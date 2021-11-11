@@ -1,11 +1,13 @@
 import express from "express";
-const router = require("./routes");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+import bodyParser from "body-parser";
+import router from "./routes";
+import cors from "cors";
+
 const port = 3000;
 
-const bootstrap = () => {
-  const app = express();
+const app = express();
+
+const boostrap = () => {
   // middlewares
   app.use(cors());
   app.use(bodyParser.urlencoded({ extended: false }));
@@ -25,4 +27,4 @@ const bootstrap = () => {
   });
 };
 
-bootstrap();
+export default boostrap;
