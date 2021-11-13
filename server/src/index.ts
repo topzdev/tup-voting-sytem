@@ -1,16 +1,15 @@
+import { connect } from "net";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
 import boostrap from "./app";
 
-const database = async () => {
-  try {
-    await createConnection();
+require("dotenv").config();
+
+createConnection()
+  .then((connect) => {
     console.log("Database Created Successfully");
-  } catch (error) {
-    throw error;
-  }
-};
-
-database();
-
-boostrap();
+    boostrap();
+  })
+  .catch((err) => {
+    throw err;
+  });

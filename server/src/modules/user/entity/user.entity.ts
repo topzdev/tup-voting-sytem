@@ -1,14 +1,15 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToOne,
-  JoinColumn,
-} from "typeorm";
-import { UserRole } from "./user-role.entity";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Timestamp } from "../../../entity/timestamp.inherit";
 
-@Entity()
-export class User {
+export enum UserRole {
+  SUPER_ADMIN = "sadmin",
+  ADMIN = "admin",
+  WATCHER = "watcher",
+  DEV = "dev",
+}
+
+@Entity("user")
+export class User extends Timestamp {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,10 +22,15 @@ export class User {
   @Column()
   username: string;
 
-  @Column()
+  @Column({
+    select: false,
+  })
   password: string;
 
-  @OneToOne((type) => UserRole)
-  @JoinColumn()
-  user_role: UserRole;
+  @Column({
+    type: "enum",
+    enum: UserRole,
+    default: UserRole.ADMIN,
+  })
+  role: UserRole;
 }

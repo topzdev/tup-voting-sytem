@@ -1,16 +1,18 @@
 import { User } from "../modules/user/entity/user.entity";
 
 const configs = {
+  auth: {
+    saltRounds: process.env.SALT_ROUNDS,
+  },
   database: {
     type: "postgres",
     host: "localhost",
-    port: 3306,
+    port: 5432,
     username: "postgres",
     password: "dev123",
-    database: "tup-voting-db-dev",
-    entities: [__dirname + "/src/modules/**/entity/*.ts"],
+    database: "tup-voting-system-db-dev",
     synchronize: true,
-    logging: false,
+    logging: true,
   },
 };
 
