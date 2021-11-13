@@ -6,7 +6,8 @@ router.get("/", userController.getUsers);
 router.get("/:id", userController.getUserById);
 router.post("/", userController.create);
 router.put("/", userController.update);
-router.delete("/", userController.remove);
+router.delete("/:id", userController.remove);
+router.put("/:id", userController.restore);
 
 const userRoute = router;
 

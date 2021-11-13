@@ -53,7 +53,7 @@ const update = async (
 ) => {
   try {
     const user = req.body.user;
-    res.status(200).json(await userServices.create(user));
+    res.status(200).json(await userServices.update(user));
   } catch (error) {
     next(error);
   }
@@ -72,12 +72,25 @@ const remove = async (
   }
 };
 
+const restore = async (
+  req: Request<{ id: string }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id = req.params.id;
+    res.status(200).json(await userServices.restore(id));
+  } catch (error) {
+    next(error);
+  }
+};
 const userController = {
   getUsers,
   getUserById,
   create,
   update,
   remove,
+  restore,
 };
 
 export default userController;

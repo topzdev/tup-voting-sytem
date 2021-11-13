@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  CreateDateColumn,
+} from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
 
 export enum UserRole {

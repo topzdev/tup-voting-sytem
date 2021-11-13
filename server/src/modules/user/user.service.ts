@@ -1,11 +1,12 @@
+import { notStrictEqual } from "assert";
 import bcrypt from "bcrypt";
-import { FindManyOptions, getRepository, ILike } from "typeorm";
-import configs from "../../configs/configs";
+import { FindManyOptions, ILike } from "typeorm";
+import configs from "../../configs";
 import { HttpException } from "../../helpers/errors/http.exception";
 import { User } from "./entity/user.entity";
 import { CreateUser, GetUserQuery, UpdateUser } from "./user.inteface";
 
-const userRepository = getRepository(User);
+// const User = getRepository(User);
 
 const getAll = async (_query: GetUserQuery) => {
   let options: FindManyOptions<User> = {};
@@ -28,34 +29,52 @@ const getAll = async (_query: GetUserQuery) => {
     options.take = _query.take;
   }
 
-  const users = await userRepository.findAndCount(options);
+  const [users, count] = await User.findAndCount(options);
 
-  return users;
+  return {
+    users,
+    count,
+  };
 };
 
-const getById = async (id: number) => {
-  const user = await userRepository.findOne({ id });
+const getById = async (_id: number) => {
+  if (!_id) throw new HttpException("BAD_REQUEST", "user id is required");
 
-  return user;
+  const user = await User.findOne(_id);
+
+  return {
+    user: user ? user : null,
+  };
 };
 
 const create = async (_user: CreateUser) => {
-  const hash = await bcrypt.hash(_user.password, configs.auth.saltRounds);
+  const isExist = await User.findOne({
+    where: {
+      username: _user.username,
+    },
+  });
 
-  console.log(hash);
+  if (isExist) throw new HttpException("BAD_REQUEST", "username has been used");
 
-  const user = await userRepository.create(_user);
+  const salt = await bcrypt.genSalt(configs.auth.saltRounds);
+  const hash = await bcrypt.hash(_user.password, salt);
+
+  let user = User.create(_user);
   user.password = hash;
 
   console.log(user);
 
-  return await userRepository.save(user);
+  user = await user.save();
+
+  delete user.password;
+
+  return user;
 };
 
 const update = async (_user: UpdateUser) => {
   if (!_user.id) throw new HttpException("BAD_REQUEST", `user id is required`);
 
-  const user = await userRepository.findOneOrFail(_user.id);
+  const user = await User.findOneOrFail(_user.id);
 
   if (!user) throw new HttpException("NOT_FOUND", "user not found");
 
@@ -63,7 +82,7 @@ const update = async (_user: UpdateUser) => {
   user.lastname = _user.lastname;
   user.role = _user.role;
 
-  await userRepository.save(user);
+  await user.save();
 
   return true;
 };
@@ -71,17 +90,25 @@ const update = async (_user: UpdateUser) => {
 const remove = async (_id: string) => {
   if (!_id) throw new HttpException("BAD_REQUEST", `user id is required`);
 
-  const user = await userRepository.softDelete(_id);
+  const user = await User.findOne(_id);
 
-  return user;
+  await user.softRemove();
+
+  return true;
 };
 
 const restore = async (_id: string) => {
   if (!_id) throw new HttpException("BAD_REQUEST", `user id is required`);
 
-  const user = await userRepository.restore(_id);
+  const user = await User.findOne(_id, { withDeleted: true });
 
-  return user;
+  console.log("Recovered", user);
+
+  if (!user) throw new HttpException("NOT_FOUND", "user cannot be recovered");
+
+  await user.recover();
+
+  return true;
 };
 
 const userServices = {
