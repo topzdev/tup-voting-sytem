@@ -39,6 +39,9 @@ const configs = {
     tempFileDir: "/tmp/",
     debug: !__prod__,
   },
+  session: {
+    secret: process.env.SESSION_SECRET,
+  },
 };
 
 export default configs;

@@ -1,8 +1,6 @@
-import { notStrictEqual } from "assert";
-import bcrypt from "bcrypt";
 import { FindManyOptions, ILike } from "typeorm";
-import configs from "../../configs";
 import { HttpException } from "../../helpers/errors/http.exception";
+import { genPassword } from "../../helpers/password.helper";
 import { User } from "./entity/user.entity";
 import { CreateUser, GetUserQuery, UpdateUser } from "./user.inteface";
 
@@ -56,11 +54,8 @@ const create = async (_user: CreateUser) => {
 
   if (isExist) throw new HttpException("BAD_REQUEST", "username has been used");
 
-  const salt = await bcrypt.genSalt(configs.auth.saltRounds);
-  const hash = await bcrypt.hash(_user.password, salt);
-
   let user = User.create(_user);
-  user.password = hash;
+  user.password = await genPassword(_user.password);
 
   console.log(user);
 

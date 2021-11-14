@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { createConnection } from "typeorm";
-import boostrap from "./app";
+import bootsrap from "./app";
 import cloudinary from "cloudinary";
 import configs from "./configs";
 
@@ -14,7 +14,7 @@ const main = async () => {
     .catch((err) => {
       throw err;
     });
-  await boostrap();
+  await bootsrap();
 };
 
 main();

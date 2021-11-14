@@ -1,22 +1,26 @@
-import express from "express";
 import bodyParser from "body-parser";
-import router from "./routes";
 import cors from "cors";
+import express from "express";
 import morgan from "morgan";
-import errorHandler from "./middlewares/errorHandler";
-import fileUpload from "express-fileupload";
-import configs from "./configs";
+import fileUploadConfig from "./configs/file-upload.config";
+import passportConfig from "./configs/passport.config";
+import sessionConfig from "./configs/session.config";
+import errorHandler from "./middlewares/error-handlers.middleware";
+import router from "./routes";
 
 const port = 3000;
 
 const app = express();
 
-const boostrap = () => {
+const bootsrap = async () => {
   // middlewares
   app.use(cors());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
-  app.use(fileUpload(configs.fileExpress));
+
+  fileUploadConfig();
+  sessionConfig();
+  passportConfig();
 
   app.use(morgan("dev"));
 
@@ -36,4 +40,4 @@ const boostrap = () => {
   });
 };
 
-export default boostrap;
+export default bootsrap;
