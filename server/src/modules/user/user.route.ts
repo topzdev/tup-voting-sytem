@@ -2,6 +2,8 @@ import express from "express";
 import userController from "./user.controller";
 const router = express.Router();
 
+console.log("module: User Module Loaded");
+
 router.get("/", userController.getUsers);
 router.get("/:id", userController.getUserById);
 router.post("/", userController.create);

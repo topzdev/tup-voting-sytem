@@ -4,6 +4,8 @@ import router from "./routes";
 import cors from "cors";
 import morgan from "morgan";
 import errorHandler from "./middlewares/errorHandler";
+import fileUpload from "express-fileupload";
+import configs from "./configs";
 
 const port = 3000;
 
@@ -14,6 +16,7 @@ const boostrap = () => {
   app.use(cors());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
+  app.use(fileUpload(configs.fileExpress));
 
   app.use(morgan("dev"));
 
