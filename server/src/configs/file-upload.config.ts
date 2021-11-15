@@ -1,10 +1,8 @@
-import express from "express";
+import { Express } from "express";
 import fileUpload from "express-fileupload";
 import configs from ".";
 
-const app = express();
-
-const fileUploadConfig = () => {
+const fileUploadConfig = (app: Express) => {
   app.use(fileUpload(configs.fileExpress));
 };
 

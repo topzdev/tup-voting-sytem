@@ -1,62 +1,68 @@
+import { Express, NextFunction, Request, Response } from "express";
 import passport from "passport";
+import { Strategy as LocalStrategy, VerifyFunction } from "passport-local";
+import { nextTick } from "process";
+import { getRepository } from "typeorm";
+import { HttpException } from "../helpers/errors/http.exception";
 import { validatePassword } from "../helpers/password.helper";
 import { User } from "../modules/user/entity/user.entity";
-import { Strategy as LocalStrategy, VerifyFunction } from "passport-local";
-import express from "express";
-import { getRepository } from "typeorm";
 
-const app = express();
+const verifyPassportAsync: VerifyFunction = (username, password, done) => {
+  if (!username) return done(null, false, { message: "Username is required" });
 
-const verifyPassport: VerifyFunction = async (username, password, done) => {
-  try {
-    if (!username)
-      return done(null, false, { message: "Username is required" });
+  console.log(username, password);
 
-    const user = await getRepository(User)
-      .createQueryBuilder()
-      .select("username", username)
-      .addSelect("password")
-      .getOne();
+  getRepository(User)
+    .createQueryBuilder("user")
+    .addSelect("user.id")
+    .addSelect("user.username")
+    .addSelect("user.password")
+    .where("user.username = :userText", { userText: username })
+    .getOne()
+    .then(async (user) => {
+      if (!user) return done(null, false, { message: "Incorrect username" });
+      console.log("Username Passed", user);
+      console.log(
+        "Checking password",
+        await validatePassword(password, user.password)
+      );
+      if (!(await validatePassword(password, user.password))) {
+        return done(null, false, { message: "Incorrect password" });
+      }
+      console.log("Password Passed");
 
-    console.log(user);
+      delete user.password;
 
-    if (!user) return done(null, false, { message: "Incorrect username" });
-
-    if (!(await validatePassword(password, user.password))) {
-      return done(null, false, { message: "Incorrect password" });
-    }
-
-    return done(null, user, {
-      message: "Logged in Succesfully",
+      return done(null, user, {
+        message: "Logged in Succesfully",
+      });
+    })
+    .catch((error) => {
+      console.log("Error", error);
+      return done(error);
     });
-  } catch (error) {
-    return done(error);
-  }
 };
 
-const serializeUser = async (user, done) => {
+const serializeUserAsync = (user, done) => {
   console.log("SerializedUserr", user);
   done(null, user.id);
 };
 
-const deserializeUser = async (id, done) => {
+const deserializeUserAsnyc = (id, done) => {
   console.log("DeserializedUser:", id);
-  try {
-    const user = User.findOne(id);
-    done(null, user);
-  } catch (error) {
-    done(error);
-  }
+  User.findOne(id)
+    .then((user) => done(null, user))
+    .catch((error) => done(error));
 };
 
-const passportConfig = () => {
+const passportConfig = async (app: Express) => {
   console.log("passport config loaded");
 
-  passport.use(new LocalStrategy(verifyPassport));
+  passport.use("admin", new LocalStrategy(verifyPassportAsync));
 
-  passport.serializeUser(serializeUser);
+  passport.serializeUser(serializeUserAsync);
 
-  passport.deserializeUser(deserializeUser);
+  passport.deserializeUser(deserializeUserAsnyc);
 
   app.use(passport.initialize());
   app.use(passport.session());
