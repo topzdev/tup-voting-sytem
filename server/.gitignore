@@ -1,14 +1,9 @@
-# Dependencies
-node_modules
-
-# yarn error logs
-yarn-error.log
-
-# Environment varibales
-.env*
-!.env*.example
-
-# Code coverage
-coverage
-
-build
+.idea/
+.vscode/
+node_modules/
+build/
+tmp/
+temp/
+.env
+development.env
+production.env
