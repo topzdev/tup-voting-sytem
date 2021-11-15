@@ -8,6 +8,7 @@ const errorHandler = (
   next: NextFunction
 ) => {
   if (err) {
+    if (err.stack) console.error(err.stack);
     res.status(err.statusCode || 500).json({
       error: {
         name: err.name,

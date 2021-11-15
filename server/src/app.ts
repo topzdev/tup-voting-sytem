@@ -8,6 +8,7 @@ import sessionConfig from "./configs/session.config";
 import errorHandler from "./middlewares/error-handlers.middleware";
 import router from "./routes";
 import flash from "connect-flash";
+import morganConfig from "./configs/morgan.config";
 
 const port = 3000;
 
@@ -23,8 +24,7 @@ const bootsrap = async () => {
   fileUploadConfig(app);
   sessionConfig(app);
   passportConfig(app);
-
-  app.use(morgan("dev"));
+  morganConfig(app);
 
   app.get("/", (req, res) => {
     res.send("Welcome to TUP VOTING SYSTEM SERVER");

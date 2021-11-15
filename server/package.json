@@ -13,6 +13,7 @@
   "author": "dev404",
   "license": "ISC",
   "dependencies": {
+    "@types/morgan": "^1.9.3",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "cloudinary": "^1.27.1",
