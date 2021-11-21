@@ -8,10 +8,13 @@
     "@emotion/server": "latest",
     "@emotion/styled": "latest",
     "@fontsource/open-sans": "^4.5.2",
+    "@mui/icons-material": "^5.1.1",
+    "@mui/lab": "^5.0.0-alpha.55",
     "@mui/material": "latest",
     "@mui/system": "^5.1.1",
     "clsx": "latest",
     "next": "latest",
+    "next-auth": "^3.29.0",
     "react": "latest",
     "react-dom": "latest",
     "react-hook-form": "^7.20.2"

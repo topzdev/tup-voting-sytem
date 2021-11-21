@@ -25,5 +25,16 @@
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "linterOptions": {
     "exclude": ["*.json", "**/*.json"]
+  },
+  "paths": {
+    "@/components/*": ["src/components/*"],
+    "@/assets/*": ["src/assets/*"],
+    "@/layouts/*": ["src/layouts/*"],
+    "@/styles/*": ["src/styles/*"],
+    "@/configs/*": ["src/configs/*"],
+    "@/utils/*": ["src/utils/*"],
+    "@/hooks/*": ["src/hooks/*"],
+    "@/api/*": ["src/apis/*"],
+    "@/context/*": ["src/contexsts/*"]
   }
 }
