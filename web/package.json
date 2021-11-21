@@ -5,13 +5,16 @@
   "dependencies": {
     "@emotion/cache": "latest",
     "@emotion/react": "latest",
-    "@emotion/styled": "latest",
     "@emotion/server": "latest",
+    "@emotion/styled": "latest",
+    "@fontsource/open-sans": "^4.5.2",
     "@mui/material": "latest",
+    "@mui/system": "^5.1.1",
     "clsx": "latest",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-hook-form": "^7.20.2"
   },
   "scripts": {
     "dev": "next",
