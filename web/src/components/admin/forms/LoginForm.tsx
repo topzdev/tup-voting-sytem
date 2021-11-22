@@ -3,20 +3,27 @@ import { Stack, TextField, InputAdornment, IconButton } from "@mui/material";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { signIn } from "next-auth/react";
+import { AdminLoginCredentials } from "../../../types/global";
+import { useRouter } from "next/router";
+import { adminRoutes } from "../../../configs/routes";
 
 interface LoginFormProps {}
 
-type LoginInputs = {
-  username: string;
-  password: string;
-};
-
 const LoginForm: React.FC<LoginFormProps> = ({}) => {
+  const router = useRouter();
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginInputs>();
+  } = useForm<AdminLoginCredentials>({
+    defaultValues: {
+      username: "dummy",
+      password: "12345678",
+    },
+  });
+
+  console.log(process.env.NEXT_PUBLIC_SERVER_URL);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -30,7 +37,21 @@ const LoginForm: React.FC<LoginFormProps> = ({}) => {
     event.preventDefault();
   };
 
-  const onSubmit = (data: LoginInputs) => console.log(data);
+  const onSubmit = async (data: AdminLoginCredentials) => {
+    const response = await signIn("admin-auth", {
+      username: data.username,
+      password: data.password,
+      redirect: false,
+    });
+
+    console.log(response);
+
+    if (!response.url) {
+      return alert(response.error);
+    } else {
+      return router.push(adminRoutes.authorized);
+    }
+  };
 
   console.log(errors);
 
@@ -49,9 +70,9 @@ const LoginForm: React.FC<LoginFormProps> = ({}) => {
           render={({ field }) => (
             <TextField
               {...field}
-              label="Username or Email"
+              label="Username"
               variant="outlined"
-              placeholder="Username or Email"
+              placeholder="Username"
               error={!!errors.username}
               helperText={errors.username?.message}
             />

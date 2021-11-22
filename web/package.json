@@ -12,9 +12,10 @@
     "@mui/lab": "^5.0.0-alpha.55",
     "@mui/material": "latest",
     "@mui/system": "^5.1.1",
+    "axios": "^0.24.0",
     "clsx": "latest",
     "next": "latest",
-    "next-auth": "^3.29.0",
+    "next-auth": "^4.0.0-beta.7",
     "react": "latest",
     "react-dom": "latest",
     "react-hook-form": "^7.20.2"

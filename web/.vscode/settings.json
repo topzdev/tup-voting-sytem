@@ -21,5 +21,7 @@
   "php.validate.executablePath": "",
   "json.schemas": [],
   "[.min]": { "editor.formatOnSave": false },
-  "javascript.updateImportsOnFileMove.enabled": "always"
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "editor.suggestSelection": "first",
+  "editor.snippetSuggestions": "top"
 }
