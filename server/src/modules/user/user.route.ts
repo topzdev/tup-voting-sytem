@@ -1,5 +1,5 @@
 import express from "express";
-import { adminAuth } from "../../middlewares/auth.middleware";
+import { adminAuth } from "../../middlewares/auth-session.middleware.legacy";
 import rolesAllowed from "../../middlewares/roles-allowed.middleware";
 import userController from "./user.controller";
 const router = express.Router();

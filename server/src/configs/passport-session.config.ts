@@ -55,7 +55,7 @@ const deserializeUserAsnyc = (id, done) => {
     .catch((error) => done(error));
 };
 
-const passportConfig = async (app: Express) => {
+const passportSessionConfig = async (app: Express) => {
   console.log("passport config loaded");
 
   passport.use("admin", new LocalStrategy(verifyPassportAsync));
@@ -68,4 +68,4 @@ const passportConfig = async (app: Express) => {
   app.use(passport.session());
 };
 
-export default passportConfig;
+export default passportSessionConfig;

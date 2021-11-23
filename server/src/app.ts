@@ -3,14 +3,14 @@ import cors from "cors";
 import express from "express";
 import morgan from "morgan";
 import fileUploadConfig from "./configs/file-upload.config";
-import passportConfig from "./configs/passport.config";
+import passportConfig from "./configs/passport-session.config";
 import sessionConfig from "./configs/session.config";
 import errorHandler from "./middlewares/error-handlers.middleware";
 import router from "./routes";
 import flash from "connect-flash";
 import morganConfig from "./configs/morgan.config";
 
-const port = 3000;
+const port = 5000;
 
 const app = express();
 
@@ -22,8 +22,8 @@ const bootsrap = async () => {
   app.use(flash());
 
   fileUploadConfig(app);
-  sessionConfig(app);
-  passportConfig(app);
+  // sessionConfig(app);
+  // passportConfig(app);
   morganConfig(app);
 
   app.get("/", (req, res) => {
@@ -32,10 +32,6 @@ const bootsrap = async () => {
 
   // routes
   app.use("/api/v1", router);
-
-  app.use((req, res, next) => {
-    console.log("Test session:", req.isAuthenticated, req.session);
-  });
 
   app.use(errorHandler);
 

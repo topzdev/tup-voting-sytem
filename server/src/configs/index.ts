@@ -42,6 +42,18 @@ const configs = {
   session: {
     secret: process.env.SESSION_SECRET,
   },
+  jwt: {
+    admin: {
+      secret: process.env.JWT_ADMIN_SECRET,
+      algo: process.env.JWT_ADMIN_ALGO,
+      expiresIn: !__prod__ ? "30d" : "1d",
+    },
+    local: {
+      secret: process.env.JWT_LOCAL_SECRET,
+      algo: process.env.JWT_LOCAL_ALGO,
+      expiresIn: !__prod__ ? "30d" : "1d",
+    },
+  },
 };
 
 export default configs;
