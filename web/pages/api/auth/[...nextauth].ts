@@ -1,9 +1,9 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import adminAuthApi from "../../../src/apis/admin/auth.api";
 
 export default async function auth(req, res) {
-  const providers = [
+  const providers: NextAuthOptions["providers"] = [
     CredentialsProvider({
       id: "admin-auth",
       name: "Credentials",
@@ -18,8 +18,8 @@ export default async function auth(req, res) {
 
         console.log("Credential Login", response.data);
 
-        if (response.data.user) {
-          return response.data.user;
+        if (response.data) {
+          return response.data;
         } else {
           return null;
         }
@@ -39,11 +39,38 @@ export default async function auth(req, res) {
     }),
   ];
 
+  const callbacks: NextAuthOptions["callbacks"] = {
+    jwt: ({ token, user }) => {
+      if (user) {
+        console.log("User", user);
+
+        token = {
+          accessToken: user.token,
+          admin: user.user,
+        };
+      }
+
+      return token;
+    },
+
+    session: async ({ session, token }) => {
+      console.log("SESSION: ", token);
+
+      session.token = token.accessToken;
+      session.admin = token.admin;
+
+      console.log("FINAL SESSION", session);
+
+      return session;
+    },
+  };
+
   return await NextAuth(req, res, {
     providers,
     secret: process.env.NEXTAUTH_SECRET,
-    jwt: {
-      maxAge: 1000 * 60 * 60 * 24, // 1 day cache
+    callbacks,
+    session: {
+      strategy: "jwt",
     },
   });
 }

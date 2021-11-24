@@ -11,7 +11,7 @@ const authorized: React.FC<authorizedProps> = ({}) => {
 
   if (loading) return <Box>Loading...</Box>;
 
-  console.log(session);
+  console.log("session", session);
 
   return (
     <Container>

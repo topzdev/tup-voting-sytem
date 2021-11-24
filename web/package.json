@@ -15,7 +15,7 @@
     "axios": "^0.24.0",
     "clsx": "latest",
     "next": "latest",
-    "next-auth": "^4.0.0-beta.7",
+    "next-auth": "0.0.0-pr.3217.87a21677",
     "react": "latest",
     "react-dom": "latest",
     "react-hook-form": "^7.20.2"
