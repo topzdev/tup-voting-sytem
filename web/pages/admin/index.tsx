@@ -1,17 +1,21 @@
-import { Container, Typography, Button } from "@mui/material";
+import { Button, Container, Typography } from "@mui/material";
 import React from "react";
 
-interface IndexPageProps {}
+interface AdminPageProps {}
 
-const IndexPage: React.FC<IndexPageProps> = ({}) => {
+const AdminPage: AdminNextPage<AdminPageProps> = ({}) => {
   return (
     <Container>
-      <Typography variant="h2">Admin</Typography>
+      <Typography variant="h2">Dashboard</Typography>
       <Button variant="text" color="primary" href="/admin/login">
-        Admin
+        Authorized Page
       </Button>
     </Container>
   );
 };
 
-export default IndexPage;
+AdminPage.auth = {
+  admin: {},
+};
+
+export default AdminPage;

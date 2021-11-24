@@ -1,6 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import adminAuthApi from "../../../src/apis/admin/auth.api";
+import adminAuthApi, { AdminUser } from "../../../src/apis/admin/auth.api";
 
 export default async function auth(req, res) {
   const providers: NextAuthOptions["providers"] = [
@@ -57,7 +57,7 @@ export default async function auth(req, res) {
       console.log("SESSION: ", token);
 
       session.token = token.accessToken;
-      session.admin = token.admin;
+      session.admin = token.admin as AdminUser;
 
       console.log("FINAL SESSION", session);
 

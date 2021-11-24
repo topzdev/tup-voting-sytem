@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { signIn } from "next-auth/react";
-import { AdminLoginCredentials } from "../../../types/global";
+import { AdminLoginCredentials } from "../../../type/global";
 import { useRouter } from "next/router";
 import { adminRoutes } from "../../../configs/routes";
 

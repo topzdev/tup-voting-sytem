@@ -1,10 +1,12 @@
-import { Box, Container, Typography } from "@mui/material";
-import { useSession } from "next-auth/react";
+import { Box, Container, Typography, Button } from "@mui/material";
+import { signOut, useSession } from "next-auth/react";
 import React from "react";
 
-interface authorizedProps {}
+interface AuthorizedPageProps {
+  auth: any;
+}
 
-const authorized: React.FC<authorizedProps> = ({}) => {
+const AuthorizedPage: AdminNextPage<AuthorizedPageProps> = ({}) => {
   const { data: session, status } = useSession();
 
   const loading = status === "loading";
@@ -16,10 +18,19 @@ const authorized: React.FC<authorizedProps> = ({}) => {
   return (
     <Container>
       <Typography variant="h1" color="initial">
-        Authorized Page
+        AuthorizedPage Page
       </Typography>
+      <Button variant="contained" color="primary" onClick={() => signOut()}>
+        Logout
+      </Button>
     </Container>
   );
 };
 
-export default authorized;
+AuthorizedPage.auth = {
+  admin: {
+    roles: "SUPER_ADMIN",
+  },
+};
+
+export default AuthorizedPage;

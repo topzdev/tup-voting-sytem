@@ -5,7 +5,7 @@ import DefaultLayout from "../../src/layouts/DefaultLayout";
 
 interface LoginPageProps {}
 
-const LoginPage: React.FC<LoginPageProps> = ({}) => {
+const LoginPage: AdminNextPage<LoginPageProps> = ({}) => {
   return (
     <DefaultLayout>
       <Box
@@ -46,5 +46,7 @@ const LoginPage: React.FC<LoginPageProps> = ({}) => {
     </DefaultLayout>
   );
 };
+
+// LoginPage.auth = un;
 
 export default LoginPage;

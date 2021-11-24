@@ -1,5 +1,22 @@
 import axios from "../../configs/axios";
-import { AdminLoginCredentials } from "../../types/global";
+import { AdminLoginCredentials } from "../../type/global";
+
+export enum UserRole {
+  SUPER_ADMIN = "sadmin",
+  ADMIN = "admin",
+  WATCHER = "watcher",
+  DEV = "dev",
+}
+
+export type UserRoleStrings = keyof typeof UserRole;
+
+export type AdminUser = {
+  id: number;
+  username: string;
+  firstname: string;
+  lastname: string;
+  role: UserRole;
+};
 
 const login = async (credentials: AdminLoginCredentials) => {
   const response = await axios.post(`api/v1/auth/admin/login`, credentials);
