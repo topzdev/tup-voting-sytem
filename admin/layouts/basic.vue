@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app dark>
     <v-main>
       <v-container>
         <Nuxt />
@@ -8,10 +8,7 @@
   </v-app>
 </template>
 
-<script>
-export default {
-  data() {
-    return {};
-  },
-};
+<script lang="ts">
+import Vue from "vue";
+export default Vue.extend({});
 </script>
