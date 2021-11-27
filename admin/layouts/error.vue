@@ -1,44 +1,49 @@
 <template>
   <v-app dark>
-    <h1 v-if="error.statusCode === 404">
-      {{ pageNotFound }}
-    </h1>
-    <h1 v-else>
-      {{ otherError }}
-    </h1>
-    <NuxtLink to="/">
-      Home page
-    </NuxtLink>
+    <v-main>
+      <v-container>
+        <page-center class="flex-column">
+          <h1 class="text-h1 font-weight-medium deep-purple--text">
+            {{ statusCode }}
+          </h1>
+          <h2 v-html="message" class="headline text-center"></h2>
+          <v-btn to="/" class="mt-2" text color="primary">
+            Back to Dashboard
+          </v-btn>
+        </page-center>
+      </v-container>
+    </v-main>
   </v-app>
 </template>
+<script lang="ts">
+import Vue, { PropOptions } from "vue";
+import { NuxtError } from "@nuxt/types";
+import PageCenter from "~/components/utils/PageCenter.vue";
 
-<script>
-export default {
-  layout: 'empty',
+export default Vue.extend({
+  components: { PageCenter },
   props: {
     error: {
       type: Object,
-      default: null
-    }
+      default: null,
+    } as PropOptions<NuxtError>,
   },
-  data () {
+
+  head() {
     return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred'
-    }
+      title: `${this.statusCode} - ${this.message}`,
+    };
   },
-  head () {
-    const title =
-      this.error.statusCode === 404 ? this.pageNotFound : this.otherError
-    return {
-      title
-    }
-  }
-}
+
+  computed: {
+    statusCode(): number {
+      return (this.error && this.error.statusCode) || 500;
+    },
+    message(): string {
+      return this.error.message || "Something went wrong";
+    },
+  },
+});
 </script>
 
-<style scoped>
-h1 {
-  font-size: 20px;
-}
-</style>
+

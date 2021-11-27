@@ -7,7 +7,7 @@ export default {
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: "%s - tup-voting-admin",
+    titleTemplate: "%s - TUP Voting System",
     title: "tup-voting-admin",
     meta: [
       { charset: "utf-8" },

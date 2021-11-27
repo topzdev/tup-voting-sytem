@@ -56,9 +56,9 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-footer :absolute="!fixed" app>
+    <!-- <v-footer :absolute="!fixed" app>
       <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
+    </v-footer> -->
   </v-app>
 </template>
 
@@ -79,6 +79,11 @@ export default {
           icon: "mdi-chart-bubble",
           title: "Inspire",
           to: "/inspire",
+        },
+        {
+          icon: "mdi-lock",
+          title: "Protected",
+          to: "/protected",
         },
       ],
       miniVariant: false,

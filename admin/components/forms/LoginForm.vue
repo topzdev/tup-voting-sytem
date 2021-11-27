@@ -4,8 +4,11 @@
       <v-card-title>
         <v-row>
           <v-col class="d-flex justify-center" md="12">
-            <v-avatar size="75">
-              <img src="~/assets/img/tup-logo.png" alt="John" />
+            <v-avatar size="80">
+              <img
+                src="/tup-logo.png"
+                alt="Technological University of the Philippines"
+              />
             </v-avatar>
           </v-col>
           <v-col>
