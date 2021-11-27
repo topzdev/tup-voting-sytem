@@ -8,6 +8,7 @@ console.log("module: Auth Module Loaded");
 
 router.post("/admin/login", authController.adminLogin);
 router.post("/admin/logout", adminAuth, authController.adminLogout);
+router.get("/admin/me", adminAuth, authController.adminMe);
 router.get(
   "/admin/protected-route",
   adminAuth,

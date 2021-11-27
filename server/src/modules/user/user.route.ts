@@ -1,12 +1,17 @@
 import express from "express";
-import { adminAuth } from "../../middlewares/auth-session.middleware.legacy";
+import { adminAuth } from "../../middlewares/auth.middleware";
 import rolesAllowed from "../../middlewares/roles-allowed.middleware";
 import userController from "./user.controller";
 const router = express.Router();
 
 console.log("module: User Module Loaded");
 
-router.get("/", adminAuth, userController.getUsers);
+router.get(
+  "/",
+  adminAuth,
+  rolesAllowed("SUPER_ADMIN"),
+  userController.getUsers
+);
 
 router.get("/:id", adminAuth, userController.getUserById);
 

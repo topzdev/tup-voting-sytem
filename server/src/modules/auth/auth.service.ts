@@ -8,9 +8,14 @@ import { signJwtAdminPayload } from "../../helpers/jwt.helper";
 const adminLogin = async (_credentials: AdminLoginCredentials) => {
   const user = await getRepository(User)
     .createQueryBuilder("user")
-    .addSelect("user.id")
-    .addSelect("user.username")
-    .addSelect("user.password")
+    .select([
+      "user.id",
+      "user.firstname",
+      "user.lastname",
+      "user.password",
+      "user.username",
+      "user.role",
+    ])
     .where("user.username = :userText", { userText: _credentials.username })
     .getOne();
 

@@ -1,15 +1,9 @@
 import { RequestOptions } from "http";
 import { JwtPayload } from "jsonwebtoken";
+import { User } from "../../modules/user/entity/user.entity";
 type PickedUser = Pick<
-  UserEntity,
-  | "id"
-  | "username"
-  | "firstname"
-  | "lastname"
-  | "created_at"
-  | "updated_at"
-  | "deleted_at"
-  | "role"
+  User,
+  "id" | "username" | "firstname" | "lastname" | "role"
 >;
 
 declare global {
