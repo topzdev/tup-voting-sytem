@@ -10,27 +10,20 @@ export const adminAuth = (req: Request, res: Response, next: NextFunction) => {
     console.log("Authorization", req.headers.authorization);
 
     if (
-      tokenParts[0] === "Bearer" &&
+      tokenParts[0] !== "Bearer" &&
       tokenParts[1].match(/\S+\.\S+\.\S+/) !== null
     ) {
-      console.log("Token Parts", tokenParts[1]);
-      const decoded = jwt.verify(tokenParts[1], configs.jwt.admin.secret);
-
-      req.jwt = decoded;
-      if (typeof decoded !== "string") req.admin = decoded.admin;
-
-      next();
-    } else {
-      next(
-        new HttpException(
-          "UNAUTHORIZED",
-          "You dont have admin privilege, Please contact administrator"
-        )
-      );
+      throw Error();
     }
-  } catch (error) {
-    console.log(error);
 
+    console.log("Token Parts", tokenParts[1]);
+    const decoded = jwt.verify(tokenParts[1], configs.jwt.admin.secret);
+
+    req.jwt = decoded;
+    if (typeof decoded !== "string") req.admin = decoded.admin;
+
+    next();
+  } catch (error) {
     next(
       new HttpException(
         "UNAUTHORIZED",

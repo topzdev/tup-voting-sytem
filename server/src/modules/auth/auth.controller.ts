@@ -34,6 +34,18 @@ const adminProtectedRoute = async (
   }
 };
 
+const adminMe = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const admin = req.admin;
+
+    res
+      .status(200)
+      .json({ message: "Admin Info Succesfully Fetched", user: admin });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const adminSessignLogin = async (
   req: Request,
   res: Response,
@@ -74,6 +86,11 @@ const adminSessionLogout = async (
   }
 };
 
-const authController = { adminLogin, adminLogout, adminProtectedRoute };
+const authController = {
+  adminLogin,
+  adminLogout,
+  adminProtectedRoute,
+  adminMe,
+};
 
 export default authController;

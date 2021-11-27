@@ -39,7 +39,7 @@ const rolesAllowed = (roles: RolesString | RolesString[]) => {
 
     if (typeof roles === "string") {
       console.log("String test");
-      if (roles === UserRole[user.role]) {
+      if (UserRole[roles] === user.role) {
         console.log(printOut());
         next();
       } else {
