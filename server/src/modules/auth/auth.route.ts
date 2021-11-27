@@ -1,5 +1,4 @@
 import express from "express";
-import passport from "passport";
 import { adminAuth } from "../../middlewares/auth.middleware";
 import rolesAllowed from "../../middlewares/roles-allowed.middleware";
 import authController from "./auth.controller";

@@ -5,13 +5,20 @@
   "dependencies": {
     "@emotion/cache": "latest",
     "@emotion/react": "latest",
-    "@emotion/styled": "latest",
     "@emotion/server": "latest",
+    "@emotion/styled": "latest",
+    "@fontsource/open-sans": "^4.5.2",
+    "@mui/icons-material": "^5.1.1",
+    "@mui/lab": "^5.0.0-alpha.55",
     "@mui/material": "latest",
+    "@mui/system": "^5.1.1",
+    "axios": "^0.24.0",
     "clsx": "latest",
     "next": "latest",
+    "next-auth": "0.0.0-pr.3217.87a21677",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-hook-form": "^7.20.2"
   },
   "scripts": {
     "dev": "next",

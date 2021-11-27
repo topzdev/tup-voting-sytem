@@ -10,13 +10,10 @@ const rolesAllowed = (roles: RolesString | RolesString[]) => {
     if (!roles || !roles.length)
       next(new HttpException("BAD_REQUEST", "Roles not provided"));
 
-    if (!req.isAuthenticated())
-      next(new HttpException("UNAUTHORIZED", "User is not authenticated"));
-
-    if (!req.user)
+    if (!req.admin)
       next(new HttpException("NOT_FOUND", "User info is not provided"));
 
-    const user = req.user;
+    const user = req.admin;
 
     const printOut = () => {
       return `AdminUser: ${user.username} - ${user.role} is allowed to used ${req.originalUrl}`;

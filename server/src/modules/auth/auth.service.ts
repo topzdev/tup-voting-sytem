@@ -1,9 +1,38 @@
 import { AdminLoginCredentials } from "./auth.inteface";
+import { getRepository } from "typeorm";
+import { User } from "../user/entity/user.entity";
+import { validatePassword } from "../../helpers/password.helper";
+import { HttpException } from "../../helpers/errors/http.exception";
+import { signJwtAdminPayload } from "../../helpers/jwt.helper";
 
-const adminLogin = async (_credentials: AdminLoginCredentials) => {};
+const adminLogin = async (_credentials: AdminLoginCredentials) => {
+  const user = await getRepository(User)
+    .createQueryBuilder("user")
+    .addSelect("user.id")
+    .addSelect("user.username")
+    .addSelect("user.password")
+    .where("user.username = :userText", { userText: _credentials.username })
+    .getOne();
 
-const userServices = {
+  if (!user) return new HttpException("BAD_REQUEST", "Incorrect username");
+
+  if (!(await validatePassword(_credentials.password, user.password))) {
+    return new HttpException("BAD_REQUEST", "Incorrect password");
+  }
+
+  delete user.password;
+
+  const { token, expiresIn } = signJwtAdminPayload(user);
+
+  return {
+    token,
+    user,
+    expiresIn,
+  };
+};
+
+const authServices = {
   adminLogin,
 };
 
-export default userServices;
+export default authServices;
