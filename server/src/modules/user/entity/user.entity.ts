@@ -6,13 +6,7 @@ import {
   CreateDateColumn,
 } from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
-
-export enum UserRole {
-  SUPER_ADMIN = "sadmin",
-  ADMIN = "admin",
-  WATCHER = "watcher",
-  DEV = "dev",
-}
+import { UserRole } from "../user.inteface";
 
 @Entity("user")
 export class User extends Timestamp {

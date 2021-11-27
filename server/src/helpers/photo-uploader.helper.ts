@@ -29,7 +29,7 @@ const upload = async (
 
   try {
     const uploadedPhoto = await uploader.upload(_photo, {
-      public_id: _options.filename,
+      public_id: _options && _options.filename ? _options.filename : undefined,
       folder: cloudFolders[_folder],
     });
 

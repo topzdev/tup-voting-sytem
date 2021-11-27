@@ -1,4 +1,11 @@
-import { UserRole } from "./entity/user.entity";
+import { User } from "./entity/user.entity";
+
+export enum UserRole {
+  SUPER_ADMIN = "sadmin",
+  ADMIN = "admin",
+  WATCHER = "watcher",
+  DEV = "dev",
+}
 
 export interface GetUserQuery {
   search?: string;
@@ -7,18 +14,13 @@ export interface GetUserQuery {
   take: number;
 }
 
-export interface CreateUser {
-  firstname: string;
-  lastname: string;
-  email: string;
-  username: string;
-  password: string;
+export type CreateUser = Pick<
+  User,
+  "firstname" | "lastname" | "username" | "password"
+> & {
   role: UserRole;
-}
+};
 
-export interface UpdateUser {
-  id: number;
-  firstname: string;
-  lastname: string;
+export type UpdateUser = Pick<User, "id" | "firstname" | "lastname"> & {
   role: UserRole;
-}
+};
