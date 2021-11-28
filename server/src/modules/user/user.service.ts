@@ -67,9 +67,11 @@ const create = async (_user: CreateUser) => {
 };
 
 const update = async (_user: UpdateUser) => {
+  console.log(_user);
+
   if (!_user.id) throw new HttpException("BAD_REQUEST", `user id is required`);
 
-  const user = await User.findOneOrFail(_user.id);
+  const user = await User.findOne(_user.id);
 
   if (!user) throw new HttpException("NOT_FOUND", "user not found");
 

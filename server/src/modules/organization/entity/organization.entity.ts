@@ -7,7 +7,7 @@ import {
 } from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
 import { OrganizationLogo } from "./organization-logo.entity";
-import {} from "class-validator";
+import { IsAlpha, IsLowercase, NotContains } from "class-validator";
 
 @Entity("organization")
 export class Organization extends Timestamp {

@@ -124,16 +124,27 @@ const archive = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const unarchive = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id;
+
+    res.status(200).json(await organizationService.unarchive(id));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const organizationController = {
   getAll,
   getOneBySlug,
   getOneById,
   create,
   update,
-  archive,
   remove,
   restore,
   isExistBySlug,
+  archive,
+  unarchive,
 };
 
 export default organizationController;

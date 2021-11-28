@@ -1,7 +1,9 @@
 import express from "express";
 import { adminAuth } from "../../middlewares/auth.middleware";
 import rolesAllowed from "../../middlewares/roles-allowed.middleware";
+import validate from "../../middlewares/validate.middleware";
 import organizationController from "./organization.controller";
+import organizationValidator from "./organization.validator";
 const router = express.Router();
 
 console.log("module: Organization Module Loaded");
@@ -23,6 +25,7 @@ router.post(
   "/",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  validate(organizationValidator.create),
   organizationController.create
 );
 
@@ -30,6 +33,7 @@ router.put(
   "/",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  validate(organizationValidator.update),
   organizationController.update
 );
 
@@ -52,6 +56,13 @@ router.put(
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   organizationController.archive
+);
+
+router.put(
+  "/unarchive/:id",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  organizationController.unarchive
 );
 
 const userRoute = router;

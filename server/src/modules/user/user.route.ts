@@ -1,7 +1,9 @@
 import express from "express";
 import { adminAuth } from "../../middlewares/auth.middleware";
 import rolesAllowed from "../../middlewares/roles-allowed.middleware";
+import validate from "../../middlewares/validate.middleware";
 import userController from "./user.controller";
+import userValidator from "./user.validator";
 const router = express.Router();
 
 console.log("module: User Module Loaded");
@@ -19,6 +21,7 @@ router.post(
   "/",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  validate(userValidator.create),
   userController.create
 );
 
@@ -26,6 +29,7 @@ router.put(
   "/",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  validate(userValidator.update),
   userController.update
 );
 

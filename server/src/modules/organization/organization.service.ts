@@ -121,12 +121,6 @@ const create = async (
   const organization = Organization.create(_organization);
   organization.logo = organizationLogo;
 
-  const errors = await validate(organization);
-
-  if (errors.length > 0) {
-    throw new HttpException("BAD_REQUEST", "Something went wrong");
-  }
-
   await organizationLogo.save();
   const savedOrganization = await organization.save();
 
@@ -176,10 +170,16 @@ const update = async (
   let newLogo = prevOrganization.logo;
 
   if (_logo && _logo.tempFilePath) {
+    //since there is a new logo provided we will destroy the exisiting image then replace before uploading a new one, so when error occcured on destory image the whole process will stop
+    if (prevOrganization.logo) {
+      await photoUploader.destroy(prevOrganization.logo.public_id);
+    }
+
     const uploadedLogo = await photoUploader.upload(
       "org_photos",
       _logo.tempFilePath
     );
+
     // if the previous logo is null then save the new logo
     // else replaced the old public_id and url
     if (!prevOrganization.logo) {
@@ -194,11 +194,14 @@ const update = async (
     }
   }
 
-  await Organization.update(_organization.id, {
+  const toUpdateOrganization = {
     ..._organization,
     slug: newSlug,
     logo: newLogo,
-  });
+  };
+
+  await OrganizationLogo.update(newLogo.id, newLogo);
+  await Organization.update(_organization.id, toUpdateOrganization);
   return true;
 };
 
@@ -223,7 +226,9 @@ const restore = async (_id: string) => {
     throw new HttpException("BAD_REQUEST", "Organization id is required");
   }
 
-  const organization = await Organization.findOne(_id);
+  const organization = await Organization.findOne(_id, {
+    withDeleted: true,
+  });
 
   if (!organization) {
     throw new HttpException("NOT_FOUND", "Organization not found");
@@ -244,7 +249,26 @@ const archive = async (_id: string) => {
     throw new HttpException("NOT_FOUND", "Organization not found");
   }
 
-  await organization.recover();
+  organization.archive = true;
+
+  await organization.save();
+  return true;
+};
+
+const unarchive = async (_id: string) => {
+  if (!_id) {
+    throw new HttpException("BAD_REQUEST", "Organization id is required");
+  }
+
+  const organization = await Organization.findOne(_id);
+
+  if (!organization) {
+    throw new HttpException("NOT_FOUND", "Organization not found");
+  }
+
+  organization.archive = false;
+
+  await organization.save();
   return true;
 };
 
@@ -257,6 +281,7 @@ const organizationServices = {
   remove,
   restore,
   archive,
+  unarchive,
   isExistBySlug,
 };
 
