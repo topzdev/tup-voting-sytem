@@ -24,7 +24,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app>
+    <v-app-bar :clipped-left="clipped" fixed app color="primary" dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-btn icon @click.stop="miniVariant = !miniVariant">
         <v-icon>mdi-{{ `chevron-${miniVariant ? "right" : "left"}` }}</v-icon>
@@ -63,18 +63,22 @@
 </template>
 
 <script>
+import pageConfig from "@/configs/pages.config";
 export default {
   data() {
     return {
-      clipped: false,
-      drawer: false,
+      clipped: true,
+      drawer: true,
       fixed: false,
       items: [
         {
           icon: "mdi-apps",
-          title: "Welcome",
+          title: "Dashboard",
           to: "/",
         },
+
+        pageConfig.org,
+
         {
           icon: "mdi-chart-bubble",
           title: "Inspire",
