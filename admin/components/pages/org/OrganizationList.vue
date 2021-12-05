@@ -10,7 +10,7 @@
       </template>
     </v-row>
 
-    <v-btn color="primary" large block class="mt-1">
+    <v-btn color="primary" large block class="mt-1" to="org/create">
       Create Organization
     </v-btn>
   </span>

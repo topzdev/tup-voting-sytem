@@ -2,7 +2,7 @@
   <v-form ref="form" v-model="valid">
     <v-row>
       <v-col align="center" cols="12">
-        <logo-uploader v-model="form.logo" />
+        <logo-uploader v-model="form.logo" :url="form.logo" />
       </v-col>
 
       <v-col cols="12">
@@ -76,10 +76,13 @@
   </v-form>
 </template>
 
-<script lang="ts">
+
+<script>
+import Vue, { PropOptions } from "vue";
 import ThemePicker from "../../pickers/ThemePicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
 import configs from "@/configs";
+
 const defaultForm = {
   slug: "",
   title: "",
@@ -90,8 +93,11 @@ const defaultForm = {
   logo: null,
 };
 
-export default {
+export default Vue.extend({
   components: { ThemePicker, LogoUploader },
+  props: {
+    defaultData: Object,
+  },
   data() {
     return {
       valid: false,
@@ -108,27 +114,11 @@ export default {
     };
   },
 
-  computed: {
-    rules() {
-      return {
-        slug: [
-          (v: any) => !!v || "Slug is required",
-          (v: any) =>
-            /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.test(v) || "Slug must be valid",
-        ],
-        title: [(v: any) => !!v || "Title is required"],
-        ticker: [(v: any) => !!v || "Ticker is required"],
-        themePrimary: [(v: any) => !!v || "Theme Primary is required"],
-        themeSecondary: [(v: any) => !!v || "Theme Secondary is required"],
-      };
-    },
-  },
-
   methods: {
     async submit() {
       this.loading = true;
 
-      (this.$refs as any).form.validate();
+      this.$refs.form.validate();
 
       if (this.valid) {
         try {
@@ -138,6 +128,36 @@ export default {
       this.loading = false;
     },
   },
-};
+
+  watch: {
+    defaultData: {
+      deep: true,
+      immediate: true,
+      handler: function (value, oldVal) {
+        this.form = Object.assign({}, value);
+      },
+    },
+  },
+
+  computed: {
+    defaultLogoUrl() {
+      const url = this.defaultData.logo.public_url || this.form.logo;
+      return url;
+    },
+    rules: function () {
+      return {
+        slug: [
+          (v) => !!v || "Slug is required",
+          (v) =>
+            /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.test(v) || "Slug must be valid",
+        ],
+        title: [(v) => !!v || "Title is required"],
+        ticker: [(v) => !!v || "Ticker is required"],
+        themePrimary: [(v) => !!v || "Theme Primary is required"],
+        themeSecondary: [(v) => !!v || "Theme Secondary is required"],
+      };
+    },
+  },
+});
 </script>
 

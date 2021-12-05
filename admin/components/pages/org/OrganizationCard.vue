@@ -20,7 +20,7 @@
           </p>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <v-btn color="primary" text>View</v-btn>
+          <v-btn color="primary" text :to="`/org/update/${org.id}`">View</v-btn>
         </v-col>
       </v-row>
     </v-card-text>

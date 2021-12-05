@@ -14,6 +14,7 @@ import Vue, { PropOptions } from "vue";
 import OrganizationEmpty from "../../components/pages/org/OrganizationEmpty.vue";
 import OrganizationList from "../../components/pages/org/OrganizationList.vue";
 import PageCenter from "../../components/utils/PageCenter.vue";
+
 export default Vue.extend({
   components: {
     PageCenter,
