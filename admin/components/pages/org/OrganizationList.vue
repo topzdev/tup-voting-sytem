@@ -1,6 +1,6 @@
 <template>
   <span>
-    <h1 class="headline-6 font-weight-medium">Organizations</h1>
+    <h1 class="headline-6 font-weight-medium">Organizations ({{ count }})</h1>
 
     <v-row no-gutters class="my-4">
       <template v-for="org in items">
@@ -17,19 +17,23 @@
 </template>
 
 <script>
+import Vue, { PropOptions } from "vue";
 import { organizationDummy } from "@/services/organization.service";
 import OrganizationCard from "./OrganizationCard.vue";
 
-export default {
+export default Vue.extend({
   components: {
     OrganizationCard,
   },
-  computed: {
-    items() {
-      return organizationDummy;
+
+  props: {
+    items: Array,
+    count: {
+      default: 0,
+      types: Number,
     },
   },
-};
+});
 </script>
 
 <style>

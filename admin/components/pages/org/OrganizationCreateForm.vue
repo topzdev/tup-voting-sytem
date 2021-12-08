@@ -77,9 +77,11 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import ThemePicker from "../../pickers/ThemePicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
 import configs from "@/configs";
+import organizationApi from "../../../services/organization.service";
 const defaultForm = {
   slug: "",
   title: "",
@@ -90,7 +92,10 @@ const defaultForm = {
   logo: null,
 };
 
-export default {
+export default Vue.extend({
+  props: {
+    createFunc: Function,
+  },
   components: { ThemePicker, LogoUploader },
   data() {
     return {
@@ -132,12 +137,18 @@ export default {
 
       if (this.valid) {
         try {
-          this.$router.push("/org");
-        } catch (error) {}
+          await this.createFunc(this.form);
+        } catch (error: any) {
+          this.alert = {
+            show: true,
+            type: "error",
+            message: error.message,
+          };
+        }
       }
       this.loading = false;
     },
   },
-};
+});
 </script>
-
+=

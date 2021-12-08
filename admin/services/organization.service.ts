@@ -1,3 +1,6 @@
+import apiClient from ".";
+import transformParamsToUrl from "../helpers/paramsToUrl.helpers";
+
 type OrganizationLogo = {
   id: number;
   public_id: string;
@@ -20,100 +23,109 @@ export type Organization = {
   logo: OrganizationLogo;
 };
 
-export const organizationDummy: Organization[] = [
-  {
-    created_at: "2021-11-27T15:36:17.596Z",
-    updated_at: "2021-11-27T15:36:17.596Z",
-    deleted_at: null,
-    id: 2,
-    slug: "comselect",
-    ticker: "COMSELECT",
-    title: "Commission on Student Elections TUP Manila",
-    description: "Test description",
-    archive: false,
-    themePrimary: "blue",
-    themeSecondary: "pink",
-    logo: {
-      id: 2,
-      public_id: "tup_voting_dev/org_photos/rhnkpclfn4f5ywsxnl7m",
-      url: "https://res.cloudinary.com/topzdev/image/upload/v1638027377/tup_voting_dev/org_photos/rhnkpclfn4f5ywsxnl7m.jpg",
-      service: "cld",
-    },
+export interface GetOrganizationDto {
+  search?: string;
+  order?: any;
+  page?: number;
+  take?: number;
+  withArchive?: boolean;
+}
+
+export type CreateOrganizationDto = {
+  slug: string;
+  title: string;
+  description: string;
+  ticker: string;
+  themePrimary: string;
+  themeSecondary: string;
+  logo: File;
+};
+
+export type UpdateOrganizationDto = {
+  slug: string;
+  title: string;
+  description: string;
+  ticker: string;
+  themePrimary: string;
+  themeSecondary: string;
+  id: number;
+  logo: File;
+};
+
+const url = "/api/v1/org";
+
+const organizationServices = {
+  async getAll(query: GetOrganizationDto) {
+    return (await apiClient.get(`${url}/${transformParamsToUrl(query)}`)).data;
   },
-  {
-    created_at: "2021-11-27T16:28:41.964Z",
-    updated_at: "2021-11-27T16:41:38.297Z",
-    deleted_at: null,
-    id: 7,
-    slug: "Test Slug Update 6",
-    ticker: "Test Ticker Update 3",
-    title: "Test Title Update 3",
-    description: "Test Desc Update 3",
-    archive: false,
-    themePrimary: "blue",
-    themeSecondary: "pink",
-    logo: {
-      id: 8,
-      public_id: "tup_voting_dev/org_photos/n451ae6r66vyvmrx8usu",
-      url: "http://res.cloudinary.com/topzdev/image/upload/v1638032453/tup_voting_dev/org_photos/n451ae6r66vyvmrx8usu.jpg",
-      service: "cld",
-    },
+  async getById(id: string) {
+    return (await apiClient.get(`${url}/${id}`)).data;
   },
-  {
-    created_at: "2021-11-27T16:28:41.964Z",
-    updated_at: "2021-11-27T17:04:05.931Z",
-    deleted_at: null,
-    id: 3,
-    slug: "Test Slug Update 3",
-    ticker: "Test Ticker Update 3",
-    title: "Test Title Update 3",
-    description: "Test Desc Update 3",
-    archive: false,
-    themePrimary: "blue",
-    themeSecondary: "pink",
-    logo: {
-      id: 9,
-      public_id: "tup_voting_dev/org_photos/gv03vdbr6bjkimqtaomc",
-      url: "http://res.cloudinary.com/topzdev/image/upload/v1638032593/tup_voting_dev/org_photos/gv03vdbr6bjkimqtaomc.jpg",
-      service: "cld",
-    },
+
+  async getBySlug(slug: string) {
+    return (await apiClient.get(`${url}/slug/${slug}`)).data;
   },
-  {
-    created_at: "2021-11-27T15:27:46.038Z",
-    updated_at: "2021-11-27T17:12:24.102Z",
-    deleted_at: null,
-    id: 1,
-    slug: "Test Slug Update 2",
-    ticker: "Test Ticker Update 3",
-    title: "Test Title Update 3",
-    description: "Test Desc Update 3",
-    archive: false,
-    themePrimary: "blue",
-    themeSecondary: "pink",
-    logo: {
-      id: 10,
-      public_id: "tup_voting_dev/org_photos/wsppcztv1s0qv6o07p9k",
-      url: "http://res.cloudinary.com/topzdev/image/upload/v1638032740/tup_voting_dev/org_photos/wsppcztv1s0qv6o07p9k.jpg",
-      service: "cld",
-    },
+
+  async isExistBySlug(slug: string) {
+    return (await apiClient.get(`${url}/exist/${slug}`)).data;
   },
-  {
-    created_at: "2021-11-27T16:28:41.964Z",
-    updated_at: "2021-11-28T06:50:20.123Z",
-    deleted_at: null,
-    id: 6,
-    slug: "test-slug-update",
-    ticker: "Test Ticker Update 4",
-    title: "Test Title Update 4",
-    description: "Test Desc Update 4",
-    archive: false,
-    themePrimary: "blue",
-    themeSecondary: "pink",
-    logo: {
-      id: 12,
-      public_id: "tup_voting_dev/org_photos/jcyu7nniftwrkvwnmbek",
-      url: "http://res.cloudinary.com/topzdev/image/upload/v1638079308/tup_voting_dev/org_photos/jcyu7nniftwrkvwnmbek.png",
-      service: "cld",
-    },
+
+  async create(body: CreateOrganizationDto) {
+    const formData = new FormData();
+
+    formData.append("slug", body.slug);
+    formData.append("title", body.title);
+    formData.append("description", body.description);
+    formData.append("ticker", body.ticker);
+    formData.append("themePrimary", body.themePrimary);
+    formData.append("themeSecondary", body.themeSecondary);
+    formData.append("logo", body.logo);
+
+    return (
+      await apiClient.post(`${url}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+    ).data;
   },
-];
+
+  async update(body: UpdateOrganizationDto) {
+    const formData = new FormData();
+
+    formData.append("id", body.id.toString());
+    formData.append("slug", body.slug);
+    formData.append("title", body.title);
+    formData.append("description", body.description);
+    formData.append("ticker", body.ticker);
+    formData.append("themePrimary", body.themePrimary);
+    formData.append("themeSecondary", body.themeSecondary);
+    formData.append("logo", body.logo);
+
+    return (
+      await apiClient.put(`${url}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+    ).data;
+  },
+
+  async archive(id: string) {
+    return (await apiClient.put(`${url}/archive/${id}`)).data;
+  },
+
+  async unarchive(id: string) {
+    return (await apiClient.put(`${url}/${id}`)).data;
+  },
+
+  async restore(id: string) {
+    return (await apiClient.put(`${url}/restore/${id}`)).data;
+  },
+
+  async delete(id: string) {
+    return (await apiClient.delete(`${url}/${id}`)).data;
+  },
+};
+
+export default organizationServices;

@@ -1,8 +1,14 @@
 <template>
   <v-form ref="form" v-model="valid">
     <v-row>
+      <v-col v-if="alert.show" cols="12">
+        <v-alert :type="alert.type">
+          {{ alert.message }}
+        </v-alert>
+      </v-col>
+
       <v-col align="center" cols="12">
-        <logo-uploader v-model="form.logo" :url="form.logo" />
+        <logo-uploader v-model="photoData" :url="form.logo.url" />
       </v-col>
 
       <v-col cols="12">
@@ -77,7 +83,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
 import Vue, { PropOptions } from "vue";
 import ThemePicker from "../../pickers/ThemePicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
@@ -97,33 +103,76 @@ export default Vue.extend({
   components: { ThemePicker, LogoUploader },
   props: {
     defaultData: Object,
+    updateFunc: Function,
   },
   data() {
     return {
       valid: false,
+      error: {
+        slug: null,
+        title: null,
+        description: null,
+        ticker: null,
+        themePrimary: null,
+        themeSecondary: null,
+        logo: null,
+      },
       alert: {
         show: false,
         type: "",
         message: "",
       },
-
       loading: false,
       form: Object.assign({}, defaultForm),
+      photoData: null,
 
       baseURL: configs.baseURL,
     };
+  },
+
+  computed: {
+    defaultLogoUrl(): string {
+      const url = this.defaultData.logo.public_url || this.form.logo;
+      return url;
+    },
+    rules: function (): object {
+      return {
+        slug: [
+          (v: any) => !!v || "Slug is required",
+          (v: any) =>
+            /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.test(v) || "Slug must be valid",
+        ],
+        title: [(v: any) => !!v || "Title is required"],
+        ticker: [(v: any) => !!v || "Ticker is required"],
+        themePrimary: [(v: any) => !!v || "Theme Primary is required"],
+        themeSecondary: [(v: any) => !!v || "Theme Secondary is required"],
+      };
+    },
   },
 
   methods: {
     async submit() {
       this.loading = true;
 
-      this.$refs.form.validate();
+      (this.$refs.form as any).validate();
 
       if (this.valid) {
         try {
-          this.$router.push("/org");
-        } catch (error) {}
+          await this.updateFunc({
+            ...this.form,
+            logo: this.photoData,
+            id: this.defaultData.id,
+          });
+        } catch (error: any) {
+          console.log(error);
+          if (error) {
+            this.alert = {
+              show: true,
+              type: "error",
+              message: error.message,
+            };
+          }
+        }
       }
       this.loading = false;
     },
@@ -136,26 +185,6 @@ export default Vue.extend({
       handler: function (value, oldVal) {
         this.form = Object.assign({}, value);
       },
-    },
-  },
-
-  computed: {
-    defaultLogoUrl() {
-      const url = this.defaultData.logo.public_url || this.form.logo;
-      return url;
-    },
-    rules: function () {
-      return {
-        slug: [
-          (v) => !!v || "Slug is required",
-          (v) =>
-            /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.test(v) || "Slug must be valid",
-        ],
-        title: [(v) => !!v || "Title is required"],
-        ticker: [(v) => !!v || "Ticker is required"],
-        themePrimary: [(v) => !!v || "Theme Primary is required"],
-        themeSecondary: [(v) => !!v || "Theme Secondary is required"],
-      };
     },
   },
 });

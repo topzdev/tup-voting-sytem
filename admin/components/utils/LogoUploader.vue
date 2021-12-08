@@ -18,9 +18,10 @@
 import Vue from "vue";
 
 export default Vue.extend({
+  props: ["value"],
   props: {
     url: String,
-    value: Object,
+
     rules: Array,
   },
 
@@ -32,7 +33,6 @@ export default Vue.extend({
 
   watch: {
     url: {
-      deep: true,
       immediate: true,
       handler: function (value, oldVal) {
         this.parsedUrl = value;
