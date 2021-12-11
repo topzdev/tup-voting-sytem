@@ -1,14 +1,11 @@
 import bodyParser from "body-parser";
+import flash from "connect-flash";
 import cors from "cors";
 import express from "express";
-import morgan from "morgan";
 import fileUploadConfig from "./configs/file-upload.config";
-import passportConfig from "./configs/passport-session.config";
-import sessionConfig from "./configs/session.config";
+import morganConfig from "./configs/morgan.config";
 import errorHandler from "./middlewares/error-handlers.middleware";
 import router from "./routes";
-import flash from "connect-flash";
-import morganConfig from "./configs/morgan.config";
 
 const port = 5000;
 

@@ -12,7 +12,7 @@ import { getRepository } from "typeorm";
 
 const options: JWTStrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: configs.jwt.secret,
+  secretOrKey: configs.jwt.admin.secret,
 };
 
 const verifyJWTPassportAsync: VerifyCallback = (jwt_payload, done) => {

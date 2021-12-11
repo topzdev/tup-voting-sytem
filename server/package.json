@@ -2,16 +2,19 @@
   "name": "tup-voting-system-server",
   "version": "1.0.0",
   "description": "voting system for technological university of the philippines",
-  "main": "src/index.js",
+  "main": "build/index.js",
+  "license": "MIT",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "dev": "set NODE_ENV=development&&set DEBUG=express-session&& nodemon src/index.ts",
-    "prod": "set NODE_ENV=production&& node build/index",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
+    "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js --config src/ormconfig",
+    "build": "tsc",
+    "start": "tsc & node build/index.js",
+    "dev": "set NODE_ENV=development&set DEBUG=express-session& nodemon src/index.ts",
+    "prod": "set NODE_ENV=production&& node build/index",
+    "deploy:dev": "set NODE_ENV=development&& npm run start",
+    "deploy:prod": "set NODE_ENV=development&& npm run start"
   },
   "author": "dev404",
-  "license": "ISC",
   "dependencies": {
     "@types/flat": "^5.0.2",
     "@types/morgan": "^1.9.3",
@@ -34,7 +37,6 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pg": "^8.4.0",
-    "pg-connection-string": "^2.5.0",
     "reflect-metadata": "^0.1.10",
     "typeorm": "0.2.39"
   },
@@ -51,7 +53,7 @@
     "@types/passport-jwt": "^3.0.6",
     "@types/passport-local": "^1.0.34",
     "nodemon": "^2.0.15",
-    "ts-node": "3.3.0",
-    "typescript": "3.3.3333"
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.3"
   }
 }

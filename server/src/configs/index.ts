@@ -1,5 +1,5 @@
-import path from "path";
-import { __prod__ } from "../../constant";
+import path, { join } from "path";
+import { __prod__ } from "../constant";
 
 require("dotenv").config({
   path: path.resolve(process.cwd(), process.env.NODE_ENV + ".env"),
@@ -26,17 +26,20 @@ const configs = {
     database: process.env.DATABASE_NAME,
     synchronize: !__prod__,
     logging: !__prod__,
-    entities: ["src/modules/**/entity/*.ts", "src/entity/*.entity.ts"],
-    migrations: ["src/migration/**/*.ts"],
-    subscribers: ["src/subscriber/**/*.ts"],
+    entities: [
+      join(__dirname, "modules", "**", "entity", "*.{js,ts}"),
+      join(__dirname, "entity", "*.entity.{js,ts}"),
+    ],
+    migrations: [join(__dirname, "migration", "**", "*.{js,ts}")],
+    subscribers: [join(__dirname, "subscriber", "**", "*.{js,ts}")],
     ssl: {
       require: true,
       rejectUnauthorized: false,
     },
     cli: {
-      entitiesDir: "src/entity",
-      migrationsDir: "src/migration",
-      subscribersDir: "src/subscriber",
+      entitiesDir: join(__dirname, "entity"),
+      migrationsDir: join(__dirname, "migration"),
+      subscribersDir: join(__dirname, "subscriber"),
     },
   },
   cloudinary: {
