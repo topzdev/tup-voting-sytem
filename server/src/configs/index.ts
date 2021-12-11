@@ -26,6 +26,18 @@ const configs = {
     database: process.env.DATABASE_NAME,
     synchronize: !__prod__,
     logging: !__prod__,
+    entities: ["src/modules/**/entity/*.ts", "src/entity/*.entity.ts"],
+    migrations: ["src/migration/**/*.ts"],
+    subscribers: ["src/subscriber/**/*.ts"],
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+    cli: {
+      entitiesDir: "src/entity",
+      migrationsDir: "src/migration",
+      subscribersDir: "src/subscriber",
+    },
   },
   cloudinary: {
     cloud_name: process.env.CLOUDINARY_API_NAME,
