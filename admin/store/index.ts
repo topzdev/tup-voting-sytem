@@ -1,24 +1,11 @@
-import { GetterTree, ActionTree, MutationTree } from "vuex";
+import { getAccessorType } from "typed-vuex";
 
-export const state = () => ({
-  things: [] as string[],
-  name: "Me",
-});
+// Import all your submodules
+import * as snackbar from "~/store/snackbar";
 
-export type RootState = ReturnType<typeof state>;
-
-export const getters: GetterTree<RootState, RootState> = {
-  name: (state) => state.name,
-};
-
-export const mutations: MutationTree<RootState> = {
-  CHANGE_NAME: (state, newName: string) => (state.name = newName),
-};
-
-export const actions: ActionTree<RootState, RootState> = {
-  async fetchThings({ commit }) {
-    const things = await this.$axios.$get("/things");
-    console.log(things);
-    commit("CHANGE_NAME", "New name");
+export const accessorType = getAccessorType({
+  modules: {
+    // The key (submodule) needs to match the Nuxt namespace (e.g. ~/store/submodule.ts)
+    snackbar,
   },
-};
+});

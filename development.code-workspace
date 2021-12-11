@@ -1,18 +1,25 @@
 {
-	"folders": [
-		{
-			"path": "admin"
-		},
-		{
-			"path": "server"
-		}
-	],
-	"settings": {
-		"terminal.integrated.tabs.enabled": true,
-		"javascript.autoClosingTags": true,
-		"typescript.autoClosingTags": true,
-		"terminal.integrated.defaultProfile.windows": "Git Bash",
-		"workbench.colorTheme": "Community Material Theme Ocean High Contrast",
-		"workbench.activityBar.visible": true
-	}
+  "folders": [
+    {
+      "path": "admin"
+    },
+    {
+      "path": "server"
+    }
+  ],
+  "settings": {
+    "terminal.integrated.tabs.enabled": true,
+    "javascript.autoClosingTags": true,
+    "typescript.autoClosingTags": true,
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "workbench.colorTheme": "Community Material Theme Ocean High Contrast",
+    "workbench.activityBar.visible": true,
+    "prettier.jsxBracketSameLine": true,
+    "editor.suggestSelection": "first",
+    "editor.snippetSuggestions": "bottom",
+    "editor.suggest.filterGraceful": true,
+    "editor.suggest.snippetsPreventQuickSuggestions": true,
+    "editor.formatOnSave": true,
+    "vetur.experimental.templateInterpolationService": false
+  }
 }

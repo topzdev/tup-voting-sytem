@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { HttpException } from "../helpers/errors/http.exception";
-import { User, UserRole } from "../modules/user/entity/user.entity";
+import { UserRole } from "../modules/user/user.inteface";
 
 type RolesString = keyof typeof UserRole;
 

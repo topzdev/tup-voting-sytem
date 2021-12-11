@@ -31,7 +31,8 @@ export default Vue.extend({
 
   head() {
     return {
-      title: `${this.statusCode} - ${this.message}`,
+      // @ts-ignore
+      title: this.titlePage,
     };
   },
 
@@ -41,6 +42,10 @@ export default Vue.extend({
     },
     message(): string {
       return this.error.message || "Something went wrong";
+    },
+    titlePage(): string {
+      // @ts-ignore
+      return `${this.statusCode} - ${this.message}`;
     },
   },
 });

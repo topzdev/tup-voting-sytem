@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { HttpException } from "../helpers/errors/http.exception";
 
 const errorHandler = (
-  err: any,
+  err: Error & HttpException,
   req: Request,
   res: Response,
   next: NextFunction
@@ -14,6 +14,7 @@ const errorHandler = (
         name: err.name,
         message: err.message,
         statusCode: err.statusCode,
+        fields: err.fields,
       },
     });
     return;

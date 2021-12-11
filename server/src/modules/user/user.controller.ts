@@ -35,7 +35,7 @@ const create = async (
   next: NextFunction
 ) => {
   try {
-    const user = req.body.user;
+    const user = req.body;
     res.status(200).json(await userServices.create(user));
   } catch (error) {
     next(error);
@@ -48,7 +48,7 @@ const update = async (
   next: NextFunction
 ) => {
   try {
-    const user = req.body.user;
+    const user = req.body;
     res.status(200).json(await userServices.update(user));
   } catch (error) {
     next(error);

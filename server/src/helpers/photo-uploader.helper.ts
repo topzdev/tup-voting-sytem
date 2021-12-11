@@ -20,6 +20,21 @@ type UploadOptions = {
   filename?: string;
 };
 
+const destroy = async (_public_id: string) => {
+  if (!_public_id)
+    throw new HttpException("BAD_REQUEST", "Image public id not provided");
+
+  try {
+    const destroyedPhoto = await uploader.destroy(_public_id);
+
+    console.log("cloudinary destory", destroyedPhoto);
+
+    return true;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 const upload = async (
   _folder: CloudFoldersTypes,
   _photo: string,
@@ -29,7 +44,7 @@ const upload = async (
 
   try {
     const uploadedPhoto = await uploader.upload(_photo, {
-      public_id: _options.filename,
+      public_id: _options && _options.filename ? _options.filename : undefined,
       folder: cloudFolders[_folder],
     });
 
@@ -72,6 +87,7 @@ const multiUpload = async (
 const photoUploader = {
   multiUpload,
   upload,
+  destroy,
 };
 
 export default photoUploader;

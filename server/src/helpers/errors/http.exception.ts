@@ -103,11 +103,14 @@ type StatusCodeString = keyof typeof httpStatus;
 export class HttpException extends Error {
   statusCode: number;
   error: string;
+  fields?: { [key: string]: string | [] };
   constructor(
     statusCode: StatusCodeString | StatusCodeNumber,
-    message: string
+    message: string,
+    fields?: { [key: string]: string | [] }
   ) {
     super();
+    this.fields = fields;
     this.statusCode =
       typeof statusCode === "number"
         ? statusCode
