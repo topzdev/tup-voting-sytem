@@ -19,6 +19,7 @@
     "editor.snippetSuggestions": "bottom",
     "editor.suggest.filterGraceful": true,
     "editor.suggest.snippetsPreventQuickSuggestions": true,
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "vetur.experimental.templateInterpolationService": false
   }
 }
