@@ -8,11 +8,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js --config src/ormconfig",
     "build": "tsc",
-    "start": "tsc & node build/index.js",
     "dev": "set NODE_ENV=development&set DEBUG=express-session& nodemon src/index.ts",
     "prod": "set NODE_ENV=production&& node build/index",
-    "deploy:dev": "set NODE_ENV=development&& npm run start",
-    "deploy:prod": "set NODE_ENV=development&& npm run start"
+    "start:dev": "set NODE_ENV=development&& nodemon src/index.ts",
+    "start:prod": "set NODE_ENV=production&& tsc && node dist/index.js",
+    "deploy:dev": "npm run start:dev",
+    "deploy:prod": "npm run start:prod"
   },
   "author": "dev404",
   "dependencies": {

@@ -1,9 +1,7 @@
 import path, { join } from "path";
 import { __prod__ } from "../constant";
 
-require("dotenv").config({
-  path: path.resolve(process.cwd(), process.env.NODE_ENV + ".env"),
-});
+require("dotenv").config();
 
 console.log(
   "config loaded at: ",
