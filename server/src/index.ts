@@ -12,7 +12,7 @@ const main = async () => {
       console.log("Database Created Successfully");
     })
     .catch((err) => {
-      throw err;
+      console.log(err);
     });
   await bootsrap();
 };

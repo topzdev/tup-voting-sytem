@@ -22,7 +22,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importStar(require("path"));
 const constant_1 = require("../constant");
 require("dotenv").config();
-// path: path.resolve(process.cwd(), process.env.NODE_ENV + ".env"),
 console.log("config loaded at: ", path_1.default.resolve(path_1.default.resolve(process.cwd(), process.env.NODE_ENV + ".env")));
 console.log("------------");
 console.log("is development? ", !constant_1.__prod__);

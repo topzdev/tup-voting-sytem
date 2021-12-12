@@ -24,7 +24,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Database Created Successfully");
     })
         .catch((err) => {
-        throw err;
+        console.log(err);
     });
     yield (0, app_1.default)();
 });
