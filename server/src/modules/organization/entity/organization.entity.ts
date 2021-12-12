@@ -4,10 +4,12 @@ import {
   PrimaryGeneratedColumn,
   JoinColumn,
   OneToOne,
+  OneToMany,
 } from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
 import { OrganizationLogo } from "./organization-logo.entity";
 import { IsAlpha, IsLowercase, NotContains } from "class-validator";
+import { Election } from "../../election/entity/election.entity";
 
 @Entity("organization")
 export class Organization extends Timestamp {
@@ -48,4 +50,7 @@ export class Organization extends Timestamp {
   @OneToOne(() => OrganizationLogo)
   @JoinColumn()
   logo: OrganizationLogo;
+
+  @OneToMany(() => Election, (election) => election.organization)
+  elections: Election[];
 }

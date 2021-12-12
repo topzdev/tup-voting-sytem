@@ -9,6 +9,7 @@ cloudinary.v2.config(configs.cloudinary);
 const main = async () => {
   await createConnection()
     .then((connect) => {
+      console.log("Database Host:", configs.database.host);
       console.log("Database Created Successfully");
     })
     .catch((err) => {

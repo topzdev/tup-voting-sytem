@@ -1,9 +1,13 @@
 const path = require("path");
 const join = path.join;
 
-require("dotenv").config();
-
 var __prod__ = process.env.NODE_ENV === "production";
+
+require("dotenv").config(
+  !__prod__
+    ? { path: path.resolve(process.cwd(), "development.env") }
+    : undefined
+);
 
 console.log(process.env.NODE_ENV);
 
@@ -25,10 +29,12 @@ module.exports = {
   ],
   migrations: [join(__dirname, ormPath, "migration", "**", "*.{js,ts}")],
   subscribers: [join(__dirname, ormPath, "subscriber", "**", "*.{js,ts}")],
-  ssl: {
-    require: true,
-    rejectUnauthorized: false,
-  },
+  ssl: !__prod__
+    ? false
+    : {
+        require: true,
+        rejectUnauthorized: false,
+      },
   cli: {
     entitiesDir: join(__dirname, ormPath, "entity"),
     migrationsDir: join(__dirname, ormPath, "migration"),
