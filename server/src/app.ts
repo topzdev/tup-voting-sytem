@@ -2,12 +2,13 @@ import bodyParser from "body-parser";
 import flash from "connect-flash";
 import cors from "cors";
 import express from "express";
+import configs from "./configs";
 import fileUploadConfig from "./configs/file-upload.config";
 import morganConfig from "./configs/morgan.config";
 import errorHandler from "./middlewares/error-handlers.middleware";
 import router from "./routes";
 
-const port = 5000;
+const port = configs.port || 5000;
 
 const app = express();
 

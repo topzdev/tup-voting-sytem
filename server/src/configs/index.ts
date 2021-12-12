@@ -12,6 +12,7 @@ console.log("------------");
 console.log("is development? ", !__prod__);
 
 const configs = {
+  port: process.env.PORT,
   auth: {
     saltRounds: parseInt(process.env.SALT_ROUNDS),
   },
