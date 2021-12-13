@@ -7,22 +7,55 @@
       fixed
       app
     >
-      <v-list>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          color="primary"
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
+      <div class="d-flex flex-column" style="height: 100%">
+        <v-list>
+          <v-list-item
+            v-for="(item, i) in topItems"
+            :key="i"
+            :to="item.to"
+            router
+            color="primary"
+          >
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+
+        <v-list style="margin-top: auto">
+          <v-list-group
+            v-for="(item, i) in bottomItems"
+            :key="i"
+            :to="item.to"
+            router
+            color="primary"
+            :prepend-icon="item.icon"
+          >
+            <template v-slot:activator>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </template>
+
+            <v-list shaped>
+              <v-list-item
+                v-for="(item, i) in item.subgroups"
+                :key="i"
+                :to="item.to"
+                link
+                color="primary"
+              >
+                <v-list-item-title v-text="item.title" />
+
+                <v-list-item-icon>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-list-item-icon>
+              </v-list-item>
+            </v-list>
+          </v-list-group>
+        </v-list>
+      </div>
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app color="primary" dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
@@ -55,6 +88,8 @@
           <v-list-item-title>Switch drawer (click me)</v-list-item-title>
         </v-list-item>
       </v-list>
+
+      <v-list> </v-list>
     </v-navigation-drawer>
     <!-- <v-footer :absolute="!fixed" app>
       <span>&copy; {{ new Date().getFullYear() }}</span>
@@ -73,7 +108,7 @@ export default {
       clipped: true,
       drawer: true,
       fixed: false,
-      items: [
+      topItems: [
         {
           icon: "mdi-apps",
           title: "Dashboard",
@@ -91,6 +126,20 @@ export default {
           icon: "mdi-lock",
           title: "Protected",
           to: "/protected",
+        },
+      ],
+      bottomItems: [
+        {
+          icon: "mdi-cog",
+          title: "Settings",
+          to: "/settings",
+          subgroups: [
+            {
+              icon: "mdi-account-supervisor",
+              title: "Manage Users",
+              to: "/settings/users",
+            },
+          ],
         },
       ],
       miniVariant: false,

@@ -24,3 +24,10 @@ export type CreateUser = Pick<
 export type UpdateUser = Pick<User, "id" | "firstname" | "lastname"> & {
   role: UserRole;
 };
+
+export type ChangePasswordDto = {
+  userId: string;
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};

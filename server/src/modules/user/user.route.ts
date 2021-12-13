@@ -32,6 +32,12 @@ router.put(
   validate(userValidator.update),
   userController.update
 );
+router.put(
+  "/change-password",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  userController.changePassword
+);
 
 router.delete(
   "/:id",

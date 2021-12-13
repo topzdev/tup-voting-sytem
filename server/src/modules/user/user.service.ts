@@ -1,8 +1,13 @@
-import { FindManyOptions, ILike } from "typeorm";
+import { FindManyOptions, getRepository, ILike } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
-import { genPassword } from "../../helpers/password.helper";
+import { genPassword, validatePassword } from "../../helpers/password.helper";
 import { User } from "./entity/user.entity";
-import { CreateUser, GetUserQuery, UpdateUser } from "./user.inteface";
+import {
+  ChangePasswordDto,
+  CreateUser,
+  GetUserQuery,
+  UpdateUser,
+} from "./user.inteface";
 
 // const User = getRepository(User);
 
@@ -84,6 +89,34 @@ const update = async (_user: UpdateUser) => {
   return true;
 };
 
+const changePassword = async (_passwords: ChangePasswordDto) => {
+  if (!_passwords.userId)
+    throw new HttpException("BAD_REQUEST", `user id is required`);
+
+  const user = await getRepository(User)
+    .createQueryBuilder("user")
+    .select(["user.id", "user.password"])
+    .where("user.id = :userId", { userId: _passwords.userId })
+    .getOne();
+
+  if (!user) throw new HttpException("NOT_FOUND", "user not found");
+
+  if (!(await validatePassword(_passwords.currentPassword, user.password)))
+    throw new HttpException("BAD_REQUEST", "password doesn't match");
+
+  if (_passwords.confirmPassword !== _passwords.newPassword)
+    throw new HttpException(
+      "BAD_REQUEST",
+      "current password doesnt match with new password"
+    );
+
+  user.password = await genPassword(_passwords.newPassword);
+
+  await user.save();
+
+  return true;
+};
+
 const remove = async (_id: string) => {
   if (!_id) throw new HttpException("BAD_REQUEST", `user id is required`);
 
@@ -115,6 +148,7 @@ const userServices = {
   update,
   remove,
   restore,
+  changePassword,
 };
 
 export default userServices;
