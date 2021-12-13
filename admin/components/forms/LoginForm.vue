@@ -35,7 +35,7 @@
             ></v-text-field>
           </v-col>
           <v-col cols="12">
-            <v-text-field
+            <password-field
               outlined
               hide-details="auto"
               v-model="credentials.password"
@@ -43,9 +43,7 @@
               label="Password"
               :type="passwordType"
               required
-              :append-icon="passwordIcon"
-              @click:append="passwordToggle = !passwordToggle"
-            ></v-text-field>
+            ></password-field>
           </v-col>
           <v-col>
             <v-btn color="primary" large @click="submit" block> Login </v-btn>
@@ -58,11 +56,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-
+import PasswordField from "@/components/input/PasswordField.vue";
 export default Vue.extend({
+  components: {
+    PasswordField,
+  },
   data() {
     return {
-      passwordToggle: false,
       credentials: {
         username: "dummy",
         password: "12345678",
@@ -72,15 +72,6 @@ export default Vue.extend({
         password: [(v: string) => !!v || "Password is required"],
       },
     };
-  },
-
-  computed: {
-    passwordType(): string {
-      return !this.passwordToggle ? "password" : "text";
-    },
-    passwordIcon(): string {
-      return this.passwordToggle ? "mdi-eye" : "mdi-eye-off";
-    },
   },
 
   methods: {

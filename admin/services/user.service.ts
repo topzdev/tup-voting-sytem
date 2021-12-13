@@ -33,6 +33,7 @@ export type UpdateUserDto = {
 };
 
 export type ChangePasswordDto = {
+  userId: string;
   currentPassword: string;
   newPassword: string;
   confirmPassword: string;

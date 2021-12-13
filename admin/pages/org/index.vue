@@ -34,13 +34,19 @@ export default Vue.extend({
   },
   fetchOnServer: false,
   async fetch() {
-    try {
-      const result = await organizationServices.getAll({});
-      this.items = result.organization;
-      this.count = result.count;
-    } catch (error) {
-      console.log(error);
-    }
+    await this.fetchItems();
+  },
+
+  methods: {
+    async fetchItems() {
+      try {
+        const result = await organizationServices.getAll({});
+        this.items = result.items;
+        this.count = result.count;
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 });
 </script>
