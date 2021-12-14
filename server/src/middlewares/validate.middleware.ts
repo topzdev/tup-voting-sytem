@@ -16,8 +16,7 @@ const validate = (validations: ValidationChain[]) => {
       next(
         new HttpException(
           "BAD_REQUEST",
-          "Body validation error",
-          errors.mapped()
+          errors.array({ onlyFirstError: true })[0]
         )
       );
     }

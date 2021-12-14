@@ -34,8 +34,12 @@ const getAll = async (_query: GetUserQuery) => {
 
   const [users, count] = await User.findAndCount(options);
 
-  return {
+  console.log("Test", {
     users,
+  });
+
+  return {
+    items: users,
     count,
   };
 };

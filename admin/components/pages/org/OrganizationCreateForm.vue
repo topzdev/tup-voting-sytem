@@ -1,6 +1,12 @@
 <template>
   <v-form ref="form" v-model="valid">
     <v-row>
+      <v-col v-if="alert.show" cols="12">
+        <v-alert :type="alert.type">
+          {{ alert.message }}
+        </v-alert>
+      </v-col>
+
       <v-col align="center" cols="12">
         <logo-uploader v-model="form.logo" />
       </v-col>
@@ -92,6 +98,12 @@ const defaultForm = {
   logo: null,
 };
 
+const defaultAlert = {
+  show: false,
+  type: "",
+  message: "",
+};
+
 export default Vue.extend({
   props: {
     createFunc: Function,
@@ -100,11 +112,7 @@ export default Vue.extend({
   data() {
     return {
       valid: false,
-      alert: {
-        show: false,
-        type: "",
-        message: "",
-      },
+      alert: Object.assign({}, defaultAlert),
 
       loading: false,
       form: Object.assign({}, defaultForm),
@@ -147,6 +155,12 @@ export default Vue.extend({
         }
       }
       this.loading = false;
+    },
+
+    reset() {
+      (this.$refs as any).form.reset();
+      (this.$refs as any).form.resetvalidation();
+      this.alert = Object.assign({}, defaultAlert);
     },
   },
 });

@@ -1,6 +1,6 @@
 <template>
   <v-select
-    item-text="text	"
+    item-text="text"
     item-value="id"
     label="Role"
     placeholder="Role"
@@ -9,6 +9,7 @@
     :items="items"
     :value="value"
     :loading="loading"
+    :rules="rules"
     @input="$emit('input', $event)"
   ></v-select>
 </template>

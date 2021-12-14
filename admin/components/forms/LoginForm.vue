@@ -24,10 +24,21 @@
       </v-card-title>
       <v-card-text class="d-flex align-center">
         <v-row>
+          <v-col v-if="alert.show" cols="12">
+            <v-alert
+              :type="alert.type"
+              v-model="alert.show"
+              dismissible
+              class="mb-0"
+            >
+              {{ alert.message }}
+            </v-alert>
+          </v-col>
+
           <v-col cols="12">
             <v-text-field
               outlined
-              v-model="credentials.username"
+              v-model="form.username"
               :rules="rules.username"
               label="Username"
               required
@@ -38,10 +49,9 @@
             <password-field
               outlined
               hide-details="auto"
-              v-model="credentials.password"
+              v-model="form.password"
               :rules="rules.password"
               label="Password"
-              :type="passwordType"
               required
             ></password-field>
           </v-col>
@@ -57,30 +67,66 @@
 <script lang="ts">
 import Vue from "vue";
 import PasswordField from "@/components/input/PasswordField.vue";
+
+const defaultForm = {
+  username: "dummy",
+  password: "12345678",
+};
+
+const defaultAlert = {
+  show: false,
+  type: "",
+  message: "",
+};
+
 export default Vue.extend({
   components: {
     PasswordField,
   },
   data() {
     return {
-      credentials: {
-        username: "dummy",
-        password: "12345678",
+      alert: {
+        show: false,
+        type: "",
+        message: "",
       },
-      rules: {
+
+      form: Object.assign({}, defaultForm),
+    };
+  },
+
+  computed: {
+    rules() {
+      return {
         username: [(v: string) => !!v || "Username is required"],
         password: [(v: string) => !!v || "Password is required"],
-      },
-    };
+      };
+    },
   },
 
   methods: {
     async submit() {
-      const response = await this.$auth.loginWith("local", {
-        data: this.credentials,
-      });
+      try {
+        const result = await this.$auth.loginWith("local", {
+          data: this.form,
+        });
 
-      console.log(response);
+        if (result && result.data.error) {
+          this.alert = {
+            message: result.data.message,
+            type: "error",
+            show: true,
+          };
+        }
+
+        this.reset();
+      } catch (error: any) {}
+    },
+
+    reset() {
+      (this.$refs as any).form.reset();
+      (this.$refs as any).form.resetvalidation();
+      this.alert = Object.assign({}, defaultAlert);
     },
   },
 });

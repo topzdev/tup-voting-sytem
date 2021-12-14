@@ -99,6 +99,12 @@ const defaultForm = {
   logo: null,
 };
 
+const defaultAlert = {
+  show: false,
+  type: "",
+  message: "",
+};
+
 export default Vue.extend({
   components: { ThemePicker, LogoUploader },
   props: {
@@ -108,20 +114,7 @@ export default Vue.extend({
   data() {
     return {
       valid: false,
-      error: {
-        slug: null,
-        title: null,
-        description: null,
-        ticker: null,
-        themePrimary: null,
-        themeSecondary: null,
-        logo: null,
-      },
-      alert: {
-        show: false,
-        type: "",
-        message: "",
-      },
+      alert: Object.assign({}, defaultAlert),
       loading: false,
       form: Object.assign({}, defaultForm),
       photoData: null,
@@ -163,6 +156,7 @@ export default Vue.extend({
             logo: this.photoData,
             id: this.defaultData.id,
           });
+          this.reset();
         } catch (error: any) {
           console.log(error);
           if (error) {
@@ -175,6 +169,12 @@ export default Vue.extend({
         }
       }
       this.loading = false;
+    },
+
+    reset() {
+      (this.$refs as any).form.reset();
+      (this.$refs as any).form.resetvalidation();
+      this.alert = Object.assign({}, defaultAlert);
     },
   },
 

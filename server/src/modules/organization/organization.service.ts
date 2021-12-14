@@ -56,7 +56,7 @@ const getAll = async (_query: GetOrganizationParams) => {
   const [organization, count] = await builder.getManyAndCount();
 
   return {
-    organization,
+    items: organization,
     count,
   };
 };

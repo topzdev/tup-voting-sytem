@@ -4,31 +4,76 @@
       <v-col cols="12" class="d-flex flex-row align-center">
         <h1 class="headline-6 font-weight-medium mr-auto">Manage Users</h1>
 
-        <v-btn large color="primary"> Add User </v-btn>
+        <v-btn large color="primary" @click="modals.createUser.show = true">
+          Add User
+        </v-btn>
       </v-col>
 
       <v-col>
-        <users-table></users-table>
+        <v-card tile :loading="loading">
+          <v-card-title>
+            <users-table
+              :items="table.items"
+              :total="table.total"
+              :refetch="fetchItems"
+            ></users-table>
+          </v-card-title>
+        </v-card>
       </v-col>
     </v-row>
 
-    <user-create-dialog :open.sync="userCreateDialog.open" />
+    <user-create-dialog
+      :fetch-func="fetchItems"
+      :is-open.sync="modals.createUser.show"
+    />
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
 import UsersTable from "../../../components/pages/users/UsersTable.vue";
 import Vue from "vue";
 import UserCreateDialog from "../../../components/pages/users/UserCreateDialog.vue";
+import userServices from "../../../services/user.service";
 export default Vue.extend({
   components: { UsersTable, UserCreateDialog },
 
   data() {
     return {
-      userCreateDialog: {
-        open: true,
+      loading: false,
+
+      table: {
+        items: [],
+        total: 0,
+      },
+
+      modals: {
+        createUser: {
+          show: false,
+        },
       },
     };
+  },
+  fetchOnServer: false,
+
+  methods: {
+    async fetchItems({ page, perPage, search }) {
+      this.loading = true;
+      const result = await userServices.getAll({
+        page: page,
+        take: perPage,
+        search: search,
+      });
+
+      console.log(result);
+
+      this.table.items = result.items;
+      this.table.total = result.total;
+      this.loading = false;
+    },
+  },
+
+  async fetch() {
+    await this.fetchItems({ page: 1, perPage: 10 });
   },
 });
 </script>
