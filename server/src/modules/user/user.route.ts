@@ -19,8 +19,8 @@ router.get("/:id", adminAuth, userController.getUserById);
 
 router.post(
   "/",
-  adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  // adminAuth,
+  // rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   validate(userValidator.create),
   userController.create
 );
