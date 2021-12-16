@@ -39,6 +39,13 @@ router.put(
   userController.changePassword
 );
 
+router.put(
+  "/reset-password/:id",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  userController.resetPassword
+);
+
 router.delete(
   "/:id",
   adminAuth,

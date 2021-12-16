@@ -13,7 +13,7 @@ const validations = {
 
 const { id, firstname, lastname, username, password, role } = validations;
 
-const create = [firstname, lastname, username, password, role];
+const create = [firstname, lastname, username, role];
 const update = [id, firstname, lastname, role];
 
 const userValidator = {

@@ -12,61 +12,55 @@
         </v-alert>
       </v-col>
       <v-col cols="12">
-        <v-text-field
-          label="Firstname"
+        <password-field
+          label="Current Password"
           outlined
-          v-model="form.firstname"
-          :rules="rules.firstname"
+          v-model="form.currentPassword"
+          :rules="rules.currentPassword"
           hide-details="auto"
-        ></v-text-field>
+        ></password-field>
       </v-col>
 
       <v-col cols="12">
-        <v-text-field
-          label="Lastname"
+        <password-field
+          label="New Password"
           outlined
-          v-model="form.lastname"
-          :rules="rules.lastname"
+          v-model="form.newPassword"
+          :rules="rules.newPassword"
           hide-details="auto"
-        ></v-text-field>
+        ></password-field>
       </v-col>
 
       <v-col cols="12">
-        <v-text-field
-          label="Username"
+        <password-field
+          label="Confirm Password"
           outlined
-          v-model="form.username"
-          :rules="rules.username"
+          v-model="form.confirmPassword"
+          :rules="rules.confirmPassword"
           hide-details="auto"
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="12">
-        <role-select v-model="form.role" :rules="rules.role" />
+        ></password-field>
       </v-col>
 
       <v-col cols="12" class="d-flex">
         <v-btn color="blue darken-1" text @click="cancel"> Close </v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="submit"> Save </v-btn>
+        <v-btn color="blue darken-1" :loading="loading" text @click="submit">
+          Save
+        </v-btn>
       </v-col>
     </v-row>
   </v-form>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import ThemePicker from "../../pickers/ThemePicker.vue";
-import LogoUploader from "@/components/utils/LogoUploader.vue";
-import configs from "@/configs";
 import PasswordField from "@/components/input/PasswordField.vue";
-import RoleSelect from "../../input/RoleSelect.vue";
+import configs from "@/configs";
+import Vue from "vue";
 
 const defaultForm = {
-  firstname: "",
-  lastname: "",
-  username: "",
-  role: "",
+  newPassword: "",
+  confirmPassword: "",
+  currentPassword: "",
 };
 
 const defaultAlert = {
@@ -80,31 +74,36 @@ export default Vue.extend({
     submitFunc: Function,
     cancelFunc: Function,
     isModal: Boolean,
+    defaultData: Object,
   },
-  components: { ThemePicker, LogoUploader, PasswordField, RoleSelect },
+  components: { PasswordField },
   data() {
     return {
       valid: false,
       alert: Object.assign({}, defaultAlert),
       loading: false,
       form: Object.assign({}, defaultForm),
-
-      baseURL: configs.baseURL,
     };
   },
 
   computed: {
     rules(): any {
       return {
-        firstname: [(v: any) => !!v || "Firstname is required"],
-        lastname: [(v: any) => !!v || "Lastname is required"],
-        username: [(v: any) => !!v || "Username Primary is required"],
-        role: [(v: any) => !!v || "Role is required"],
+        currentPassword: [(v: any) => !!v || "Current Password is required"],
+        newPassword: [(v: any) => !!v || "Password is required"],
+        confirmPassword: [
+          (v: any) =>
+            !!this.confirmPasswordMatch() || "Confirm password must match",
+        ],
       };
     },
   },
 
   methods: {
+    confirmPasswordMatch() {
+      return this.form.confirmPassword === this.form.newPassword;
+    },
+
     async cancel() {
       if (this.cancelFunc) this.cancelFunc();
       this.reset();
@@ -132,6 +131,15 @@ export default Vue.extend({
       (this.$refs as any).form.reset();
       (this.$refs as any).form.resetValidation();
       this.alert = Object.assign({}, defaultAlert);
+    },
+  },
+  watch: {
+    defaultData: {
+      deep: true,
+      immediate: true,
+      handler: function (value, oldVal) {
+        this.form = Object.assign({}, value);
+      },
     },
   },
 });

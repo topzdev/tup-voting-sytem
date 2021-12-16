@@ -2,6 +2,7 @@ import { FindManyOptions, getRepository, ILike } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
 import { genPassword, validatePassword } from "../../helpers/password.helper";
 import { User } from "./entity/user.entity";
+import userHelper from "./user.helper";
 import {
   ChangePasswordDto,
   CreateUser,
@@ -44,14 +45,12 @@ const getAll = async (_query: GetUserQuery) => {
   };
 };
 
-const getById = async (_id: number) => {
+const getById = async (_id: string) => {
   if (!_id) throw new HttpException("BAD_REQUEST", "user id is required");
 
   const user = await User.findOne(_id);
 
-  return {
-    user: user ? user : null,
-  };
+  return user ? user : null;
 };
 
 const create = async (_user: CreateUser) => {
@@ -64,7 +63,9 @@ const create = async (_user: CreateUser) => {
   if (isExist) throw new HttpException("BAD_REQUEST", "username has been used");
 
   let user = User.create(_user);
-  user.password = await genPassword(_user.password);
+  user.password = await genPassword(
+    userHelper.generatePassword(_user.username, _user.lastname)
+  );
 
   console.log(user);
 
@@ -93,7 +94,25 @@ const update = async (_user: UpdateUser) => {
   return true;
 };
 
+const resetPassword = async (_id: string) => {
+  if (!_id) throw new HttpException("BAD_REQUEST", `user id is required`);
+
+  const user = await User.findOne(_id);
+
+  if (!user) throw new HttpException("NOT_FOUND", "user not found");
+
+  user.password = await genPassword(
+    userHelper.generatePassword(user.username, user.lastname)
+  );
+
+  await user.save();
+
+  return true;
+};
+
 const changePassword = async (_passwords: ChangePasswordDto) => {
+  console.log(_passwords);
+
   if (!_passwords.userId)
     throw new HttpException("BAD_REQUEST", `user id is required`);
 
@@ -115,6 +134,8 @@ const changePassword = async (_passwords: ChangePasswordDto) => {
     );
 
   user.password = await genPassword(_passwords.newPassword);
+
+  console.log("Final User", user);
 
   await user.save();
 
@@ -153,6 +174,7 @@ const userServices = {
   remove,
   restore,
   changePassword,
+  resetPassword,
 };
 
 export default userServices;

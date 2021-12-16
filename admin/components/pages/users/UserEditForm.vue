@@ -48,7 +48,9 @@
       <v-col cols="12" class="d-flex">
         <v-btn color="blue darken-1" text @click="cancel"> Close </v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="submit"> Save </v-btn>
+        <v-btn color="blue darken-1" :loading="loading" text @click="submit">
+          Save
+        </v-btn>
       </v-col>
     </v-row>
   </v-form>
@@ -80,6 +82,7 @@ export default Vue.extend({
     submitFunc: Function,
     cancelFunc: Function,
     isModal: Boolean,
+    defaultData: Object,
   },
   components: { ThemePicker, LogoUploader, PasswordField, RoleSelect },
   data() {
@@ -99,6 +102,7 @@ export default Vue.extend({
         firstname: [(v: any) => !!v || "Firstname is required"],
         lastname: [(v: any) => !!v || "Lastname is required"],
         username: [(v: any) => !!v || "Username Primary is required"],
+
         role: [(v: any) => !!v || "Role is required"],
       };
     },
@@ -132,6 +136,15 @@ export default Vue.extend({
       (this.$refs as any).form.reset();
       (this.$refs as any).form.resetValidation();
       this.alert = Object.assign({}, defaultAlert);
+    },
+  },
+  watch: {
+    defaultData: {
+      deep: true,
+      immediate: true,
+      handler: function (value, oldVal) {
+        this.form = Object.assign({}, value);
+      },
     },
   },
 });

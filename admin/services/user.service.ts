@@ -56,7 +56,11 @@ const userServices = {
   },
 
   async changePassword(body: ChangePasswordDto) {
-    return (await apiClient.put(`${url}/password`, body)).data;
+    return (await apiClient.put(`${url}/change-password`, body)).data;
+  },
+
+  async resetPassword(id: string) {
+    return (await apiClient.put(`${url}/reset-password/${id}`)).data;
   },
 
   async archive(id: string) {

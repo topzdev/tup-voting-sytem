@@ -173,7 +173,7 @@ export default Vue.extend({
 
     reset() {
       (this.$refs as any).form.reset();
-      (this.$refs as any).form.resetvalidation();
+      (this.$refs as any).form.resetValidation();
       this.alert = Object.assign({}, defaultAlert);
     },
   },

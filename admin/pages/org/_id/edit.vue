@@ -33,7 +33,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      edit: null,
+      defaultData: null,
     };
   },
 
@@ -41,7 +41,7 @@ export default Vue.extend({
   async fetch() {
     try {
       const id = this.$nuxt.$route.params.id;
-      this.edit = await organizationServices.getById(id);
+      this.defaultData = await organizationServices.getById(id);
     } catch (error) {
       console.log(error);
     }

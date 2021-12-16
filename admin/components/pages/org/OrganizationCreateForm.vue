@@ -146,6 +146,7 @@ export default Vue.extend({
       if (this.valid) {
         try {
           await this.createFunc(this.form);
+          this.reset();
         } catch (error: any) {
           this.alert = {
             show: true,
@@ -159,7 +160,7 @@ export default Vue.extend({
 
     reset() {
       (this.$refs as any).form.reset();
-      (this.$refs as any).form.resetvalidation();
+      (this.$refs as any).form.resetValidation();
       this.alert = Object.assign({}, defaultAlert);
     },
   },

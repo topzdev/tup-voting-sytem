@@ -137,7 +137,7 @@ export default {
             {
               icon: "mdi-account-supervisor",
               title: "Manage Users",
-              to: "/settings/users",
+              to: "/settings/user",
             },
           ],
         },

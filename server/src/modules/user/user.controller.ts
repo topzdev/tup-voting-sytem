@@ -68,6 +68,19 @@ const changePassword = async (
   }
 };
 
+const resetPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id = req.params.id as string;
+    res.status(200).json(await userServices.resetPassword(id));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const remove = async (
   req: Request<{ id: string }>,
   res: Response,
@@ -101,6 +114,7 @@ const userController = {
   remove,
   restore,
   changePassword,
+  resetPassword,
 };
 
 export default userController;

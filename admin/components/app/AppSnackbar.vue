@@ -1,6 +1,6 @@
 <template>
   <v-snackbar
-    v-model="snackbar.show"
+    v-model="show"
     :timeout="snackbar.timeout"
     :color="snackbar.color"
   >
@@ -16,9 +16,21 @@
 import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
+  data() {
+    return {
+      show: false,
+    };
+  },
+
   computed: {
     snackbar() {
-      return this.$accessor.snackbar.snackbar;
+      return this.$accessor.snackbar.default;
+    },
+  },
+
+  watch: {
+    ["$accessor.snackbar.default"](val) {
+      this.show = val.show;
     },
   },
 

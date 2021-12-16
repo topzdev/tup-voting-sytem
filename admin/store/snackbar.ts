@@ -14,12 +14,12 @@ type SnackbarConfig = {
 };
 
 export const state = () => ({
-  snackbar: defaultSnackbar,
+  default: defaultSnackbar,
 });
 
 export const mutations = mutationTree(state, {
   set(state, _config) {
-    state.snackbar = _config;
+    state.default = _config;
   },
 });
 
@@ -30,7 +30,7 @@ export const actions = actionTree(
       commit("set", _config);
     },
     async reset({ commit }) {
-      commit("set", defaultSnackbar);
+      commit("set", Object.assign({}, defaultSnackbar));
     },
   }
 );

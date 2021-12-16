@@ -25,7 +25,12 @@
         <template v-slot:item.actions="{ item }">
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" v-on="on">
+              <v-btn
+                icon
+                v-bind="attrs"
+                v-on="on"
+                :to="`/settings/user/${item.id}/edit`"
+              >
                 <v-icon> mdi-pencil </v-icon>
               </v-btn>
             </template>
@@ -33,11 +38,16 @@
           </v-tooltip>
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" v-on="on">
-                <v-icon> mdi-form-textbox-password </v-icon>
+              <v-btn
+                icon
+                v-bind="attrs"
+                v-on="on"
+                :to="`/settings/user/${item.id}/reset-password`"
+              >
+                <v-icon> mdi-lock-reset </v-icon>
               </v-btn>
             </template>
-            <span>Change Password</span>
+            <span>Reset Password</span>
           </v-tooltip>
         </template>
       </v-data-table>
@@ -48,14 +58,9 @@
 <script>
 import Vue, { PropOptions } from "vue";
 import debounce from "@/helpers/debounce";
+import userServices from "~/services/user.service";
 
 export default Vue.extend({
-  props: {
-    refetch: Function,
-    items: Array,
-    total: Number,
-  },
-
   data() {
     return {
       table: {
@@ -95,12 +100,6 @@ export default Vue.extend({
   },
 
   watch: {
-    ["items"](value) {
-      this.table.items = value;
-    },
-    ["total"](value) {
-      this.table.pagination.total = value;
-    },
     async ["table.paginations.page"](val) {
       await this.fetchItems();
     },
@@ -112,14 +111,22 @@ export default Vue.extend({
 
   methods: {
     async fetchItems() {
-      await this.refetch({
+      this.loading = true;
+      const result = await userServices.getAll({
         page: this.table.pagination.page,
         perPage: this.table.pagination.perPage,
         search: this.table.search,
       });
+
+      console.log(result);
+
+      this.table.items = result.items;
+      this.table.pagination.total = result.total;
+      this.loading = false;
     },
   },
 
+  fetchOnServer: false,
   async fetch() {
     await this.fetchItems();
   },
