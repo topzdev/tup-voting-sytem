@@ -10,6 +10,7 @@ import { Timestamp } from "../../../entity/timestamp.inherit";
 import { OrganizationLogo } from "./organization-logo.entity";
 import { IsAlpha, IsLowercase, NotContains } from "class-validator";
 import { Election } from "../../election/entity/election.entity";
+import { OrganizationTheme } from "./organization-theme.entity";
 
 @Entity("organization")
 export class Organization extends Timestamp {
@@ -32,20 +33,9 @@ export class Organization extends Timestamp {
   })
   description: string;
 
-  @Column({
-    default: false,
-  })
-  archive: boolean;
-
-  @Column({
-    default: "blue",
-  })
-  themePrimary: string;
-
-  @Column({
-    default: "pink",
-  })
-  themeSecondary: string;
+  @OneToOne(() => OrganizationTheme)
+  @JoinColumn()
+  theme: OrganizationTheme;
 
   @OneToOne(() => OrganizationLogo)
   @JoinColumn()
@@ -53,4 +43,9 @@ export class Organization extends Timestamp {
 
   @OneToMany(() => Election, (election) => election.organization)
   elections: Election[];
+
+  @Column({
+    default: false,
+  })
+  archive: boolean;
 }

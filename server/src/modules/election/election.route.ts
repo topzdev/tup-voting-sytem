@@ -17,6 +17,10 @@ router.get(
 
 router.get("/:id", adminAuth, electionController.getOneById);
 
+router.get("/slug/:slug", adminAuth, electionController.getOneBySlug);
+
+router.get("/exist/:slug", adminAuth, electionController.isExistBySlug);
+
 router.post(
   "/",
   adminAuth,
@@ -61,6 +65,6 @@ router.put(
   electionController.unarchive
 );
 
-const userRoute = router;
+const electionRoute = router;
 
-export default userRoute;
+export default electionRoute;

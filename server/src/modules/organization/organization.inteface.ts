@@ -10,21 +10,16 @@ export interface GetOrganizationParams {
 
 export type CreateOrganizationParams = Pick<
   Organization,
-  | "slug"
-  | "title"
-  | "description"
-  | "ticker"
-  | "themePrimary"
-  | "themeSecondary"
->;
+  "slug" | "title" | "description" | "ticker"
+> & {
+  theme_primary: string;
+  theme_secondary: string;
+};
 
 export type UpdateOrganizationParams = Pick<
   Organization,
-  | "id"
-  | "slug"
-  | "title"
-  | "description"
-  | "ticker"
-  | "themePrimary"
-  | "themeSecondary"
->;
+  "id" | "slug" | "title" | "description" | "ticker"
+> & {
+  theme_primary: string;
+  theme_secondary: string;
+};

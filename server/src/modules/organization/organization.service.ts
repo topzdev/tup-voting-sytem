@@ -4,6 +4,7 @@ import { HttpException } from "../../helpers/errors/http.exception";
 import photoUploader from "../../helpers/photo-uploader.helper";
 import { Photo } from "../photo/photo.service";
 import { OrganizationLogo } from "./entity/organization-logo.entity";
+import { OrganizationTheme } from "./entity/organization-theme.entity";
 import { Organization } from "./entity/organization.entity";
 import {
   CreateOrganizationParams,
@@ -22,7 +23,8 @@ const getAll = async (_query: GetOrganizationParams) => {
 
   let builder = orgRepository
     .createQueryBuilder("org")
-    .leftJoinAndSelect("org.logo", "logo");
+    .leftJoinAndSelect("org.logo", "logo")
+    .leftJoinAndSelect("org.theme", "theme");
 
   if (!withArchive) {
     builder = builder.andWhere("org.archive = :bol", { bol: false });
@@ -67,27 +69,31 @@ const isExistBySlug = async (_slug: string) => {
 
 const getById = async (_id: string) => {
   if (!_id)
-    return new HttpException("BAD_REQUEST", "Organization ID not provided");
+    throw new HttpException("BAD_REQUEST", "Organization ID is required");
 
-  const organization = Organization.findOne(_id, {
-    relations: ["logo"],
+  const organization = await Organization.findOne(_id, {
+    relations: ["logo", "theme"],
+    where: {
+      archive: false,
+    },
   });
 
-  return organization;
+  return organization || null;
 };
 
 const getBySlug = async (_slug: string) => {
   if (!_slug)
-    return new HttpException("BAD_REQUEST", "Organization Slug not provided");
+    throw new HttpException("BAD_REQUEST", "Organization slug is required");
 
-  const organization = Organization.findOne({
+  const organization = await Organization.findOne({
     where: {
       slug: _slug,
+      archive: false,
     },
-    relations: ["logo"],
+    relations: ["logo", "theme"],
   });
 
-  return organization;
+  return organization || null;
 };
 
 const create = async (
@@ -118,10 +124,22 @@ const create = async (
     url: uploadedLogo.secure_url,
   });
 
-  const organization = Organization.create(_organization);
-  organization.logo = organizationLogo;
+  const organizationTheme = OrganizationTheme.create({
+    primary: _organization.theme_primary,
+    secondary: _organization.theme_secondary,
+  });
 
   await organizationLogo.save();
+  await organizationTheme.save();
+
+  const organization = Organization.create({
+    title: _organization.title,
+    description: _organization.description,
+    ticker: _organization.ticker,
+    logo: organizationLogo,
+    theme: organizationTheme,
+  });
+
   const savedOrganization = await organization.save();
 
   console.log(savedOrganization);
@@ -137,24 +155,24 @@ const update = async (
     throw new HttpException("BAD_REQUEST", "Organization ID is required");
   }
 
-  const prevOrganization = await Organization.findOne(_organization.id, {
-    relations: ["logo"],
+  const curOrganization = await Organization.findOne(_organization.id, {
+    relations: ["logo", "theme"],
   });
 
-  if (!prevOrganization) {
+  if (!curOrganization) {
     throw new HttpException("NOT_FOUND", "Organization not found");
   }
 
-  let newSlug = prevOrganization.slug;
+  let toUpdateSlug = curOrganization.slug;
 
-  console.log("Prev:", prevOrganization, "Passed:", _organization);
+  console.log("Prev:", curOrganization, "Passed:", _organization);
 
   // Check if slug is different from previous record of slug
-  if (prevOrganization.slug !== _organization.slug) {
+  if (curOrganization.slug !== _organization.slug) {
     //find if slug exist on other organization
     const slugExist = await Organization.findOne({
       where: {
-        id: Not(prevOrganization.id),
+        id: Not(curOrganization.id),
         slug: _organization.slug,
       },
     });
@@ -164,15 +182,17 @@ const update = async (
       throw new HttpException("BAD_REQUEST", "Organization slug has been used");
     }
 
-    newSlug = _organization.slug;
+    toUpdateSlug = _organization.slug;
   }
 
-  let newLogo = prevOrganization.logo;
+  let toUpdateLogo = curOrganization.logo;
+
+  console.log("The LOGO:", _logo.tempFilePath, toUpdateLogo);
 
   if (_logo && _logo.tempFilePath) {
     //since there is a new logo provided we will destroy the exisiting image then replace before uploading a new one, so when error occcured on destory image the whole process will stop
-    if (prevOrganization.logo) {
-      await photoUploader.destroy(prevOrganization.logo.public_id);
+    if (curOrganization.logo) {
+      await photoUploader.destroy(curOrganization.logo.public_id);
     }
 
     const uploadedLogo = await photoUploader.upload(
@@ -182,26 +202,53 @@ const update = async (
 
     // if the previous logo is null then save the new logo
     // else replaced the old public_id and url
-    if (!prevOrganization.logo) {
-      newLogo = OrganizationLogo.create({
+    if (!curOrganization.logo) {
+      console.log("Logo is EMPTY so saving a new one");
+      toUpdateLogo = OrganizationLogo.create({
         public_id: uploadedLogo.public_id,
         url: uploadedLogo.url,
       });
-      await newLogo.save();
+      toUpdateLogo = await toUpdateLogo.save();
     } else {
-      newLogo.public_id = uploadedLogo.public_id;
-      newLogo.url = uploadedLogo.url;
+      console.log("Logo is AVAILABLE so saving a new one");
+      toUpdateLogo.public_id = uploadedLogo.public_id;
+      toUpdateLogo.url = uploadedLogo.url;
     }
   }
 
-  const toUpdateOrganization = {
-    ..._organization,
-    slug: newSlug,
-    logo: newLogo,
-  };
+  console.log("Logo Data", toUpdateLogo);
 
-  await OrganizationLogo.update(newLogo.id, newLogo);
-  await Organization.update(_organization.id, toUpdateOrganization);
+  // assign the current theme
+  let toUpdateTheme = curOrganization.theme;
+
+  // check if the current data has theme, if empty then create a theme and save it
+  if (!curOrganization.theme) {
+    toUpdateTheme = OrganizationTheme.create({
+      secondary: _organization.theme_secondary,
+      primary: _organization.theme_primary,
+    });
+
+    toUpdateTheme = await toUpdateTheme.save();
+  } else {
+    // if theme is avaiable, replace the current theme with the new / updated theme
+    toUpdateTheme.secondary = _organization.theme_secondary;
+    toUpdateTheme.primary = _organization.theme_primary;
+  }
+
+  console.log("Theme Data", toUpdateTheme);
+
+  const toUpdateOrganization = Organization.merge(curOrganization, {
+    title: _organization.title,
+    description: _organization.description,
+    ticker: _organization.ticker,
+    slug: toUpdateSlug,
+    logo: toUpdateLogo,
+    theme: toUpdateTheme,
+  });
+
+  await OrganizationLogo.update(toUpdateLogo.id, toUpdateLogo);
+  await OrganizationTheme.update(toUpdateTheme.id, toUpdateTheme);
+  await Organization.update(curOrganization.id, toUpdateOrganization);
   return true;
 };
 

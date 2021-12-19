@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js --config src/ormconfig",
+    "typeorm": "set NODE_ENV=development&&node --require ts-node/register ./node_modules/typeorm/cli.js --config src/ormconfig",
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "set NODE_ENV=development&set DEBUG=express-session& nodemon src/index.ts",
@@ -40,7 +40,8 @@
     "passport-local": "^1.0.0",
     "pg": "^8.4.0",
     "reflect-metadata": "^0.1.10",
-    "typeorm": "0.2.39"
+    "typeorm": "0.2.39",
+    "typeorm-naming-strategies": "^2.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

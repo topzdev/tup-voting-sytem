@@ -1,5 +1,7 @@
 const path = require("path");
 const join = path.join;
+const SnakeNamingStrategy =
+  require("typeorm-naming-strategies").SnakeNamingStrategy;
 
 var __prod__ = process.env.NODE_ENV === "production";
 
@@ -40,4 +42,5 @@ module.exports = {
     migrationsDir: join(__dirname, ormPath, "migration"),
     subscribersDir: join(__dirname, ormPath, "subscriber"),
   },
+  namingStrategy: new SnakeNamingStrategy(),
 };

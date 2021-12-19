@@ -10,7 +10,7 @@ import { unflatten } from "flat";
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { page, take, order, search, withArchive } = req.query as any;
+    const { page, take, order, search, withArchive, orgId } = req.query as any;
 
     res.status(200).json(
       await electionService.getAll({
@@ -19,6 +19,7 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
         order,
         search,
         withArchive: withArchive ? Boolean(withArchive) : undefined,
+        orgId,
       })
     );
   } catch (error) {
@@ -31,6 +32,34 @@ const getOneById = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
 
     res.status(200).json(await electionService.getById(id));
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getOneBySlug = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const slug = req.params.slug;
+
+    res.status(200).json(await electionService.getBySlug(slug));
+  } catch (error) {
+    next(error);
+  }
+};
+
+const isExistBySlug = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const slug = req.params.slug;
+
+    res.status(200).json(await electionService.isExistBySlug(slug));
   } catch (error) {
     next(error);
   }
@@ -115,6 +144,8 @@ const electionController = {
   restore,
   archive,
   unarchive,
+  getOneBySlug,
+  isExistBySlug,
 };
 
 export default electionController;

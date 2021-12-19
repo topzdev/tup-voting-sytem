@@ -62,10 +62,15 @@ const create = async (_user: CreateUser) => {
 
   if (isExist) throw new HttpException("BAD_REQUEST", "username has been used");
 
-  let user = User.create(_user);
-  user.password = await genPassword(
-    userHelper.generatePassword(_user.username, _user.lastname)
-  );
+  let user = User.create({
+    username: _user.username,
+    firstname: _user.firstname,
+    lastname: _user.lastname,
+    role: _user.role,
+    password: await genPassword(
+      userHelper.generatePassword(_user.username, _user.lastname)
+    ),
+  });
 
   console.log(user);
 
@@ -85,11 +90,13 @@ const update = async (_user: UpdateUser) => {
 
   if (!user) throw new HttpException("NOT_FOUND", "user not found");
 
-  user.firstname = _user.firstname;
-  user.lastname = _user.lastname;
-  user.role = _user.role;
+  const toUpdateUser = User.merge(user, {
+    firstname: _user.firstname,
+    lastname: _user.lastname,
+    role: _user.role,
+  });
 
-  await user.save();
+  await toUpdateUser.save();
 
   return true;
 };

@@ -11,6 +11,7 @@ console.log("Cloudinary folder is:", folder);
 export const cloudFolders = {
   candidate_photos: `${folder}/candidates_photos`,
   org_photos: `${folder}/org_photos`,
+  election_photos: `${folder}/election_photos`,
   party_photos: `${folder}/party_photos`,
   test_photos: `${folder}/test_photos`,
 };

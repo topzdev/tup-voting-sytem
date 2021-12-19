@@ -65,6 +65,6 @@ router.put(
   organizationController.unarchive
 );
 
-const userRoute = router;
+const organizationRoute = router;
 
-export default userRoute;
+export default organizationRoute;
