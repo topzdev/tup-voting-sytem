@@ -1,8 +1,7 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { Timestamp } from "../../../entity/timestamp.inherit";
 
-@Entity("election_logo")
-export class ElectionLogo extends BaseEntity {
+@Entity("candidate_cover_photo")
+export class CandidateCoverPhoto extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

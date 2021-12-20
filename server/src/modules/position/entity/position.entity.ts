@@ -22,12 +22,24 @@ export class Position extends Timestamp {
   @Column()
   description: string;
 
-  @Column({ type: "timestamptz" })
-  start_date: Date;
+  @Column({
+    default: 1,
+  })
+  max_selected: number;
 
-  @Column({ type: "timestamptz" })
-  close_date: Date;
+  @Column({
+    default: 1,
+  })
+  min_selected: number;
+
+  @Column({
+    nullable: true,
+  })
+  display_order: number;
 
   @ManyToOne(() => Election, (election) => election.positions)
   election: Election;
+
+  @Column()
+  election_id: number;
 }
