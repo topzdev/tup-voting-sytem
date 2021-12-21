@@ -119,6 +119,20 @@ const unarchive = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const importFromCSV = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const candidateCSV = req.files["candidates-csv"] as fileUpload.UploadedFile;
+    console.log("RAW CSV", candidateCSV);
+    res.status(200).json(await candidateService.importFromCSV(candidateCSV));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const candidateController = {
   getAll,
   getOneById,
@@ -128,6 +142,7 @@ const candidateController = {
   restore,
   archive,
   unarchive,
+  importFromCSV,
 };
 
 export default candidateController;

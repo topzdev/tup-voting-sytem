@@ -1,4 +1,6 @@
+import fileUpload from "express-fileupload";
 import { getRepository, Not } from "typeorm";
+import parseCSV, { File } from "../../helpers/csv-parser.helper";
 import { HttpException } from "../../helpers/errors/http.exception";
 import parseDate from "../../helpers/parse-date.helper";
 import photoUploader from "../../helpers/photo-uploader.helper";
@@ -345,6 +347,13 @@ const unarchive = async (_id: string) => {
   return true;
 };
 
+const importFromCSV = async (_candidateCSV: File) => {
+  const data = await parseCSV(_candidateCSV);
+  console.log("PARSE CSV", data);
+
+  return data;
+};
+
 const candidateServices = {
   getAll,
   getById,
@@ -354,6 +363,7 @@ const candidateServices = {
   restore,
   archive,
   unarchive,
+  importFromCSV,
 };
 
 export default candidateServices;

@@ -61,6 +61,13 @@ router.put(
   candidateController.unarchive
 );
 
+router.post(
+  "/import/csv",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  candidateController.importFromCSV
+);
+
 const candidateRoute = router;
 
 export default candidateRoute;

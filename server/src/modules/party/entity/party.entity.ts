@@ -5,6 +5,7 @@ import {
   JoinColumn,
   OneToOne,
   OneToMany,
+  ManyToOne,
 } from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
 import { IsAlpha, IsLowercase, NotContains } from "class-validator";
@@ -35,6 +36,12 @@ export class Party extends Timestamp {
   @OneToOne(() => PartyCoverPhoto)
   @JoinColumn()
   cover_photo: PartyCoverPhoto;
+
+  @Column({ nullable: true })
+  election_id: number;
+
+  @ManyToOne(() => Election, (election) => election.party)
+  election: Party;
 
   @Column({
     default: false,

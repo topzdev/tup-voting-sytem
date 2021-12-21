@@ -13,6 +13,7 @@ import { Organization } from "../../organization/entity/organization.entity";
 import { Position } from "../../position/entity/position.entity";
 import { ElectionLogo } from "./election-logo.entity";
 import { Candidate } from "../../candidate/entity/candidate.entity";
+import { Party } from "../../party/entity/party.entity";
 
 @Entity("election")
 export class Election extends Timestamp {
@@ -51,8 +52,11 @@ export class Election extends Timestamp {
   @OneToMany(() => Position, (position) => position.election)
   positions: Position[];
 
-  @OneToMany(() => Position, (position) => position.election)
+  @OneToMany(() => Candidate, (candidate) => candidate.election)
   candidates: Candidate[];
+
+  @OneToMany(() => Party, (party) => party.election)
+  party: Party[];
 
   @Column({
     default: false,
