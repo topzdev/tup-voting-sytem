@@ -1,1 +1,1 @@
-import { GetElectionBody } from "./election.inteface";
+import { GetElectionBody } from "./election.interface";

@@ -2,11 +2,13 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
+import { Election } from "../../election/entity/election.entity";
 import { Party } from "../../party/entity/party.entity";
 import { Position } from "../../position/entity/position.entity";
 import { CandidateCoverPhoto } from "./candidate-cover-photo.entity";
@@ -19,15 +21,15 @@ export class Candidate extends Timestamp {
   id: number;
 
   @Column()
-  first_name: string;
+  firstname: string;
 
   @Column()
-  last_name: string;
+  lastname: string;
 
   @Column({
     nullable: true,
   })
-  middle_name: string;
+  middlename: string;
 
   @Column({
     nullable: true,
@@ -56,6 +58,12 @@ export class Candidate extends Timestamp {
   @OneToOne(() => CandidateSocials)
   @JoinColumn()
   socials: CandidateSocials;
+
+  @Column({ nullable: true })
+  election_id: number;
+
+  @ManyToOne(() => Election, (election) => election.candidates)
+  election: Election;
 
   @OneToOne(() => CandidateProfilePhoto)
   @JoinColumn()

@@ -8,7 +8,7 @@ import {
   CreateElectionBody,
   GetElectionBody,
   UpdateElectionBody,
-} from "./election.inteface";
+} from "./election.interface";
 import { ElectionLogo } from "./entity/election-logo.entity";
 import { Organization } from "../organization/entity/organization.entity";
 import parseDate from "../../helpers/parse-date.helper";

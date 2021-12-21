@@ -1,25 +1,25 @@
 import { NextFunction, Request, Response } from "express";
 import fileUpload from "express-fileupload";
-import {
-  CreateElectionBody,
-  UpdateElectionBody,
-  GetElectionBody,
-} from "./election.interface";
-import electionService from "./election.service";
 import { unflatten } from "flat";
+import {
+  CreateCandidateBody,
+  UpdateCandidateBody,
+} from "./candidate.interface";
+import candidateService from "./candidate.service";
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { page, take, order, search, withArchive, orgId } = req.query as any;
+    const { page, take, order, search, withArchive, electionId } =
+      req.query as any;
 
     res.status(200).json(
-      await electionService.getAll({
+      await candidateService.getAll({
         page: page ? parseInt(page) : undefined,
         take: take ? parseInt(take) : undefined,
         order,
         search,
         withArchive: withArchive ? Boolean(withArchive) : undefined,
-        orgId,
+        electionId,
       })
     );
   } catch (error) {
@@ -31,35 +31,7 @@ const getOneById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
 
-    res.status(200).json(await electionService.getById(id));
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getOneBySlug = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const slug = req.params.slug;
-
-    res.status(200).json(await electionService.getBySlug(slug));
-  } catch (error) {
-    next(error);
-  }
-};
-
-const isExistBySlug = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const slug = req.params.slug;
-
-    res.status(200).json(await electionService.isExistBySlug(slug));
+    res.status(200).json(await candidateService.getById(id));
   } catch (error) {
     next(error);
   }
@@ -67,13 +39,17 @@ const isExistBySlug = async (
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const logo = req.files.logo as fileUpload.UploadedFile;
+    const profile_photo = req.files.profile_photo as fileUpload.UploadedFile;
+    const cover_photo = req.files.cover_photo as fileUpload.UploadedFile;
+    const candidate = unflatten<CreateCandidateBody, any>(req.body);
 
-    const election = unflatten<CreateElectionBody, any>(req.body);
+    console.log(profile_photo, cover_photo, candidate);
 
-    console.log(logo, election);
-
-    res.status(200).json(await electionService.create(logo, election));
+    res
+      .status(200)
+      .json(
+        await candidateService.create(profile_photo, cover_photo, candidate)
+      );
   } catch (error) {
     next(error);
   }
@@ -81,15 +57,23 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const logo = req.files
-      ? (req.files.logo as fileUpload.UploadedFile)
+    const profile_photo = req.files
+      ? (req.files.profile_photo as fileUpload.UploadedFile)
       : undefined;
 
-    const election = unflatten<UpdateElectionBody, any>(req.body);
+    const cover_photo = req.files
+      ? (req.files.cover_photo as fileUpload.UploadedFile)
+      : undefined;
 
-    console.log(logo, election);
+    const candidate = unflatten<UpdateCandidateBody, any>(req.body);
 
-    res.status(200).json(await electionService.update(logo, election));
+    console.log(profile_photo, cover_photo, candidate);
+
+    res
+      .status(200)
+      .json(
+        await candidateService.update(profile_photo, cover_photo, candidate)
+      );
   } catch (error) {
     next(error);
   }
@@ -99,7 +83,7 @@ const remove = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
 
-    res.status(200).json(await electionService.remove(id));
+    res.status(200).json(await candidateService.remove(id));
   } catch (error) {
     next(error);
   }
@@ -109,7 +93,7 @@ const restore = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
 
-    res.status(200).json(await electionService.restore(id));
+    res.status(200).json(await candidateService.restore(id));
   } catch (error) {
     next(error);
   }
@@ -119,7 +103,7 @@ const archive = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
 
-    res.status(200).json(await electionService.archive(id));
+    res.status(200).json(await candidateService.archive(id));
   } catch (error) {
     next(error);
   }
@@ -129,13 +113,13 @@ const unarchive = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
 
-    res.status(200).json(await electionService.unarchive(id));
+    res.status(200).json(await candidateService.unarchive(id));
   } catch (error) {
     next(error);
   }
 };
 
-const electionController = {
+const candidateController = {
   getAll,
   getOneById,
   create,
@@ -144,8 +128,6 @@ const electionController = {
   restore,
   archive,
   unarchive,
-  getOneBySlug,
-  isExistBySlug,
 };
 
-export default electionController;
+export default candidateController;

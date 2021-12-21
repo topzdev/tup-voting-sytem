@@ -4,7 +4,7 @@ import {
   CreateOrganizationParams,
   GetOrganizationParams,
   UpdateOrganizationParams,
-} from "./organization.inteface";
+} from "./organization.interface";
 import organizationService from "./organization.service";
 import { unflatten } from "flat";
 

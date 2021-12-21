@@ -10,7 +10,7 @@ import {
   CreateOrganizationParams,
   GetOrganizationParams,
   UpdateOrganizationParams,
-} from "./organization.inteface";
+} from "./organization.interface";
 
 // const User = getRepository(User);
 
@@ -133,6 +133,7 @@ const create = async (
   await organizationTheme.save();
 
   const organization = Organization.create({
+    slug: _organization.slug,
     title: _organization.title,
     description: _organization.description,
     ticker: _organization.ticker,
