@@ -17,6 +17,7 @@ var ormPath = !__prod__ ? "src" : "dist";
 console.log(join(__dirname, ormPath, "entity", "*.entity.{js,ts}"));
 
 module.exports = {
+  name: "default",
   type: process.env.DATABASE_TYPE,
   host: process.env.DATABASE_HOST,
   port: parseInt(process.env.DATABASE_PORT),

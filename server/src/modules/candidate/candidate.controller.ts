@@ -127,7 +127,9 @@ const importFromCSV = async (
   try {
     const candidateCSV = req.files["candidates-csv"] as fileUpload.UploadedFile;
     console.log("RAW CSV", candidateCSV);
-    res.status(200).json(await candidateService.importFromCSV(candidateCSV));
+    res
+      .status(200)
+      .json(await candidateService.importCandidatesFromCSV(candidateCSV));
   } catch (error) {
     next(error);
   }

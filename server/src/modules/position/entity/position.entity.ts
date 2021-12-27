@@ -1,18 +1,14 @@
 import {
+  BaseEntity,
   Column,
   Entity,
-  PrimaryGeneratedColumn,
-  JoinColumn,
-  OneToOne,
   ManyToOne,
+  PrimaryGeneratedColumn,
 } from "typeorm";
-import { Timestamp } from "../../../entity/timestamp.inherit";
-import { IsAlpha, IsLowercase, NotContains } from "class-validator";
-import { Organization } from "../../organization/entity/organization.entity";
 import { Election } from "../../election/entity/election.entity";
 
 @Entity("position")
-export class Position extends Timestamp {
+export class Position extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -37,9 +33,11 @@ export class Position extends Timestamp {
   })
   display_order: number;
 
+  @Column({
+    nullable: true,
+  })
+  election_id: number;
+
   @ManyToOne(() => Election, (election) => election.positions)
   election: Election;
-
-  @Column()
-  election_id: number;
 }

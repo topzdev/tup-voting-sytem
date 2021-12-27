@@ -6,7 +6,7 @@ import electionController from "./election.controller";
 import electionValidator from "./election.validator";
 const router = express.Router();
 
-console.log("module: ELection Module Loaded");
+console.log("module: Election Module Loaded");
 
 router.get(
   "/",

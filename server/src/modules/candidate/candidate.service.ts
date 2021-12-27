@@ -1,6 +1,10 @@
 import fileUpload from "express-fileupload";
 import { getRepository, Not } from "typeorm";
-import parseCSV, { File } from "../../helpers/csv-parser.helper";
+import {
+  File,
+  parseCsvToJson,
+  parseJsontoCsv,
+} from "../../helpers/csv-parser.helper";
 import { HttpException } from "../../helpers/errors/http.exception";
 import parseDate from "../../helpers/parse-date.helper";
 import photoUploader from "../../helpers/photo-uploader.helper";
@@ -101,8 +105,8 @@ const create = async (
   if (!_candidate.position_id)
     throw new HttpException("BAD_REQUEST", "Position is required");
 
-  if (!_candidate.party_id)
-    throw new HttpException("BAD_REQUEST", "Party is required");
+  // if (!_candidate.party_id)
+  //   throw new HttpException("BAD_REQUEST", "Party is required");
 
   const uploadedProfilePhoto = await photoUploader.upload(
     "candidate_photos",
@@ -179,8 +183,8 @@ const update = async (
   if (!_candidate.position_id)
     throw new HttpException("BAD_REQUEST", "Position is required");
 
-  if (!_candidate.party_id)
-    throw new HttpException("BAD_REQUEST", "Party is required");
+  // if (!_candidate.party_id)
+  //   throw new HttpException("BAD_REQUEST", "Party is required");
 
   let toUpdateSocials = curCandidate.socials;
 
@@ -347,8 +351,37 @@ const unarchive = async (_id: string) => {
   return true;
 };
 
-const importFromCSV = async (_candidateCSV: File) => {
-  const data = await parseCSV(_candidateCSV);
+const exportCandidatesToCSV = async (_electionId: number) => {
+  if (!_electionId) {
+    throw new HttpException(
+      "BAD_REQUEST",
+      "Election id is required on exporting candidates"
+    );
+  }
+
+  const [candidates, count] = await Candidate.findAndCount({
+    where: {
+      election_id: _electionId,
+    },
+    relations: [""],
+  });
+
+  const fields = [
+    {
+      label: "firstname",
+      value: "firstname",
+    },
+    {
+      label: "lastname",
+      value: "firstname",
+    },
+  ];
+
+  return candidates;
+};
+
+const importCandidatesFromCSV = async (_candidateCSV: File) => {
+  const data = await parseCsvToJson(_candidateCSV);
   console.log("PARSE CSV", data);
 
   return data;
@@ -363,7 +396,8 @@ const candidateServices = {
   restore,
   archive,
   unarchive,
-  importFromCSV,
+  importCandidatesFromCSV,
+  exportCandidatesToCSV,
 };
 
 export default candidateServices;

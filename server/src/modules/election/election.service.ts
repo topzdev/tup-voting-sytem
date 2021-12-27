@@ -23,7 +23,7 @@ const getAll = async (_query: GetElectionBody) => {
     .leftJoinAndSelect("election.logo", "logo");
 
   if (_query.orgId) {
-    builder = builder.andWhere("election.organizationId = :orgId", {
+    builder = builder.andWhere("election.organization_id = :orgId", {
       orgId: _query.orgId,
     });
   }

@@ -1,1 +1,3 @@
-import { GetCandidateBody } from "./candidate.interface";
+export const ifEmptyStringReturnNull = (value: any) => {
+  return value === "" ? null : value;
+};

@@ -10,6 +10,7 @@ const main = async () => {
   await createConnection()
     .then((connect) => {
       console.log("Database Host:", configs.database.host);
+      console.log("Connection Name:", connect.name);
       console.log("Database Created Successfully");
     })
     .catch((err) => {

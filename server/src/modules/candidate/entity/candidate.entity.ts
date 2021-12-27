@@ -1,4 +1,6 @@
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   JoinColumn,
@@ -8,6 +10,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
+import { isEmptyStringReturnNull } from "../../election/election.helper";
 import { Election } from "../../election/entity/election.entity";
 import { Party } from "../../party/entity/party.entity";
 import { Position } from "../../position/entity/position.entity";
@@ -48,7 +51,7 @@ export class Candidate extends Timestamp {
   @JoinColumn()
   party: Party;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: null })
   position_id: number;
 
   @OneToOne(() => Position)

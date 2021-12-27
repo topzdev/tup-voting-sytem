@@ -1,1 +1,3 @@
-import { GetElectionBody } from "./election.interface";
+export const isEmptyStringReturnNull = (str: string) => {
+  return str === "" ? null : str;
+};

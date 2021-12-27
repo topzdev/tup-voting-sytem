@@ -1,12 +1,14 @@
 import express from "express";
 import { adminAuth } from "../../middlewares/auth.middleware";
 import rolesAllowed from "../../middlewares/roles-allowed.middleware";
+import sanitize from "../../middlewares/sanitize.middleware";
 import validate from "../../middlewares/validate.middleware";
 import candidateController from "./candidate.controller";
+import candidateSanitizer from "./candidate.sanitizer";
 import candidateValidator from "./candidate.validator";
 const router = express.Router();
 
-console.log("module: ELection Module Loaded");
+console.log("module: Candidates Module Loaded");
 
 router.get(
   "/",
@@ -22,6 +24,7 @@ router.post(
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   validate(candidateValidator.create),
+  sanitize(candidateSanitizer.create),
   candidateController.create
 );
 
@@ -30,6 +33,7 @@ router.put(
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   validate(candidateValidator.update),
+  sanitize(candidateSanitizer.update),
   candidateController.update
 );
 

@@ -1,20 +1,15 @@
-import csv from "csv-parser";
+import csv from "csvtojson";
+import { Response } from "express";
 import fileUpload from "express-fileupload";
-import fs from "fs";
+import { Parser } from "json2csv";
 export type File = fileUpload.UploadedFile;
 
-const parseCSV = async (csvFile: File) => {
-  const results = [];
-
-  await fs
-    .createReadStream(csvFile.tempFilePath)
-    .pipe(csv())
-    .on("data", (data) => results.push(data))
-    .on("end", () => console.log(results));
-
-  const csvPromise = await new Promise((resolve, reject) => {});
-
-  return csvPromise as any[];
+export const parseCsvToJson = async (csvFile: File) => {
+  return await csv().fromFile(csvFile.tempFilePath);
 };
 
-export default parseCSV;
+export const parseJsontoCsv = async (fields: any[], data: any[]) => {
+  const json2csv = new Parser({ fields });
+  const csv = json2csv.parse(data);
+  return csv;
+};
