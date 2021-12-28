@@ -381,7 +381,7 @@ const exportCandidatesToCSV = async (_electionId: number) => {
 };
 
 const importCandidatesFromCSV = async (_candidateCSV: File) => {
-  const data = await parseCsvToJson(_candidateCSV);
+  const data = await parseCsvToJson(_candidateCSV, {});
   console.log("PARSE CSV", data);
 
   return data;

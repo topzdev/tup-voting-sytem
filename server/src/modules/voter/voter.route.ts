@@ -10,11 +10,25 @@ console.log("module: Voter Module Loaded");
 
 router.get("/", adminAuth, rolesAllowed("SUPER_ADMIN"), voterController.getAll);
 
+router.get("/voter-elections", adminAuth, voterController.getVoterElections);
+
 router.get("/:id", adminAuth, voterController.getOneById);
 
-router.get("/slug/:slug", adminAuth, voterController.getOneBySlug);
+router.get("/voter-id/:id", adminAuth, voterController.getOneByVoterId);
 
-router.get("/exist/:slug", adminAuth, voterController.isExistBySlug);
+router.get("/email/:email", adminAuth, voterController.getOneByEmailAddress);
+
+router.get(
+  "/exist/voter-id/:voterId",
+  adminAuth,
+  voterController.isExistByVoterId
+);
+
+router.get(
+  "/exist/email/:email",
+  adminAuth,
+  voterController.isExistByEmailAddress
+);
 
 router.post(
   "/",
@@ -46,18 +60,46 @@ router.put(
   voterController.restore
 );
 
-router.put(
-  "/archive/:id",
+router.post(
+  "/export-to-csv",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
-  voterController.archive
+  voterController.exportVotersToCSV
 );
 
-router.put(
-  "/unarchive/:id",
+router.post(
+  "/import-by-election",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
-  voterController.unarchive
+  voterController.importVotersByElection
+);
+
+router.post(
+  "/import-by-csv",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  voterController.importVotersByCsv
+);
+
+router.post(
+  "/disallow",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  voterController.disallowVoters
+);
+
+router.post(
+  "/allow",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  voterController.disallowVoters
+);
+
+router.post(
+  "/remove",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  voterController.disallowVoters
 );
 
 const voterRoute = router;

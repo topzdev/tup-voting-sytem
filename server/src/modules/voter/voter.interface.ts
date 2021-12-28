@@ -7,7 +7,13 @@ export interface GetVoterBody {
   page: number;
   take: number;
   org_id: number;
-  withArchive?: boolean;
+}
+
+export interface GetVoterElectionDto {
+  order?: any;
+  page: number;
+  take: number;
+  voter_id: number;
 }
 
 export type CreateVoterBody = Pick<
@@ -37,4 +43,24 @@ export type ImportVotersByElectionDto = {
     from: number;
     to: number;
   };
+};
+
+export type ImportVotersByCSVDto = {
+  election_id: number;
+  organization_id: number;
+};
+
+export type DisallowVotersDto = {
+  ids: number[];
+  election_id: number;
+};
+
+export type AllowVotersDto = {
+  ids: number[];
+  election_id: number;
+};
+
+export type RemoveVotersDto = {
+  ids: number[];
+  election_id: number;
 };

@@ -6,6 +6,7 @@ import organizationRoute from "./modules/organization/organization.route";
 import electionRoute from "./modules/election/election.route";
 import candidateRoute from "./modules/candidate/candidate.route";
 import positionRoute from "./modules/position/position.route";
+import voterRoute from "./modules/voter/voter.route";
 
 const router = express.Router();
 
@@ -16,5 +17,6 @@ router.use("/org", organizationRoute);
 router.use("/election", electionRoute);
 router.use("/candidate", candidateRoute);
 router.use("/position", positionRoute);
+router.use("/voter", voterRoute);
 
 export default router;
