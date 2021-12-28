@@ -11,6 +11,7 @@ import { OrganizationLogo } from "./organization-logo.entity";
 import { IsAlpha, IsLowercase, NotContains } from "class-validator";
 import { Election } from "../../election/entity/election.entity";
 import { OrganizationTheme } from "./organization-theme.entity";
+import { Voter } from "../../voter/entity/voter.entity";
 
 @Entity("organization")
 export class Organization extends Timestamp {
@@ -43,6 +44,9 @@ export class Organization extends Timestamp {
 
   @OneToMany(() => Election, (election) => election.organization)
   elections: Election[];
+
+  @OneToMany(() => Voter, (voter) => voter.organization)
+  voters: Voter[];
 
   @Column({
     default: false,

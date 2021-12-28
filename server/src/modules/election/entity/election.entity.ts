@@ -1,19 +1,20 @@
 import {
   Column,
   Entity,
-  PrimaryGeneratedColumn,
   JoinColumn,
-  OneToOne,
   ManyToOne,
   OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
 } from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
-import { IsAlpha, IsLowercase, NotContains } from "class-validator";
+import { Candidate } from "../../candidate/entity/candidate.entity";
 import { Organization } from "../../organization/entity/organization.entity";
+import { Party } from "../../party/entity/party.entity";
 import { Position } from "../../position/entity/position.entity";
 import { ElectionLogo } from "./election-logo.entity";
-import { Candidate } from "../../candidate/entity/candidate.entity";
-import { Party } from "../../party/entity/party.entity";
+import { ElectionMember } from "./election-member.entity";
+import { ElectionVote } from "./election-vote.entity";
 
 @Entity("election")
 export class Election extends Timestamp {
@@ -57,6 +58,12 @@ export class Election extends Timestamp {
 
   @OneToMany(() => Party, (party) => party.election)
   party: Party[];
+
+  @OneToMany(() => ElectionMember, (electionMember) => electionMember.election)
+  members: ElectionMember[];
+
+  @OneToMany(() => ElectionVote, (electionVote) => electionVote.election)
+  votes: ElectionVote;
 
   @Column({
     default: false,
