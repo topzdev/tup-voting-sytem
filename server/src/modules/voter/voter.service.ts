@@ -1,4 +1,4 @@
-import { getRepository, In } from "typeorm";
+import { getConnection, getRepository, In, Not } from "typeorm";
 import {
   File,
   parseCsvToJson,
@@ -7,12 +7,15 @@ import {
 import { HttpException } from "../../helpers/errors/http.exception";
 import { ElectionMember } from "../election/entity/election-member.entity";
 import { Election } from "../election/entity/election.entity";
+import { Organization } from "../organization/entity/organization.entity";
 import { Photo } from "../photo/photo.service";
 import { Voter } from "./entity/voter.entity";
+import { exportCSVDetailedError } from "./voter.helper";
 import {
   AllowVotersDto,
   CreateVoterBody,
   DisallowVotersDto,
+  GetElectionMembersDto,
   GetVoterBody,
   GetVoterElectionDto,
   ImportVotersByCSVDto,
@@ -116,6 +119,20 @@ const create = async (_voter: CreateVoterBody) => {
   if (!_voter.organization_id)
     throw new HttpException("BAD_REQUEST", "Organization is required");
 
+  const exist = await Voter.findOne({
+    where: [
+      { voter_id: _voter.voter_id },
+      { email_address: _voter.email_address },
+    ],
+  });
+
+  if (exist) {
+    throw new HttpException(
+      "BAD_REQUEST",
+      "Voter ID or Email Address is already exist"
+    );
+  }
+
   const voter = Voter.create({
     firstname: _voter.firstname,
     lastname: _voter.lastname,
@@ -152,13 +169,47 @@ const update = async (_voter: UpdateVoterBody) => {
     throw new HttpException("NOT_FOUND", "Voter not found");
   }
 
+  let toUpdateVoterId = curVoter.voter_id;
+
+  if (_voter.voter_id !== curVoter.voter_id) {
+    const voterExist = await Voter.findOne({
+      where: {
+        id: Not(curVoter.id),
+        voter_id: _voter.voter_id,
+      },
+    });
+
+    if (voterExist) {
+      throw new HttpException("BAD_REQUEST", "Voter Id has been used");
+    }
+
+    toUpdateVoterId = _voter.voter_id;
+  }
+
+  let toUpdateEmail = curVoter.email_address;
+
+  if (_voter.email_address !== curVoter.email_address) {
+    const voterExist = await Voter.findOne({
+      where: {
+        id: Not(curVoter.id),
+        email_address: _voter.email_address,
+      },
+    });
+
+    if (voterExist) {
+      throw new HttpException("BAD_REQUEST", "Voter Id has been used");
+    }
+
+    toUpdateEmail = _voter.email_address;
+  }
+
   const toUpdateVoter = Voter.merge(curVoter, {
     firstname: _voter.firstname,
     lastname: _voter.lastname,
-    email_address: _voter.email_address,
-    voter_id: _voter.voter_id,
-    pin: _voter.pin,
     organization_id: _voter.organization_id,
+    email_address: toUpdateEmail,
+    voter_id: toUpdateVoterId,
+    pin: _voter.pin,
   });
 
   await Voter.update(_voter.id, toUpdateVoter);
@@ -219,18 +270,128 @@ const checkVotedOnElectionById = async (
 };
 
 const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
-  const columns = ["firstname", "lastname", "email_address", "voter_id", "pin"];
+  // the default and standard columns wit h corresponding type which needed on csvtojson column parser should csv data return.
+  const columns = {
+    firstname: "string",
+    lastname: "string",
+    email_address: "string",
+    voter_id: "string",
+    pin: "string",
+  };
 
+  // check if election id has value
+  if (!_dto.election_id) {
+    throw new HttpException("BAD_REQUEST", "Election is required");
+  }
+
+  // check if organization id has value
+  if (!_dto.organization_id)
+    throw new HttpException("BAD_REQUEST", "Organization is required");
+
+  // check if organization is exist
+  const isOrganizationExist = await Organization.findOne(_dto.organization_id);
+  if (!isOrganizationExist)
+    throw new HttpException("BAD_REQUEST", "Election is not exist");
+
+  // check if election is exist
+  const isElectionExist = await Election.findOne(_dto.election_id);
+  if (!isElectionExist)
+    throw new HttpException("BAD_REQUEST", "Election is not exist");
+
+  // check if csv has value
   if (!_file) throw new HttpException("BAD_REQUEST", "Please send csv");
 
-  const data = await parseCsvToJson(_file, {});
+  // parsing the csv to json/array
+  const csvData = await parseCsvToJson(_file, {
+    colParser: columns,
+    checkType: true,
+    checkColumn: true,
+  });
 
-  console.log(data, columns);
+  console.log(csvData, columns);
 
-  if (!data.length)
+  // check if parsed csv data have items
+  if (!csvData.length)
     throw new HttpException("BAD_REQUEST", "File submitted seems empty");
 
-  return data;
+  //extract the columns by getting the first item object keys/properites
+  const dataColumns = Object.keys(csvData[0]);
+
+  // check if the columns of parsed csv match the default/standard column
+  const columnDiffs = Object.keys(columns).filter(
+    (item) => !dataColumns.includes(item)
+  );
+
+  if (columnDiffs.length)
+    throw new HttpException(
+      "BAD_REQUEST",
+      `column missing/mismatch (${columnDiffs.join(",")})`
+    );
+
+  console.log("Default Column", columns, "Columns", dataColumns);
+
+  let voterInserted, electionMembersInserted;
+
+  // create transaction
+  const connection = getConnection();
+  const queryRunner = connection.createQueryRunner();
+
+  // starting the transaction
+  await queryRunner.startTransaction();
+
+  console.log("Transaction started", queryRunner.isTransactionActive);
+
+  try {
+    // adding organization_id to voters info
+    const parsedVoter = csvData.map((item) => ({
+      ...item,
+      organization_id: _dto.organization_id,
+    }));
+
+    //inserting the parse voter data and returning the saved id's
+    voterInserted = await queryRunner.manager
+      .createQueryBuilder(Voter, "voter")
+      .insert()
+      .into(Voter)
+      .values(parsedVoter)
+      .returning("id")
+      .execute();
+
+    //mapping the inserted voter's id and addiing election_id on it
+    const parsedElectionMembers = voterInserted.generatedMaps.map((item) => ({
+      voter_id: item.id,
+      election_id: _dto.election_id,
+    }));
+
+    console.log("Voter Inserted", electionMembersInserted);
+
+    // then inserting the parse election members to database
+    electionMembersInserted = await queryRunner.manager
+      .createQueryBuilder()
+      .insert()
+      .into(ElectionMember)
+      .values(parsedElectionMembers)
+      .returning("id")
+      .execute();
+
+    console.log("Election Members Inserted", electionMembersInserted);
+
+    // commiting the transaction
+    await queryRunner.commitTransaction();
+    console.log("Transaction Commited", queryRunner.isTransactionActive);
+
+    // returning true if transaction is successful
+    return true;
+  } catch (error) {
+    // if error occurred on transaction then rollback it
+    await queryRunner.rollbackTransaction();
+    console.log("Transaction Error", error);
+    throw exportCSVDetailedError(error);
+  } finally {
+    // finalizing the transaction by releasing it
+    await queryRunner.release();
+    console.log("Transaction Final", voterInserted, electionMembersInserted);
+  }
 };
 
 const importVotersByElection = async (_dto: ImportVotersByElectionDto) => {
@@ -238,6 +399,12 @@ const importVotersByElection = async (_dto: ImportVotersByElectionDto) => {
 
   if (!electionIds.from || !electionIds.to)
     throw new HttpException("BAD_REQUEST", "Election ID's are required");
+
+  if (electionIds.from === electionIds.to)
+    throw new HttpException(
+      "BAD_REQUEST",
+      "You cannot re-import this current election"
+    );
 
   const electionMembers = await ElectionMember.find({
     where: {
@@ -249,12 +416,19 @@ const importVotersByElection = async (_dto: ImportVotersByElectionDto) => {
   if (!electionMembers.length)
     throw new HttpException("BAD_REQUEST", "No Election Members found");
 
-  const insertedElectionMember = await ElectionMember.insert(
-    electionMembers.map((item) => ({
-      voter_id: item.voter_id,
-      election_id: electionIds.to,
-    }))
-  );
+  const newElectionMembers = electionMembers.map((item) => ({
+    voter_id: item.voter_id,
+    election_id: electionIds.to,
+  }));
+
+  const memberRepository = getRepository(ElectionMember);
+
+  const insertedElectionMember = await memberRepository
+    .createQueryBuilder()
+    .insert()
+    .values(newElectionMembers)
+    .orIgnore('("election_id", "voter_id") DO NOTHING')
+    .execute();
 
   console.log(insertedElectionMember);
 
@@ -277,7 +451,9 @@ const exportVotersToCSV = async (_electionId: number) => {
     relations: ["voter"],
   });
 
-  const filename = `${election.title}-${new Date()}-items-${count}.csv`;
+  const filename = `${
+    election.title
+  }-${Date.now()}-items-${count}.csv`.toLowerCase();
 
   const data = voter.map((item) => {
     const { firstname, lastname, email_address, voter_id, pin } = item.voter;
@@ -299,7 +475,7 @@ const exportVotersToCSV = async (_electionId: number) => {
 };
 
 const disallowVoters = async (_dto: DisallowVotersDto) => {
-  if (!_dto.ids.length)
+  if (!_dto.voter_ids.length)
     throw new HttpException("BAD_REQUEST", "Please provide voter id's");
 
   if (!_dto.election_id) {
@@ -309,7 +485,7 @@ const disallowVoters = async (_dto: DisallowVotersDto) => {
   const result = await ElectionMember.update(
     {
       election_id: _dto.election_id,
-      id: In(_dto.ids),
+      voter_id: In(_dto.voter_ids),
     },
     {
       is_allowed: false,
@@ -320,7 +496,7 @@ const disallowVoters = async (_dto: DisallowVotersDto) => {
 };
 
 const allowVoters = async (_dto: AllowVotersDto) => {
-  if (!_dto.ids.length)
+  if (!_dto.voter_ids.length)
     throw new HttpException("BAD_REQUEST", "Please provide voter id's");
 
   if (!_dto.election_id) {
@@ -330,7 +506,7 @@ const allowVoters = async (_dto: AllowVotersDto) => {
   const result = await ElectionMember.update(
     {
       election_id: _dto.election_id,
-      id: In(_dto.ids),
+      voter_id: In(_dto.voter_ids),
     },
     {
       is_allowed: true,
@@ -340,17 +516,37 @@ const allowVoters = async (_dto: AllowVotersDto) => {
   return true;
 };
 
+const getElectionVoters = async (_dto: GetElectionMembersDto) => {
+  const electionRepository = getRepository(Election);
+
+  if (!_dto.election_id) {
+    throw new HttpException("BAD_REQUEST", "Election ID is required");
+  }
+
+  let builder = await electionRepository
+    .createQueryBuilder("election")
+    .leftJoinAndSelect("election.members", "members")
+    .leftJoinAndSelect("election.logo", "logo")
+    .where("election.id = :electionId", { electionId: _dto.election_id })
+    .andWhere("election.archive = :isArchived", { isArchived: false })
+    .getOne();
+
+  return builder || null;
+};
+
 const getVoterElections = async (_dto: GetVoterElectionDto) => {
   const electionRepository = getRepository(Election);
+  const memberRepository = getRepository(ElectionMember);
+  const voterRepository = getRepository(Voter);
 
   if (!_dto.voter_id)
     throw new HttpException("BAD_REQUEST", "Please provide voter's id");
 
   let builder = electionRepository
     .createQueryBuilder("election")
-    .leftJoinAndSelect("election.members", "members")
+    .leftJoin("election.members", "members")
     .leftJoinAndSelect("election.logo", "logo")
-    .where("election.archived = :isArchived", { isArchived: false })
+    .where("election.archive = :isArchived", { isArchived: false })
     .andWhere("members.voter_id = :voterId", { voterId: _dto.voter_id })
     .andWhere("members.is_allowed = :isAllowed", { isAllowed: true });
 
@@ -368,7 +564,7 @@ const getVoterElections = async (_dto: GetVoterElectionDto) => {
 };
 
 const removeVoters = async (_dto: RemoveVotersDto) => {
-  if (!_dto.ids.length)
+  if (!_dto.voter_ids.length)
     throw new HttpException("BAD_REQUEST", "Please provide voter id's");
 
   if (!_dto.election_id) {
@@ -376,11 +572,14 @@ const removeVoters = async (_dto: RemoveVotersDto) => {
   }
 
   const toDeleteData = await ElectionMember.find({
-    where: { id: In(_dto.ids), election_id: _dto.election_id },
+    where: {
+      election_id: _dto.election_id,
+      voter_id: In(_dto.voter_ids),
+    },
     select: ["id"],
   });
 
-  const result = await ElectionMember.softRemove(toDeleteData);
+  const result = await ElectionMember.remove(toDeleteData);
 
   console.log("removed voters", result);
 
@@ -405,6 +604,7 @@ const voterServices = {
   disallowVoters,
   allowVoters,
   getVoterElections,
+  getElectionVoters,
   removeVoters,
 };
 

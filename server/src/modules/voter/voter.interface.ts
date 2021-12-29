@@ -16,6 +16,10 @@ export interface GetVoterElectionDto {
   voter_id: number;
 }
 
+export type GetElectionMembersDto = {
+  election_id: number;
+};
+
 export type CreateVoterBody = Pick<
   Voter,
   | "voter_id"
@@ -51,16 +55,16 @@ export type ImportVotersByCSVDto = {
 };
 
 export type DisallowVotersDto = {
-  ids: number[];
+  voter_ids: number[];
   election_id: number;
 };
 
 export type AllowVotersDto = {
-  ids: number[];
+  voter_ids: number[];
   election_id: number;
 };
 
 export type RemoveVotersDto = {
-  ids: number[];
+  voter_ids: number[];
   election_id: number;
 };

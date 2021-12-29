@@ -12,9 +12,11 @@ router.get("/", adminAuth, rolesAllowed("SUPER_ADMIN"), voterController.getAll);
 
 router.get("/voter-elections", adminAuth, voterController.getVoterElections);
 
+router.get("/election-voters", adminAuth, voterController.getElectionVoters);
+
 router.get("/:id", adminAuth, voterController.getOneById);
 
-router.get("/voter-id/:id", adminAuth, voterController.getOneByVoterId);
+router.get("/voter-id/:voterId", adminAuth, voterController.getOneByVoterId);
 
 router.get("/email/:email", adminAuth, voterController.getOneByEmailAddress);
 
@@ -61,7 +63,7 @@ router.put(
 );
 
 router.post(
-  "/export-to-csv",
+  "/export-to-csv/:electionId",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   voterController.exportVotersToCSV
@@ -92,14 +94,14 @@ router.post(
   "/allow",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
-  voterController.disallowVoters
+  voterController.allowVoters
 );
 
 router.post(
   "/remove",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
-  voterController.disallowVoters
+  voterController.removeVoters
 );
 
 const voterRoute = router;

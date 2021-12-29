@@ -4,6 +4,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
 } from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
 import { Election } from "../../election/entity/election.entity";
@@ -11,6 +12,7 @@ import { Voter } from "../../voter/entity/voter.entity";
 import { ElectionVote } from "./election-vote.entity";
 
 @Entity("election_member")
+@Unique(["election_id", "voter_id"])
 export class ElectionMember extends Timestamp {
   @PrimaryGeneratedColumn()
   id: number;

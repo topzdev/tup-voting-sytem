@@ -3,36 +3,31 @@ import { body } from "express-validator";
 // docs: https://express-validator.github.io/docs/index.html
 
 const validations = {
-  id: body("id").notEmpty().withMessage("ID is required"),
-  slug: body("slug")
-    .notEmpty()
-    .withMessage("Slug is required")
-    .not()
-    .contains(" ")
-    .withMessage("Slug must not contain space")
-    .isLowercase()
-    .withMessage("Slug must be lowercase")
-    .not()
-    .matches(/[ `!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?~\.\*\\\t\n\r]+/)
-    .withMessage("Slug must not contain number and special characters"),
-  title: body("title").notEmpty().withMessage("Title is required"),
+  id: body("id").notEmpty().withMessage("ID is required").toInt(),
+  firstname: body("firstname").notEmpty().withMessage("Firstname is required"),
+  lastname: body("lastname").notEmpty().withMessage("Lastname is required"),
+  voter_id: body("voter_id").notEmpty().withMessage("Voter ID is required"),
+  pin: body("pin").notEmpty().withMessage("PIN is required"),
   organization_id: body("organization_id")
     .notEmpty()
-    .withMessage("Organization is required"),
-  start_date: body("start_date")
+    .withMessage("Organization ID is required"),
+  election_id: body("election_id")
     .notEmpty()
-    .withMessage("Start Date is required"),
-
-  close_date: body("start_date")
-    .notEmpty()
-    .withMessage("Start Date is required"),
+    .withMessage("Election ID is required"),
 };
 
-const { id, slug, title, organization_id, close_date, start_date } =
+const { id, firstname, lastname, voter_id, pin, organization_id, election_id } =
   validations;
 
-const create = [slug, title, organization_id, close_date, start_date];
-const update = [id, slug, title, close_date, start_date, organization_id];
+const create = [
+  firstname,
+  lastname,
+  voter_id,
+  pin,
+  organization_id,
+  election_id,
+];
+const update = [id, firstname, lastname, voter_id, pin, organization_id];
 
 const voterValidator = {
   create,

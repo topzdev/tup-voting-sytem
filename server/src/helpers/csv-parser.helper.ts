@@ -5,12 +5,12 @@ import fileUpload from "express-fileupload";
 import { Parser } from "json2csv";
 export type File = fileUpload.UploadedFile;
 
-export const parseCsvToJson = async (
+export async function parseCsvToJson(
   csvFile: File,
   params: Partial<CSVParseParam>
-) => {
+) {
   return await csv(params).fromFile(csvFile.tempFilePath);
-};
+}
 
 export const parseJsontoCsv = async (fields: any[], data: any[]) => {
   const json2csv = new Parser({ fields });

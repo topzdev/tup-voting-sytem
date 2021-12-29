@@ -77,7 +77,7 @@ const getOneByVoterId = async (
   next: NextFunction
 ) => {
   try {
-    const voter_id = req.params.id;
+    const voter_id = req.params.voterId;
 
     res.status(200).json(await voterService.getByVoterId(voter_id));
   } catch (error) {
@@ -91,7 +91,7 @@ const isExistByVoterId = async (
   next: NextFunction
 ) => {
   try {
-    const voter_id = req.params.id;
+    const voter_id = req.params.voterId;
 
     res.status(200).json(await voterService.isExistByVoterId(voter_id));
   } catch (error) {
@@ -144,9 +144,9 @@ const exportVotersToCSV = async (
   next: NextFunction
 ) => {
   try {
-    const id = parseInt(req.params.id);
+    const electionId = parseInt(req.params.electionId);
 
-    const { file, filename } = await voterService.exportVotersToCSV(id);
+    const { file, filename } = await voterService.exportVotersToCSV(electionId);
 
     res
       .status(200)
@@ -234,6 +234,19 @@ const getVoterElections = async (
   }
 };
 
+const getElectionVoters = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const dto = req.query as any;
+    res.status(200).json(await voterService.getElectionVoters(dto));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const voterController = {
   getAll,
   getOneById,
@@ -253,9 +266,9 @@ const voterController = {
 
   disallowVoters,
   allowVoters,
-
   removeVoters,
   getVoterElections,
+  getElectionVoters,
 };
 
 export default voterController;
