@@ -13,10 +13,10 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import OrganizationEmpty from "../../components/pages/org/OrganizationEmpty.vue";
-import OrganizationList from "../../components/pages/org/OrganizationList.vue";
-import PageCenter from "../../components/utils/PageCenter.vue";
-import organizationServices from "../../services/organization.service";
+import OrganizationEmpty from "@/components/pages/org/OrganizationEmpty.vue";
+import OrganizationList from "@/components/pages/org/OrganizationList.vue";
+import PageCenter from "@/components/utils/PageCenter.vue";
+import organizationServices from "@/services/organization.service";
 
 export default Vue.extend({
   components: {

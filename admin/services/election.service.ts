@@ -1,36 +1,26 @@
 import apiClient from ".";
 import transformParamsToUrl from "../helpers/paramsToUrl.helpers";
 
-type OrganizationLogo = {
+type ElectionLogo = {
   id: number;
   public_id: string;
   url: string;
   service: string;
 };
 
-type OrganizationTheme = {
-  id: string;
-  primary: string;
-  secondary: string;
-};
-
-export type Organization = {
-  created_at: string;
-  updated_at: string;
-  deleted_at: null | string;
+export interface Election {
   id: number;
   slug: string;
-  ticker: string;
   title: string;
-  description?: string;
-  archive: boolean;
-  themePrimary: string;
-  themeSecondary: string;
-  theme: OrganizationTheme;
-  logo: OrganizationLogo;
-};
+  description: string;
+  start_date: string;
+  close_date: string;
+  organization_id: number;
+  logo: ElectionLogo;
+}
 
-export interface GetOrganizationDto {
+export interface GetElectionDto {
+  orgId?: number;
   search?: string;
   order?: any;
   page?: number;
@@ -38,31 +28,31 @@ export interface GetOrganizationDto {
   withArchive?: boolean;
 }
 
-export type CreateOrganizationDto = {
+export type CreateElectionDto = {
   slug: string;
   title: string;
   description: string;
-  ticker: string;
-  themePrimary: string;
-  themeSecondary: string;
+  start_date: string;
+  close_date: string;
+  organization_id: number;
   logo: File;
 };
 
-export type UpdateOrganizationDto = {
-  slug: string;
-  title: string;
-  description: string;
-  ticker: string;
-  themePrimary: string;
-  themeSecondary: string;
+export type UpdateElectionDto = {
   id: number;
+  slug: string;
+  title: string;
+  description: string;
+  start_date: string;
+  close_date: string;
+  organization_id: number;
   logo: File;
 };
 
-const url = "/api/v1/org";
+const url = "/api/v1/election";
 
-const organizationServices = {
-  async getAll(query: GetOrganizationDto) {
+const electionServices = {
+  async getAll(query: GetElectionDto) {
     return (await apiClient.get(`${url}/${transformParamsToUrl(query)}`)).data;
   },
   async getById(id: string) {
@@ -77,15 +67,17 @@ const organizationServices = {
     return (await apiClient.get(`${url}/exist/${slug}`)).data;
   },
 
-  async create(body: CreateOrganizationDto) {
+  async create(body: CreateElectionDto) {
     const formData = new FormData();
+
+    console.log("Body Test", body);
 
     formData.append("slug", body.slug);
     formData.append("title", body.title);
     formData.append("description", body.description);
-    formData.append("ticker", body.ticker);
-    formData.append("theme_primary", body.themePrimary);
-    formData.append("theme_secondary", body.themeSecondary);
+    formData.append("start_date", body.start_date);
+    formData.append("close_date", body.close_date);
+    formData.append("organization_id", body.organization_id.toString());
     formData.append("logo", body.logo);
 
     return (
@@ -97,16 +89,16 @@ const organizationServices = {
     ).data;
   },
 
-  async update(body: UpdateOrganizationDto) {
+  async update(body: UpdateElectionDto) {
     const formData = new FormData();
 
     formData.append("id", body.id.toString());
     formData.append("slug", body.slug);
     formData.append("title", body.title);
     formData.append("description", body.description);
-    formData.append("ticker", body.ticker);
-    formData.append("theme_primary", body.themePrimary);
-    formData.append("theme_secondary", body.themeSecondary);
+    formData.append("start_date", body.start_date);
+    formData.append("close_date", body.close_date);
+    formData.append("organization_id", body.organization_id.toString());
     formData.append("logo", body.logo);
 
     return (
@@ -135,4 +127,4 @@ const organizationServices = {
   },
 };
 
-export default organizationServices;
+export default electionServices;

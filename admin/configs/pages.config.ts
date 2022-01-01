@@ -6,6 +6,13 @@ const pageConfig = {
     },
     icon: "mdi-account-group",
   },
+  election: {
+    title: "Election",
+    to: {
+      path: "/election",
+    },
+    icon: "mdi-account-group",
+  },
 };
 
 export default pageConfig;

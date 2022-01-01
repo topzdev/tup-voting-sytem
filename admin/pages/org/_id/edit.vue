@@ -1,33 +1,37 @@
 <template>
-  <page-center>
-    <v-row>
-      <v-col class="mx-auto text-center" md="4">
-        <h1 class="headline-6 font-weight-medium mb-3">Edit Organization</h1>
+  <span>
+    <page-bars back title="Edit Organization"> </page-bars>
+
+    <account-container>
+      <v-col class="mx-auto text-center" md="6">
         <div v-if="$fetchState.pending">Loading...</div>
         <div v-else-if="$fetchState.error">Something went wrong</div>
         <organization-edit-form
           v-else
-          :defaultData="edit"
+          :defaultData="defaultData"
           :updateFunc="update"
         />
       </v-col>
-    </v-row>
-  </page-center>
+    </account-container>
+  </span>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 
-import PageCenter from "@/components/utils/PageCenter.vue";
+import PageBars from "@/components/bars/PageBars.vue";
+import AccountContainer from "@/components/containers/AccountContainer.vue";
 import OrganizationCreateForm from "@/components/pages/org/OrganizationCreateForm.vue";
 import OrganizationEditForm from "@/components/pages/org/OrganizationEditForm.vue";
 import organizationServices, {
   UpdateOrganizationDto,
-} from "../../../services/organization.service";
+} from "@/services/organization.service";
 
 export default Vue.extend({
+  layout: "account",
   components: {
-    PageCenter,
+    PageBars,
+    AccountContainer,
     OrganizationCreateForm,
     OrganizationEditForm,
   },
@@ -58,7 +62,7 @@ export default Vue.extend({
           timeout: 5000,
           color: "success",
         });
-        this.$router.push("/org");
+        this.$router.push("/");
       } catch (error: any) {
         throw error.response.data.error;
       }

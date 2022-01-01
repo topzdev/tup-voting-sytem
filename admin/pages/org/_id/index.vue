@@ -1,9 +1,13 @@
 <template>
   <span>
-    <page-bars>
-      <h2 class="headline-6 font-weight-medium">Organization</h2>
-      <v-btn color="primary" class="ml-auto" to="/org/create" large
-        >New Organization</v-btn
+    <page-bars back backTooltip="Back to Organization" :title="pageTitle">
+      <v-btn
+        v-if="itemsCount"
+        color="primary"
+        class="ml-auto"
+        :to="createPage"
+        large
+        >New Election</v-btn
       >
     </page-bars>
     <account-container>
@@ -11,10 +15,13 @@
         <v-col class="mx-auto text-center" md="8">
           <div v-if="$fetchState.pending">Loading...</div>
           <div v-else-if="$fetchState.error">Something went wrong</div>
-          <organization-empty v-else-if="!totalCount" />
+          <election-empty v-else-if="!itemsCount" />
         </v-col>
 
-        <v-col cols="12" v-if="!$fetchState.pending && !$fetchState.error">
+        <v-col
+          cols="12"
+          v-if="!$fetchState.pending && !$fetchState.error && itemsCount"
+        >
           <v-row no-gutters>
             <v-col cols="12">
               <v-row>
@@ -33,7 +40,7 @@
               </v-row>
             </v-col>
             <v-col cols="12">
-              <organization-list :items="items" :total-count="totalCount" />
+              <election-list :items="items" />
             </v-col>
           </v-row>
         </v-col>
@@ -41,25 +48,30 @@
     </account-container>
   </span>
 </template>
-<script lang="ts">
+
+<script>
 import Vue from "vue";
 import authMixins from "@/mixins/auth.mixins";
+import orgMixins from "@/mixins/org.mixins";
 import PageBars from "@/components/bars/PageBars.vue";
 import AccountContainer from "@/components/containers/AccountContainer.vue";
-import OrganizationList from "@/components/pages/org/OrganizationList.vue";
-import organizationServices from "@/services/organization.service";
 
-import OrganizationEmpty from "@/components/pages/org/OrganizationEmpty.vue";
-import debounce from "../helpers/debounce";
+import ElectionEmpty from "@/components/pages/election/ElectionEmpty.vue";
+import ElectionList from "@/components/pages/election/ElectionList.vue";
+import debounce from "@/helpers/debounce";
+import electionServices from "../../../services/election.service";
+import organizationServices, {
+  Organization,
+} from "@/services/organization.service";
 
 export default Vue.extend({
   auth: true,
   layout: "account",
-  mixins: [authMixins],
+  mixins: [authMixins, orgMixins],
   components: {
     PageBars,
-    OrganizationList,
-    OrganizationEmpty,
+    ElectionList,
+    ElectionEmpty,
     AccountContainer,
   },
   head: {
@@ -71,12 +83,14 @@ export default Vue.extend({
       loading: true,
       items: [],
       totalCount: 0,
-      itemCount: 0,
+      itemsCount: 0,
       search: "",
+      organization: null,
     };
   },
   fetchOnServer: false,
   async fetch() {
+    await this.fetchOrganization();
     await this.fetchItems();
   },
 
@@ -87,18 +101,34 @@ export default Vue.extend({
     }, 500),
   },
 
+  computed: {
+    pageTitle() {
+      if (!this.organization) return "Election";
+      return `${this.organization.ticker} Election`;
+    },
+  },
+
   methods: {
-    async fetchOrganization() {},
+    async fetchOrganization() {
+      try {
+        const result = await organizationServices.getById(this.organizationId);
+        this.organization = result;
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
     async fetchItems() {
       this.loading = true;
       try {
-        const result = await organizationServices.getAll({
+        const result = await electionServices.getAll({
           search: this.search,
+          orgId: this.organizationId,
         });
+
         this.items = result.items;
         this.totalCount = result.totalCount;
-        this.itemCount = result.itemCount;
+        this.itemsCount = result.itemsCount;
       } catch (error) {
         console.log(error);
       }

@@ -69,8 +69,8 @@ import Vue from "vue";
 import PasswordField from "@/components/input/PasswordField.vue";
 
 const defaultForm = {
-  username: "dummy",
-  password: "12345678",
+  username: "topzdev",
+  password: "topzdev-lugod",
 };
 
 const defaultAlert = {
@@ -111,12 +111,16 @@ export default Vue.extend({
           data: this.form,
         });
 
+        console.log(result);
+
         if (result && result.data.error) {
           this.alert = {
             message: result.data.message,
             type: "error",
             show: true,
           };
+
+          return;
         }
 
         this.reset();

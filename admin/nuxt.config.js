@@ -26,7 +26,10 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [{ src: "@/plugins/axios-port.plugins.ts" }],
+  plugins: [
+    { src: "~/plugins/axios-port.plugins.ts" },
+    { src: "~/plugins/vue-datetime-picker.ts", mode: "client" },
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -112,5 +115,7 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: ["vue-datetime-picker"],
+  },
 };

@@ -3,7 +3,7 @@
     <v-row no-gutters class="my-4">
       <template v-if="items.length">
         <v-col v-for="item in items" :key="item.id" cols="12" class="mb-3">
-          <organization-card :org="item" />
+          <election-card :election="item" />
         </v-col>
       </template>
       <v-col v-else class="text-center"> No item found </v-col>
@@ -13,12 +13,11 @@
 
 <script>
 import Vue, { PropOptions } from "vue";
-import { organizationDummy } from "@/services/organization.service";
-import OrganizationCard from "./OrganizationCard.vue";
+import ElectionCard from "./ElectionCard.vue";
 
 export default Vue.extend({
   components: {
-    OrganizationCard,
+    ElectionCard,
   },
 
   props: {

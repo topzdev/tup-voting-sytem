@@ -68,12 +68,12 @@
       </v-col>
 
       <v-col class="d-flex" cols="12">
+        <v-btn text to="/" large class="mr-auto">Cancel</v-btn>
         <v-btn
           color="primary"
           :disabled="loading"
           :loading="loading"
           large
-          block
           @click="submit"
           >Submit</v-btn
         >
@@ -145,16 +145,15 @@ export default Vue.extend({
 
   methods: {
     async submit() {
+      this.loading = true;
+
       if (!this.form.logo) {
-        this.alert = {
+        return (this.alert = {
           show: true,
           type: "error",
           message: "Logo is required",
-        };
-
-        return;
+        });
       }
-      this.loading = true;
 
       (this.$refs.form as any).validate();
 

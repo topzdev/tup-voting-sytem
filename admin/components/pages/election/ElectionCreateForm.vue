@@ -8,7 +8,7 @@
       </v-col>
 
       <v-col align="center" cols="12">
-        <logo-uploader v-model="photoData" :url="form.logo.url" />
+        <logo-uploader v-model="form.logo" />
       </v-col>
 
       <v-col cols="12">
@@ -31,15 +31,23 @@
           hide-details="auto"
         ></v-text-field>
       </v-col>
-      <v-col cols="12">
-        <v-text-field
-          label="Ticker *"
-          outlined
-          v-model="form.ticker"
-          :rules="rules.ticker"
-          hide-details="auto"
-        ></v-text-field>
+
+      <v-col cols="6">
+        <date-time-picker
+          label="Start Date *"
+          v-model="form.start_date"
+          :rules="rules.start_date"
+        />
       </v-col>
+
+      <v-col cols="6">
+        <date-time-picker
+          label="Close Date *"
+          v-model="form.close_date"
+          :rules="rules.close_date"
+        />
+      </v-col>
+
       <v-col cols="12">
         <v-textarea
           label="Description"
@@ -47,24 +55,6 @@
           v-model="form.description"
           hide-details="auto"
         ></v-textarea>
-      </v-col>
-      <v-col cols="6">
-        <theme-picker
-          label="Theme - Primary"
-          outlined
-          v-model="form.themePrimary"
-          :rules="rules.themePrimary"
-          hide-details="auto"
-        ></theme-picker>
-      </v-col>
-      <v-col cols="6">
-        <theme-picker
-          label="Theme - Secondary"
-          outlined
-          v-model="form.themeSecondary"
-          :rules="rules.themeSecondary"
-          hide-details="auto"
-        ></theme-picker>
       </v-col>
 
       <v-col class="d-flex" cols="12">
@@ -82,20 +72,18 @@
   </v-form>
 </template>
 
-
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
-import ThemePicker from "../../pickers/ThemePicker.vue";
+import Vue from "vue";
+import DateTimePicker from "../../pickers/DateTimePicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
 import configs from "@/configs";
-
+import organizationApi from "../../../services/organization.service";
 const defaultForm = {
   slug: "",
   title: "",
   description: "",
-  ticker: "",
-  themePrimary: "blue",
-  themeSecondary: "red",
+  start_date: "2022-01-14 04:25",
+  close_date: "2022-01-14 04:25",
   logo: null,
 };
 
@@ -106,29 +94,24 @@ const defaultAlert = {
 };
 
 export default Vue.extend({
-  components: { ThemePicker, LogoUploader },
   props: {
-    defaultData: Object,
-    updateFunc: Function,
+    createFunc: Function,
   },
+  components: { DateTimePicker, LogoUploader },
   data() {
     return {
       valid: false,
       alert: Object.assign({}, defaultAlert),
+
       loading: false,
       form: Object.assign({}, defaultForm),
-      photoData: null,
 
       baseURL: configs.baseURL,
     };
   },
 
   computed: {
-    defaultLogoUrl(): string {
-      const url = this.defaultData.logo.public_url || this.form.logo;
-      return url;
-    },
-    rules: function (): object {
+    rules() {
       return {
         slug: [
           (v: any) => !!v || "Slug is required",
@@ -136,9 +119,8 @@ export default Vue.extend({
             /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.test(v) || "Slug must be valid",
         ],
         title: [(v: any) => !!v || "Title is required"],
-        ticker: [(v: any) => !!v || "Ticker is required"],
-        themePrimary: [(v: any) => !!v || "Theme Primary is required"],
-        themeSecondary: [(v: any) => !!v || "Theme Secondary is required"],
+        start_date: [(v: any) => !!v || "Start Date is required"],
+        close_date: [(v: any) => !!v || "Close Date is required"],
       };
     },
   },
@@ -156,25 +138,19 @@ export default Vue.extend({
       }
       this.loading = true;
 
-      (this.$refs.form as any).validate();
+      (this.$refs as any).form.validate();
 
       if (this.valid) {
+        console.log(this.form);
         try {
-          await this.updateFunc({
-            ...this.form,
-            logo: this.photoData,
-            id: this.defaultData.id,
-          });
+          await this.createFunc(this.form);
           this.reset();
         } catch (error: any) {
-          console.log(error);
-          if (error) {
-            this.alert = {
-              show: true,
-              type: "error",
-              message: error.message,
-            };
-          }
+          this.alert = {
+            show: true,
+            type: "error",
+            message: error.message,
+          };
         }
       }
       this.loading = false;
@@ -186,27 +162,5 @@ export default Vue.extend({
       this.alert = Object.assign({}, defaultAlert);
     },
   },
-
-  watch: {
-    defaultData: {
-      deep: true,
-      immediate: true,
-      handler: function (value, oldVal) {
-        const theme = value.theme;
-
-        delete value.theme;
-
-        this.form = Object.assign(
-          {},
-          {
-            ...value,
-            themePrimary: theme.primary,
-            themeSecondary: theme.secondary,
-          }
-        );
-      },
-    },
-  },
 });
 </script>
-

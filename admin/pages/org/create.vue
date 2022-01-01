@@ -1,27 +1,29 @@
 <template>
-  <page-center>
-    <v-row>
-      <v-col class="mx-auto text-center" md="4">
-        <h1 class="headline-6 font-weight-medium mb-3">Create Organization</h1>
+  <span>
+    <page-bars back title="Create Organization"> </page-bars>
 
+    <account-container>
+      <v-col class="mx-auto text-center" md="6">
         <organization-create-form :createFunc="create" />
       </v-col>
-    </v-row>
-  </page-center>
+    </account-container>
+  </span>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-
-import PageCenter from "@/components/utils/PageCenter.vue";
+import PageBars from "@/components/bars/PageBars.vue";
+import AccountContainer from "@/components/containers/AccountContainer.vue";
 import OrganizationCreateForm from "@/components/pages/org/OrganizationCreateForm.vue";
 import organizationServices, {
   CreateOrganizationDto,
-} from "../../services/organization.service";
+} from "@/services/organization.service";
 
 export default Vue.extend({
+  layout: "account",
   components: {
-    PageCenter,
+    PageBars,
+    AccountContainer,
     OrganizationCreateForm,
   },
 
@@ -36,7 +38,7 @@ export default Vue.extend({
           timeout: 5000,
           color: "success",
         });
-        this.$router.push("/org");
+        this.$router.push("/");
       } catch (error: any) {
         throw error.response.data.error;
       }
