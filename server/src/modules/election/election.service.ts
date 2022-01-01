@@ -33,7 +33,7 @@ const getAll = async (_query: GetElectionBody) => {
   }
 
   if (searchStirng) {
-    builder = builder.orWhere("election.title ILIKE :title", {
+    builder = builder.andWhere("election.title ILIKE :title", {
       title: `%${searchStirng}%`,
     });
   }
@@ -49,11 +49,21 @@ const getAll = async (_query: GetElectionBody) => {
     builder = builder.offset(offset).limit(_query.take);
   }
 
-  const [elections, count] = await builder.getManyAndCount();
+  const [items, itemsCount] = await builder.getManyAndCount();
 
+  const where: any = {};
+
+  if (_query.orgId) {
+    where.organization_id = _query.orgId;
+  }
+
+  const totalCount = await electionRepository.count({
+    where,
+  });
   return {
-    items: elections,
-    count,
+    items,
+    itemsCount,
+    totalCount,
   };
 };
 

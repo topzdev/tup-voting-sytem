@@ -31,11 +31,12 @@ const getAll = async (_query: GetOrganizationParams) => {
   }
 
   if (searchStirng) {
-    builder = builder.orWhere("org.ticker ILIKE :ticker", {
+    builder = builder.andWhere("org.ticker ILIKE :ticker", {
       ticker: `%${searchStirng}%`,
     });
+    console.log("Search String: ", searchStirng);
 
-    builder = builder.orWhere("org.title ILIKE :title", {
+    builder = builder.andWhere("org.title ILIKE :title", {
       title: `%${searchStirng}%`,
     });
   }
@@ -55,11 +56,12 @@ const getAll = async (_query: GetOrganizationParams) => {
     builder = builder.offset(offset).limit(_query.take);
   }
 
-  const [organization, count] = await builder.getManyAndCount();
-
+  const [items, itemsCount] = await builder.getManyAndCount();
+  const totalCount = await orgRepository.count();
   return {
-    items: organization,
-    count,
+    items,
+    itemsCount,
+    totalCount,
   };
 };
 
@@ -187,8 +189,6 @@ const update = async (
   }
 
   let toUpdateLogo = curOrganization.logo;
-
-  console.log("The LOGO:", _logo.tempFilePath, toUpdateLogo);
 
   if (_logo && _logo.tempFilePath) {
     //since there is a new logo provided we will destroy the exisiting image then replace before uploading a new one, so when error occcured on destory image the whole process will stop

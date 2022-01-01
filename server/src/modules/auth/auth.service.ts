@@ -19,7 +19,7 @@ const adminLogin = async (_credentials: AdminLoginCredentials) => {
     .where("user.username = :userText", { userText: _credentials.username })
     .getOne();
 
-  if (!user) return new HttpException("BAD_REQUEST", "Incorrect username");
+  if (!user) return new HttpException("BAD_REQUEST", "User is not exist");
 
   if (!(await validatePassword(_credentials.password, user.password))) {
     return new HttpException("BAD_REQUEST", "Incorrect password");
