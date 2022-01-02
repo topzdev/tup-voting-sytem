@@ -29,7 +29,14 @@
     </v-navigation-drawer>
 
     <!-- App Bar -->
-    <v-app-bar :clipped-left="clipped" fixed app color="primary" dark>
+    <v-app-bar
+      :clipped-left="clipped"
+      fixed
+      app
+      color="primary"
+      dark
+      elevation="0"
+    >
       <div v-if="electionInfo" class="d-flex align-center">
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
@@ -55,9 +62,7 @@
 
     <!-- App Main -->
     <v-main>
-      <v-container>
-        <Nuxt />
-      </v-container>
+      <Nuxt />
     </v-main>
 
     <app-snackbar />

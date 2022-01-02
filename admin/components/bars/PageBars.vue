@@ -1,35 +1,39 @@
 <template>
-  <v-app-bar>
-    <account-container>
-      <div class="d-flex align-center">
-        <div class="d-flex align-center">
-          <v-tooltip bottom v-if="back || backTo">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                color="primary"
-                fab
-                text
-                v-bind="attrs"
-                @click="backToPage"
-                v-on="on"
-              >
-                <v-icon large> mdi-chevron-left </v-icon></v-btn
-              >
-            </template>
-            <span v-text="backTooltipMessage"></span>
-          </v-tooltip>
+  <v-toolbar elevation="1">
+    <v-container>
+      <v-row justify="center" align="center">
+        <v-col :cols="cols" :sm="sm" :md="md" :lg="lg">
+          <div class="d-flex align-center">
+            <div class="d-flex align-center">
+              <v-tooltip bottom v-if="back || backTo">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    color="primary"
+                    fab
+                    text
+                    v-bind="attrs"
+                    @click="backToPage"
+                    v-on="on"
+                  >
+                    <v-icon large> mdi-chevron-left </v-icon></v-btn
+                  >
+                </template>
+                <span v-text="backTooltipMessage"></span>
+              </v-tooltip>
 
-          <h2
-            v-if="title"
-            class="headline-6 font-weight-medium"
-            v-text="title"
-          />
-        </div>
+              <h2
+                v-if="title"
+                class="headline-6 font-weight-medium"
+                v-text="title"
+              />
+            </div>
 
-        <slot></slot>
-      </div>
-    </account-container>
-  </v-app-bar>
+            <slot></slot>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-toolbar>
 </template>
 
 <script>
@@ -43,6 +47,13 @@ export default {
     back: Boolean,
     backTo: String,
     backTooltip: String,
+    cols: {
+      type: String,
+      default: 12,
+    },
+    md: String,
+    sm: String,
+    lg: String,
   },
 
   methods: {
