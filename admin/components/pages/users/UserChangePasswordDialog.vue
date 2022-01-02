@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import userServices from "../../../services/user.service";
+import userServices from "@/services/user.service";
 import UserChangePasswordForm from "./UserChangePasswordForm.vue";
 
 export default Vue.extend({

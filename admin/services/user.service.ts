@@ -1,5 +1,5 @@
 import apiClient from ".";
-import transformParamsToUrl from "../helpers/paramsToUrl.helpers";
+import transformParamsToUrl from "@/helpers/paramsToUrl.helpers";
 
 const url = "/api/v1/user";
 

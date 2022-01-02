@@ -1,7 +1,7 @@
 import Vue from "vue";
 import colors from "vuetify/es5/util/colors";
 import { Colors } from "vuetify/lib/util/colors";
-import systemColors, { SystemColors } from "../configs/system-colors.config";
+import systemColors, { SystemColors } from "@/configs/system-colors.config";
 
 type AppTheme = {
   primary: SystemColors;

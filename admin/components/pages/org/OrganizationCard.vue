@@ -4,7 +4,7 @@
       <v-row no-gutters align="center">
         <v-col cols="auto">
           <v-avatar size="50" :title="org.ticker">
-            <img :src="org.logo.url" :alt="org.title" />
+            <app-image :size="50" :src="org.logo" :alt="org.title" />
           </v-avatar>
         </v-col>
         <v-col class="px-3 d-flex flex-column justify-center text-left">
@@ -16,8 +16,15 @@
           </p>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <v-btn color="warning" text :to="`/org/${org.id}/edit`">Edit</v-btn>
-          <v-btn color="primary" text :to="`/org/${org.id}`">View</v-btn>
+          <v-btn
+            color="warning"
+            text
+            :to="`/manage/organization/${org.id}/edit`"
+            >Edit</v-btn
+          >
+          <v-btn color="primary" text :to="`/organization/${org.id}`"
+            >View</v-btn
+          >
         </v-col>
       </v-row>
     </v-card-text>
@@ -26,9 +33,13 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { Organization } from "../../../services/organization.service";
+import { Organization } from "@/services/organization.service";
+import AppImage from "@/components/app/AppImage.vue";
 
 export default Vue.extend({
+  components: {
+    AppImage,
+  },
   props: {
     org: {
       type: Object,

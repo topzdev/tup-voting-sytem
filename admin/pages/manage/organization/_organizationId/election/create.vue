@@ -16,10 +16,13 @@ import Vue, { PropOptions } from "vue";
 import PageBars from "@/components/bars/PageBars.vue";
 import AccountContainer from "@/components/containers/AccountContainer.vue";
 import ElectionCreateForm from "@/components/pages/election/ElectionCreateForm.vue";
-import electionServices from "../../../services/election.service";
+import electionServices from "@/services/election.service";
+import orgMixin from "~/mixins/org.mixins";
 
 export default Vue.extend({
+  auth: true,
   layout: "account",
+  mixins: [orgMixin],
   components: {
     PageBars,
     AccountContainer,
@@ -44,16 +47,10 @@ export default Vue.extend({
           timeout: 5000,
           color: "success",
         });
-        this.$router.push(`/org/${this.organizationId}`);
+        this.$router.push(`/organization/${this.organizationId}`);
       } catch (error) {
         throw error;
       }
-    },
-  },
-
-  computed: {
-    organizationId() {
-      return this.$route.params.id;
     },
   },
 

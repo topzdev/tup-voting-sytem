@@ -58,11 +58,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import ThemePicker from "../../pickers/ThemePicker.vue";
+import ThemePicker from "@/components/pickers/ThemePicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
 import configs from "@/configs";
 import PasswordField from "@/components/input/PasswordField.vue";
-import RoleSelect from "../../input/RoleSelect.vue";
+import RoleSelect from "@/components/input/RoleSelect.vue";
 
 const defaultForm = {
   firstname: "",

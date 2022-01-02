@@ -2,7 +2,11 @@
   <span>
     <page-bars>
       <h2 class="headline-6 font-weight-medium">Organization</h2>
-      <v-btn color="primary" class="ml-auto" to="/org/create" large
+      <v-btn
+        color="primary"
+        class="ml-auto"
+        to="/manage/organization/create"
+        large
         >New Organization</v-btn
       >
     </page-bars>
@@ -50,7 +54,7 @@ import OrganizationList from "@/components/pages/org/OrganizationList.vue";
 import organizationServices from "@/services/organization.service";
 
 import OrganizationEmpty from "@/components/pages/org/OrganizationEmpty.vue";
-import debounce from "../helpers/debounce";
+import debounce from "@/helpers/debounce";
 
 export default Vue.extend({
   auth: true,

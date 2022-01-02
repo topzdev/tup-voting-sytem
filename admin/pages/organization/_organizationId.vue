@@ -1,6 +1,10 @@
 <template>
   <span>
-    <page-bars backTo="/" backTooltip="Back to Organization" :title="pageTitle">
+    <page-bars
+      backTo="/"
+      backTooltip="Back to Organization"
+      :title="pageBarTitle"
+    >
       <v-btn
         v-if="itemsCount"
         color="primary"
@@ -59,7 +63,7 @@ import AccountContainer from "@/components/containers/AccountContainer.vue";
 import ElectionEmpty from "@/components/pages/election/ElectionEmpty.vue";
 import ElectionList from "@/components/pages/election/ElectionList.vue";
 import debounce from "@/helpers/debounce";
-import electionServices from "../../../services/election.service";
+import electionServices from "@/services/election.service";
 import organizationServices, {
   Organization,
 } from "@/services/organization.service";
@@ -102,9 +106,9 @@ export default Vue.extend({
   },
 
   computed: {
-    pageTitle() {
-      if (!this.organization) return "Election";
-      return `${this.organization.ticker} Election`;
+    pageBarTitle() {
+      if (!this.organization) return "Elections";
+      return `${this.organization.ticker} Elections`;
     },
   },
 

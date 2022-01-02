@@ -74,10 +74,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import DateTimePicker from "../../pickers/DateTimePicker.vue";
+import DateTimePicker from "@/components/pickers/DateTimePicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
 import configs from "@/configs";
-import organizationApi from "../../../services/organization.service";
+import organizationApi from "@/services/organization.service";
 const defaultForm = {
   slug: "",
   title: "",

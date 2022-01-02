@@ -1,5 +1,5 @@
 import apiClient from ".";
-import transformParamsToUrl from "../helpers/paramsToUrl.helpers";
+import transformParamsToUrl from "@/helpers/paramsToUrl.helpers";
 
 type OrganizationLogo = {
   id: number;

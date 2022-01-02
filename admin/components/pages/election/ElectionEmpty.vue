@@ -19,7 +19,7 @@
 <script lang="ts">
 import Vue from "vue";
 import pageConfig from "@/configs/pages.config";
-import orgMixins from "../../../mixins/org.mixins";
+import orgMixins from "@/mixins/org.mixins";
 export default Vue.extend({
   mixins: [orgMixins],
 

@@ -1,5 +1,5 @@
 import { Middleware } from "@nuxt/types";
-import { RolesString, UserRole } from "../types/roles";
+import { RolesString, UserRole } from "@/types/roles";
 
 //https://github.com/nuxt/nuxt.js/issues/1687
 

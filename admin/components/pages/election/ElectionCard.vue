@@ -4,7 +4,7 @@
       <v-row no-gutters align="center">
         <v-col cols="auto">
           <v-avatar size="50" :title="election.ticker">
-            <img :src="election.logo.url" :alt="election.title" />
+            <app-image :size="50" :src="election.logo" :alt="election.title" />
           </v-avatar>
         </v-col>
         <v-col class="px-3 d-flex flex-column justify-center text-left">
@@ -39,7 +39,10 @@
           </v-row>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <v-btn color="primary" text :to="`/manage/election/${election.id}`"
+          <v-btn
+            color="primary"
+            text
+            :to="`/manage/election/${election.id}/overview`"
             >View</v-btn
           >
         </v-col>
@@ -53,6 +56,7 @@ import Vue, { PropOptions } from "vue";
 import { Election } from "@/services/election.service";
 import ElectionStatusChip from "@/components/pages/election/ElectionStatusChip.vue";
 import dayjs from "dayjs";
+import AppImage from "@/components/app/AppImage.vue";
 
 export default Vue.extend({
   props: {
@@ -64,6 +68,7 @@ export default Vue.extend({
 
   components: {
     ElectionStatusChip,
+    AppImage,
   },
 
   computed: {

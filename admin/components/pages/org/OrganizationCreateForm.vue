@@ -84,10 +84,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import ThemePicker from "../../pickers/ThemePicker.vue";
+import ThemePicker from "@/components/pickers/ThemePicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
 import configs from "@/configs";
-import organizationApi from "../../../services/organization.service";
+import organizationApi from "@/services/organization.service";
 const defaultForm = {
   slug: "",
   title: "",

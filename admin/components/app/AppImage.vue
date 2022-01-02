@@ -1,5 +1,5 @@
 <template>
-  <img :src="parseSource" :alt="alt" />
+  <v-img :src="parseSource" :alt="alt" />
 </template>
 
 <script>
@@ -29,8 +29,8 @@ export default {
 
   computed: {
     parseSource() {
-      if (this.src instanceof String) return this.src;
-      else if (this.src instanceof Object) return this.src.url;
+      if (typeof this.src === "string") return this.src;
+      else if (typeof this.src === "object") return this.src.url;
       return null;
     },
   },

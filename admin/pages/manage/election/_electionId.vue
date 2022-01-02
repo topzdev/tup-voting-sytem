@@ -7,6 +7,7 @@
 <script>
 import themeMixin from "~/mixins/theme.mixin";
 export default {
+  auth: true,
   layout: "manage-election",
   mixins: [themeMixin],
 

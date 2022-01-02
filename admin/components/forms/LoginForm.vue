@@ -5,7 +5,8 @@
         <v-row>
           <v-col class="d-flex justify-center" md="12">
             <v-avatar size="80">
-              <img
+              <app-image
+                :size="80"
                 src="/tup-logo.png"
                 alt="Technological University of the Philippines"
               />
@@ -67,6 +68,7 @@
 <script lang="ts">
 import Vue from "vue";
 import PasswordField from "@/components/input/PasswordField.vue";
+import AppImage from "@/components/app/AppImage.vue";
 
 const defaultForm = {
   username: "topzdev",
@@ -82,6 +84,7 @@ const defaultAlert = {
 export default Vue.extend({
   components: {
     PasswordField,
+    AppImage,
   },
   data() {
     return {
@@ -122,8 +125,6 @@ export default Vue.extend({
 
           return;
         }
-
-        this.reset();
       } catch (error: any) {}
     },
 

@@ -85,7 +85,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import ThemePicker from "../../pickers/ThemePicker.vue";
+import ThemePicker from "@/components/pickers/ThemePicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
 import configs from "@/configs";
 

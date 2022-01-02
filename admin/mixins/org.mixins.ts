@@ -3,10 +3,10 @@ import Vue from "vue";
 const orgMixin = Vue.extend({
   computed: {
     organizationId(): number {
-      return parseInt(this.$route.params.id);
+      return parseInt(this.$route.params.organizationId);
     },
     createPage(): string {
-      return `/org/${this.organizationId}/create`;
+      return `/manage/organization/${this.organizationId}/election/create`;
     },
   },
 });

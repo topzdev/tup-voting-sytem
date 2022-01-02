@@ -47,6 +47,8 @@
         <v-toolbar-title class="text-capitalize">
           {{ appBarTitle }}
         </v-toolbar-title>
+
+        <election-status-chip status="building" :outlined="true" class="ml-2" />
       </div>
       <v-spacer />
     </v-app-bar>
@@ -67,9 +69,10 @@ import pageConfig from "@/configs/pages.config";
 import AppSnackbar from "~/components/app/AppSnackbar.vue";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import AppImage from "~/components/app/AppImage.vue";
+import ElectionStatusChip from "@/components/pages/election/ElectionStatusChip.vue";
 
 export default {
-  components: { AppSnackbar, AppImage },
+  components: { AppSnackbar, AppImage, ElectionStatusChip },
   mixins: [manageElectionMixins],
   data() {
     return {
@@ -96,7 +99,7 @@ export default {
     backToPage() {
       if (!this.electionInfo) return this.$router.back();
 
-      const orgElectionPath = `/org/${this.electionInfo.organization_id}`;
+      const orgElectionPath = `/organization/${this.electionInfo.organization_id}`;
 
       this.$router.push(orgElectionPath);
     },

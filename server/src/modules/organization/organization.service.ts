@@ -24,7 +24,10 @@ const getAll = async (_query: GetOrganizationParams) => {
   let builder = orgRepository
     .createQueryBuilder("org")
     .leftJoinAndSelect("org.logo", "logo")
-    .leftJoinAndSelect("org.theme", "theme");
+    .leftJoinAndSelect("org.theme", "theme")
+    .orderBy({
+      "org.created_at": "ASC",
+    });
 
   if (!withArchive) {
     builder = builder.andWhere("org.archive = :bol", { bol: false });

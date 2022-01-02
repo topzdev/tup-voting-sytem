@@ -16,7 +16,7 @@
   </span>
 </template>
 
-<script lang="ts">
+<script>
 import Vue, { PropOptions } from "vue";
 
 import PageBars from "@/components/bars/PageBars.vue";
@@ -26,9 +26,12 @@ import OrganizationEditForm from "@/components/pages/org/OrganizationEditForm.vu
 import organizationServices, {
   UpdateOrganizationDto,
 } from "@/services/organization.service";
+import orgMixin from "../../../../mixins/org.mixins";
 
 export default Vue.extend({
+  auth: true,
   layout: "account",
+  mixins: [orgMixin],
   components: {
     PageBars,
     AccountContainer,
@@ -44,15 +47,16 @@ export default Vue.extend({
   fetchOnServer: false,
   async fetch() {
     try {
-      const id = this.$nuxt.$route.params.id;
-      this.defaultData = await organizationServices.getById(id);
+      this.defaultData = await organizationServices.getById(
+        this.organizationId
+      );
     } catch (error) {
       console.log(error);
     }
   },
 
   methods: {
-    async update(data: UpdateOrganizationDto) {
+    async update(data) {
       try {
         const result = await organizationServices.update(data);
         console.log(result);
@@ -63,7 +67,7 @@ export default Vue.extend({
           color: "success",
         });
         this.$router.push("/");
-      } catch (error: any) {
+      } catch (error) {
         throw error.response.data.error;
       }
     },

@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import userServices from "../../../services/user.service";
+import userServices from "@/services/user.service";
 import UserCreateForm from "./UserCreateForm.vue";
 
 export default Vue.extend({

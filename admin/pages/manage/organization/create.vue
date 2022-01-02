@@ -20,6 +20,7 @@ import organizationServices, {
 } from "@/services/organization.service";
 
 export default Vue.extend({
+  auth: true,
   layout: "account",
   components: {
     PageBars,

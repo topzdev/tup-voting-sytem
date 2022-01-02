@@ -2,7 +2,7 @@
   <v-avatar :color="background" size="140" class="logo-uploader">
     <template v-if="!parsedUrl"> Logo Here </template>
     <template v-else>
-      <v-img :src="parsedUrl"></v-img>
+      <app-image :src="parsedUrl"></app-image>
     </template>
 
     <input
@@ -16,8 +16,10 @@
 
 <script>
 import Vue from "vue";
+import AppImage from "@/components/app/AppImage.vue";
 
 export default Vue.extend({
+  components: { AppImage },
   props: ["value"],
   props: {
     url: String,

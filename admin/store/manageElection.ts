@@ -1,5 +1,5 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import electionServices from "../services/election.service";
+import electionServices from "@/services/election.service";
 const defaultSnackbar = {
   show: false,
   message: "",
