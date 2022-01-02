@@ -4,12 +4,15 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
 } from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
-import { ElectionMember } from "../../election/entity/election-member.entity";
+import { Election } from "../../election/entity/election.entity";
 import { Organization } from "../../organization/entity/organization.entity";
+import { ElectionVote } from "../../election/entity/election-vote.entity";
 
 @Entity("voter")
+@Unique(["username", "email_address", "election_id"])
 export class Voter extends Timestamp {
   @PrimaryGeneratedColumn()
   id: number;
@@ -20,27 +23,25 @@ export class Voter extends Timestamp {
   @Column()
   lastname: string;
 
-  @Column({
-    unique: true,
-  })
-  voter_id: string;
+  @Column()
+  username: string;
 
-  @Column({
-    unique: true,
-  })
+  @Column()
   email_address: string;
 
   @Column()
   pin: string;
 
+  @Column({
+    default: true,
+  })
+  is_allowed: boolean;
+
   @Column({ nullable: true })
-  organization_id: number;
+  election_id: number;
 
-  @ManyToOne(() => Organization, (organization) => organization.voters)
-  organization: Organization;
-
-  @OneToMany(() => ElectionMember, (electionMember) => electionMember.voter)
-  electionsMember: ElectionMember[];
+  @ManyToOne(() => Election, (election) => election.voters)
+  election: Election;
 
   @Column({
     default: false,

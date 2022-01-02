@@ -5,7 +5,7 @@ import {
   parseJsontoCsv,
 } from "../../helpers/csv-parser.helper";
 import { HttpException } from "../../helpers/errors/http.exception";
-import { ElectionMember } from "../election/entity/election-member.entity";
+import { ElectionVoted } from "../election/entity/election-voted.entity";
 import { Election } from "../election/entity/election.entity";
 import { Organization } from "../organization/entity/organization.entity";
 import { Photo } from "../photo/photo.service";
@@ -24,17 +24,27 @@ import {
   UpdateVoterBody,
 } from "./voter.interface";
 
+/*  
+!IMPORTANT
+treat voter_id as username not a primary key
+username is a column on entity 
+
+but accept username as voter_id
+always return voter_id not username  client side
+*/
+
 const getAll = async (_query: GetVoterBody) => {
   const voterRepository = getRepository(Voter);
   const searchStirng = _query.search ? _query.search : "";
 
-  let builder = voterRepository.createQueryBuilder("voter");
+  if (!_query.election_id)
+    throw new HttpException("BAD_REQUEST", "Election id is required");
 
-  if (_query.org_id) {
-    builder = builder.andWhere("voter.organization_id = :orgId", {
-      orgId: _query.org_id,
+  let builder = voterRepository
+    .createQueryBuilder("voter")
+    .andWhere("voter.election_id = :electionId", {
+      electionId: _query.election_id,
     });
-  }
 
   if (searchStirng) {
     builder = builder.orWhere("voter.firstname ILIKE :firstname", {
@@ -60,11 +70,12 @@ const getAll = async (_query: GetVoterBody) => {
     builder = builder.offset(offset).limit(_query.take);
   }
 
-  const [voters, count] = await builder.getManyAndCount();
+  const [items, count] = await builder.getManyAndCount();
 
   return {
-    items: voters,
-    count,
+    items,
+    totalCount: count,
+    itemsCount: count,
   };
 };
 
@@ -73,7 +84,7 @@ const getByVoterId = async (_voterId: string) => {
 
   const voter = await Voter.findOne({
     where: {
-      voter_id: _voterId,
+      username: _voterId,
     },
   });
 
@@ -116,12 +127,9 @@ const create = async (_voter: CreateVoterBody) => {
     throw new HttpException("BAD_REQUEST", "Election is required");
   }
 
-  if (!_voter.organization_id)
-    throw new HttpException("BAD_REQUEST", "Organization is required");
-
   const exist = await Voter.findOne({
     where: [
-      { voter_id: _voter.voter_id },
+      { username: _voter.username },
       { email_address: _voter.email_address },
     ],
   });
@@ -137,20 +145,11 @@ const create = async (_voter: CreateVoterBody) => {
     firstname: _voter.firstname,
     lastname: _voter.lastname,
     email_address: _voter.email_address,
-    voter_id: _voter.voter_id,
+    username: _voter.username,
     pin: _voter.pin,
-    organization_id: _voter.organization_id,
-  });
-  const savedVoter = await voter.save();
-
-  const electionMember = ElectionMember.create({
-    voter_id: voter.id,
     election_id: _voter.election_id,
   });
-
-  const savedElectionMember = electionMember.save();
-
-  console.log(savedVoter, savedElectionMember);
+  const savedVoter = await voter.save();
 
   return voter;
 };
@@ -160,22 +159,19 @@ const update = async (_voter: UpdateVoterBody) => {
     throw new HttpException("BAD_REQUEST", "Voter ID is required");
   }
 
-  if (!_voter.organization_id)
-    throw new HttpException("BAD_REQUEST", "Organization is required");
-
   const curVoter = await Voter.findOne(_voter.id);
 
   if (!curVoter) {
     throw new HttpException("NOT_FOUND", "Voter not found");
   }
 
-  let toUpdateVoterId = curVoter.voter_id;
+  let toUpdateUsername = curVoter.username;
 
-  if (_voter.voter_id !== curVoter.voter_id) {
+  if (_voter.username !== curVoter.username) {
     const voterExist = await Voter.findOne({
       where: {
         id: Not(curVoter.id),
-        voter_id: _voter.voter_id,
+        username: _voter.username,
       },
     });
 
@@ -183,7 +179,7 @@ const update = async (_voter: UpdateVoterBody) => {
       throw new HttpException("BAD_REQUEST", "Voter Id has been used");
     }
 
-    toUpdateVoterId = _voter.voter_id;
+    toUpdateUsername = _voter.username;
   }
 
   let toUpdateEmail = curVoter.email_address;
@@ -206,9 +202,8 @@ const update = async (_voter: UpdateVoterBody) => {
   const toUpdateVoter = Voter.merge(curVoter, {
     firstname: _voter.firstname,
     lastname: _voter.lastname,
-    organization_id: _voter.organization_id,
     email_address: toUpdateEmail,
-    voter_id: toUpdateVoterId,
+    username: toUpdateUsername,
     pin: _voter.pin,
   });
 
@@ -258,11 +253,10 @@ const checkVotedOnElectionById = async (
     throw new HttpException("BAD_REQUEST", "Election ID is required");
   if (!_voterId) throw new HttpException("BAD_REQUEST", "Voter ID is required");
 
-  const data = await ElectionMember.findOne({
+  const data = await ElectionVoted.findOne({
     where: {
       election_id: _electionId,
-      voter_id: _voterId,
-      is_voted: true,
+      username: _voterId,
     },
   });
 
@@ -283,16 +277,6 @@ const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
   if (!_dto.election_id) {
     throw new HttpException("BAD_REQUEST", "Election is required");
   }
-
-  // check if organization id has value
-  if (!_dto.organization_id)
-    throw new HttpException("BAD_REQUEST", "Organization is required");
-
-  // check if organization is exist
-  const isOrganizationExist = await Organization.findOne(_dto.organization_id);
-  if (!isOrganizationExist)
-    throw new HttpException("BAD_REQUEST", "Election is not exist");
-
   // check if election is exist
   const isElectionExist = await Election.findOne(_dto.election_id);
   if (!isElectionExist)
@@ -330,7 +314,7 @@ const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
 
   console.log("Default Column", columns, "Columns", dataColumns);
 
-  let voterInserted, electionMembersInserted;
+  let voterInserted;
 
   // create transaction
   const connection = getConnection();
@@ -345,7 +329,8 @@ const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
     // adding organization_id to voters info
     const parsedVoter = csvData.map((item) => ({
       ...item,
-      organization_id: _dto.organization_id,
+      username: item.voter_id,
+      election_id: _dto.election_id,
     }));
 
     //inserting the parse voter data and returning the saved id's
@@ -356,25 +341,6 @@ const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
       .values(parsedVoter)
       .returning("id")
       .execute();
-
-    //mapping the inserted voter's id and addiing election_id on it
-    const parsedElectionMembers = voterInserted.generatedMaps.map((item) => ({
-      voter_id: item.id,
-      election_id: _dto.election_id,
-    }));
-
-    console.log("Voter Inserted", electionMembersInserted);
-
-    // then inserting the parse election members to database
-    electionMembersInserted = await queryRunner.manager
-      .createQueryBuilder()
-      .insert()
-      .into(ElectionMember)
-      .values(parsedElectionMembers)
-      .returning("id")
-      .execute();
-
-    console.log("Election Members Inserted", electionMembersInserted);
 
     // commiting the transaction
     await queryRunner.commitTransaction();
@@ -390,7 +356,7 @@ const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
   } finally {
     // finalizing the transaction by releasing it
     await queryRunner.release();
-    console.log("Transaction Final", voterInserted, electionMembersInserted);
+    console.log("Transaction Final", voterInserted);
   }
 };
 
@@ -406,31 +372,36 @@ const importVotersByElection = async (_dto: ImportVotersByElectionDto) => {
       "You cannot re-import this current election"
     );
 
-  const electionMembers = await ElectionMember.find({
+  const electionVoters = await Voter.find({
     where: {
       election_id: electionIds.from,
     },
-    select: ["voter_id"],
   });
 
-  if (!electionMembers.length)
+  if (!electionVoters.length)
     throw new HttpException("BAD_REQUEST", "No Election Members found");
 
-  const newElectionMembers = electionMembers.map((item) => ({
-    voter_id: item.voter_id,
-    election_id: electionIds.to,
-  }));
+  const newElectionVoters = Voter.create(
+    electionVoters.map((item) => ({
+      firstname: item.firstname,
+      lastname: item.lastname,
+      email_address: item.email_address,
+      pin: item.pin,
+      username: item.username,
+      election_id: electionIds.to,
+    }))
+  );
 
-  const memberRepository = getRepository(ElectionMember);
+  const voterRepository = getRepository(Voter);
 
-  const insertedElectionMember = await memberRepository
+  const insertedElectionVoters = await voterRepository
     .createQueryBuilder()
     .insert()
-    .values(newElectionMembers)
-    .orIgnore('("election_id", "voter_id") DO NOTHING')
+    .values(newElectionVoters)
+    .orIgnore('("election_id", "username") DO NOTHING')
     .execute();
 
-  console.log(insertedElectionMember);
+  console.log(insertedElectionVoters);
 
   return true;
 };
@@ -444,11 +415,10 @@ const exportVotersToCSV = async (_electionId: number) => {
 
   if (!election) throw new HttpException("BAD_REQUEST", "Election not found");
 
-  const [voter, count] = await ElectionMember.findAndCount({
+  const [voter, count] = await Voter.findAndCount({
     where: {
       election_id: _electionId,
     },
-    relations: ["voter"],
   });
 
   const filename = `${
@@ -456,12 +426,12 @@ const exportVotersToCSV = async (_electionId: number) => {
   }-${Date.now()}-items-${count}.csv`.toLowerCase();
 
   const data = voter.map((item) => {
-    const { firstname, lastname, email_address, voter_id, pin } = item.voter;
-    return { firstname, lastname, email_address, voter_id, pin };
+    const { firstname, lastname, email_address, username, pin } = item;
+    return { firstname, lastname, email_address, username, pin };
   });
 
   const fields = [
-    { label: "Voter ID", value: "voter_id" },
+    { label: "Voter ID", value: "username" },
     { label: "First Name", value: "firstname" },
     { label: "Last Name", value: "lastname" },
     { label: "Email Address", value: "email_address" },
@@ -482,10 +452,10 @@ const disallowVoters = async (_dto: DisallowVotersDto) => {
     throw new HttpException("BAD_REQUEST", "Election ID is required");
   }
 
-  const result = await ElectionMember.update(
+  const result = await Voter.update(
     {
       election_id: _dto.election_id,
-      voter_id: In(_dto.voter_ids),
+      id: In(_dto.voter_ids),
     },
     {
       is_allowed: false,
@@ -503,10 +473,10 @@ const allowVoters = async (_dto: AllowVotersDto) => {
     throw new HttpException("BAD_REQUEST", "Election ID is required");
   }
 
-  const result = await ElectionMember.update(
+  const result = await Voter.update(
     {
       election_id: _dto.election_id,
-      voter_id: In(_dto.voter_ids),
+      id: In(_dto.voter_ids),
     },
     {
       is_allowed: true,
@@ -525,42 +495,13 @@ const getElectionVoters = async (_dto: GetElectionMembersDto) => {
 
   let builder = await electionRepository
     .createQueryBuilder("election")
-    .leftJoinAndSelect("election.members", "members")
+    .leftJoinAndSelect("election.voters", "voters")
     .leftJoinAndSelect("election.logo", "logo")
     .where("election.id = :electionId", { electionId: _dto.election_id })
     .andWhere("election.archive = :isArchived", { isArchived: false })
     .getOne();
 
   return builder || null;
-};
-
-const getVoterElections = async (_dto: GetVoterElectionDto) => {
-  const electionRepository = getRepository(Election);
-  const memberRepository = getRepository(ElectionMember);
-  const voterRepository = getRepository(Voter);
-
-  if (!_dto.voter_id)
-    throw new HttpException("BAD_REQUEST", "Please provide voter's id");
-
-  let builder = electionRepository
-    .createQueryBuilder("election")
-    .leftJoin("election.members", "members")
-    .leftJoinAndSelect("election.logo", "logo")
-    .where("election.archive = :isArchived", { isArchived: false })
-    .andWhere("members.voter_id = :voterId", { voterId: _dto.voter_id })
-    .andWhere("members.is_allowed = :isAllowed", { isAllowed: true });
-
-  if (_dto.page && _dto.take) {
-    const offset = _dto.page * _dto.take - _dto.take;
-    builder = builder.offset(offset).limit(_dto.take);
-  }
-
-  const [elections, count] = await builder.getManyAndCount();
-
-  return {
-    elections,
-    count,
-  };
 };
 
 const removeVoters = async (_dto: RemoveVotersDto) => {
@@ -571,15 +512,15 @@ const removeVoters = async (_dto: RemoveVotersDto) => {
     throw new HttpException("BAD_REQUEST", "Election ID is required");
   }
 
-  const toDeleteData = await ElectionMember.find({
+  const toDeleteData = await Voter.find({
     where: {
       election_id: _dto.election_id,
-      voter_id: In(_dto.voter_ids),
+      id: In(_dto.voter_ids),
     },
     select: ["id"],
   });
 
-  const result = await ElectionMember.remove(toDeleteData);
+  const result = await Voter.remove(toDeleteData);
 
   console.log("removed voters", result);
 
@@ -603,7 +544,6 @@ const voterServices = {
   exportVotersToCSV,
   disallowVoters,
   allowVoters,
-  getVoterElections,
   getElectionVoters,
   removeVoters,
 };

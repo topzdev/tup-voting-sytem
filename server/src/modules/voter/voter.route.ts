@@ -10,8 +10,6 @@ console.log("module: Voter Module Loaded");
 
 router.get("/", adminAuth, rolesAllowed("SUPER_ADMIN"), voterController.getAll);
 
-router.get("/voter-elections", adminAuth, voterController.getVoterElections);
-
 router.get("/election-voters", adminAuth, voterController.getElectionVoters);
 
 router.get("/:id", adminAuth, voterController.getOneById);
