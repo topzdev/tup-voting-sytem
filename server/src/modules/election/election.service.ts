@@ -76,7 +76,12 @@ const getBySlug = async (_slug: string) => {
       slug: _slug,
       archive: false,
     },
-    relations: ["logo"],
+    relations: [
+      "logo",
+      "organization",
+      "organization.theme",
+      "organization.logo",
+    ],
   });
 
   return election || null;
@@ -90,7 +95,12 @@ const getById = async (_id: string) => {
   if (!_id) throw new HttpException("BAD_REQUEST", "Election ID is required");
 
   const election = await Election.findOne(_id, {
-    relations: ["logo", "organization"],
+    relations: [
+      "logo",
+      "organization",
+      "organization.theme",
+      "organization.logo",
+    ],
     where: {
       archive: false,
     },

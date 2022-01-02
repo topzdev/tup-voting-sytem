@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import systemColors from "~/configs/system-colors.config";
+import systemColors, { SystemColors } from "~/configs/system-colors.config";
 
 export default Vue.extend({
   props: {
@@ -52,7 +52,11 @@ export default Vue.extend({
 
   computed: {
     colors() {
-      return systemColors;
+      const isDark = this.$vuetify.theme.dark;
+
+      return Object.keys(systemColors).map((key) => ({
+        color: key,
+      }));
     },
   },
 });

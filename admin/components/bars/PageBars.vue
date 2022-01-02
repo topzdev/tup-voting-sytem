@@ -12,7 +12,6 @@
                 v-bind="attrs"
                 @click="backToPage"
                 v-on="on"
-                :to="backTo"
               >
                 <v-icon large> mdi-chevron-left </v-icon></v-btn
               >

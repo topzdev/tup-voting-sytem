@@ -1,84 +1,25 @@
-const systemColors = [
-  {
-    color: "red",
-    hex: "#F44336",
-  },
-  {
-    color: "pink",
-    hex: "#E91E63",
-  },
-  {
-    color: "purple",
-    hex: "#9C27B0",
-  },
-  {
-    color: "deep-purple",
-    hex: "#673AB7",
-  },
-  {
-    color: "indigo",
-    hex: "#3F51B5",
-  },
-  {
-    color: "blue",
-    hex: "#2196F3",
-  },
-  {
-    color: "light-blue",
-    hex: "#03A9F4",
-  },
-  {
-    color: "cyan",
-    hex: "#00BCD4",
-  },
-  {
-    color: "teal",
-    hex: "#009688",
-  },
-  {
-    color: "green",
-    hex: "#4CAF50",
-  },
-  {
-    color: "light-green",
-    hex: "#8BC34A",
-  },
-  {
-    color: "lime",
-    hex: "#CDDC39",
-  },
-  {
-    color: "yellow",
-    hex: "#FFEB3B",
-  },
-  {
-    color: "amber",
-    hex: "#FFC107",
-  },
+const systemColors = {
+  red: { light: "#f44336", dark: "#f44336" },
+  pink: { light: "#e91e63", dark: "#e91e63" },
+  purple: { light: "#9c27b0", dark: "#9c27b0" },
+  "deep-purple": { light: "#673ab7", dark: "#673ab7" },
+  indigo: { light: "#3f51b5", dark: "#3f51b5" },
+  blue: { light: "#2196f3", dark: "#2196f3" },
+  "light-blue": { light: "#03a9f4", dark: "#03a9f4" },
+  cyan: { light: "#00bcd4", dark: "#00bcd4" },
+  teal: { light: "#009688", dark: "#009688" },
+  green: { light: "#4caf50", dark: "#4caf50" },
+  "light-green": { light: "#8bc34a", dark: "#8bc34a" },
+  lime: { light: "#cddc39", dark: "#cddc39" },
+  yellow: { light: "#ffeb3b", dark: "#ffeb3b" },
+  amber: { light: "#ffc107", dark: "#ffc107" },
+  orange: { light: "#ff9800", dark: "#ff9800" },
+  "deep-orange": { light: "#ff5722", dark: "#ff5722" },
+  brown: { light: "#795548", dark: "#795548" },
+  "blue-grey": { light: "#607d8b", dark: "#607d8b" },
+  grey: { light: "#9e9e9e", dark: "#9e9e9e" },
+};
 
-  {
-    color: "orange",
-    hex: "#FF9800",
-  },
-
-  {
-    color: "deep-orange",
-    hex: "#FF5722",
-  },
-
-  {
-    color: "brown",
-    hex: "#795548",
-  },
-
-  {
-    color: "blue-grey",
-    hex: "#607D8B",
-  },
-  {
-    color: "grey",
-    hex: "#9E9E9E",
-  },
-];
+export type SystemColors = keyof typeof systemColors;
 
 export default systemColors;

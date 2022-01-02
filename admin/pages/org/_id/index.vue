@@ -1,6 +1,6 @@
 <template>
   <span>
-    <page-bars back backTooltip="Back to Organization" :title="pageTitle">
+    <page-bars backTo="/" backTooltip="Back to Organization" :title="pageTitle">
       <v-btn
         v-if="itemsCount"
         color="primary"
