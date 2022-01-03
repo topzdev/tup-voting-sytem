@@ -44,15 +44,16 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import Vue, { PropOptions } from "vue";
 import debounce from "@/helpers/debounce";
 import userServices from "~/services/user.service";
 import votersServices from "~/services/voters.service";
 import votersMixin from "~/mixins/voters.mixin";
+import manageElectionMixins from "../../../mixins/manage-election.mixins";
+import mixins from "vue-typed-mixins";
 
-export default Vue.extend({
-  mixins: [votersMixin],
+export default mixins(manageElectionMixins, votersMixin).extend({
   data() {
     return {
       table: {
@@ -103,10 +104,13 @@ export default Vue.extend({
 
   methods: {
     async fetchItems() {
-      this.loading = true;
+      this.table.loading = true;
+
+      if (!this.electionId) return;
+
       const result = await votersServices.getAll(this.electionId, {
         page: this.table.pagination.page,
-        perPage: this.table.pagination.perPage,
+        take: this.table.pagination.perPage,
         search: this.table.search,
       });
 
@@ -114,7 +118,7 @@ export default Vue.extend({
 
       this.table.items = result.items;
       this.table.pagination.total = result.itemsCount;
-      this.loading = false;
+      this.table.loading = false;
     },
   },
 

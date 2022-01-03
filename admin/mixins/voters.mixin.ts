@@ -1,10 +1,11 @@
 import Vue from "vue";
-import manageElectionMixins from "./manage-election.mixins";
 
 const votersMixin = Vue.extend({
-  mixins: [manageElectionMixins],
   computed: {},
   methods: {
+    createVoterRoute() {
+      this.$router.push("voters/create");
+    },
     editVoterRoute(id: string) {
       this.$router.push(`voters/${id}/edit`);
     },

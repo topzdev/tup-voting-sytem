@@ -1,15 +1,15 @@
 <template>
   <span>
-    <user-edit-dialog :isOpen="true" />
+    <voters-edit-dialog :isOpen="true" />
   </span>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import UserEditDialog from "@/components/pages/users/UserEditDialog.vue";
+import VotersEditDialog from "@/components/pages/voters/VotersEditDialog.vue";
 
 export default Vue.extend({
-  components: { UserEditDialog },
+  components: { VotersEditDialog },
 });
 </script>
 

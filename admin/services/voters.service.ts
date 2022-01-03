@@ -51,11 +51,11 @@ export type CreateVotersDto = {
 };
 
 export type UpdateVotersDto = {
+  id: string;
   firstname: string;
   lastname: string;
   pin: string;
   email_address: string;
-  election_id: number;
   username: string;
 };
 
@@ -88,7 +88,7 @@ export type RemoveVotersDto = {
 const url = "/api/v1/voter";
 
 const votersServices = {
-  async getAll(electionId: string, query: GetVotersDto) {
+  async getAll(electionId: number, query: GetVotersDto) {
     return (
       await apiClient.get(
         `${url}/all/${electionId}/${transformParamsToUrl(query)}`
@@ -123,7 +123,7 @@ const votersServices = {
 
     console.log("Body Test", body);
 
-    formData.append("usename", body.username);
+    formData.append("username", body.username);
     formData.append("pin", body.pin);
     formData.append("firstname", body.firstname);
     formData.append("lastname", body.lastname);
@@ -142,7 +142,8 @@ const votersServices = {
   async update(body: UpdateVotersDto) {
     const formData = new FormData();
 
-    formData.append("usename", body.username);
+    formData.append("id", body.id);
+    formData.append("username", body.username);
     formData.append("pin", body.pin);
     formData.append("firstname", body.firstname);
     formData.append("lastname", body.lastname);
