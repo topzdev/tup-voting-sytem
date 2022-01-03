@@ -7,14 +7,19 @@
       <v-btn color="primary" class="mr-2" large>Add Voters</v-btn>
     </page-bars>
 
-    <v-container> </v-container>
+    <v-container>
+      <voters-table />
+    </v-container>
+
+    <nuxt-child />
   </span>
 </template>
 
 <script>
 import PageBars from "~/components/bars/PageBars.vue";
+import VotersTable from "~/components/pages/voters/VotersTable.vue";
 export default {
-  components: { PageBars },
+  components: { PageBars, VotersTable },
 };
 </script>
 

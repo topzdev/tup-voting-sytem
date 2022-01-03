@@ -5,7 +5,6 @@ export interface GetVoterBody {
   order?: any;
   page: number;
   take: number;
-  election_id: number;
 }
 
 export interface GetVoterElectionDto {

@@ -1,105 +1,152 @@
 import apiClient from ".";
 import transformParamsToUrl from "@/helpers/paramsToUrl.helpers";
+import { Election } from "./election.service";
 
-type ElectionLogo = {
-  id: number;
-  public_id: string;
-  url: string;
-  service: string;
+export type DataTimestamp = {
+  created_at: string;
+  updated_at: string;
+  deleted_at: null | string;
 };
 
-export interface Election {
+export type Voters = {
   id: number;
-  slug: string;
-  title: string;
-  description: string;
-  start_date: string;
-  close_date: string;
-  organization_id: number;
-  logo: ElectionLogo;
-}
+  username: string;
+  firstname: string;
+  lastname: string;
+  email_address: string;
+  pin: string;
+  is_allowed: boolean;
+  election_id: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at: null | string;
+  election: Election;
+} & DataTimestamp;
 
-export interface GetElectionDto {
-  orgId?: number;
+export interface GetVotersDto {
   search?: string;
   order?: any;
-  page?: number;
-  take?: number;
-  withArchive?: boolean;
+  page: number;
+  take: number;
 }
 
-export type CreateElectionDto = {
-  slug: string;
-  title: string;
-  description: string;
-  start_date: string;
-  close_date: string;
-  organization_id: number;
-  logo: File;
+export interface GetVoterElectionDto {
+  order?: any;
+  page: number;
+  take: number;
+  voter_id: number;
+}
+
+export type GetElectionMembersDto = {
+  election_id: number;
 };
 
-export type UpdateElectionDto = {
-  id: number;
-  slug: string;
-  title: string;
-  description: string;
-  start_date: string;
-  close_date: string;
-  organization_id: number;
-  logo: File;
+export type CreateVotersDto = {
+  firstname: string;
+  lastname: string;
+  pin: string;
+  email_address: string;
+  election_id: number;
+  username: string;
+};
+
+export type UpdateVotersDto = {
+  firstname: string;
+  lastname: string;
+  pin: string;
+  email_address: string;
+  election_id: number;
+  username: string;
+};
+
+export type ImportVotersByElectionDto = {
+  electionIds: {
+    from: number;
+    to: number;
+  };
+};
+
+export type ImportVotersByCSVDto = {
+  election_id: number;
+};
+
+export type DisallowVotersDto = {
+  voter_ids: number[];
+  election_id: number;
+};
+
+export type AllowVotersDto = {
+  voter_ids: number[];
+  election_id: number;
+};
+
+export type RemoveVotersDto = {
+  voter_ids: number[];
+  election_id: number;
 };
 
 const url = "/api/v1/voter";
 
-const electionServices = {
-  async getAll(query: GetElectionDto) {
-    return (await apiClient.get(`${url}/${transformParamsToUrl(query)}`)).data;
+const votersServices = {
+  async getAll(electionId: string, query: GetVotersDto) {
+    return (
+      await apiClient.get(
+        `${url}/all/${electionId}/${transformParamsToUrl(query)}`
+      )
+    ).data;
   },
   async getById(id: string) {
     return (await apiClient.get(`${url}/${id}`)).data;
   },
-
-  async getBySlug(slug: string) {
-    return (await apiClient.get(`${url}/slug/${slug}`)).data;
+  async getByVoterId(voterId: string) {
+    return (await apiClient.get(`${url}/voter-id/${voterId}`)).data;
+  },
+  async isExistByVoterId(voterId: string) {
+    return (await apiClient.get(`${url}/exist/voter-id/${voterId}`)).data;
+  },
+  async getByEmail(email: string) {
+    return (await apiClient.get(`${url}/email/${email}`)).data;
+  },
+  async isExistByEmail(email: string) {
+    return (await apiClient.get(`${url}/exist/email/${email}`)).data;
+  },
+  async getElectionVoters(election_id: string) {
+    return (
+      await apiClient.get(
+        `${url}/election-voters/${transformParamsToUrl({ election_id })}`
+      )
+    ).data;
   },
 
-  async isExistBySlug(slug: string) {
-    return (await apiClient.get(`${url}/exist/${slug}`)).data;
-  },
-
-  async create(body: CreateElectionDto) {
+  async create(body: CreateVotersDto) {
     const formData = new FormData();
 
     console.log("Body Test", body);
 
-    formData.append("slug", body.slug);
-    formData.append("title", body.title);
-    formData.append("description", body.description);
-    formData.append("start_date", body.start_date);
-    formData.append("close_date", body.close_date);
-    formData.append("organization_id", body.organization_id.toString());
-    formData.append("logo", body.logo);
+    formData.append("usename", body.username);
+    formData.append("pin", body.pin);
+    formData.append("firstname", body.firstname);
+    formData.append("lastname", body.lastname);
+    formData.append("email_address", body.email_address);
+    formData.append("election_id", body.election_id.toString());
 
     return (
       await apiClient.post(`${url}`, formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "content-type": "multipart/form-data",
         },
       })
     ).data;
   },
 
-  async update(body: UpdateElectionDto) {
+  async update(body: UpdateVotersDto) {
     const formData = new FormData();
 
-    formData.append("id", body.id.toString());
-    formData.append("slug", body.slug);
-    formData.append("title", body.title);
-    formData.append("description", body.description);
-    formData.append("start_date", body.start_date);
-    formData.append("close_date", body.close_date);
-    formData.append("organization_id", body.organization_id.toString());
-    formData.append("logo", body.logo);
+    formData.append("usename", body.username);
+    formData.append("pin", body.pin);
+    formData.append("firstname", body.firstname);
+    formData.append("lastname", body.lastname);
+    formData.append("email_address", body.email_address);
 
     return (
       await apiClient.put(`${url}`, formData, {
@@ -110,21 +157,35 @@ const electionServices = {
     ).data;
   },
 
-  async archive(id: string) {
-    return (await apiClient.put(`${url}/archive/${id}`)).data;
+  async exportToCsv(_electionId: number) {
+    return (await apiClient.post(`${url}/export-to-csv/${_electionId}`)).data;
   },
-
-  async unarchive(id: string) {
-    return (await apiClient.put(`${url}/${id}`)).data;
+  async importByElection(_dto: ImportVotersByElectionDto) {
+    return (await apiClient.post(`${url}/import-by-election`, _dto)).data;
   },
+  async importByCsv(_file: any, _dto: ImportVotersByCSVDto) {
+    const formData = new FormData();
 
-  async restore(id: string) {
-    return (await apiClient.put(`${url}/restore/${id}`)).data;
+    formData.append("voters-csv", _file);
+    formData.append("election_id", _dto.election_id.toString());
+
+    return (
+      await apiClient.put(`${url}/import-by-csv`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+    ).data;
   },
-
-  async delete(id: string) {
-    return (await apiClient.delete(`${url}/${id}`)).data;
+  async allow(_dto: AllowVotersDto) {
+    return (await apiClient.post(`${url}/allow/`, _dto)).data;
+  },
+  async disallow(_dto: DisallowVotersDto) {
+    return (await apiClient.post(`${url}/disallow/`, _dto)).data;
+  },
+  async remove(_dto: DisallowVotersDto) {
+    return (await apiClient.post(`${url}/remove/`, _dto)).data;
   },
 };
 
-export default electionServices;
+export default votersServices;

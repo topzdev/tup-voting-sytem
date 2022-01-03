@@ -1,71 +1,71 @@
 <template>
-  <v-row>
-    <v-col cols="4">
-      <v-text-field
-        v-model="table.search"
-        append-icon="mdi-magnify"
-        label="Search user by Firstname, Lastname or Username"
-        single-line
-        hide-details
-        outlined
-      ></v-text-field>
-    </v-col>
+  <v-card>
+    <v-card-title>
+      <v-row>
+        <v-col cols="4">
+          <v-text-field
+            v-model="table.search"
+            append-icon="mdi-magnify"
+            label="Search user by Firstname, Lastname or Username"
+            single-line
+            hide-details
+            outlined
+          ></v-text-field>
+        </v-col>
+      </v-row>
+    </v-card-title>
 
-    <v-col cols="12">
-      <v-data-table
-        :loading="table.loading"
-        :headers="table.headers"
-        :items="table.items"
-        :server-items-length="table.pagination.total"
-        :page.sync="table.pagination.page"
-        :footer-props="{
-          'items-per-page-options': table.pagination.itemsPerPageOptions,
-        }"
-      >
-        <template v-slot:item.actions="{ item }">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                icon
-                v-bind="attrs"
-                v-on="on"
-                :to="`/settings/user/${item.id}/edit`"
-              >
-                <v-icon> mdi-pencil </v-icon>
-              </v-btn>
-            </template>
-            <span>Edit User</span>
-          </v-tooltip>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                icon
-                v-bind="attrs"
-                v-on="on"
-                :to="`/settings/user/${item.id}/reset-password`"
-              >
-                <v-icon> mdi-lock-reset </v-icon>
-              </v-btn>
-            </template>
-            <span>Reset Password</span>
-          </v-tooltip>
-        </template>
-      </v-data-table>
-    </v-col>
-  </v-row>
+    <v-data-table
+      :loading="table.loading"
+      :headers="table.headers"
+      :items="table.items"
+      :server-items-length="table.pagination.total"
+      :page.sync="table.pagination.page"
+      :footer-props="{
+        'items-per-page-options': table.pagination.itemsPerPageOptions,
+      }"
+    >
+      <template v-slot:item.actions="{ item }">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              icon
+              v-bind="attrs"
+              v-on="on"
+              @click="editVoterRoute(item.id)"
+            >
+              <v-icon> mdi-pencil </v-icon>
+            </v-btn>
+          </template>
+          <span>Edit Voter</span>
+        </v-tooltip>
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script>
 import Vue, { PropOptions } from "vue";
 import debounce from "@/helpers/debounce";
 import userServices from "~/services/user.service";
+import votersServices from "~/services/voters.service";
+import votersMixin from "~/mixins/voters.mixin";
 
 export default Vue.extend({
+  mixins: [votersMixin],
   data() {
     return {
       table: {
         loading: false,
         headers: [
+          {
+            text: "Voter ID",
+            value: "username",
+          },
+          {
+            text: "Email Address",
+            value: "email_address",
+          },
           {
             text: "Firstname",
             value: "firstname",
@@ -73,14 +73,6 @@ export default Vue.extend({
           {
             text: "Lastname",
             value: "lastname",
-          },
-          {
-            text: "Username",
-            value: "username",
-          },
-          {
-            text: "Role",
-            value: "role",
           },
           {
             text: "Action",
@@ -112,7 +104,7 @@ export default Vue.extend({
   methods: {
     async fetchItems() {
       this.loading = true;
-      const result = await userServices.getAll({
+      const result = await votersServices.getAll(this.electionId, {
         page: this.table.pagination.page,
         perPage: this.table.pagination.perPage,
         search: this.table.search,
@@ -121,7 +113,7 @@ export default Vue.extend({
       console.log(result);
 
       this.table.items = result.items;
-      this.table.pagination.total = result.total;
+      this.table.pagination.total = result.itemsCount;
       this.loading = false;
     },
   },

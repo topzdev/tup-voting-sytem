@@ -48,7 +48,7 @@ export default {
     backTo: String,
     backTooltip: String,
     cols: {
-      type: String,
+      type: [String, Number],
       default: 12,
     },
     md: String,

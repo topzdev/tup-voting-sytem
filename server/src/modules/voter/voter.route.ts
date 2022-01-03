@@ -8,11 +8,16 @@ const router = express.Router();
 
 console.log("module: Voter Module Loaded");
 
-router.get("/", adminAuth, rolesAllowed("SUPER_ADMIN"), voterController.getAll);
-
 router.get("/election-voters", adminAuth, voterController.getElectionVoters);
 
 router.get("/:id", adminAuth, voterController.getOneById);
+
+router.get(
+  "/all/:electionId",
+  adminAuth,
+  rolesAllowed("SUPER_ADMIN"),
+  voterController.getAll
+);
 
 router.get("/voter-id/:voterId", adminAuth, voterController.getOneByVoterId);
 
