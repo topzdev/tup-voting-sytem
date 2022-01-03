@@ -15,7 +15,7 @@ import { unflatten } from "flat";
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { page, take, order, search, org_id } = req.query as any;
+    const { page, take, order, search, election_id } = req.query as any;
 
     res.status(200).json(
       await voterService.getAll({
@@ -23,7 +23,7 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
         take: take ? parseInt(take) : undefined,
         order,
         search,
-        org_id,
+        election_id,
       })
     );
   } catch (error) {
@@ -221,19 +221,6 @@ const removeVoters = async (
   }
 };
 
-const getVoterElections = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const dto = req.query as any;
-    res.status(200).json(await voterService.getVoterElections(dto));
-  } catch (error) {
-    next(error);
-  }
-};
-
 const getElectionVoters = async (
   req: Request,
   res: Response,
@@ -267,7 +254,6 @@ const voterController = {
   disallowVoters,
   allowVoters,
   removeVoters,
-  getVoterElections,
   getElectionVoters,
 };
 

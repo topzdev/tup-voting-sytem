@@ -1,4 +1,3 @@
-import { ElectionMember } from "../election/entity/election-member.entity";
 import { Voter } from "./entity/voter.entity";
 
 export interface GetVoterBody {
@@ -6,7 +5,7 @@ export interface GetVoterBody {
   order?: any;
   page: number;
   take: number;
-  org_id: number;
+  election_id: number;
 }
 
 export interface GetVoterElectionDto {
@@ -22,24 +21,17 @@ export type GetElectionMembersDto = {
 
 export type CreateVoterBody = Pick<
   Voter,
-  | "voter_id"
   | "firstname"
   | "lastname"
   | "pin"
   | "email_address"
-  | "organization_id"
-> &
-  Pick<ElectionMember, "election_id">;
+  | "election_id"
+  | "username"
+>;
 
 export type UpdateVoterBody = Pick<
   Voter,
-  | "id"
-  | "firstname"
-  | "lastname"
-  | "voter_id"
-  | "pin"
-  | "email_address"
-  | "organization_id"
+  "id" | "firstname" | "lastname" | "pin" | "email_address" | "username"
 >;
 
 export type ImportVotersByElectionDto = {
@@ -51,7 +43,6 @@ export type ImportVotersByElectionDto = {
 
 export type ImportVotersByCSVDto = {
   election_id: number;
-  organization_id: number;
 };
 
 export type DisallowVotersDto = {
