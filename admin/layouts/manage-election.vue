@@ -74,7 +74,7 @@ import pageConfig from "@/configs/pages.config";
 import AppSnackbar from "~/components/app/AppSnackbar.vue";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import AppImage from "~/components/app/AppImage.vue";
-import ElectionStatusChip from "@/components/pages/election/ElectionStatusChip.vue";
+import ElectionStatusChip from "~/components/chips/ElectionStatusChip.vue";
 
 export default {
   components: { AppSnackbar, AppImage, ElectionStatusChip },

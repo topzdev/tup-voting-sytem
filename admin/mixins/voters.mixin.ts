@@ -9,6 +9,9 @@ const votersMixin = Vue.extend({
     editVoterRoute(id: string) {
       this.$router.push(`voters/${id}/edit`);
     },
+    importVoterRoute() {
+      this.$router.push("voters/import");
+    },
   },
 });
 

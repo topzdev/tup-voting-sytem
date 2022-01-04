@@ -16,6 +16,12 @@ const manageElectionMixins = Vue.extend({
       return this.$accessor.manageElection.organization;
     },
 
+    organizationId(): Organization["id"] | null {
+      return this.electionOrganizationInfo
+        ? this.electionOrganizationInfo.id
+        : null;
+    },
+
     sidebarLinks() {
       console.log(this.$route);
 

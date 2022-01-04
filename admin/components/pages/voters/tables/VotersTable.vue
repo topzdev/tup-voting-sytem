@@ -50,7 +50,7 @@ import debounce from "@/helpers/debounce";
 import userServices from "~/services/user.service";
 import votersServices from "~/services/voters.service";
 import votersMixin from "~/mixins/voters.mixin";
-import manageElectionMixins from "../../../mixins/manage-election.mixins";
+import manageElectionMixins from "../../../../mixins/manage-election.mixins";
 import mixins from "vue-typed-mixins";
 
 export default mixins(manageElectionMixins, votersMixin).extend({

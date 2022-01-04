@@ -8,10 +8,7 @@
           </v-avatar>
         </v-col>
         <v-col class="px-3 d-flex flex-column justify-center text-left">
-          <h2
-            class="title text-truncate d-inline-block"
-            :title="election.title"
-          >
+          <h2 class="title text-truncate text--primary" :title="election.title">
             {{ election.title }}
           </h2>
           <p v-if="election.description" class="body-2 my-0 text--secondary">
@@ -54,7 +51,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { Election } from "@/services/election.service";
-import ElectionStatusChip from "@/components/pages/election/ElectionStatusChip.vue";
+import ElectionStatusChip from "~/components/chips/ElectionStatusChip.vue";
 import dayjs from "dayjs";
 import AppImage from "@/components/app/AppImage.vue";
 

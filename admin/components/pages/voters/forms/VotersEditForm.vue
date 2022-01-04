@@ -66,7 +66,7 @@
           hide-details="auto"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" class="d-flex">
+      <v-col cols="12" class="d-flex px-0 pb-0">
         <v-btn color="blue darken-1" text @click="cancel"> Close </v-btn>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" :loading="loading" text @click="submit">

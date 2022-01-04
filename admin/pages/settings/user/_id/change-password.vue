@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import UserChangePasswordDialog from "@/components/pages/users/UserChangePasswordDialog.vue";
+import UserChangePasswordDialog from "~/components/pages/users/dialogs/UserChangePasswordDialog.vue";
 
 export default Vue.extend({
   components: { UserChangePasswordDialog },

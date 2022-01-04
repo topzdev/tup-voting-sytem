@@ -5,11 +5,14 @@
 </template>
 
 <script lang="ts">
-import VotersCreateDialog from "@/components/pages/voters/VotersCreateDialog.vue";
+import VotersCreateDialog from "~/components/pages/voters/dialogs/VotersCreateDialog.vue";
 export default {
   name: "settings-user-create",
   components: {
     VotersCreateDialog,
+  },
+  head: {
+    title: "Voters",
   },
 };
 </script>

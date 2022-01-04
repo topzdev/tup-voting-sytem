@@ -1,7 +1,12 @@
 <template>
   <span>
     <page-bars title="Voters">
-      <v-btn color="primary" class="mr-2 ml-auto" outlined large
+      <v-btn
+        color="primary"
+        class="mr-2 ml-auto"
+        outlined
+        large
+        @click="importVoterRoute"
         >Import Voters</v-btn
       >
       <v-btn color="primary" class="mr-2" @click="createVoterRoute" large
@@ -19,11 +24,14 @@
 
 <script>
 import PageBars from "~/components/bars/PageBars.vue";
-import VotersTable from "~/components/pages/voters/VotersTable.vue";
+import VotersTable from "~/components/pages/voters/tables/VotersTable.vue";
 import votersMixin from "~/mixins/voters.mixin";
 export default {
   mixins: [votersMixin],
   components: { PageBars, VotersTable },
+  head: {
+    title: "Voters",
+  },
 };
 </script>
 

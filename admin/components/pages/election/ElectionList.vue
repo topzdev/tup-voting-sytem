@@ -13,7 +13,7 @@
 
 <script>
 import Vue, { PropOptions } from "vue";
-import ElectionCard from "./ElectionCard.vue";
+import ElectionCard from "./cards/ElectionCard.vue";
 
 export default Vue.extend({
   components: {

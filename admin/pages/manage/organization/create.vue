@@ -14,7 +14,7 @@
 import Vue, { PropOptions } from "vue";
 import PageBars from "@/components/bars/PageBars.vue";
 import AccountContainer from "@/components/containers/AccountContainer.vue";
-import OrganizationCreateForm from "@/components/pages/org/OrganizationCreateForm.vue";
+import OrganizationCreateForm from "~/components/pages/org/forms/OrganizationCreateForm.vue";
 import organizationServices, {
   CreateOrganizationDto,
 } from "@/services/organization.service";

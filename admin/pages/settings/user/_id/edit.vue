@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import UserEditDialog from "@/components/pages/users/UserEditDialog.vue";
+import UserEditDialog from "~/components/pages/users/dialogs/UserEditDialog.vue";
 
 export default Vue.extend({
   components: { UserEditDialog },

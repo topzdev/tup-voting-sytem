@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import VotersEditDialog from "@/components/pages/voters/VotersEditDialog.vue";
+import VotersEditDialog from "~/components/pages/voters/dialogs/VotersEditDialog.vue";
 
 export default Vue.extend({
   components: { VotersEditDialog },

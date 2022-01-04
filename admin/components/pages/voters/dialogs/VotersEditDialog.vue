@@ -1,16 +1,17 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="isOpenLocal" persistent max-width="600px">
-      <v-card :loading="loading">
+    <v-dialog v-model="isOpenLocal" persistent width="600px" max-width="600px">
+      <v-card :loading="$fetchState.pending">
         <v-card-title class="mb-4">
-          <span class="text-h5">Add Voter</span>
+          <span class="text-h5">Edit Voters</span>
         </v-card-title>
 
-        <v-card-text>
-          <voters-create-form
+        <v-card-text v-if="!$fetchState.pending && !$fetchState.error">
+          <voters-edit-form
             :isModal="true"
             :cancelFunc="cancelFunc"
             :submitFunc="submitFunc"
+            :defaultData="defaultData"
           />
         </v-card-text>
       </v-card>
@@ -20,27 +21,26 @@
 
 <script lang="ts">
 import Vue from "vue";
-import manageElectionMixins from "../../../mixins/manage-election.mixins";
-import votersServices from "../../../services/voters.service";
-import VotersCreateForm from "./VotersCreateForm.vue";
+import votersServices from "@/services/voters.service";
+import VotersEditForm from "../forms/VotersEditForm.vue";
+import manageElectionMixins from "../../../../mixins/manage-election.mixins";
 
 export default manageElectionMixins.extend({
   props: {
     isOpen: Boolean,
+    fetchFunc: Function,
   },
 
   components: {
-    VotersCreateForm,
+    VotersEditForm,
   },
 
   data() {
     return {
-      loading: false,
       isOpenLocal: this.isOpen,
+      defaultData: null,
     };
   },
-
-  computed: {},
 
   watch: {
     isOpen(value) {
@@ -54,31 +54,42 @@ export default manageElectionMixins.extend({
     },
   },
 
+  fetchOnServer: false,
+  async fetch() {
+    try {
+      this.defaultData = await votersServices.getById(this.voterId);
+      console.log(this.defaultData);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  computed: {
+    voterId(): string {
+      return this.$route.params.voterId;
+    },
+  },
+
   methods: {
     cancelFunc() {
       this.isOpenLocal = false;
     },
 
     async submitFunc(body: any) {
-      this.loading = true;
-
       try {
-        const result = await votersServices.create({
+        const result = await votersServices.update({
           ...body,
-          election_id: this.electionId,
+          id: this.voterId,
         });
         this.$accessor.snackbar.set({
           show: true,
-          message: "Voter Successfully Added!",
+          message: "Voters Successfully Updated!",
           timeout: 5000,
           color: "success",
         });
-
         this.isOpenLocal = false;
       } catch (error: any) {
         throw error.response.data.error;
-      } finally {
-        this.loading = false;
       }
     },
   },

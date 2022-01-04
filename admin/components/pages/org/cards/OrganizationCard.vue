@@ -8,7 +8,7 @@
           </v-avatar>
         </v-col>
         <v-col class="px-3 d-flex flex-column justify-center text-left">
-          <h2 class="title text-truncate d-inline-block" :title="org.title">
+          <h2 class="title text-truncate text--primary" :title="org.title">
             {{ org.title }} <b>({{ org.ticker }})</b>
           </h2>
           <p v-if="org.description" class="body-2 my-0 text--secondary">
