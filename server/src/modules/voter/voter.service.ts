@@ -63,7 +63,7 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
   }
 
   builder = builder.orderBy({
-    "voter.created_at": "ASC",
+    "voter.created_at": "DESC",
   });
 
   if (_query.order) {

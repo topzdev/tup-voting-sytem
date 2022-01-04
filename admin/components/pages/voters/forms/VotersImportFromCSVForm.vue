@@ -44,8 +44,8 @@
               <v-col class="px-4">
                 <h3 class="text--primary mb-1">Download the import template</h3>
                 <p class="mb-1">
-                  <nuxt-link to="/instructions/import-from-csv"
-                    >Click here</nuxt-link
+                  <a href="/files/templates/election_voter_members_template.csv"
+                    >Click here</a
                   >
                   to download the voter import template and add one voter per
                   row.
@@ -69,7 +69,7 @@
                   Select the import file from your computer
                 </h3>
 
-                <v-text-field
+                <v-file-input
                   accept=".csv"
                   label="Choose File"
                   outlined
@@ -78,8 +78,7 @@
                   type="file"
                   v-model="form.file"
                   :rules="rules.file"
-                  append-icon="mdi-file"
-                ></v-text-field>
+                ></v-file-input>
 
                 <p class="mt-2">
                   Click Upload button below to process your file.
@@ -103,7 +102,7 @@
 import Vue from "vue";
 
 const defaultForm = {
-  file: null as File[] | null,
+  file: null as File | File[] | null,
 };
 
 const defaultAlert = {
@@ -130,7 +129,7 @@ export default Vue.extend({
   computed: {
     rules(): any {
       return {
-        file: [(v: any) => (v && v.length > 0) || "File is required"],
+        file: [(v: any) => !!v || "File is required"],
       };
     },
   },
@@ -140,11 +139,11 @@ export default Vue.extend({
       if (this.cancelFunc) this.cancelFunc();
       this.reset();
     },
+
     async submit() {
       this.loading = true;
 
       (this.$refs as any).form.validate();
-      console.log(this.form.file);
 
       if (this.valid) {
         try {

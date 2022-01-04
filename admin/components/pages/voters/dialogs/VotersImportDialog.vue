@@ -33,12 +33,14 @@
         <v-card-text class="mb-0" v-if="step === 'csv'">
           <VotersImportFromCSVForm
             :cancelFunc="gotoForm.bind(null, 'default')"
+            :submitFunc="importFromCSV"
           />
         </v-card-text>
 
         <v-card-text class="mb-0" v-if="step === 'election'">
           <voters-import-from-election-form
             :cancelFunc="gotoForm.bind(null, 'default')"
+            :submitFunc="importFromElection"
           />
         </v-card-text>
 
@@ -120,26 +122,44 @@ export default manageElectionMixins.extend({
       this.step = form;
     },
 
-    async submitFunc(body: any) {
-      this.loading = true;
+    async importFromCSV(body: any) {
+      if (!this.electionId) return;
 
       try {
-        const result = await votersServices.create({
-          ...body,
+        const result = await votersServices.importByCsv(body.file, {
           election_id: this.electionId,
         });
         this.$accessor.snackbar.set({
           show: true,
-          message: "Voter Successfully Added!",
+          message: "Voters Successfully Imported!",
           timeout: 5000,
           color: "success",
         });
-
         this.isOpenLocal = false;
       } catch (error: any) {
         throw error.response.data.error;
-      } finally {
-        this.loading = false;
+      }
+    },
+
+    async importFromElection(body: any) {
+      if (!this.electionId) return;
+
+      try {
+        const result = await votersServices.importByElection({
+          electionIds: {
+            from: body.election_id,
+            to: this.electionId,
+          },
+        });
+        this.$accessor.snackbar.set({
+          show: true,
+          message: "Voters Successfully Imported!",
+          timeout: 5000,
+          color: "success",
+        });
+        this.isOpenLocal = false;
+      } catch (error: any) {
+        throw error.response.data.error;
       }
     },
   },

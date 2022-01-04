@@ -159,7 +159,11 @@ const votersServices = {
   },
 
   async exportToCsv(_electionId: number) {
-    return (await apiClient.post(`${url}/export-to-csv/${_electionId}`)).data;
+    return (
+      await apiClient.post(`${url}/export-to-csv/${_electionId}`, undefined, {
+        responseType: "blob",
+      })
+    ).data;
   },
   async importByElection(_dto: ImportVotersByElectionDto) {
     return (await apiClient.post(`${url}/import-by-election`, _dto)).data;
@@ -171,7 +175,7 @@ const votersServices = {
     formData.append("election_id", _dto.election_id.toString());
 
     return (
-      await apiClient.put(`${url}/import-by-csv`, formData, {
+      await apiClient.post(`${url}/import-by-csv`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

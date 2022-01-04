@@ -13,7 +13,12 @@
       </v-col>
       <v-col cols="12">
         <label>Select your Organizations Elections to copy the voters </label>
-        <election-picker :orgId="organizationId" :excludeId="electionId">
+        <election-picker
+          :orgId="organizationId"
+          :excludeId="electionId"
+          v-model="form.election_id"
+          :rules="rules.election_id"
+        >
         </election-picker>
       </v-col>
 
@@ -32,7 +37,7 @@ import ElectionPicker from "@/components/pickers/ElectionPicker.vue";
 import manageElectionMixins from "../../../../mixins/manage-election.mixins";
 
 const defaultForm = {
-  file: null as File[] | null,
+  election_id: null,
 };
 
 const defaultAlert = {
@@ -62,7 +67,7 @@ export default manageElectionMixins.extend({
   computed: {
     rules(): any {
       return {
-        file: [(v: any) => (v && v.length > 0) || "File is required"],
+        election_id: [(v: any) => !!v || "Election is required"],
       };
     },
   },
@@ -76,7 +81,6 @@ export default manageElectionMixins.extend({
       this.loading = true;
 
       (this.$refs as any).form.validate();
-      console.log(this.form.file);
 
       if (this.valid) {
         try {
