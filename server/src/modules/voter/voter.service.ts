@@ -1,4 +1,4 @@
-import { getConnection, getRepository, In, Not } from "typeorm";
+import { Brackets, getConnection, getRepository, In, Not } from "typeorm";
 import {
   File,
   parseCsvToJson,
@@ -33,28 +33,38 @@ but accept username as voter_id
 always return voter_id not username  client side
 */
 
-const getAll = async (_query: GetVoterBody) => {
+const getAll = async (_electionId: string, _query: GetVoterBody) => {
   const voterRepository = getRepository(Voter);
   const searchStirng = _query.search ? _query.search : "";
 
-  if (!_query.election_id)
+  if (!_electionId)
     throw new HttpException("BAD_REQUEST", "Election id is required");
 
   let builder = voterRepository
     .createQueryBuilder("voter")
-    .andWhere("voter.election_id = :electionId", {
-      electionId: _query.election_id,
+    .where("voter.election_id = :electionId", {
+      electionId: _electionId,
     });
 
   if (searchStirng) {
-    builder = builder.orWhere("voter.firstname ILIKE :firstname", {
-      firstname: `%${searchStirng}%`,
-    });
-
-    builder = builder.orWhere("voter.lastname ILIKE :lastname", {
-      lastname: `%${searchStirng}%`,
-    });
+    builder = builder.andWhere(
+      new Brackets((sqb) => {
+        sqb.orWhere("voter.firstname ILIKE :firstname", {
+          firstname: `%${searchStirng}%`,
+        });
+        sqb.orWhere("voter.lastname ILIKE :lastname", {
+          lastname: `%${searchStirng}%`,
+        });
+        sqb.orWhere("voter.username ILIKE :username", {
+          username: `%${searchStirng}%`,
+        });
+      })
+    );
   }
+
+  builder = builder.orderBy({
+    "voter.created_at": "DESC",
+  });
 
   if (_query.order) {
     builder = builder.orderBy({
@@ -91,8 +101,8 @@ const getByVoterId = async (_voterId: string) => {
   return voter || null;
 };
 
-const isExistByVoterId = async (_slug: string) => {
-  return !!(await getByVoterId(_slug));
+const isExistByVoterId = async (_voterId: string) => {
+  return !!(await getByVoterId(_voterId));
 };
 
 const getByEmailAddress = async (_emailAddress: string) => {
@@ -108,8 +118,8 @@ const getByEmailAddress = async (_emailAddress: string) => {
   return voter || null;
 };
 
-const isExistByEmailAddress = async (_slug: string) => {
-  return !!(await getByEmailAddress(_slug));
+const isExistByEmailAddress = async (_email: string) => {
+  return !!(await getByEmailAddress(_email));
 };
 
 const getById = async (_id: string) => {

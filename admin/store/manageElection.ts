@@ -1,5 +1,6 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import electionServices from "@/services/election.service";
+import electionServices, { Election } from "@/services/election.service";
+import { Organization } from "../services/organization.service";
 const defaultSnackbar = {
   show: false,
   message: "",
@@ -8,8 +9,8 @@ const defaultSnackbar = {
 };
 
 export const state = () => ({
-  election: null,
-  organization: null,
+  election: null as Election | null,
+  organization: null as Organization | null,
 });
 
 export const mutations = mutationTree(state, {

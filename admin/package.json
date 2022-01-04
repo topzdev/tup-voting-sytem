@@ -16,12 +16,16 @@
     "dayjs": "^1.10.7",
     "nuxt": "^2.15.7",
     "nuxt-typed-vuex": "^0.2.0",
+    "shortid": "^2.2.16",
+    "vee-validate": "^3.4.14",
+    "vue-typed-mixins": "^0.2.0",
     "vuetify": "^2.5.5",
     "vuetify-datetime-picker": "^2.1.1"
   },
   "devDependencies": {
     "@nuxt/types": "^2.15.7",
     "@nuxt/typescript-build": "^2.1.0",
-    "@nuxtjs/vuetify": "^1.12.1"
+    "@nuxtjs/vuetify": "^1.12.1",
+    "@types/shortid": "^0.0.29"
   }
 }

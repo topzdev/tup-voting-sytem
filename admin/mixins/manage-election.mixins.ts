@@ -1,13 +1,25 @@
 import Vue from "vue";
+import { Election } from "../services/election.service";
+import { Organization } from "../services/organization.service";
 
 const manageElectionMixins = Vue.extend({
   computed: {
-    electionInfo() {
+    electionId(): Election["id"] | null {
+      return this.electionInfo ? this.electionInfo.id : null;
+    },
+
+    electionInfo(): Election | null {
       return this.$accessor.manageElection.election;
     },
 
-    electionOrganizationInfo() {
+    electionOrganizationInfo(): Organization | null {
       return this.$accessor.manageElection.organization;
+    },
+
+    organizationId(): Organization["id"] | null {
+      return this.electionOrganizationInfo
+        ? this.electionOrganizationInfo.id
+        : null;
     },
 
     sidebarLinks() {

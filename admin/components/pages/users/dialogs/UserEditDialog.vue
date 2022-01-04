@@ -1,16 +1,17 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="isOpenLocal" persistent max-width="600px">
-      <v-card>
+    <v-dialog v-model="isOpenLocal" persistent width="600px" max-width="600px">
+      <v-card :loading="$fetchState.pending">
         <v-card-title>
-          <span class="text-h5">Add User</span>
+          <span class="text-h5">Edit User</span>
         </v-card-title>
 
-        <v-card-text>
-          <user-create-form
+        <v-card-text v-if="!$fetchState.pending && !$fetchState.error">
+          <user-edit-form
             :isModal="true"
             :cancelFunc="cancelFunc"
             :submitFunc="submitFunc"
+            :defaultData="defaultData"
           />
         </v-card-text>
       </v-card>
@@ -21,7 +22,7 @@
 <script lang="ts">
 import Vue from "vue";
 import userServices from "@/services/user.service";
-import UserCreateForm from "./UserCreateForm.vue";
+import UserEditForm from "../forms/UserEditForm.vue";
 
 export default Vue.extend({
   props: {
@@ -30,16 +31,15 @@ export default Vue.extend({
   },
 
   components: {
-    UserCreateForm,
+    UserEditForm,
   },
 
   data() {
     return {
       isOpenLocal: this.isOpen,
+      defaultData: null,
     };
   },
-
-  computed: {},
 
   watch: {
     isOpen(value) {
@@ -50,18 +50,28 @@ export default Vue.extend({
     },
   },
 
+  fetchOnServer: false,
+  async fetch() {
+    try {
+      const id = this.$nuxt.$route.params.id;
+      this.defaultData = await userServices.getById(id);
+      console.log(this.defaultData);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
   methods: {
     cancelFunc() {
-      this.isOpenLocal = false;
       this.$nuxt.$router.push("/settings/user");
     },
 
     async submitFunc(body: any) {
       try {
-        const result = await userServices.create(body);
+        const result = await userServices.update(body);
         this.$accessor.snackbar.set({
           show: true,
-          message: "User Successfully Added!",
+          message: "User Successfully Updated!",
           timeout: 5000,
           color: "success",
         });

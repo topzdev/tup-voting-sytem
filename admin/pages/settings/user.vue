@@ -23,9 +23,9 @@
 </template>
 
 <script>
-import UsersTable from "@/components/pages/users/UsersTable.vue";
+import UsersTable from "~/components/pages/users/tables/UsersTable.vue";
 import Vue from "vue";
-import UserCreateDialog from "@/components/pages/users/UserCreateDialog.vue";
+import UserCreateDialog from "~/components/pages/users/dialogs/UserCreateDialog.vue";
 export default Vue.extend({
   components: { UsersTable, UserCreateDialog },
 

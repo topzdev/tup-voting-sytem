@@ -15,15 +15,15 @@ import { unflatten } from "flat";
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { page, take, order, search, election_id } = req.query as any;
+    const electionId = req.params.electionId;
+    const { page, take, order, search } = req.query as any;
 
     res.status(200).json(
-      await voterService.getAll({
+      await voterService.getAll(electionId, {
         page: page ? parseInt(page) : undefined,
         take: take ? parseInt(take) : undefined,
         order,
         search,
-        election_id,
       })
     );
   } catch (error) {

@@ -1,5 +1,6 @@
 import apiClient from ".";
 import transformParamsToUrl from "@/helpers/paramsToUrl.helpers";
+import { DataTimestamp } from "./voters.service";
 
 type ElectionLogo = {
   id: number;
@@ -8,7 +9,13 @@ type ElectionLogo = {
   service: string;
 };
 
-export interface Election {
+export type GetElectionReturn = {
+  items: Election[];
+  itemsCount: number;
+  totalCount: number;
+};
+
+export type Election = {
   id: number;
   slug: string;
   title: string;
@@ -17,7 +24,7 @@ export interface Election {
   close_date: string;
   organization_id: number;
   logo: ElectionLogo;
-}
+} & DataTimestamp;
 
 export interface GetElectionDto {
   orgId?: number;
@@ -52,14 +59,14 @@ export type UpdateElectionDto = {
 const url = "/api/v1/election";
 
 const electionServices = {
-  async getAll(query: GetElectionDto) {
+  async getAll(query: GetElectionDto): Promise<GetElectionReturn> {
     return (await apiClient.get(`${url}/${transformParamsToUrl(query)}`)).data;
   },
-  async getById(id: string) {
+  async getById(id: string): Promise<Election> {
     return (await apiClient.get(`${url}/${id}`)).data;
   },
 
-  async getBySlug(slug: string) {
+  async getBySlug(slug: string): Promise<Election> {
     return (await apiClient.get(`${url}/slug/${slug}`)).data;
   },
 
@@ -67,7 +74,7 @@ const electionServices = {
     return (await apiClient.get(`${url}/exist/${slug}`)).data;
   },
 
-  async create(body: CreateElectionDto) {
+  async create(body: CreateElectionDto): Promise<Election> {
     const formData = new FormData();
 
     console.log("Body Test", body);
@@ -89,7 +96,7 @@ const electionServices = {
     ).data;
   },
 
-  async update(body: UpdateElectionDto) {
+  async update(body: UpdateElectionDto): Promise<boolean> {
     const formData = new FormData();
 
     formData.append("id", body.id.toString());
@@ -110,19 +117,19 @@ const electionServices = {
     ).data;
   },
 
-  async archive(id: string) {
+  async archive(id: string): Promise<boolean> {
     return (await apiClient.put(`${url}/archive/${id}`)).data;
   },
 
-  async unarchive(id: string) {
+  async unarchive(id: string): Promise<boolean> {
     return (await apiClient.put(`${url}/${id}`)).data;
   },
 
-  async restore(id: string) {
+  async restore(id: string): Promise<boolean> {
     return (await apiClient.put(`${url}/restore/${id}`)).data;
   },
 
-  async delete(id: string) {
+  async delete(id: string): Promise<boolean> {
     return (await apiClient.delete(`${url}/${id}`)).data;
   },
 };

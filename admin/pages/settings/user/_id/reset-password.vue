@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import UserResetPasswordDialog from "@/components/pages/users/UserResetPasswordDialog.vue";
+import UserResetPasswordDialog from "~/components/pages/users/dialogs/UserResetPasswordDialog.vue";
 
 export default Vue.extend({
   components: { UserResetPasswordDialog },

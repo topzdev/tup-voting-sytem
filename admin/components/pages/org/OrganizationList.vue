@@ -14,7 +14,7 @@
 <script>
 import Vue, { PropOptions } from "vue";
 import { organizationDummy } from "@/services/organization.service";
-import OrganizationCard from "./OrganizationCard.vue";
+import OrganizationCard from "./cards/OrganizationCard.vue";
 
 export default Vue.extend({
   components: {

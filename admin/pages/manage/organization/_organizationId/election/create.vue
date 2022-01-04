@@ -15,7 +15,7 @@
 import Vue, { PropOptions } from "vue";
 import PageBars from "@/components/bars/PageBars.vue";
 import AccountContainer from "@/components/containers/AccountContainer.vue";
-import ElectionCreateForm from "@/components/pages/election/ElectionCreateForm.vue";
+import ElectionCreateForm from "~/components/pages/election/forms/ElectionCreateForm.vue";
 import electionServices from "@/services/election.service";
 import orgMixin from "~/mixins/org.mixins";
 

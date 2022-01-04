@@ -29,7 +29,14 @@
     </v-navigation-drawer>
 
     <!-- App Bar -->
-    <v-app-bar :clipped-left="clipped" fixed app color="primary" dark>
+    <v-app-bar
+      :clipped-left="clipped"
+      fixed
+      app
+      color="primary"
+      dark
+      elevation="0"
+    >
       <div v-if="electionInfo" class="d-flex align-center">
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
@@ -55,9 +62,7 @@
 
     <!-- App Main -->
     <v-main>
-      <v-container>
-        <Nuxt />
-      </v-container>
+      <Nuxt />
     </v-main>
 
     <app-snackbar />
@@ -69,7 +74,7 @@ import pageConfig from "@/configs/pages.config";
 import AppSnackbar from "~/components/app/AppSnackbar.vue";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import AppImage from "~/components/app/AppImage.vue";
-import ElectionStatusChip from "@/components/pages/election/ElectionStatusChip.vue";
+import ElectionStatusChip from "~/components/chips/ElectionStatusChip.vue";
 
 export default {
   components: { AppSnackbar, AppImage, ElectionStatusChip },

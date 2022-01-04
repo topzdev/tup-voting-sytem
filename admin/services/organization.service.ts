@@ -1,5 +1,6 @@
 import apiClient from ".";
 import transformParamsToUrl from "@/helpers/paramsToUrl.helpers";
+import { DataTimestamp } from "./voters.service";
 
 type OrganizationLogo = {
   id: number;
@@ -28,7 +29,7 @@ export type Organization = {
   themeSecondary: string;
   theme: OrganizationTheme;
   logo: OrganizationLogo;
-};
+} & DataTimestamp;
 
 export interface GetOrganizationDto {
   search?: string;
