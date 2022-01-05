@@ -1,22 +1,22 @@
 import Vue from "vue";
 
-const votersMixin = Vue.extend({
+const positionsMixin = Vue.extend({
   data() {
     return {
-      pagePath: "voters",
+      pagePath: "positions",
     };
   },
   methods: {
-    createVoterRoute() {
+    createPositionRoute() {
       this.$router.push(`${this.pagePath}/create`);
     },
-    editVoterRoute(id: string) {
+    editPositionRoute(id: string) {
       this.$router.push(`${this.pagePath}/${id}/edit`);
     },
-    importVoterRoute() {
+    importPositionRoute() {
       this.$router.push(`${this.pagePath}/import`);
     },
   },
 });
 
-export default votersMixin;
+export default positionsMixin;

@@ -30,7 +30,6 @@ import orgMixin from "../../../../mixins/org.mixins";
 
 export default Vue.extend({
   auth: true,
-  layout: "account",
   mixins: [orgMixin],
   components: {
     PageBars,
