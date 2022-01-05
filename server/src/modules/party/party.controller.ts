@@ -1,10 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import fileUpload from "express-fileupload";
-import {
-  CreateParty,
-  GetParty,
-  UpdateParty,
-} from "./party.interface";
+import { CreateParty, GetParty, UpdateParty } from "./party.interface";
 import partyService from "./party.service";
 import { unflatten } from "flat";
 
@@ -67,11 +63,11 @@ const getOneById = async (req: Request, res: Response, next: NextFunction) => {
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const logo = req.files.logo as fileUpload.UploadedFile;
+    const logo = req.files?.logo as fileUpload.UploadedFile;
 
     const party = unflatten<CreateParty, any>(req.body);
 
-    const cover = req.files.cover as fileUpload.UploadedFile;
+    const cover = req.files?.cover as fileUpload.UploadedFile;
 
     console.log(logo, party, cover);
 
@@ -92,7 +88,6 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
     const cover = req.files
       ? (req.files.cover as fileUpload.UploadedFile)
       : undefined;
-    
 
     console.log(logo, party, cover);
 

@@ -4,13 +4,9 @@ import { HttpException } from "../../helpers/errors/http.exception";
 import photoUploader from "../../helpers/photo-uploader.helper";
 import { Photo } from "../photo/photo.service";
 import { Party } from "./entity/party.entity";
-import {
-  CreateParty,
-  GetParty,
-  UpdateParty,
-} from "./party.interface";
+import { CreateParty, GetParty, UpdateParty } from "./party.interface";
 import { PartyLogo } from "./entity/party-logo.entity";
-import { PartyCoverPhoto} from "./entity/party-cover-photo.entity";
+import { PartyCoverPhoto } from "./entity/party-cover-photo.entity";
 
 const getAll = async (_query: GetParty) => {
   const partyRepository = getRepository(Party);
@@ -22,7 +18,7 @@ const getAll = async (_query: GetParty) => {
   let builder = partyRepository
     .createQueryBuilder("party")
     .leftJoinAndSelect("party.logo", "logo")
-    .leftJoinAndSelect("party.cover_photo", "cover")
+    .leftJoinAndSelect("party.cover_photo", "cover");
 
   if (!withArchive) {
     builder = builder.andWhere("party.archive = :bol", { bol: false });
@@ -62,8 +58,7 @@ const getAll = async (_query: GetParty) => {
 };
 
 const getById = async (_id: string) => {
-  if (!_id)
-    throw new HttpException("BAD_REQUEST", "Party ID is required");
+  if (!_id) throw new HttpException("BAD_REQUEST", "Party ID is required");
 
   const party = await Party.findOne(_id, {
     relations: ["logo", "cover_photo", "election"],
@@ -75,11 +70,7 @@ const getById = async (_id: string) => {
   return party || null;
 };
 
-const create = async (
-  _logo: Photo,
-  _party: CreateParty,
-  _cover: Photo,
-) => {
+const create = async (_logo: Photo, _party: CreateParty, _cover: Photo) => {
   const uploadedLogo = await photoUploader.upload(
     "party_photos",
     _logo.tempFilePath
@@ -93,12 +84,12 @@ const create = async (
   const uploadedCoverPhoto = await photoUploader.upload(
     "party_photos",
     _cover.tempFilePath
-  )
+  );
 
   const partyCoverPhoto = PartyCoverPhoto.create({
     public_id: uploadedCoverPhoto.public_id,
     url: uploadedCoverPhoto.secure_url,
-  })
+  });
 
   await logo.save();
   await partyCoverPhoto.save();
@@ -119,11 +110,7 @@ const create = async (
   return party;
 };
 
-const update = async (
-  _logo: Photo,
-  _party: UpdateParty,
-  _cover: Photo
-) => {
+const update = async (_logo: Photo, _party: UpdateParty, _cover: Photo) => {
   if (!_party.id) {
     throw new HttpException("BAD_REQUEST", "Party ID is required");
   }
@@ -216,7 +203,6 @@ const update = async (
   await PartyCoverPhoto.update(toUpdateCoverPhoto.id, toUpdateCoverPhoto);
   await Party.update(curParty.id, toUpdateParty);
   return true;
-
 };
 
 const remove = async (_id: string) => {
