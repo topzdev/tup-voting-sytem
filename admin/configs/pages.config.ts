@@ -13,13 +13,6 @@ const pageConfig = {
     },
     icon: "mdi-account-group",
   },
-  party: {
-    title: "Party}",
-    to: {
-      path: "/party",
-    },
-    icon: "mdi-account-multiple-outline",
-  },
 };
 
 export default pageConfig;
