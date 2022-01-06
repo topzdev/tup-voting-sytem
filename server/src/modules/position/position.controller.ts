@@ -12,16 +12,15 @@ import { UpdateElectionBody } from "../election/election.interface";
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { page, take, order, search, withArchive, electionId } =
-      req.query as any;
+    const electionId = parseInt(req.params.electionId);
+    const { page, take, order, search, withArchive } = req.query as any;
 
     res.status(200).json(
-      await positionService.getAll({
+      await positionService.getAll(electionId, {
         page: page ? parseInt(page) : undefined,
         take: take ? parseInt(take) : undefined,
         order,
         search,
-        electionId,
       })
     );
   } catch (error) {

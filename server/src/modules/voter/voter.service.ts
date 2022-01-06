@@ -67,12 +67,8 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
   });
 
   if (_query.order) {
-    builder = builder.orderBy({
-      "voter.firstname": _query.order,
-    });
-    builder = builder.orderBy({
-      "voter.lastname": _query.order,
-    });
+    builder = builder.addOrderBy("voter.firstname", _query.order);
+    builder = builder.addOrderBy("voter.lastname", _query.order);
   }
 
   if (_query.page && _query.take) {
