@@ -1,6 +1,7 @@
 import apiClient from ".";
 import transformParamsToUrl from "@/helpers/paramsToUrl.helpers";
 import { DataTimestamp } from "./voters.service";
+import { Organization } from "./organization.service";
 
 type ElectionLogo = {
   id: number;
@@ -23,6 +24,7 @@ export type Election = {
   start_date: string;
   close_date: string;
   organization_id: number;
+  organization: Organization;
   logo: ElectionLogo;
 } & DataTimestamp;
 

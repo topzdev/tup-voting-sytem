@@ -44,19 +44,20 @@
 
 
 <script lang="ts">
+import Vue, { PropOptions } from "vue";
 import electionServices, { Election } from "~/services/election.service";
 import ElectionStatusChip from "@/components/chips/ElectionStatusChip.vue";
 import AppImage from "../app/AppImage.vue";
-export default {
+export default Vue.extend({
   components: { AppImage, ElectionStatusChip },
   props: {
     orgId: {
       type: Number,
-    },
+    } as PropOptions<number>,
 
     excludeId: {
       type: Number,
-    },
+    } as PropOptions<number>,
 
     value: {
       type: Number,
@@ -82,14 +83,12 @@ export default {
     };
   },
 
-  async fetch() {
-    await this.fetchItems();
-  },
-
   methods: {
-    async fetchItems() {
+    async fetchItems(): Promise<void> {
       try {
         const params: any = {};
+
+        if (!this.excludeId && !!this.orgId) return;
 
         if (this.orgId) params.orgId = this.orgId;
 
@@ -101,7 +100,11 @@ export default {
       } catch (error) {}
     },
   },
-};
+
+  async fetch() {
+    await this.fetchItems();
+  },
+});
 </script>
 
 <style>
