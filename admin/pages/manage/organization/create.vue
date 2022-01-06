@@ -21,7 +21,6 @@ import organizationServices, {
 
 export default Vue.extend({
   auth: true,
-  layout: "account",
   components: {
     PageBars,
     AccountContainer,

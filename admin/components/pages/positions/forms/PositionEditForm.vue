@@ -26,30 +26,42 @@
           hide-details="auto"
         ></v-text-field>
       </v-col>
+      <v-col cols="12">
+        <v-row>
+          <v-col cols="6">
+            <v-text-field
+              type="number"
+              label="Maximum*"
+              outlined
+              v-model.number="form.max_selected"
+              :rules="rules.max_selected"
+              hide-details="auto"
+              @keypress="shouldNumber"
+            ></v-text-field>
+          </v-col>
 
-      <v-col cols="6">
-        <v-text-field
-          label="Max Vote*"
-          outlined
-          v-model="form.max_vote"
-          :rules="rules.max_vote"
-          hide-details="auto"
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="6">
-        <v-text-field
-          label="Max Vote*"
-          outlined
-          v-model="form.min_vote"
-          :rules="rules.min_vote"
-          hide-details="auto"
-        ></v-text-field>
+          <v-col cols="6">
+            <v-text-field
+              type="number"
+              label="Minimum*"
+              outlined
+              v-model.number="form.min_selected"
+              :rules="rules.min_selected"
+              hide-details="auto"
+              @keypress="shouldNumber($event)"
+            ></v-text-field> </v-col
+          ><v-col class="d-flex pt-0" cols="12">
+            <label class="subtitle-2" for=""
+              >Voters Can Select Maximum of {{ form.max_selected }} and a
+              minimum {{ form.min_selected }} candidate(s) option
+            </label>
+          </v-col>
+        </v-row>
       </v-col>
       <v-col class="d-flex" cols="12">
         <v-btn
           color="primary"
-          :disabled="loading"
+          :disabled="!isEdited || !valid || loading"
           :loading="loading"
           large
           block
@@ -65,44 +77,14 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import configs from "@/configs";
+import mixins from "vue-typed-mixins";
+import positionFormMixin from "@/mixins/forms/position-form.mixins";
+import debounce from "debounce";
 
-const defaultForm = {
-  title: "",
-  description: "",
-  max_vote: 1,
-  min_vote: 1,
-};
-
-const defaultAlert = {
-  show: false,
-  type: "",
-  message: "",
-};
-
-export default Vue.extend({
+export default mixins(positionFormMixin).extend({
   props: {
     defaultData: Object,
     updateFunc: Function,
-  },
-  data() {
-    return {
-      valid: false,
-      alert: Object.assign({}, defaultAlert),
-      loading: false,
-      form: Object.assign({}, defaultForm),
-      photoData: null,
-    };
-  },
-
-  computed: {
-    rules: function (): object {
-      return {
-        title: [(v: any) => !!v || "Title is required"],
-        description: [(v: any) => !!v || "Start Date is required"],
-        max_vote: [(v: any) => !!v || "Max Vote is required"],
-        min_vote: [(v: any) => !!v || "Min Vote is required"],
-      };
-    },
   },
 
   methods: {
@@ -113,42 +95,44 @@ export default Vue.extend({
 
       if (this.valid) {
         try {
-          await this.updateFunc({
-            ...this.form,
-            logo: this.photoData,
-            id: this.defaultData.id,
-          });
+          await this.updateFunc(this.form);
           this.reset();
         } catch (error: any) {
           console.log(error);
           if (error) {
+            const message =
+              error.response?.data?.error?.message || error.message;
+
+            console.error(message);
+
             this.alert = {
               show: true,
               type: "error",
-              message: error.message,
+              message,
             };
           }
         }
       }
       this.loading = false;
     },
-
-    reset() {
-      (this.$refs as any).form.reset();
-      (this.$refs as any).form.resetValidation();
-      this.alert = Object.assign({}, defaultAlert);
-    },
   },
 
   watch: {
+    ["form"]: {
+      deep: true,
+      immediate: true,
+      handler: debounce(function (newVal: any, oldVal: any) {
+        // @ts-ignore
+        this.isEdited =
+          // @ts-ignore
+          JSON.stringify(this.defaultData) !== JSON.stringify(newVal);
+      }, 250),
+    },
+
     defaultData: {
       deep: true,
       immediate: true,
       handler: function (value, oldVal) {
-        const theme = value.theme;
-
-        delete value.theme;
-
         this.form = Object.assign({}, value);
       },
     },

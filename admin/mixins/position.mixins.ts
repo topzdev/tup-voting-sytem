@@ -10,7 +10,7 @@ const positionsMixin = Vue.extend({
     createPositionRoute() {
       this.$router.push(`${this.pagePath}/create`);
     },
-    editPositionRoute(id: string) {
+    editPositionRoute(id: number) {
       this.$router.push(`${this.pagePath}/${id}/edit`);
     },
     importPositionRoute() {

@@ -35,7 +35,10 @@ import positionMixins from "@/mixins/position.mixins";
 import PositionList from "@/components/pages/positions/PositionList.vue";
 import PositionEmpty from "@/components/pages/positions/PositionEmpty.vue";
 import ManageContainer from "@/components/containers/ManageContainer.vue";
-export default mixins(positionMixins).extend({
+import positionService from "@/services/position.service";
+import manageElectionMixins from "../../../../../mixins/manage-election.mixins";
+
+export default mixins(manageElectionMixins, positionMixins).extend({
   components: {
     PageBars,
     PositionList,
@@ -52,7 +55,6 @@ export default mixins(positionMixins).extend({
       totalCount: 0,
       itemsCount: 0,
       search: "",
-      organization: null,
     };
   },
   fetchOnServer: false,
@@ -62,38 +64,13 @@ export default mixins(positionMixins).extend({
 
   methods: {
     async fetchItems() {
+      if (!this.electionId) return;
       this.loading = true;
       try {
-        const result = [{}];
-
-        this.items = [
-          {
-            id: 1,
-            title: "President",
-            description: "Highest Poisition",
-            max_vote: 1,
-            min_vote: 1,
-            slot_position: 1,
-          },
-          {
-            id: 2,
-            title: "Vice President",
-            description: "Second Highest Poisition",
-            max_vote: 1,
-            min_vote: 1,
-            slot_position: 3,
-          },
-          {
-            id: 3,
-            title: "Senator",
-            description: "Board members of Supreme Court",
-            max_vote: 5,
-            min_vote: 5,
-            slot_position: 2,
-          },
-        ];
-        this.totalCount = 3;
-        this.itemsCount = 3;
+        const result = await positionService.getAll(this.electionId, {});
+        this.items = result.items;
+        this.totalCount = result.itemsCount;
+        this.itemsCount = result.totalCount;
       } catch (error) {
         console.log(error);
       }
