@@ -20,7 +20,7 @@
 
       <v-col
         v-if="hasFormSlot"
-        class="mx-auto text-center d-flex align-center"
+        class="mx-auto text-center d-flex align-center mt-10"
         md="4"
       >
         <slot name="form"></slot>
