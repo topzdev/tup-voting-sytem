@@ -8,14 +8,14 @@ const router = express.Router();
 
 console.log("module: Election Module Loaded");
 
+router.get("/:id", adminAuth, electionController.getOneById);
+
 router.get(
-  "/",
+  "/all/:org_id",
   adminAuth,
   rolesAllowed("SUPER_ADMIN"),
   electionController.getAll
 );
-
-router.get("/:id", adminAuth, electionController.getOneById);
 
 router.get("/slug/:slug", adminAuth, electionController.getOneBySlug);
 

@@ -41,7 +41,7 @@ export class Party extends Timestamp {
   election_id: number;
 
   @ManyToOne(() => Election, (election) => election.party)
-  election: Party;
+  election: Election;
 
   @Column({
     default: false,

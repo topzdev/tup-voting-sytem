@@ -41,12 +41,12 @@ const getAll = async (_electionId: number, _query: GetPositionBody) => {
     builder = builder.offset(offset).limit(_query.take);
   }
 
-  const [positions, count] = await builder.getManyAndCount();
+  const [items, count] = await builder.getManyAndCount();
 
   return {
-    items: positions,
+    items,
     totalCount: count,
-    itemsCount: count,
+    itemsCount: items.length,
   };
 };
 

@@ -42,6 +42,7 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
 
   let builder = voterRepository
     .createQueryBuilder("voter")
+    .select("COUNT(voter.election_id = :electionId)", "count")
     .where("voter.election_id = :electionId", {
       electionId: _electionId,
     });
@@ -76,12 +77,16 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
     builder = builder.offset(offset).limit(_query.take);
   }
 
-  const [items, count] = await builder.getManyAndCount();
+  const items = await builder.getMany();
+
+  const totalCount = await voterRepository.count({
+    where: { election_id: _electionId },
+  });
 
   return {
     items,
-    totalCount: count,
-    itemsCount: count,
+    totalCount,
+    itemsCount: items.length,
   };
 };
 

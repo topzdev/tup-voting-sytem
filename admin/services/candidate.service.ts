@@ -180,8 +180,8 @@ const candidateServices = {
     formData.append("election_id", body.election_id.toString());
     formData.append("position_id", body.position_id.toString());
     formData.append("party_id", body.party_id ? body.party_id.toString() : "");
-    formData.append("profile_photo", body.cover_photo);
-    formData.append("cover_photo", body.profile_photo);
+    formData.append("profile_photo", body.profile_photo);
+    formData.append("cover_photo", body.cover_photo);
 
     return (
       await apiClient.post(`${url}`, formData, {
@@ -195,6 +195,7 @@ const candidateServices = {
   async update(body: UpdateCandidateDto): Promise<boolean> {
     const formData = new FormData();
 
+    formData.append("id", body.id.toString());
     formData.append("firstname", body.firstname);
     formData.append("lastname", body.lastname);
     formData.append("middlename", body.middlename);
@@ -212,8 +213,8 @@ const candidateServices = {
     formData.append("election_id", body.election_id.toString());
     formData.append("position_id", body.position_id.toString());
     formData.append("party_id", body.party_id ? body.party_id.toString() : "");
-    formData.append("profile_photo", body.cover_photo);
-    formData.append("cover_photo", body.profile_photo);
+    formData.append("profile_photo", body.profile_photo);
+    formData.append("cover_photo", body.cover_photo);
 
     return (
       await apiClient.put(`${url}`, formData, {

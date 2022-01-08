@@ -98,7 +98,7 @@ export default Vue.extend({
 
   computed: {
     background(): string {
-      return !this.parsedUrl ? this.color : "";
+      return !this.parsedUrl ? this.color : "grey lighten-4";
     },
   },
 

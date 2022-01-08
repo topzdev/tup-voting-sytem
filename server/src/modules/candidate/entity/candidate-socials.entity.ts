@@ -24,4 +24,9 @@ export class CandidateSocials extends BaseEntity {
     nullable: true,
   })
   website_url: string;
+
+  @Column({
+    nullable: true,
+  })
+  insta_url: string;
 }

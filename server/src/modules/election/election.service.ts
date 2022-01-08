@@ -1,5 +1,5 @@
 import { validate } from "class-validator";
-import { getRepository, Not } from "typeorm";
+import { Brackets, getRepository, Not } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
 import photoUploader from "../../helpers/photo-uploader.helper";
 import { Photo } from "../photo/photo.service";
@@ -13,35 +13,42 @@ import { ElectionLogo } from "./entity/election-logo.entity";
 import { Organization } from "../organization/entity/organization.entity";
 import parseDate from "../../helpers/parse-date.helper";
 
-const getAll = async (_query: GetElectionBody) => {
+const getAll = async (_orgId: string, _query: GetElectionBody) => {
   const electionRepository = getRepository(Election);
   const searchStirng = _query.search ? _query.search : "";
   const withArchive = _query.withArchive;
 
+  if (!_orgId) {
+    throw new HttpException("BAD_REQUEST", "Organization Id is required");
+  }
+
   let builder = electionRepository
     .createQueryBuilder("election")
-    .leftJoinAndSelect("election.logo", "logo");
-
-  if (_query.orgId) {
-    builder = builder.andWhere("election.organization_id = :orgId", {
-      orgId: _query.orgId,
+    .leftJoinAndSelect("election.logo", "logo")
+    .where("election.organization_id = :orgId", {
+      orgId: _orgId,
     });
-  }
 
   if (!withArchive) {
     builder = builder.andWhere("election.archive = :bol", { bol: false });
   }
 
   if (searchStirng) {
-    builder = builder.andWhere("election.title ILIKE :title", {
-      title: `%${searchStirng}%`,
-    });
+    builder = builder.andWhere(
+      new Brackets((sqb) => {
+        sqb.orWhere("election.title ILIKE :title", {
+          title: `%${searchStirng}%`,
+        });
+      })
+    );
   }
 
+  builder = builder.orderBy({
+    "election.created_at": "DESC",
+  });
+
   if (_query.order) {
-    builder = builder.orderBy({
-      "election.title": _query.order,
-    });
+    builder = builder.addOrderBy("election.title", _query.order);
   }
 
   if (_query.page && _query.take) {
@@ -49,21 +56,16 @@ const getAll = async (_query: GetElectionBody) => {
     builder = builder.offset(offset).limit(_query.take);
   }
 
-  const [items, itemsCount] = await builder.getManyAndCount();
-
-  const where: any = {};
-
-  if (_query.orgId) {
-    where.organization_id = _query.orgId;
-  }
+  const items = await builder.getMany();
 
   const totalCount = await electionRepository.count({
-    where,
+    where: { organization_id: _orgId },
   });
+
   return {
     items,
-    itemsCount,
     totalCount,
+    itemsCount: items.length,
   };
 };
 

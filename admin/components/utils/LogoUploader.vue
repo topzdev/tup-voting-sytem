@@ -40,7 +40,7 @@ import AppImage from "@/components/app/AppImage.vue";
 export default Vue.extend({
   components: { AppImage },
   props: {
-    url: String,
+    url: [String],
     size: {
       type: String,
       default: "140",
@@ -83,7 +83,7 @@ export default Vue.extend({
 
   computed: {
     background(): string {
-      return !this.parsedUrl ? this.color : "";
+      return !this.parsedUrl ? this.color : "grey lighten-4";
     },
   },
 
@@ -107,6 +107,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .logo-uploader {
   position: relative;
+
   &__input {
     position: absolute;
     top: 0;

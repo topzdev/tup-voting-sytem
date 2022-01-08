@@ -10,14 +10,14 @@ const router = express.Router();
 
 console.log("module: Candidates Module Loaded");
 
+router.get("/:id", adminAuth, candidateController.getOneById);
+
 router.get(
-  "/",
+  "/all/:election_id",
   adminAuth,
   rolesAllowed("SUPER_ADMIN"),
   candidateController.getAll
 );
-
-router.get("/:id", adminAuth, candidateController.getOneById);
 
 router.post(
   "/",

@@ -9,17 +9,19 @@ import candidateService from "./candidate.service";
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { page, take, order, search, withArchive, electionId } =
+    const election_id = req.params.election_id;
+    const { page, take, order, search, withArchive, partyId, positionId } =
       req.query as any;
 
     res.status(200).json(
-      await candidateService.getAll({
+      await candidateService.getAll(election_id, {
         page: page ? parseInt(page) : undefined,
         take: take ? parseInt(take) : undefined,
         order,
         search,
+        partyId,
+        positionId,
         withArchive: withArchive ? Boolean(withArchive) : undefined,
-        electionId,
       })
     );
   } catch (error) {

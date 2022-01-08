@@ -5,7 +5,6 @@ export interface GetElectionBody {
   order?: any;
   page: number;
   take: number;
-  orgId: number;
   withArchive?: boolean;
 }
 

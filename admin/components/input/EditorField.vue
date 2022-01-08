@@ -2,11 +2,13 @@
   <ClientOnly>
     <!-- Use the component in the right place of the template -->
     <tiptap-vuetify
-      v-model="content"
+      :value="value"
       :extensions="extensions"
-      outlined
-      flat
+      :outlined="outlined"
+      :hide-details="hideDetails"
       elevation="0"
+      :rules="rules"
+      @input="$emit('input', $event)"
     />
 
     <template #placeholder> Loading... </template>
@@ -35,6 +37,15 @@ import {
 } from "tiptap-vuetify";
 
 export default {
+  props: {
+    value: String,
+    rules: Array,
+    label: String,
+    outlined: Boolean,
+    hideDetails: [String, Boolean],
+    placeholder: String,
+    required: Boolean,
+  },
   // specify TiptapVuetify component in "components"
   components: { TiptapVuetify },
   data: () => ({

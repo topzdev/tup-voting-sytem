@@ -10,7 +10,8 @@
         <cover-photo-uploader
           tabindex="-1"
           class="mx-auto"
-          v-model="form.cover_photo"
+          v-model="coverPhotoData"
+          :url="coverPhotoUrl"
           height="350"
           withBtn
         >
@@ -28,7 +29,8 @@
           label="Profile Photo"
           description=""
           class="mx-auto"
-          v-model="form.profile_photo"
+          v-model="profilePhotoData"
+          :url="profilePhotoUrl"
           size="240"
           withBtn
         ></logo-uploader>
@@ -151,7 +153,7 @@
           <v-col class="d-flex" cols="12">
             <v-btn
               color="primary"
-              :disabled="loading"
+              :disabled="!valid || loading"
               :loading="loading"
               large
               block
@@ -166,24 +168,31 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue, { PropOptions } from "vue";
 import configs from "@/configs";
+import mixins from "vue-typed-mixins";
 import PartyPicker from "@/components/pickers/PartyPicker.vue";
 import PositionPicker from "@/components/pickers/PositionPicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
 import CoverPhotoUploader from "@/components/utils/CoverPhotoUploader.vue";
-import mixins from "vue-typed-mixins";
-import manageElectionMixins from "@/mixins/manage-election.mixins";
 import EditorField from "@/components/input/EditorField.vue";
 import candidateFormMixin from "@/mixins/forms/candidate-form.mixin";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
+import { Candidate } from "../../../../services/candidate.service";
 
-const defaultAlert = {
-  show: false,
-  type: "",
-  message: "",
-};
-
-export default mixins(manageElectionMixins, candidateFormMixin).extend({
+export default mixins(candidateFormMixin, manageElectionMixins).extend({
+  props: {
+    defaultData: {
+      type: Object,
+    } as PropOptions<Candidate>,
+    updateFunc: Function,
+  },
+  data() {
+    return {
+      profilePhotoData: null,
+      coverPhotoData: null,
+    };
+  },
   components: {
     PartyPicker,
     PositionPicker,
@@ -191,8 +200,14 @@ export default mixins(manageElectionMixins, candidateFormMixin).extend({
     CoverPhotoUploader,
     EditorField,
   },
-  props: {
-    createFunc: Function,
+
+  computed: {
+    profilePhotoUrl(): string {
+      return this.defaultData.profile_photo.url;
+    },
+    coverPhotoUrl(): string {
+      return this.defaultData.cover_photo.url;
+    },
   },
 
   methods: {
@@ -212,25 +227,56 @@ export default mixins(manageElectionMixins, candidateFormMixin).extend({
           message: "Cover Photo is required",
         });
       }
+
       this.loading = true;
 
-      (this.$refs as any).form.validate();
+      (this.$refs.form as any).validate();
 
       if (this.valid) {
-        console.log(this.form);
         try {
-          await this.createFunc(this.form);
+          await this.updateFunc({
+            ...this.form,
+            profile_photo: this.profilePhotoData,
+            cover_photo: this.coverPhotoData,
+          });
           this.reset();
         } catch (error: any) {
-          this.alert = {
-            show: true,
-            type: "error",
-            message: error.message,
-          };
+          console.log(error);
+          if (error) {
+            const message =
+              error.response?.data?.error?.message || error.message;
+            this.alert = {
+              show: true,
+              type: "error",
+              message: error.message,
+            };
+          }
         }
       }
       this.loading = false;
     },
   },
+
+  watch: {
+    defaultData: {
+      deep: true,
+      immediate: true,
+      handler: function (value, oldVal) {
+        const socials = value.socials;
+
+        delete value.socials;
+        delete socials.id;
+
+        this.form = Object.assign(
+          {},
+          {
+            ...value,
+            ...socials,
+          }
+        );
+      },
+    },
+  },
 });
 </script>
+
