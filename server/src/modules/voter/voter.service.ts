@@ -42,7 +42,6 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
 
   let builder = voterRepository
     .createQueryBuilder("voter")
-    .select("COUNT(voter.election_id = :electionId)", "count")
     .where("voter.election_id = :electionId", {
       electionId: _electionId,
     });
