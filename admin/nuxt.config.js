@@ -29,6 +29,7 @@ export default {
   plugins: [
     { src: "~/plugins/axios-port.plugins.ts" },
     { src: "~/plugins/vue-datetime-picker.ts", mode: "client" },
+    { src: "~/plugins/vue-draggable.ts", mode: "client" },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
