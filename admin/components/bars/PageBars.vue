@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar elevation="1">
+  <v-toolbar elevation="1" style="z-index: 1">
     <v-row justify="center" align="center">
       <v-col :cols="cols" :sm="sm" :md="md" :lg="lg">
         <div class="d-flex align-center">
@@ -34,9 +34,11 @@
   </v-toolbar>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+
 import AccountContainer from "@/components/containers/AccountContainer.vue";
-export default {
+export default Vue.extend({
   components: {
     AccountContainer,
   },
@@ -64,11 +66,11 @@ export default {
   },
 
   computed: {
-    backTooltipMessage() {
+    backTooltipMessage(): string {
       return this.backTooltip || "Back";
     },
   },
-};
+});
 </script>
 
 <style>

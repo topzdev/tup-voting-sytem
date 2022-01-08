@@ -59,12 +59,11 @@ const getAll = async (_query: GetOrganizationParams) => {
     builder = builder.offset(offset).limit(_query.take);
   }
 
-  const [items, itemsCount] = await builder.getManyAndCount();
-  const totalCount = await orgRepository.count();
+  const [items, count] = await builder.getManyAndCount();
   return {
     items,
-    itemsCount,
-    totalCount,
+    totalCount: count,
+    itemsCount: items.length,
   };
 };
 

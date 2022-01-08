@@ -125,9 +125,8 @@ export default Vue.extend({
     async fetchItems() {
       this.loading = true;
       try {
-        const result = await electionServices.getAll({
+        const result = await electionServices.getAll(this.organizationId, {
           search: this.search,
-          orgId: this.organizationId,
         });
 
         this.items = result.items;

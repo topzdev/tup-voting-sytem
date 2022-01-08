@@ -8,7 +8,7 @@
       </v-col>
 
       <v-col align="center" cols="12">
-        <logo-uploader v-model="photoData" :url="form.logo.url" />
+        <logo-uploader v-model="photoData" :url="logoUrl" />
       </v-col>
 
       <v-col cols="12">
@@ -88,6 +88,7 @@ import Vue, { PropOptions } from "vue";
 import ThemePicker from "@/components/pickers/ThemePicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
 import configs from "@/configs";
+import { Election } from "../../../../services/election.service";
 
 const defaultForm = {
   slug: "",
@@ -108,7 +109,7 @@ const defaultAlert = {
 export default Vue.extend({
   components: { ThemePicker, LogoUploader },
   props: {
-    defaultData: Object,
+    defaultData: { type: Object } as PropOptions<Election>,
     updateFunc: Function,
   },
   data() {
@@ -124,11 +125,10 @@ export default Vue.extend({
   },
 
   computed: {
-    defaultLogoUrl(): string {
-      const url = this.defaultData.logo.public_url || this.form.logo;
-      return url;
+    logoUrl(): string {
+      return this.defaultData.logo.url;
     },
-    rules: function (): object {
+    rules: function (): any {
       return {
         slug: [
           (v: any) => !!v || "Slug is required",

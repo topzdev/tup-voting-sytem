@@ -10,15 +10,12 @@ const validations = {
   position_id: body("position_id")
     .notEmpty()
     .withMessage("Position is required"),
-  election_id: body("election_id")
-    .notEmpty()
-    .withMessage("Election is required"),
 };
 
-const { id, firstname, lastname, position_id, election_id } = validations;
+const { id, firstname, lastname, position_id } = validations;
 
-const create = [firstname, lastname, position_id, election_id];
-const update = [id, firstname, lastname, position_id, election_id];
+const create = [firstname, lastname, position_id];
+const update = [id, firstname, lastname, position_id];
 
 const candidateValidator = {
   create,

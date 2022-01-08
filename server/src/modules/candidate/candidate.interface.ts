@@ -6,7 +6,8 @@ export interface GetCandidateBody {
   order?: any;
   page: number;
   take: number;
-  electionId: number;
+  partyId: number;
+  positionId: number;
   withArchive?: boolean;
 }
 
@@ -24,7 +25,11 @@ export type CreateCandidateBody = Pick<
 > &
   Pick<
     CandidateSocials,
-    "facebook_url" | "linkedin_url" | "twitter_url" | "website_url"
+    | "facebook_url"
+    | "linkedin_url"
+    | "twitter_url"
+    | "website_url"
+    | "insta_url"
   >;
 
 export type UpdateCandidateBody = Pick<
@@ -42,5 +47,9 @@ export type UpdateCandidateBody = Pick<
 > &
   Pick<
     CandidateSocials,
-    "facebook_url" | "linkedin_url" | "twitter_url" | "website_url"
+    | "facebook_url"
+    | "linkedin_url"
+    | "twitter_url"
+    | "website_url"
+    | "insta_url"
   >;

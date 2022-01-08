@@ -1,5 +1,6 @@
 <template>
   <v-select
+    :loading="loading"
     item-text="name"
     item-value="id"
     :label="label"
@@ -85,6 +86,7 @@ export default Vue.extend({
 
   methods: {
     async fetchItems(): Promise<void> {
+      this.loading = true;
       try {
         const params: any = {};
 
@@ -92,15 +94,19 @@ export default Vue.extend({
 
         if (this.orgId) params.orgId = this.orgId;
 
-        const result = await electionServices.getAll(params);
+        const result = await electionServices.getAll(this.orgId, params);
 
         console.log(result);
 
         this.items = result.items.filter((item) => item.id !== this.excludeId);
-      } catch (error) {}
+      } catch (error) {
+      } finally {
+        this.loading = false;
+      }
     },
   },
 
+  fetchOnServer: false,
   async fetch() {
     await this.fetchItems();
   },

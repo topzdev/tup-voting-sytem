@@ -5,7 +5,6 @@ export interface GetPositionBody {
   order?: any;
   page: number;
   take: number;
-  electionId: number;
 }
 
 export type CreatePositionBody = Pick<

@@ -10,16 +10,17 @@ import { unflatten } from "flat";
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { page, take, order, search, withArchive, orgId } = req.query as any;
+    const orgId = req.params.org_id;
+
+    const { page, take, order, search, withArchive } = req.query as any;
 
     res.status(200).json(
-      await electionService.getAll({
+      await electionService.getAll(orgId, {
         page: page ? parseInt(page) : undefined,
         take: take ? parseInt(take) : undefined,
         order,
         search,
         withArchive: withArchive ? Boolean(withArchive) : undefined,
-        orgId,
       })
     );
   } catch (error) {

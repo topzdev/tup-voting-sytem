@@ -1,35 +1,74 @@
 <template>
-  <v-avatar :color="background" size="140" class="logo-uploader">
-    <template v-if="!parsedUrl"> Logo Here </template>
-    <template v-else>
-      <app-image :src="parsedUrl"></app-image>
-    </template>
+  <span class="logo-uploader text-center">
+    <v-avatar :color="background" :size="size">
+      <div class="d-flex flex-column" v-if="!parsedUrl">
+        <h4>
+          {{ label }}
+        </h4>
+        <p class="caption">{{ description }}</p>
+      </div>
+      <template v-else>
+        <app-image :src="parsedUrl" contain></app-image>
+      </template>
 
-    <input
-      type="file"
-      class="logo-uploader__input"
-      accept="image/*"
-      @change="onFileChange"
-    />
-  </v-avatar>
+      <input
+        ref="uploader"
+        type="file"
+        class="logo-uploader__input"
+        accept="image/*"
+        @change="onFileChange"
+      />
+    </v-avatar>
+
+    <v-btn
+      v-if="withBtn"
+      class="logo-uploader__btn"
+      fab
+      small
+      color="primary"
+      @click="openUploader"
+    >
+      <v-icon>mdi-camera</v-icon>
+    </v-btn>
+  </span>
 </template>
 
-<script>
+<script  lang="ts">
 import Vue from "vue";
 import AppImage from "@/components/app/AppImage.vue";
 
 export default Vue.extend({
   components: { AppImage },
-  props: ["value"],
   props: {
-    url: String,
-
+    url: [String],
+    size: {
+      type: String,
+      default: "140",
+    },
     rules: Array,
+    label: {
+      type: String,
+      default: "Logo",
+    },
+
+    description: {
+      type: String,
+      default: "Click to logo",
+    },
+
+    color: {
+      type: String,
+      default: "grey lighten-1",
+    },
+
+    withBtn: {
+      type: Boolean,
+    },
   },
 
   data() {
     return {
-      parsedUrl: null,
+      parsedUrl: null as string | null,
     };
   },
 
@@ -43,13 +82,16 @@ export default Vue.extend({
   },
 
   computed: {
-    background() {
-      return !this.parsedUrl ? "grey white--text" : "";
+    background(): string {
+      return !this.parsedUrl ? this.color : "grey lighten-4";
     },
   },
 
   methods: {
-    onFileChange(events) {
+    openUploader() {
+      (this.$refs as any).uploader.click();
+    },
+    onFileChange(events): void {
       const files = events.target.files;
 
       if (files && files.length) {
@@ -62,8 +104,10 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .logo-uploader {
+  position: relative;
+
   &__input {
     position: absolute;
     top: 0;
@@ -73,6 +117,11 @@ export default Vue.extend({
     display: block;
     opacity: 0;
     cursor: pointer;
+  }
+  &__btn {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
   }
 }
 </style>

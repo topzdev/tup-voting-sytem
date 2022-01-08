@@ -1,4 +1,4 @@
-import { getManager, getRepository } from "typeorm";
+import { Brackets, getManager, getRepository } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
 import { Position } from "./entity/position.entity";
 import {
@@ -8,49 +8,52 @@ import {
   UpdatePositionDisplayOrder,
 } from "./position.interface";
 
-const getAll = async (_query: GetPositionBody) => {
+const getAll = async (_electionId: number, _query: GetPositionBody) => {
   const positionRepository = getRepository(Position);
   const searchStirng = _query.search ? _query.search : "";
 
-  let builder = positionRepository.createQueryBuilder("position");
+  if (!_electionId)
+    throw new HttpException("BAD_REQUEST", "Election id is required");
 
-  if (_query.electionId) {
-    builder = builder.andWhere("position.election_id = :electionId", {
-      electionId: _query.electionId,
+  let builder = positionRepository
+    .createQueryBuilder("position")
+    .where("position.election_id = :electionId", {
+      electionId: _electionId,
     });
-  }
 
   if (searchStirng) {
-    builder = builder.orWhere("position.title ILIKE :title", {
-      title: `%${searchStirng}%`,
-    });
+    builder = builder.andWhere(
+      new Brackets((sqb) => {
+        sqb.orWhere("position.title ILIKE :title", {
+          title: `%${searchStirng}%`,
+        });
+      })
+    );
   }
 
-  if (_query.order) {
-    builder = builder.orderBy({
-      "position.display_order": _query.order,
-    });
-  }
+  builder = builder.orderBy({
+    "position.display_order": _query.order || "ASC",
+    "position.created_at": "DESC",
+  });
 
   if (_query.page && _query.take) {
     const offset = _query.page * _query.take - _query.take;
     builder = builder.offset(offset).limit(_query.take);
   }
 
-  const [positions, count] = await builder.getManyAndCount();
+  const [items, count] = await builder.getManyAndCount();
 
   return {
-    items: positions,
-    count,
+    items,
+    totalCount: count,
+    itemsCount: items.length,
   };
 };
 
 const getById = async (_id: string) => {
   if (!_id) throw new HttpException("BAD_REQUEST", "Position ID is required");
 
-  const position = await Position.findOne(_id, {
-    relations: ["election"],
-  });
+  const position = await Position.findOne(_id);
 
   console.log(position);
 

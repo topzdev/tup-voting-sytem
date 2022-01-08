@@ -8,14 +8,14 @@ const router = express.Router();
 
 console.log("module: Position Module Loaded");
 
+router.get("/:id", adminAuth, positionController.getOneById);
+
 router.get(
-  "/",
+  "/all/:electionId",
   adminAuth,
   rolesAllowed("SUPER_ADMIN"),
   positionController.getAll
 );
-
-router.get("/:id", adminAuth, positionController.getOneById);
 
 router.post(
   "/",

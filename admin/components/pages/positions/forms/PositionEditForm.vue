@@ -98,7 +98,6 @@ export default mixins(positionFormMixin).extend({
           await this.updateFunc(this.form);
           this.reset();
         } catch (error: any) {
-          console.log(error);
           if (error) {
             const message =
               error.response?.data?.error?.message || error.message;

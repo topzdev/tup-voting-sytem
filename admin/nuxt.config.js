@@ -27,9 +27,10 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    { src: "~/plugins/axios-port.plugins.ts" },
-    { src: "~/plugins/vue-datetime-picker.ts", mode: "client" },
-    { src: "~/plugins/vue-draggable.ts", mode: "client" },
+    { src: "~/plugins/axios-port.plugins" },
+    { src: "~/plugins/vue-datetime-picker", mode: "client" },
+    { src: "~/plugins/vue-draggable", mode: "client" },
+    { src: "~/plugins/tiptap-vuetify", mode: "client" },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -117,6 +118,6 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: ["vue-datetime-picker"],
+    transpile: ["vue-datetime-picker", "tiptap-vuetify", "vuetify/lib"],
   },
 };

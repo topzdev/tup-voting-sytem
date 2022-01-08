@@ -29,7 +29,6 @@ export type Election = {
 } & DataTimestamp;
 
 export interface GetElectionDto {
-  orgId?: number;
   search?: string;
   order?: any;
   page?: number;
@@ -61,8 +60,13 @@ export type UpdateElectionDto = {
 const url = "/api/v1/election";
 
 const electionServices = {
-  async getAll(query: GetElectionDto): Promise<GetElectionReturn> {
-    return (await apiClient.get(`${url}/${transformParamsToUrl(query)}`)).data;
+  async getAll(
+    orgId: number,
+    query: GetElectionDto
+  ): Promise<GetElectionReturn> {
+    return (
+      await apiClient.get(`${url}/all/${orgId}${transformParamsToUrl(query)}`)
+    ).data;
   },
   async getById(id: string): Promise<Election> {
     return (await apiClient.get(`${url}/${id}`)).data;

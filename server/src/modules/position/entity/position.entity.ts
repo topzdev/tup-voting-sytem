@@ -5,10 +5,11 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Timestamp } from "../../../entity/timestamp.inherit";
 import { Election } from "../../election/entity/election.entity";
 
 @Entity("position")
-export class Position extends BaseEntity {
+export class Position extends Timestamp {
   @PrimaryGeneratedColumn()
   id: number;
 
