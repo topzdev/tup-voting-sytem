@@ -103,7 +103,7 @@ export default mixins(manageElectionMixins, votersMixin).extend({
   },
 
   watch: {
-    async ["table.paginations.page"](val) {
+    async ["table.pagination.page"](val) {
       await this.fetchItems();
     },
     ["table.search"]: debounce(async function () {

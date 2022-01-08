@@ -1,9 +1,18 @@
 <template>
-  <v-img :src="parseSource" :alt="alt" />
+  <v-img
+    :src="parseSource"
+    :alt="alt"
+    :contain="contain"
+    :width="width"
+    :height="height"
+    :max-width="maxWidth"
+    :max-height="maxHeight"
+  />
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+export default Vue.extend({
   props: {
     alt: {
       type: String,
@@ -25,16 +34,22 @@ export default {
     public_id: {
       type: String,
     },
+
+    contain: Boolean,
+    height: String,
+    width: String,
+    maxHeight: String,
+    maxWidth: String,
   },
 
   computed: {
-    parseSource() {
+    parseSource(): any {
       if (typeof this.src === "string") return this.src;
       else if (typeof this.src === "object") return this.src.url;
       return null;
     },
   },
-};
+});
 </script>
 
 <style>

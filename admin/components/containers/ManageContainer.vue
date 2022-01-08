@@ -1,20 +1,15 @@
 <template>
-  <v-container>
-    <v-row no-gutters>
+  <v-container style="height: 70vh">
+    <v-row v-if="!hasDefaultSlot" no-gutters>
       <v-col
         v-if="hasStateSlot"
         class="mx-auto text-center d-flex align-center justify-center"
-        style="min-height: 60vh"
         md="6"
       >
         <slot name="states"></slot>
       </v-col>
 
-      <v-col
-        v-if="hasCenteredSlot"
-        class="mx-auto text-center d-flex align-center"
-        md="6"
-      >
+      <v-col v-if="hasCenteredSlot" class="mx-auto d-flex" md="6">
         <slot name="centered"></slot>
       </v-col>
 
@@ -34,6 +29,8 @@
         </v-row>
       </v-col>
     </v-row>
+
+    <slot v-else></slot>
   </v-container>
 </template>
 
@@ -41,6 +38,10 @@
 import Vue from "vue";
 export default Vue.extend({
   computed: {
+    hasDefaultSlot() {
+      return this.$slots.default;
+    },
+
     hasStateSlot() {
       return this.$slots.states;
     },

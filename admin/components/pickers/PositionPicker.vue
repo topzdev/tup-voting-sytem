@@ -1,7 +1,7 @@
 <template>
   <v-select
     :loading="loading"
-    item-text="name"
+    item-text="title"
     item-value="id"
     :label="label"
     :placeholder="placeholder"
@@ -13,32 +13,16 @@
     @input="$emit('input', $event)"
   >
     <template v-slot:item="data">
-      <v-list-item-avatar size="40">
-        <app-image :size="40" :alt="data.item.title" :src="data.item.logo" />
-      </v-list-item-avatar>
       <v-list-item-content>
         <v-list-item-title class="text-capitilize">
           {{ data.item.title }}
-
-          <election-status-chip status="building" small outlined />
         </v-list-item-title>
-        <v-list-item-subtitle
-          class="d-inline-block text-truncate"
-          style="max-width: 400px"
-          v-text="data.item.description"
-        />
       </v-list-item-content>
     </template>
     <template v-slot:selection="data">
-      <v-list-item-avatar size="40">
-        <app-image :size="40" :alt="data.item.title" :src="data.item.logo" />
-      </v-list-item-avatar>
-      <v-list-item-content>
-        <v-list-item-title class="text-capitilize">
-          {{ data.item.title }}
-          <election-status-chip status="building" small />
-        </v-list-item-title>
-      </v-list-item-content>
+      <v-list-item-title class="text-capitilize">
+        {{ data.item.title }}
+      </v-list-item-title>
     </template>
   </v-select>
 </template>
@@ -49,10 +33,11 @@ import Vue, { PropOptions } from "vue";
 import electionServices, { Election } from "~/services/election.service";
 import ElectionStatusChip from "@/components/chips/ElectionStatusChip.vue";
 import AppImage from "../app/AppImage.vue";
+import positionServices, { Position } from "../../services/position.service";
 export default Vue.extend({
   components: { AppImage, ElectionStatusChip },
   props: {
-    orgId: {
+    electionId: {
       type: Number,
     } as PropOptions<number>,
 
@@ -61,7 +46,7 @@ export default Vue.extend({
     } as PropOptions<number>,
 
     value: {
-      type: Number,
+      type: [Number, String],
     },
     rules: {
       type: Array,
@@ -73,14 +58,14 @@ export default Vue.extend({
     },
     placeholder: {
       type: String,
-      default: "Select Election",
+      default: "Select Position",
     },
   },
 
   data() {
     return {
       loading: true,
-      items: [] as Election[],
+      items: [] as Position[],
     };
   },
 
@@ -90,11 +75,9 @@ export default Vue.extend({
       try {
         const params: any = {};
 
-        if (!this.excludeId && !!this.orgId) return;
+        if (!this.electionId) return;
 
-        if (this.orgId) params.orgId = this.orgId;
-
-        const result = await electionServices.getAll(this.orgId, params);
+        const result = await positionServices.getAll(this.electionId, params);
 
         console.log(result);
 
@@ -105,9 +88,7 @@ export default Vue.extend({
       }
     },
   },
-
-  fetchOnServer: false,
-  async fetch() {
+  async created() {
     await this.fetchItems();
   },
 });

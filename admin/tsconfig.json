@@ -23,7 +23,8 @@
       "@nuxtjs/axios",
       "@types/node",
       "@nuxtjs/auth-next",
-      "@nuxtjs/vuetify"
+      "@nuxtjs/vuetify",
+      "tiptap-vuetify"
     ]
   },
   "include": ["./**/*"],

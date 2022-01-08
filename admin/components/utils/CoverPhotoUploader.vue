@@ -1,69 +1,84 @@
 <template>
-  <span class="logo-uploader text-center">
-    <v-avatar :color="background" :size="size">
-      <div class="d-flex flex-column" v-if="!parsedUrl">
-        <h4>
-          {{ label }}
-        </h4>
-        <p class="caption">{{ description }}</p>
-      </div>
-      <template v-else>
-        <app-image :src="parsedUrl" contain></app-image>
-      </template>
+  <v-card
+    :height="height"
+    :color="background"
+    class="cover-uploader text-center"
+    flat
+    outlined
+    max-width="100%"
+    rounded="3"
+  >
+    <div class="d-flex flex-column" v-if="!parsedUrl">
+      <h3>
+        {{ label }}
+      </h3>
+      <p class="caption">{{ description }}</p>
+    </div>
+    <template v-else>
+      <app-image
+        :src="parsedUrl"
+        :max-height="height"
+        max-width="100%"
+        width="300px"
+      ></app-image>
+    </template>
 
-      <input
-        ref="uploader"
-        type="file"
-        class="logo-uploader__input"
-        accept="image/*"
-        @change="onFileChange"
-      />
-    </v-avatar>
+    <input
+      ref="uploader"
+      type="file"
+      class="cover-uploader__input"
+      accept="image/*"
+      @change="onFileChange"
+    />
 
     <v-btn
       v-if="withBtn"
-      class="logo-uploader__btn"
+      class="cover-uploader__btn"
       fab
-      small
       color="primary"
       @click="openUploader"
     >
       <v-icon>mdi-camera</v-icon>
     </v-btn>
-  </span>
+  </v-card>
 </template>
 
-<script  lang="ts">
+<script lang="ts">
 import Vue from "vue";
 import AppImage from "@/components/app/AppImage.vue";
 
 export default Vue.extend({
   components: { AppImage },
   props: {
-    url: String,
-    size: {
-      type: String,
-      default: "140",
+    value: {
+      required: true,
     },
-    rules: Array,
+    url: String,
+    height: {
+      type: String,
+      default: "200px",
+    },
+
     label: {
       type: String,
-      default: "Logo",
+      default: "Cover Photo",
     },
 
     description: {
       type: String,
-      default: "Click to logo",
+      default: "Click to upload cover photo",
     },
 
     color: {
       type: String,
-      default: "grey lighten-1",
+      default: "grey lighten-2",
     },
 
     withBtn: {
       type: Boolean,
     },
+
+    rules: Array,
   },
 
   data() {
@@ -91,6 +106,7 @@ export default Vue.extend({
     openUploader() {
       (this.$refs as any).uploader.click();
     },
+
     onFileChange(events): void {
       const files = events.target.files;
 
@@ -105,8 +121,13 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.logo-uploader {
+.cover-uploader {
+  display: flex;
   position: relative;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  overflow: hidden;
   &__input {
     position: absolute;
     top: 0;
@@ -117,10 +138,11 @@ export default Vue.extend({
     opacity: 0;
     cursor: pointer;
   }
+
   &__btn {
     position: absolute;
-    bottom: 15px;
-    right: 15px;
+    bottom: 10px;
+    right: 10px;
   }
 }
 </style>

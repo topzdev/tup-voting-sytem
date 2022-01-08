@@ -57,7 +57,16 @@
             ></password-field>
           </v-col>
           <v-col>
-            <v-btn color="primary" large @click="submit" block> Login </v-btn>
+            <v-btn
+              color="primary"
+              :loading="loading"
+              :disabled="loading"
+              large
+              @click="submit"
+              block
+            >
+              Login
+            </v-btn>
           </v-col>
         </v-row>
       </v-card-text>
@@ -88,6 +97,8 @@ export default Vue.extend({
   },
   data() {
     return {
+      loading: false,
+
       alert: {
         show: false,
         type: "",
@@ -109,6 +120,7 @@ export default Vue.extend({
 
   methods: {
     async submit() {
+      this.loading = true;
       try {
         const result = await this.$auth.loginWith("local", {
           data: this.form,
@@ -125,7 +137,10 @@ export default Vue.extend({
 
           return;
         }
-      } catch (error: any) {}
+      } catch (error: any) {
+      } finally {
+        this.loading = false;
+      }
     },
 
     reset() {

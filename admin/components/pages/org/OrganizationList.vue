@@ -6,7 +6,7 @@
           <organization-card :org="item" />
         </v-col>
       </template>
-      <v-col v-else class="text-center"> No item found </v-col>
+      <v-col v-else class="text-center"> No items found </v-col>
     </v-row>
   </span>
 </template>
