@@ -63,7 +63,7 @@ const getOneById = async (req: Request, res: Response, next: NextFunction) => {
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const logo = req.files.logo as fileUpload.UploadedFile;
+    const logo = req.files?.logo as fileUpload.UploadedFile;
 
     const party = unflatten<CreateParty, any>(req.body);
 

@@ -75,10 +75,11 @@ const create = async (_logo: Photo, _party: CreateParty, _cover: Photo) => {
     "party_photos",
     _logo.tempFilePath
   );
-
+  if (!_logo) throw new HttpException("BAD_REQUEST", "Party ID is required");
+  
   const logo = PartyLogo.create({
-    public_id: uploadedLogo.public_id,
-    url: uploadedLogo.secure_url,
+  public_id: uploadedLogo.public_id,
+  url: uploadedLogo.secure_url,
   });
 
   const uploadedCoverPhoto = await photoUploader.upload(
