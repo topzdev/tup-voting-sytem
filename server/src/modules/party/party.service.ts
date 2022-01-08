@@ -75,29 +75,42 @@ const getById = async (_id: string) => {
 };
 
 const create = async (_logo: Photo, _party: CreatePartyBody, _cover: Photo) => {
+
+  if (!_logo) throw new HttpException("BAD_REQUEST", "Logo is required");
+  
   const uploadedLogo = await photoUploader.upload(
     "party_photos",
     _logo.tempFilePath
   );
-  if (!_logo) throw new HttpException("BAD_REQUEST", "Party ID is required");
+
 
   const logo = PartyLogo.create({
   public_id: uploadedLogo.public_id,
   url: uploadedLogo.secure_url,
   });
 
-  const uploadedCoverPhoto = await photoUploader.upload(
-    "party_photos",
-    _cover.tempFilePath
-  );
+  let uploadedCoverPhoto;
+  let partyCoverPhoto;
+  if(_cover){
+    uploadedCoverPhoto = await photoUploader.upload(
+      "party_photos",
+      _cover.tempFilePath
+    );
 
-  const partyCoverPhoto = PartyCoverPhoto.create({
+    partyCoverPhoto = PartyCoverPhoto.create({
     public_id: uploadedCoverPhoto.public_id,
     url: uploadedCoverPhoto.secure_url,
-  });
+    }); 
+
+    await partyCoverPhoto.save();
+  }
+
+
+
+  
 
   await logo.save();
-  await partyCoverPhoto.save();
+
 
   const party = Party.create({
     ticker: _party.ticker,

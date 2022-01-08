@@ -39,7 +39,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
     const party = unflatten<CreatePartyBody, any>(req.body);
 
-    const cover = req.files.cover as fileUpload.UploadedFile;
+    const cover = req.files?.cover as fileUpload.UploadedFile;
 
     console.log(logo, party, cover);
 
