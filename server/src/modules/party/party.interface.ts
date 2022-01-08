@@ -1,15 +1,14 @@
 import { Party } from "./entity/party.entity";
 
-export interface GetParty {
+export interface GetPartyBody {
   search?: string;
   order?: any;
   page: number;
   take: number;
-  elecId: number;
   withArchive?: boolean;
 }
 
-export type CreateParty = Pick<
+export type CreatePartyBody = Pick<
   Party,
   | "ticker"
   | "title"
@@ -17,7 +16,8 @@ export type CreateParty = Pick<
   | "election_id"
 >;
 
-export type UpdateParty = Pick<
+export type UpdatePartyBody
+ = Pick<
   Party,
   | "id"
   | "ticker"

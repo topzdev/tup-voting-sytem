@@ -17,6 +17,13 @@ router.get(
 
 router.get("/:id", adminAuth, partyController.getOneById);
 
+router.get(
+  "/all/:electionId",
+  adminAuth,
+  rolesAllowed("SUPER_ADMIN"),
+  partyController.getAll
+);
+
 router.post(
   "/",
   adminAuth,

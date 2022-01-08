@@ -1,41 +1,27 @@
 import { NextFunction, Request, Response } from "express";
 import fileUpload from "express-fileupload";
-import { CreateParty, GetParty, UpdateParty } from "./party.interface";
+import { CreatePartyBody, GetPartyBody, UpdatePartyBody } from "./party.interface";
 import partyService from "./party.service";
 import { unflatten } from "flat";
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { page, take, order, search, withArchive, elecId } = req.query as any;
+    const electionId = req.params.electionId;
+    const { page, take, order, search, withArchive } = req.query as any;
 
     res.status(200).json(
-      await partyService.getAll({
+      await partyService.getAll(electionId, {
         page: page ? parseInt(page) : undefined,
         take: take ? parseInt(take) : undefined,
         order,
         search,
         withArchive: withArchive ? Boolean(withArchive) : undefined,
-        elecId,
       })
     );
   } catch (error) {
     next(error);
   }
 };
-
-// const getOneBySlug = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const slug = req.params.slug;
-
-//     res.status(200).json(await partyService.getBySlug(slug));
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 
 const getOneById = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -47,25 +33,11 @@ const getOneById = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// const isExistBySlug = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const slug = req.params.slug;
-
-//     res.status(200).json(await partyService.isExistBySlug(slug));
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const logo = req.files?.logo as fileUpload.UploadedFile;
 
-    const party = unflatten<CreateParty, any>(req.body);
+    const party = unflatten<CreatePartyBody, any>(req.body);
 
     const cover = req.files.cover as fileUpload.UploadedFile;
 
@@ -83,7 +55,7 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
       ? (req.files.logo as fileUpload.UploadedFile)
       : undefined;
 
-    const party = unflatten<UpdateParty, any>(req.body);
+    const party = unflatten<UpdatePartyBody, any>(req.body);
 
     const cover = req.files
       ? (req.files.cover as fileUpload.UploadedFile)

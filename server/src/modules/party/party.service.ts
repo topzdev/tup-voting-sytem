@@ -4,21 +4,25 @@ import { HttpException } from "../../helpers/errors/http.exception";
 import photoUploader from "../../helpers/photo-uploader.helper";
 import { Photo } from "../photo/photo.service";
 import { Party } from "./entity/party.entity";
-import { CreateParty, GetParty, UpdateParty } from "./party.interface";
+import { CreatePartyBody, GetPartyBody, UpdatePartyBody } from "./party.interface";
 import { PartyLogo } from "./entity/party-logo.entity";
 import { PartyCoverPhoto } from "./entity/party-cover-photo.entity";
 
-const getAll = async (_query: GetParty) => {
+const getAll = async (_electionId: string, _query: GetPartyBody) => {
   const partyRepository = getRepository(Party);
-
   const searchStirng = _query.search ? _query.search : "";
-
   const withArchive = _query.withArchive;
 
+  if (!_electionId)
+    throw new HttpException("BAD_REQUEST", "Election id is required");
+    
   let builder = partyRepository
     .createQueryBuilder("party")
     .leftJoinAndSelect("party.logo", "logo")
-    .leftJoinAndSelect("party.cover_photo", "cover");
+    .leftJoinAndSelect("party.cover_photo", "cover")
+    .where("party.election_id = :electionId", {
+      electionId: _electionId,
+    });
 
   if (!withArchive) {
     builder = builder.andWhere("party.archive = :bol", { bol: false });
@@ -70,13 +74,13 @@ const getById = async (_id: string) => {
   return party || null;
 };
 
-const create = async (_logo: Photo, _party: CreateParty, _cover: Photo) => {
+const create = async (_logo: Photo, _party: CreatePartyBody, _cover: Photo) => {
   const uploadedLogo = await photoUploader.upload(
     "party_photos",
     _logo.tempFilePath
   );
   if (!_logo) throw new HttpException("BAD_REQUEST", "Party ID is required");
-  
+
   const logo = PartyLogo.create({
   public_id: uploadedLogo.public_id,
   url: uploadedLogo.secure_url,
@@ -111,7 +115,7 @@ const create = async (_logo: Photo, _party: CreateParty, _cover: Photo) => {
   return party;
 };
 
-const update = async (_logo: Photo, _party: UpdateParty, _cover: Photo) => {
+const update = async (_logo: Photo, _party: UpdatePartyBody, _cover: Photo) => {
   if (!_party.id) {
     throw new HttpException("BAD_REQUEST", "Party ID is required");
   }
