@@ -10,10 +10,9 @@ const partyMixin = Vue.extend({
     createPartyRoute() {
       this.$router.push(`${this.pagePath}/create`);
     },
-    editPartyRoute(id: string) {
+    editPartyRoute(id: number) {
       this.$router.push(`${this.pagePath}/${id}/edit`);
     },
-    
   },
 });
 

@@ -1,142 +1,110 @@
 <template>
   <v-form ref="form" v-model="valid">
     <v-row>
-      <v-col v-if="alert.show" cols="12">
-        <v-alert :type="alert.type">
+      <v-col v-if="alert.show" cols="12" class="pb-0">
+        <v-alert
+          v-model="alert.show"
+          :type="alert.type"
+          class="mb-0"
+          dismissible
+        >
           {{ alert.message }}
         </v-alert>
       </v-col>
-
-      <v-col align="center" cols="12">
-          <v-container class="partylist-header">
-            <v-btn plain :color="background" class="cover-uploader">
-            <v-img max-height="120%"
-            src="https://picsum.photos/id/11/500/300"
-            ></v-img>
-          </v-btn>
-          </v-container>
-        </v-col>
-        <v-col align="center" cols="12">
-            <v-avatar :color="background" size="140" class="logo-uploader">
-                <template v-if="!parsedUrl"> Logo Here </template>
-                <template v-else>
-                <v-img :src="parsedUrl"></v-img>
-                </template>
-
-                <input
-                type="file"
-                class="logo-uploader__input"
-                accept="image/*"
-                @change="onFileChange"
-                />
-            </v-avatar>
-        </v-col>
-
-      <v-col cols="12">
-        <v-text-field
-          label="Partylist Name *"
-          outlined
-          v-model="form.partyName"
-          :rules="rules.partyName"
-          hide-details="auto"
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="12">
-        <v-text-field
-          label="Partylist Alias/Ticker *"
-          outlined
-          v-model="form.ticker"
-          :rules="rules.ticker"
-          hide-details="auto"
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="12">
-        <v-text-field
-          label="Description *"
-          outlined
-          v-model="form.description"
-          :rules="rules.description"
-          hide-details="auto"
-        ></v-text-field>
-      </v-col>
-
-      <v-col class="d-flex" cols="12">
-        <v-btn
-          color="primary"
-          :disabled="loading"
-          :loading="loading"
-          large
-          block
-          @click="submit"
-          >Submit</v-btn
+      <v-col cols="12" style="position: relative; margin-top: -10px">
+        <cover-photo-uploader
+          tabindex="-1"
+          class="mx-auto"
+          v-model="form.cover"
+          height="350"
+          withBtn
         >
+        </cover-photo-uploader>
+      </v-col>
+
+      <v-col class="d-flex" cols="12" style="margin-top: -150px">
+        <logo-uploader
+          label="Logo"
+          class="mx-auto"
+          v-model="form.logo"
+          size="240"
+          withBtn
+        ></logo-uploader>
+      </v-col>
+
+      <v-col cols="9" class="mx-auto">
+        <v-row>
+          <v-col cols="12">
+            <v-text-field
+              label="Partylist Name*"
+              outlined
+              v-model="form.title"
+              :rules="rules.title"
+              hide-details="auto"
+            ></v-text-field>
+          </v-col>
+
+          <v-col cols="12">
+            <v-text-field
+              label="Partylist Alias/Ticker *"
+              outlined
+              v-model="form.ticker"
+              :rules="rules.ticker"
+              hide-details="auto"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              label="Description"
+              outlined
+              v-model="form.description"
+              hide-details="auto"
+            ></v-text-field>
+          </v-col>
+
+          <v-col class="d-flex" cols="12">
+            <v-btn
+              color="primary"
+              :disabled="!valid || loading"
+              :loading="loading"
+              large
+              block
+              @click="submit"
+              >Submit</v-btn
+            >
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
   </v-form>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import configs from "@/configs";
+import LogoUploader from "@/components/utils/LogoUploader.vue";
+import CoverPhotoUploader from "@/components/utils/CoverPhotoUploader.vue";
+import mixins from "vue-typed-mixins";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
+import partyFormMixin from "@/mixins/forms/party-form.mixin";
 
-const defaultForm = {
-  partyName: "",
-  ticker: "",
-  description: "",
-};
-
-const defaultAlert = {
-  show: false,
-  type: "",
-  message: "",
-};
-
-export default Vue.extend({
+export default mixins(manageElectionMixins, partyFormMixin).extend({
+  components: {
+    LogoUploader,
+    CoverPhotoUploader,
+  },
   props: {
     createFunc: Function,
   },
 
-  data() {
-    return {
-      valid: false,
-      alert: Object.assign({}, defaultAlert),
-
-      loading: false,
-      form: Object.assign({}, defaultForm),
-
-      baseURL: configs.baseURL,
-
-      parsedUrl: null,
-    };
-  },
-
-   watch: {
-    url: {
-      immediate: true,
-      handler: function (value, oldVal) {
-        this.parsedUrl = value;
-      },
-    },
-  },
-
-  computed: {
-    rules() {
-      return {
-        partyName: [(v: any) => !!v || "Party is required"],
-        ticker: [(v: any) => !!v || "Alias/Ticker is required"],
-        description: [(v: any) => !!v || "Description is required"],
-      };
-    },
-
-    background() {
-      return !this.parsedUrl ? "grey white--text" : "";
-    },
-  },
-
   methods: {
     async submit() {
+      if (!this.form.logo) {
+        return (this.alert = {
+          show: true,
+          type: "error",
+          message: "Logo is required",
+        });
+      }
+
       this.loading = true;
 
       (this.$refs as any).form.validate();
@@ -156,41 +124,6 @@ export default Vue.extend({
       }
       this.loading = false;
     },
-
-    reset() {
-      (this.$refs as any).form.reset();
-      (this.$refs as any).form.resetValidation();
-      this.alert = Object.assign({}, defaultAlert);
-    },
-
-    onFileChange(events) {
-      const files = events.target.files;
-
-      if (files && files.length) {
-        const file = files[0];
-        this.parsedUrl = URL.createObjectURL(file);
-        this.$emit("input", file);
-      }
-    },
-
   },
 });
 </script>
-
-<style lang="scss">
-.logo-uploader {
-  &__input {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    display: block;
-    opacity: 0;
-    cursor: pointer;
-  }
-}
-.partylist-header {
-  padding-top: 40mm;
-}
-</style>

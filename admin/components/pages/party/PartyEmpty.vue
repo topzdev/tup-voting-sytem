@@ -7,11 +7,11 @@
       autem sed facilis deserunt corrupti aliquid odit dolorem, provident
     </p>
     <v-btn
-      color="primary" 
+      color="primary"
       large
       width="75%"
       class="mt-1 mx-auto"
-      @click="createSampleRoute"
+      @click="createPartyRoute"
       >Create Partylist</v-btn
     >
   </span>
@@ -23,7 +23,7 @@ import partyMixin from "~/mixins/party.mixin";
 export default mixins(manageElectionMixins, partyMixin).extend({
   computed: {
     thisPageConfig() {
-      return this.links['party'];
+      return this.links["party"];
     },
   },
 });

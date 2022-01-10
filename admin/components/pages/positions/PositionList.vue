@@ -1,7 +1,7 @@
 <template>
   <span>
     <draggable
-      class="my-4"
+      class="mb-4"
       v-model="itemsLocal"
       draggable=".item"
       v-bind="dragOptions"
@@ -18,7 +18,7 @@
           v-for="(item, idx) in itemsLocal"
           :key="item.id"
           cols="12"
-          class="item py-2"
+          class="item pt-2 pb-0"
         >
           <position-card
             :index="idx + 1"
@@ -29,7 +29,10 @@
         </v-col>
       </transition-group>
     </draggable>
-    <v-row class="w-100">
+    <v-row no-gutters class="w-100">
+      <v-col v-if="!isArranging" cols="12">
+        <p class="caption">Drag one item on list to start items arrangement.</p>
+      </v-col>
       <v-col class="d-flex" cols="12" v-if="isArranging">
         <v-btn :disabled="loading" depressed large @click="cancel"
           >Cancel</v-btn

@@ -2,8 +2,8 @@
   <span>
     <page-bars title="Create Party" back> </page-bars>
     <manage-container>
-      <template v-slot:form>
-        <party-create-form />
+      <template v-slot:centered>
+        <party-create-form :createFunc="create" />
       </template>
     </manage-container>
   </span>
@@ -12,11 +12,13 @@
 
 <script lang="ts">
 import ManageContainer from "@/components/containers/ManageContainer.vue";
-import partyMixins from "@/mixins/party.mixin";
 import mixins from "vue-typed-mixins";
-import PageBars from "~/components/bars/PageBars.vue";
+import PageBars from "@/components/bars/PageBars.vue";
 import PartyCreateForm from "@/components/pages/party/forms/PartyCreateForm.vue";
-export default mixins(partyMixins).extend({
+import partyServices from "@/services/party.service";
+import partyMixin from "@/mixins/party.mixin";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
+export default mixins(partyMixin, manageElectionMixins).extend({
   components: {
     PageBars,
     ManageContainer,
@@ -27,12 +29,16 @@ export default mixins(partyMixins).extend({
   },
   methods: {
     async create(data: any) {
+      if (!this.electionId) return;
+
       try {
-        // const result = await organizationServices.create(data);
-        // console.log(result);
+        const result = await partyServices.create({
+          election_id: this.electionId,
+          ...data,
+        });
         this.$accessor.snackbar.set({
           show: true,
-          message: "Party Added!",
+          message: "Party Added",
           timeout: 5000,
           color: "success",
         });

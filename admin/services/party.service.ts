@@ -48,7 +48,7 @@ export type CreatePartyDto = {
   description: string;
   election_id: number;
   logo: File;
-  cover_photo: File;
+  cover: File;
 };
 
 export type UpdatePartyDto = {
@@ -58,7 +58,7 @@ export type UpdatePartyDto = {
   description: string;
   election_id: number;
   logo: File;
-  cover_photo: File;
+  cover: File;
 };
 
 const url = "/api/v1/party";
@@ -87,6 +87,8 @@ const partyServices = {
     formData.append("ticker", body.ticker);
     formData.append("election_id", body.election_id.toString());
     formData.append("description", body.description);
+    formData.append("logo", body.logo);
+    formData.append("cover", body.cover);
 
     return (
       await apiClient.post(`${url}`, formData, {
@@ -106,6 +108,8 @@ const partyServices = {
     formData.append("election_id", body.election_id.toString());
     formData.append("description", body.description);
 
+    formData.append("logo", body.logo);
+    formData.append("cover", body.cover);
     return (
       await apiClient.put(`${url}`, formData, {
         headers: {

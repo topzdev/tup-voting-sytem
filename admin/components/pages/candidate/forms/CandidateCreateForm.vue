@@ -2,7 +2,12 @@
   <v-form ref="form" v-model="valid">
     <v-row>
       <v-col v-if="alert.show" cols="12" class="pb-0">
-        <v-alert :type="alert.type" class="mb-0" dismissible>
+        <v-alert
+          v-model="alert.show"
+          :type="alert.type"
+          class="mb-0"
+          dismissible
+        >
           {{ alert.message }}
         </v-alert>
       </v-col>
@@ -25,8 +30,7 @@
 
       <v-col class="d-flex" cols="12" style="margin-top: -150px">
         <logo-uploader
-          label="Profile Photo"
-          description=""
+          label="Profile Photo *"
           class="mx-auto"
           v-model="form.profile_photo"
           size="240"
@@ -151,7 +155,7 @@
           <v-col class="d-flex" cols="12">
             <v-btn
               color="primary"
-              :disabled="loading"
+              :disabled="!valid || loading"
               :loading="loading"
               large
               block
@@ -166,8 +170,6 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import configs from "@/configs";
 import PartyPicker from "@/components/pickers/PartyPicker.vue";
 import PositionPicker from "@/components/pickers/PositionPicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
@@ -176,12 +178,6 @@ import mixins from "vue-typed-mixins";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import EditorField from "@/components/input/EditorField.vue";
 import candidateFormMixin from "@/mixins/forms/candidate-form.mixin";
-
-const defaultAlert = {
-  show: false,
-  type: "",
-  message: "",
-};
 
 export default mixins(manageElectionMixins, candidateFormMixin).extend({
   components: {
@@ -205,13 +201,6 @@ export default mixins(manageElectionMixins, candidateFormMixin).extend({
         });
       }
 
-      if (!this.form.cover_photo) {
-        return (this.alert = {
-          show: true,
-          type: "error",
-          message: "Cover Photo is required",
-        });
-      }
       this.loading = true;
 
       (this.$refs as any).form.validate();
