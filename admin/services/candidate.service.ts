@@ -3,37 +3,12 @@ import transformParamsToUrl from "@/helpers/paramsToUrl.helpers";
 import { Election } from "./election.service";
 import { Position } from "./position.service";
 import { DataTimestamp } from "./voters.service";
+import { Party } from "./party.service";
 
 export type GetCandidateReturn = {
   items: Candidate[];
   itemsCount: number;
   totalCount: number;
-};
-
-type PartyLogo = {
-  id: number;
-  public_id: number;
-  url: string;
-  service: string;
-};
-
-type PartyCoverPhoto = {
-  id: number;
-  public_id: number;
-  url: string;
-  service: string;
-};
-
-export type Party = {
-  id: number;
-  description: string;
-  ticker: string;
-  title: string;
-  election_id: number;
-  election: Election;
-  logo: PartyLogo;
-  cover_photo: PartyCoverPhoto;
-  archive: boolean;
 };
 
 type CandidateProfilePhoto = {

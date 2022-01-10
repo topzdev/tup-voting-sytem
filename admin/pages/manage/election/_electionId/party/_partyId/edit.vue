@@ -1,6 +1,6 @@
 <template>
   <span>
-    <page-bars back title="Manage Candidate">
+    <page-bars back title="Manage Party">
       <v-menu offset-y min-width="200">
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -33,7 +33,7 @@
         <div v-else-if="$fetchState.error">Something went wrong</div>
       </template>
       <template v-slot:centered>
-        <candidate-edit-form
+        <party-edit-form
           v-if="!$fetchState.error && !$fetchState.pending"
           :defaultData="defaultData"
           :updateFunc="update"
@@ -47,26 +47,26 @@
 import ManageContainer from "@/components/containers/ManageContainer.vue";
 import mixins from "vue-typed-mixins";
 import PageBars from "~/components/bars/PageBars.vue";
-import CandidateEditForm from "~/components/pages/candidate/forms/CandidateEditForm.vue";
-import candidateServices from "@/services/candidate.service";
-import candidateMixin from "@/mixins/candidate.mixin";
-export default mixins(candidateMixin).extend({
+import PartyEditForm from "~/components/pages/party/forms/PartyEditForm.vue";
+import partyServices from "@/services/party.service";
+import partyMixin from "@/mixins/party.mixin";
+export default mixins(partyMixin).extend({
   components: {
     PageBars,
     ManageContainer,
-    CandidateEditForm,
+    PartyEditForm,
   },
   head: {
-    title: "Update Candidate",
+    title: "Update Party",
   },
   methods: {
     async remove() {
-      if (!this.candidateId) return;
-      const result = await candidateServices.delete(parseInt(this.candidateId));
+      if (!this.partyId) return;
+      const result = await partyServices.delete(parseInt(this.partyId));
 
       this.$accessor.snackbar.set({
         show: true,
-        message: "Candidate Deleted",
+        message: "Party Deleted",
         timeout: 5000,
         color: "success",
       });
@@ -74,14 +74,14 @@ export default mixins(candidateMixin).extend({
     },
 
     async update(data: any) {
-      const result = await candidateServices.update({
+      const result = await partyServices.update({
         ...data,
-        id: this.candidateId,
+        id: this.partyId,
       });
       console.log(result);
       this.$accessor.snackbar.set({
         show: true,
-        message: "Candidate Updated!",
+        message: "Party Updated!",
         timeout: 5000,
         color: "success",
       });
@@ -95,17 +95,17 @@ export default mixins(candidateMixin).extend({
   },
 
   computed: {
-    candidateId() {
-      const id = this.$route.params.candidateId;
-      if (!id) throw Error("Candidate ID is missing :(");
-      return this.$route.params.candidateId;
+    partyId(): string {
+      const id = this.$route.params.partyId;
+      if (!id) throw Error("Party ID is missing :(");
+      return id;
     },
   },
 
   fetchOnServer: false,
   async fetch() {
     try {
-      this.defaultData = await candidateServices.getById(this.candidateId);
+      this.defaultData = await partyServices.getById(parseInt(this.partyId));
     } catch (error) {
       console.log(error);
     }

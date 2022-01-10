@@ -206,7 +206,7 @@ export default mixins(candidateFormMixin, manageElectionMixins).extend({
       return this.defaultData.profile_photo.url;
     },
     coverPhotoUrl(): string {
-      return this.defaultData.cover_photo.url;
+      return this.defaultData.cover_photo?.url;
     },
   },
 
@@ -217,14 +217,6 @@ export default mixins(candidateFormMixin, manageElectionMixins).extend({
           show: true,
           type: "error",
           message: "Profile Photo is required",
-        });
-      }
-
-      if (!this.form.cover_photo) {
-        return (this.alert = {
-          show: true,
-          type: "error",
-          message: "Cover Photo is required",
         });
       }
 

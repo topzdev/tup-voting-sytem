@@ -1,36 +1,38 @@
 <template>
-  <span class="logo-uploader text-center">
-    <v-avatar :color="background" :size="size">
-      <div class="d-flex flex-column" v-if="!parsedUrl">
-        <h4>
-          {{ label }}
-        </h4>
-        <p class="caption">{{ description }}</p>
-      </div>
-      <template v-else>
-        <app-image :src="parsedUrl" contain></app-image>
-      </template>
+  <v-hover v-slot="{ hover }">
+    <span class="logo-uploader text-center">
+      <v-avatar :color="hover ? hoverBackground : background" :size="size">
+        <div class="d-flex flex-column" v-if="!parsedUrl">
+          <h4>
+            {{ label }}
+          </h4>
+          <p class="caption">{{ description }}</p>
+        </div>
+        <template v-else>
+          <app-image :src="parsedUrl"></app-image>
+        </template>
 
-      <input
-        ref="uploader"
-        type="file"
-        class="logo-uploader__input"
-        accept="image/*"
-        @change="onFileChange"
-      />
-    </v-avatar>
+        <input
+          ref="logoUploader"
+          type="file"
+          class="logo-uploader__input"
+          accept="image/*"
+          @change="onFileChange"
+        />
+      </v-avatar>
 
-    <v-btn
-      v-if="withBtn"
-      class="logo-uploader__btn"
-      fab
-      small
-      color="primary"
-      @click="openUploader"
-    >
-      <v-icon>mdi-camera</v-icon>
-    </v-btn>
-  </span>
+      <v-btn
+        v-if="withBtn"
+        class="logo-uploader__btn"
+        fab
+        small
+        color="primary"
+        @click="openUploader"
+      >
+        <v-icon>mdi-camera</v-icon>
+      </v-btn>
+    </span>
+  </v-hover>
 </template>
 
 <script  lang="ts">
@@ -53,12 +55,16 @@ export default Vue.extend({
 
     description: {
       type: String,
-      default: "Click to logo",
+      default: "Click to upload logo",
     },
 
     color: {
       type: String,
       default: "grey lighten-1",
+    },
+    hoverColor: {
+      type: String,
+      default: "grey lightnen-1",
     },
 
     withBtn: {
@@ -85,11 +91,14 @@ export default Vue.extend({
     background(): string {
       return !this.parsedUrl ? this.color : "grey lighten-4";
     },
+    hoverBackground(): string {
+      return this.hoverColor;
+    },
   },
 
   methods: {
     openUploader() {
-      (this.$refs as any).uploader.click();
+      (this.$refs as any).logoUploader.click();
     },
     onFileChange(events): void {
       const files = events.target.files;
@@ -107,6 +116,12 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .logo-uploader {
   position: relative;
+  border: 5px solid white;
+  border-radius: 100%;
+
+  .v-avatar {
+    transition: 300ms ease all;
+  }
 
   &__input {
     position: absolute;

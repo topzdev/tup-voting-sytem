@@ -61,7 +61,7 @@
       <v-col class="d-flex" cols="12">
         <v-btn
           color="primary"
-          :disabled="!isEdited || !valid || loading"
+          :disabled="!valid || loading"
           :loading="loading"
           large
           block

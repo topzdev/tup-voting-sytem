@@ -1,10 +1,14 @@
 import { validate } from "class-validator";
-import { getRepository, Not } from "typeorm";
+import { Brackets, getRepository, Not } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
 import photoUploader from "../../helpers/photo-uploader.helper";
 import { Photo } from "../photo/photo.service";
 import { Party } from "./entity/party.entity";
-import { CreatePartyBody, GetPartyBody, UpdatePartyBody } from "./party.interface";
+import {
+  CreatePartyBody,
+  GetPartyBody,
+  UpdatePartyBody,
+} from "./party.interface";
 import { PartyLogo } from "./entity/party-logo.entity";
 import { PartyCoverPhoto } from "./entity/party-cover-photo.entity";
 
@@ -15,7 +19,7 @@ const getAll = async (_electionId: string, _query: GetPartyBody) => {
 
   if (!_electionId)
     throw new HttpException("BAD_REQUEST", "Election id is required");
-    
+
   let builder = partyRepository
     .createQueryBuilder("party")
     .leftJoinAndSelect("party.logo", "logo")
@@ -29,35 +33,42 @@ const getAll = async (_electionId: string, _query: GetPartyBody) => {
   }
 
   if (searchStirng) {
-    builder = builder.orWhere("party.ticker ILIKE :ticker", {
-      ticker: `%${searchStirng}%`,
-    });
-
-    builder = builder.orWhere("party.title ILIKE :title", {
-      title: `%${searchStirng}%`,
-    });
+    builder = builder.andWhere(
+      new Brackets((sqb) => {
+        sqb.orWhere("party.ticker ILIKE :ticker", {
+          ticker: `%${searchStirng}%`,
+        });
+        sqb.orWhere("party.title ILIKE :title", {
+          title: `%${searchStirng}%`,
+        });
+      })
+    );
   }
 
+  builder = builder.orderBy({
+    "party.created_at": "DESC",
+  });
+
   if (_query.order) {
-    builder = builder.orderBy({
-      "party.title": _query.order,
-      "party.ticker": _query.order,
-    });
+    builder = builder.addOrderBy("party.firstname", _query.order);
+    builder = builder.addOrderBy("party.lastname", _query.order);
   }
 
   if (_query.page && _query.take) {
     const offset = _query.page * _query.take - _query.take;
-
-    console.log("OFFSET", offset);
-
     builder = builder.offset(offset).limit(_query.take);
   }
 
-  const [party, count] = await builder.getManyAndCount();
+  const items = await builder.getMany();
+
+  const totalCount = await partyRepository.count({
+    where: { election_id: _electionId },
+  });
 
   return {
-    items: party,
-    count,
+    items,
+    totalCount,
+    itemsCount: items.length,
   };
 };
 
@@ -75,42 +86,35 @@ const getById = async (_id: string) => {
 };
 
 const create = async (_logo: Photo, _party: CreatePartyBody, _cover: Photo) => {
-
   if (!_logo) throw new HttpException("BAD_REQUEST", "Logo is required");
-  
+
   const uploadedLogo = await photoUploader.upload(
     "party_photos",
     _logo.tempFilePath
   );
 
-
   const logo = PartyLogo.create({
-  public_id: uploadedLogo.public_id,
-  url: uploadedLogo.secure_url,
+    public_id: uploadedLogo.public_id,
+    url: uploadedLogo.secure_url,
   });
 
   let uploadedCoverPhoto;
   let partyCoverPhoto;
-  if(_cover){
+  if (_cover) {
     uploadedCoverPhoto = await photoUploader.upload(
       "party_photos",
       _cover.tempFilePath
     );
 
     partyCoverPhoto = PartyCoverPhoto.create({
-    public_id: uploadedCoverPhoto.public_id,
-    url: uploadedCoverPhoto.secure_url,
-    }); 
+      public_id: uploadedCoverPhoto.public_id,
+      url: uploadedCoverPhoto.secure_url,
+    });
 
     await partyCoverPhoto.save();
   }
 
-
-
-  
-
   await logo.save();
-
 
   const party = Party.create({
     ticker: _party.ticker,
@@ -134,7 +138,7 @@ const update = async (_logo: Photo, _party: UpdatePartyBody, _cover: Photo) => {
   }
 
   const curParty = await Party.findOne(_party.id, {
-    relations: ["logo"],
+    relations: ["logo", "cover_photo"],
   });
 
   if (!curParty) {
@@ -144,8 +148,6 @@ const update = async (_logo: Photo, _party: UpdatePartyBody, _cover: Photo) => {
   console.log("Prev:", curParty, "Passed:", _party);
 
   let toUpdateLogo = curParty.logo;
-
-  console.log("The LOGO:", _logo.tempFilePath, toUpdateLogo);
 
   if (_logo && _logo.tempFilePath) {
     //since there is a new logo provided we will destroy the exisiting image then replace before uploading a new one, so when error occcured on destory image the whole process will stop
@@ -178,8 +180,6 @@ const update = async (_logo: Photo, _party: UpdatePartyBody, _cover: Photo) => {
 
   let toUpdateCoverPhoto = curParty.cover_photo;
 
-  console.log("Cover Photo:", _cover.tempFilePath, toUpdateCoverPhoto);
-
   if (_cover && _cover.tempFilePath) {
     //since there is a new logo provided we will destroy the exisiting image then replace before uploading a new one, so when error occcured on destory image the whole process will stop
     if (curParty.cover_photo) {
@@ -188,20 +188,20 @@ const update = async (_logo: Photo, _party: UpdatePartyBody, _cover: Photo) => {
 
     const uploadedCoverPhoto = await photoUploader.upload(
       "party_photos",
-      _logo.tempFilePath
+      _cover.tempFilePath
     );
 
     // if the previous logo is null then save the new logo
     // else replaced the old public_id and url
     if (!curParty.cover_photo) {
-      console.log("Logo is EMPTY so saving a new one");
+      console.log("Cover Photo is EMPTY so saving a new one");
       toUpdateCoverPhoto = PartyCoverPhoto.create({
         public_id: uploadedCoverPhoto.public_id,
         url: uploadedCoverPhoto.url,
       });
-      toUpdateCoverPhoto = await toUpdateLogo.save();
+      toUpdateCoverPhoto = await toUpdateCoverPhoto.save();
     } else {
-      console.log("Logo is AVAILABLE so saving a new one");
+      console.log("Cover Photo is AVAILABLE so saving a new one");
       toUpdateCoverPhoto.public_id = uploadedCoverPhoto.public_id;
       toUpdateCoverPhoto.url = uploadedCoverPhoto.url;
     }
@@ -217,8 +217,8 @@ const update = async (_logo: Photo, _party: UpdatePartyBody, _cover: Photo) => {
     cover_photo: toUpdateCoverPhoto,
   });
 
-  await PartyLogo.update(toUpdateLogo.id, toUpdateLogo);
   await PartyCoverPhoto.update(toUpdateCoverPhoto.id, toUpdateCoverPhoto);
+  await PartyLogo.update(toUpdateLogo.id, toUpdateLogo);
   await Party.update(curParty.id, toUpdateParty);
   return true;
 };

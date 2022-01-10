@@ -1,46 +1,48 @@
 <template>
-  <v-card
-    :height="height"
-    :color="background"
-    class="cover-uploader text-center"
-    flat
-    outlined
-    max-width="100%"
-    rounded="3"
-  >
-    <div class="d-flex flex-column" v-if="!parsedUrl">
-      <h3>
-        {{ label }}
-      </h3>
-      <p class="caption">{{ description }}</p>
-    </div>
-    <template v-else>
-      <app-image
-        :src="parsedUrl"
-        :max-height="height"
-        max-width="100%"
-        width="300px"
-      ></app-image>
-    </template>
-
-    <input
-      ref="uploader"
-      type="file"
-      class="cover-uploader__input"
-      accept="image/*"
-      @change="onFileChange"
-    />
-
-    <v-btn
-      v-if="withBtn"
-      class="cover-uploader__btn"
-      fab
-      color="primary"
-      @click="openUploader"
+  <v-hover v-slot="{ hover }">
+    <v-card
+      :height="height"
+      :color="hover ? hoverBackground : background"
+      class="cover-uploader text-center"
+      flat
+      outlined
+      max-width="100%"
+      rounded="3"
     >
-      <v-icon>mdi-camera</v-icon>
-    </v-btn>
-  </v-card>
+      <div class="d-flex flex-column" v-if="!parsedUrl">
+        <h3>
+          {{ label }}
+        </h3>
+        <p class="caption">{{ description }}</p>
+      </div>
+      <template v-else>
+        <app-image
+          :src="parsedUrl"
+          :max-height="height"
+          max-width="100%"
+          width="300px"
+        ></app-image>
+      </template>
+
+      <input
+        ref="uploader"
+        type="file"
+        class="cover-uploader__input"
+        accept="image/*"
+        @change="onFileChange"
+      />
+
+      <v-btn
+        v-if="withBtn"
+        class="cover-uploader__btn"
+        fab
+        color="primary"
+        @click="openUploader"
+      >
+        <v-icon>mdi-camera</v-icon>
+      </v-btn>
+    </v-card>
+  </v-hover>
 </template>
 
 <script lang="ts">
@@ -74,6 +76,11 @@ export default Vue.extend({
       default: "grey lighten-2",
     },
 
+    hoverColor: {
+      type: String,
+      default: "grey lightnen-3",
+    },
+
     withBtn: {
       type: Boolean,
     },
@@ -99,6 +106,9 @@ export default Vue.extend({
   computed: {
     background(): string {
       return !this.parsedUrl ? this.color : "grey lighten-4";
+    },
+    hoverBackground(): string {
+      return this.hoverColor;
     },
   },
 
@@ -128,6 +138,10 @@ export default Vue.extend({
   align-items: center;
   border-radius: 10px;
   overflow: hidden;
+  border-top-right-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+  transition: 300ms ease all;
+
   &__input {
     position: absolute;
     top: 0;
