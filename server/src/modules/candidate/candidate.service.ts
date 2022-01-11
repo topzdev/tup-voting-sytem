@@ -123,17 +123,14 @@ const create = async (
   if (!_candidate.position_id)
     throw new HttpException("BAD_REQUEST", "Position is required");
 
+  
   // if (!_candidate.party_id)
   //   throw new HttpException("BAD_REQUEST", "Party is required");
 
   console.log("Body Candidate:", _candidate);
-
+  if (!_profilePhoto) throw new HttpException("BAD_REQUEST", "Profile Photo is required");
+  
   const uploadedProfilePhoto = await photoUploader.upload(
-    "candidate_photos",
-    _profilePhoto.tempFilePath
-  );
-
-  const uploadedCoverPhoto = await photoUploader.upload(
     "candidate_photos",
     _profilePhoto.tempFilePath
   );
@@ -142,10 +139,25 @@ const create = async (
     public_id: uploadedProfilePhoto.public_id,
     url: uploadedProfilePhoto.secure_url,
   });
-  const candidateCoverPhoto = CandidateCoverPhoto.create({
-    public_id: uploadedCoverPhoto.public_id,
-    url: uploadedCoverPhoto.secure_url,
-  });
+
+  let uploadedCoverPhoto;
+  let candidateCoverPhoto;
+  if(_coverPhoto)
+  {
+    uploadedCoverPhoto = await photoUploader.upload(
+      "candidate_photos",
+      _profilePhoto.tempFilePath
+    );
+  
+    candidateCoverPhoto = CandidateCoverPhoto.create({
+      public_id: uploadedCoverPhoto.public_id,
+      url: uploadedCoverPhoto.secure_url,
+    });
+
+    await candidateCoverPhoto.save();
+  }
+  
+
   const candidateSocials = CandidateSocials.create({
     facebook_url: _candidate.facebook_url,
     linkedin_url: _candidate.linkedin_url,
@@ -155,7 +167,6 @@ const create = async (
   });
 
   await candidateProfilePhoto.save();
-  await candidateCoverPhoto.save();
   await candidateSocials.save();
 
   const candidate = Candidate.create({

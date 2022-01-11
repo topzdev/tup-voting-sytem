@@ -41,8 +41,8 @@ const getOneById = async (req: Request, res: Response, next: NextFunction) => {
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const profile_photo = req.files.profile_photo as fileUpload.UploadedFile;
-    const cover_photo = req.files.cover_photo as fileUpload.UploadedFile;
+    const profile_photo = req.files?.profile_photo as fileUpload.UploadedFile;
+    const cover_photo = req.files?.cover_photo as fileUpload.UploadedFile;
     const candidate = unflatten<CreateCandidateBody, any>(req.body);
 
     console.log(profile_photo, cover_photo, candidate);
