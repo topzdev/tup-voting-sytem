@@ -32,6 +32,7 @@ const getAll = async (_electionId: string, _query: GetCandidateBody) => {
     .leftJoinAndSelect("candidate.party", "party")
     .leftJoinAndSelect("candidate.position", "position")
     .leftJoinAndSelect("candidate.profile_photo", "profile_photo")
+    .leftJoinAndSelect("candidate.cover_photo", "cover_photo")
     .where("candidate.election_id = :electionId", {
       electionId: _electionId,
     });
