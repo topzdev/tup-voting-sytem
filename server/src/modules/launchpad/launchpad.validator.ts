@@ -1,25 +1,30 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 // docs: https://express-validator.github.io/docs/index.html
 
 const validations = {
-  id: body("id").notEmpty().withMessage("ID is required"),
-  firstname: body("firstname").notEmpty().withMessage("First Name is required"),
-  lastname: body("lastname").notEmpty().withMessage("Last Name is required"),
-  // party_id: body("party_id").notEmpty().withMessage("Party is required"),
-  position_id: body("position_id")
+  param_election_id: param("election_id")
     .notEmpty()
-    .withMessage("Position is required"),
+    .withMessage("Election ID is required"),
+  param_organization_id: param("organization_id")
+    .notEmpty()
+    .withMessage("Organization ID is required"),
 };
 
-const { id, firstname, lastname, position_id } = validations;
+const { param_election_id, param_organization_id } = validations;
 
-const create = [firstname, lastname, position_id];
-const update = [id, firstname, lastname, position_id];
+const getElectionBallot = [param_election_id];
+const getElectionDetails = [param_election_id];
+const launchElection = [param_election_id];
+const getAllElection = [param_organization_id];
+const getElectionById = [param_election_id];
 
 const launchpadValidator = {
-  create,
-  update,
+  getElectionBallot,
+  getElectionDetails,
+  launchElection,
+  getAllElection,
+  getElectionById,
 };
 
 export default launchpadValidator;

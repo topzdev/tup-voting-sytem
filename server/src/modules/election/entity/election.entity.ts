@@ -1,4 +1,5 @@
 import {
+  AfterLoad,
   Column,
   Entity,
   JoinColumn,
@@ -78,9 +79,18 @@ export class Election extends Timestamp {
   archive: boolean;
 
   @Column({
+    select: false,
     type: "enum",
     enum: ElectionStatusEnum,
     default: ElectionStatusEnum.BUILDING,
   })
   status: ElectionStatusEnum;
+
+  @Column({
+    nullable: true,
+    insert: false,
+    update: false,
+    select: false,
+  })
+  final_status: string;
 }

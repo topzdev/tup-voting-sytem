@@ -60,20 +60,20 @@ export const statusAsTextSubquery = () => {
   ARCHIVED = 4,
 */
 
-export const finalStatusSubquery = () => {
+export const finalStatusSubquery = (alias) => {
   return `
    CASE	
-      WHEN status >= '3' AND "election"."archive" = TRUE 					
+      WHEN "election"."status" >= '3' AND "election"."archive" = TRUE 					
 			    THEN '${STATUS_MESSAGE[4]}' 
 		
-      WHEN status >= '2' AND CURRENT_TIMESTAMP >= "election"."close_date"  
+      WHEN "election"."status" >= '2' AND CURRENT_TIMESTAMP >= "election"."close_date"  
           THEN '${STATUS_MESSAGE[3]}'
 
-      WHEN status > '1' 													
+      WHEN "election"."status" > '1' 													
 			    THEN '${STATUS_MESSAGE[2]}'
   
       ELSE '${STATUS_MESSAGE[1]}'
     
-    END
+    END AS ${alias}_final_status
   `;
 };
