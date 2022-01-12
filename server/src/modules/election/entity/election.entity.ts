@@ -1,4 +1,5 @@
 import {
+  AfterLoad,
   Column,
   Entity,
   JoinColumn,
@@ -15,6 +16,13 @@ import { Position } from "../../position/entity/position.entity";
 import { ElectionLogo } from "./election-logo.entity";
 import { ElectionVote } from "./election-vote.entity";
 import { Voter } from "../../voter/entity/voter.entity";
+
+export enum ElectionStatusEnum {
+  BUILDING = 1,
+  RUNNING = 2,
+  COMPLETED = 3,
+  ARCHIVED = 4,
+}
 
 @Entity("election")
 export class Election extends Timestamp {
@@ -63,10 +71,26 @@ export class Election extends Timestamp {
   voters: Voter[];
 
   @OneToMany(() => ElectionVote, (electionVote) => electionVote.election)
-  votes: ElectionVote;
+  votes: ElectionVote[];
 
   @Column({
     default: false,
   })
   archive: boolean;
+
+  @Column({
+    select: false,
+    type: "enum",
+    enum: ElectionStatusEnum,
+    default: ElectionStatusEnum.BUILDING,
+  })
+  status: ElectionStatusEnum;
+
+  @Column({
+    nullable: true,
+    insert: false,
+    update: false,
+    select: false,
+  })
+  final_status: string;
 }

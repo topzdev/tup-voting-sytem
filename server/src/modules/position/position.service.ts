@@ -53,7 +53,9 @@ const getAll = async (_electionId: number, _query: GetPositionBody) => {
 const getById = async (_id: string) => {
   if (!_id) throw new HttpException("BAD_REQUEST", "Position ID is required");
 
-  const position = await Position.findOne(_id);
+  const position = await Position.findOne(_id, {
+    relations: ["candidates"],
+  });
 
   console.log(position);
 

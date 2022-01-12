@@ -12,6 +12,7 @@ import {
 import { ElectionLogo } from "./entity/election-logo.entity";
 import { Organization } from "../organization/entity/organization.entity";
 import parseDate from "../../helpers/parse-date.helper";
+import { finalStatusSubquery } from "../launchpad/launchpad.helper";
 
 const getAll = async (_orgId: string, _query: GetElectionBody) => {
   const electionRepository = getRepository(Election);
@@ -22,8 +23,10 @@ const getAll = async (_orgId: string, _query: GetElectionBody) => {
     throw new HttpException("BAD_REQUEST", "Organization Id is required");
   }
 
-  let builder = electionRepository
-    .createQueryBuilder("election")
+  let builder = electionRepository.createQueryBuilder("election");
+
+  builder = builder
+    .addSelect(finalStatusSubquery(builder.alias))
     .leftJoinAndSelect("election.logo", "logo")
     .where("election.organization_id = :orgId", {
       orgId: _orgId,
@@ -73,18 +76,35 @@ const getBySlug = async (_slug: string) => {
   if (!_slug)
     throw new HttpException("BAD_REQUEST", "Election slug is required");
 
-  const election = await Election.findOne({
-    where: {
-      slug: _slug,
-      archive: false,
-    },
-    relations: [
-      "logo",
-      "organization",
-      "organization.theme",
-      "organization.logo",
-    ],
-  });
+  const electionRepository = getRepository(Election);
+
+  let builder = electionRepository.createQueryBuilder("election");
+
+  builder = builder
+    .addSelect(finalStatusSubquery(builder.alias))
+    .leftJoinAndSelect("election.logo", "logo")
+    .leftJoinAndSelect("election.organization", "organization")
+    .leftJoinAndSelect("organization.theme", "organization.theme")
+    .leftJoinAndSelect("organization.logo", "organization.logo")
+    .where("election.slug = :_slug", { _slug })
+    .andWhere("election.archive = :_archive", {
+      _archive: false,
+    });
+
+  const election = await builder.getOne();
+
+  // await Election.findOne({
+  //   where: {
+  //     slug: _slug,
+  //     archive: false,
+  //   },
+  //   relations: [
+  //     "logo",
+  //     "organization",
+  //     "organization.theme",
+  //     "organization.logo",
+  //   ],
+  // });
 
   return election || null;
 };
@@ -93,22 +113,40 @@ const isExistBySlug = async (_slug: string) => {
   return !!(await getBySlug(_slug));
 };
 
-const getById = async (_id: string) => {
-  if (!_id) throw new HttpException("BAD_REQUEST", "Election ID is required");
+const getById = async (_election_id: string) => {
+  if (!_election_id)
+    throw new HttpException("BAD_REQUEST", "Election ID is required");
 
-  const election = await Election.findOne(_id, {
-    relations: [
-      "logo",
-      "organization",
-      "organization.theme",
-      "organization.logo",
-    ],
-    where: {
-      archive: false,
-    },
-  });
+  const electionRepository = getRepository(Election);
 
-  console.log(election);
+  let builder = electionRepository.createQueryBuilder("election");
+
+  builder = builder
+    .addSelect(finalStatusSubquery(builder.alias))
+    .leftJoinAndSelect("election.logo", "logo")
+    .leftJoinAndSelect("election.organization", "organization")
+    .leftJoinAndSelect("organization.theme", "organization.theme")
+    .leftJoinAndSelect("organization.logo", "organization.logo")
+    .where("election.id = :_election_id", { _election_id })
+    .andWhere("election.archive = :_archive", {
+      _archive: false,
+    });
+
+  const election = await builder.getOne();
+
+  // const election = await Election.findOne(_id, {
+  //   relations: [
+  //     "logo",
+  //     "organization",
+  //     "organization.theme",
+  //     "organization.logo",
+  //   ],
+  //   where: {
+  //     archive: false,
+  //   },
+  // });
+
+  // console.log(election);
 
   return election || null;
 };

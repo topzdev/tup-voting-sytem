@@ -3,9 +3,11 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
+import { Candidate } from "../../candidate/entity/candidate.entity";
 import { Election } from "../../election/entity/election.entity";
 
 @Entity("position")
@@ -38,6 +40,9 @@ export class Position extends Timestamp {
     nullable: true,
   })
   election_id: number;
+
+  @OneToMany(() => Candidate, (candidate) => candidate.position)
+  candidates: Candidate[];
 
   @ManyToOne(() => Election, (election) => election.positions)
   election: Election;

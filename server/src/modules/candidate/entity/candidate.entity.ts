@@ -55,7 +55,7 @@ export class Candidate extends Timestamp {
   @Column({ nullable: true })
   position_id: number;
 
-  @ManyToOne(() => Position)
+  @ManyToOne(() => Position, (position) => position.candidates)
   position: Position;
 
   @OneToOne(() => CandidateSocials)
