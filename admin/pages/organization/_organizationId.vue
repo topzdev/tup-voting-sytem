@@ -4,78 +4,39 @@
       backTo="/"
       backTooltip="Back to Organization"
       :title="pageBarTitle"
+      :logo="pageBarLogo"
     >
-      <v-btn
-        v-if="itemsCount"
-        color="primary"
-        class="ml-auto"
-        :to="createPage"
-        large
+      <v-btn color="primary" class="ml-auto" :to="createPage" large
         >New Election</v-btn
       >
     </page-bars>
     <account-container>
-      <v-row no-gutters>
-        <v-col class="mx-auto text-center" md="8">
-          <div v-if="$fetchState.pending">Loading...</div>
-          <div v-else-if="$fetchState.error">Something went wrong</div>
-          <election-empty v-else-if="!itemsCount" />
-        </v-col>
-
-        <v-col
-          cols="12"
-          v-if="!$fetchState.pending && !$fetchState.error && itemsCount"
-        >
-          <v-row no-gutters>
-            <v-col cols="12">
-              <v-row>
-                <v-col cols="5">
-                  <v-text-field
-                    v-model="search"
-                    :loading="loading"
-                    append-icon="mdi-magnify"
-                    label="Search organization by title or ticker"
-                    single-line
-                    hide-details
-                    outlined
-                  ></v-text-field>
-                </v-col>
-                <v-col> </v-col>
-              </v-row>
-            </v-col>
-            <v-col cols="12">
-              <election-list :items="items" />
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
+      <election-list />
     </account-container>
   </span>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from "vue";
 import authMixins from "@/mixins/auth.mixins";
 import orgMixins from "@/mixins/org.mixins";
 import PageBars from "@/components/bars/PageBars.vue";
 import AccountContainer from "@/components/containers/AccountContainer.vue";
 
-import ElectionEmpty from "@/components/pages/election/ElectionEmpty.vue";
 import ElectionList from "@/components/pages/election/ElectionList.vue";
 import debounce from "@/helpers/debounce";
 import electionServices from "@/services/election.service";
 import organizationServices, {
   Organization,
 } from "@/services/organization.service";
+import mixins from "vue-typed-mixins";
 
-export default Vue.extend({
+export default mixins(orgMixins, authMixins).extend({
   auth: true,
   layout: "account",
-  mixins: [authMixins, orgMixins],
   components: {
     PageBars,
     ElectionList,
-    ElectionEmpty,
     AccountContainer,
   },
   head: {
@@ -84,58 +45,38 @@ export default Vue.extend({
 
   data() {
     return {
-      loading: true,
-      items: [],
-      totalCount: 0,
-      itemsCount: 0,
-      search: "",
-      organization: null,
+      organization: null as Organization | null,
     };
   },
+
   fetchOnServer: false,
   async fetch() {
     await this.fetchOrganization();
-    await this.fetchItems();
-  },
-
-  watch: {
-    search: debounce(async function () {
-      // @ts-ignore
-      await this.fetchItems();
-    }, 500),
   },
 
   computed: {
-    pageBarTitle() {
+    pageBarTitle(): string {
       if (!this.organization) return "Elections";
       return `${this.organization.ticker} Elections`;
+    },
+    pageBarLogo(): any {
+      if (!this.organization) return null;
+      return this.organization.logo;
     },
   },
 
   methods: {
     async fetchOrganization() {
+      if (!this.organizationId) return;
+
       try {
-        const result = await organizationServices.getById(this.organizationId);
+        const result = await organizationServices.getById(
+          this.organizationId.toString()
+        );
         this.organization = result;
       } catch (error) {
         console.log(error);
       }
-    },
-
-    async fetchItems() {
-      this.loading = true;
-      try {
-        const result = await electionServices.getAll(this.organizationId, {
-          search: this.search,
-        });
-
-        this.items = result.items;
-        this.totalCount = result.totalCount;
-        this.itemsCount = result.itemsCount;
-      } catch (error) {
-        console.log(error);
-      }
-      this.loading = false;
     },
   },
 });

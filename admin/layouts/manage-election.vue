@@ -14,7 +14,6 @@
             color="primary"
             :key="i"
             :to="item.to"
-            :exact="item.exact"
             router
           >
             <v-list-item-action>
@@ -55,7 +54,10 @@
           {{ appBarTitle }}
         </v-toolbar-title>
 
-        <election-status-chip status="building" :outlined="true" class="ml-2" />
+        <election-status-chip
+          :status="electionInfo.final_status"
+          class="ml-2"
+        />
       </div>
       <v-spacer />
     </v-app-bar>
@@ -69,16 +71,16 @@
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
 import pageConfig from "@/configs/pages.config";
 import AppSnackbar from "~/components/app/AppSnackbar.vue";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import AppImage from "~/components/app/AppImage.vue";
 import ElectionStatusChip from "~/components/chips/ElectionStatusChip.vue";
+import mixins from "vue-typed-mixins";
 
-export default {
+export default mixins(manageElectionMixins).extend({
   components: { AppSnackbar, AppImage, ElectionStatusChip },
-  mixins: [manageElectionMixins],
   data() {
     return {
       clipped: true,
@@ -109,6 +111,6 @@ export default {
       this.$router.push(orgElectionPath);
     },
   },
-};
+});
 </script>
 

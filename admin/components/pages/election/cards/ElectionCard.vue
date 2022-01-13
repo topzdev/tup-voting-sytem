@@ -3,16 +3,19 @@
     <v-card-text>
       <v-row no-gutters align="center">
         <v-col cols="auto">
-          <v-avatar size="50" :title="election.ticker">
-            <app-image :size="50" :src="election.logo" :alt="election.title" />
+          <v-avatar size="50">
+            <app-image :size="50" :src="data.logo" :alt="data.title" />
           </v-avatar>
         </v-col>
-        <v-col class="px-3 d-flex flex-column justify-center text-left">
-          <h2 class="title text-truncate text--primary" :title="election.title">
-            {{ election.title }}
+        <v-col
+          cols="4"
+          class="px-3 d-flex flex-column justify-center text-left"
+        >
+          <h2 class="title text-truncate text--primary" :title="data.title">
+            {{ data.title }}
           </h2>
-          <p v-if="election.description" class="body-2 my-0 text--secondary">
-            {{ election.description }}
+          <p v-if="data.description" class="body-2 my-0 text--secondary">
+            {{ data.description }}
           </p>
         </v-col>
         <v-col>
@@ -31,7 +34,12 @@
             </v-col>
             <v-col>
               <p class="body-2 my-0 text--secondary">Status</p>
-              <election-status-chip status="building" :small="true" />
+              <election-status-chip
+                class="font-weight-bold"
+                :status="data.final_status"
+                dark
+                outlined
+              />
             </v-col>
           </v-row>
         </v-col>
@@ -39,7 +47,7 @@
           <v-btn
             color="primary"
             text
-            :to="`/manage/election/${election.id}/overview`"
+            :to="`/manage/election/${data.id}/overview`"
             >View</v-btn
           >
         </v-col>
@@ -57,7 +65,7 @@ import AppImage from "@/components/app/AppImage.vue";
 
 export default Vue.extend({
   props: {
-    election: {
+    data: {
       type: Object,
       required: true,
     } as PropOptions<Election>,
@@ -69,11 +77,11 @@ export default Vue.extend({
   },
 
   computed: {
-    startDate() {
-      return dayjs(this.election.start_date).format("MM/DD/YYYY - hh:mm a");
+    startDate(): string {
+      return dayjs(this.data.start_date).format("MM/DD/YYYY - hh:mm a");
     },
-    endDate() {
-      return dayjs(this.election.close_date).format("MM/DD/YYYY - hh:mm a");
+    endDate(): string {
+      return dayjs(this.data.close_date).format("MM/DD/YYYY - hh:mm a");
     },
   },
 });

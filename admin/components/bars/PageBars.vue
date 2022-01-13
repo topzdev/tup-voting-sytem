@@ -20,6 +20,10 @@
               <span v-text="backTooltipMessage"></span>
             </v-tooltip>
 
+            <v-avatar v-if="logo" size="45" class="mr-2">
+              <app-image :size="45" :src="logo"></app-image>
+            </v-avatar>
+
             <h2
               v-if="title"
               class="headline-6 font-weight-medium"
@@ -46,6 +50,7 @@ export default Vue.extend({
     title: String,
     back: Boolean,
     backTo: String,
+    logo: [Object, String],
     backTooltip: String,
     cols: {
       type: [String, Number],

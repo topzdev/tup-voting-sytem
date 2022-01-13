@@ -6,5 +6,5 @@ import {
 type ElectionStatus = "building" | "running" | "completed" | "archived";
 
 export type ElectionWithStatusFinal = Election & {
-  status_final: ElectionStatus;
+  final_status: ElectionStatus;
 };

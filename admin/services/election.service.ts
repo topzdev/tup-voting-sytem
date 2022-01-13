@@ -3,6 +3,8 @@ import transformParamsToUrl from "@/helpers/paramsToUrl.helpers";
 import { DataTimestamp } from "./voters.service";
 import { Organization } from "./organization.service";
 
+export type ElectionStatus = "building" | "running" | "completed" | "archived";
+
 type ElectionLogo = {
   id: number;
   public_id: string;
@@ -26,6 +28,7 @@ export type Election = {
   organization_id: number;
   organization: Organization;
   logo: ElectionLogo;
+  final_status: ElectionStatus;
 } & DataTimestamp;
 
 export interface GetElectionDto {

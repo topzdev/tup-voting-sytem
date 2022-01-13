@@ -3,26 +3,26 @@
     <v-card-text>
       <v-row no-gutters align="center">
         <v-col cols="auto">
-          <v-avatar size="50" :title="org.ticker">
-            <app-image :size="50" :src="org.logo" :alt="org.title" />
+          <v-avatar size="50" :title="data.ticker">
+            <app-image :size="50" :src="data.logo" :alt="data.title" />
           </v-avatar>
         </v-col>
         <v-col class="px-3 d-flex flex-column justify-center text-left">
-          <h2 class="title text-truncate text--primary" :title="org.title">
-            {{ org.title }} <b>({{ org.ticker }})</b>
+          <h2 class="title text-truncate text--primary" :title="data.title">
+            {{ data.title }} <b>({{ data.ticker }})</b>
           </h2>
-          <p v-if="org.description" class="body-2 my-0 text--secondary">
-            {{ org.description }}
+          <p v-if="data.description" class="body-2 my-0 text--secondary">
+            {{ data.description }}
           </p>
         </v-col>
         <v-col cols="auto" class="ml-auto">
           <v-btn
             color="warning"
             text
-            :to="`/manage/organization/${org.id}/edit`"
+            :to="`/manage/organization/${data.id}/edit`"
             >Edit</v-btn
           >
-          <v-btn color="primary" text :to="`/organization/${org.id}`"
+          <v-btn color="primary" text :to="`/organization/${data.id}`"
             >View</v-btn
           >
         </v-col>
@@ -41,7 +41,7 @@ export default Vue.extend({
     AppImage,
   },
   props: {
-    org: {
+    data: {
       type: Object,
       required: true,
     } as PropOptions<Organization>,

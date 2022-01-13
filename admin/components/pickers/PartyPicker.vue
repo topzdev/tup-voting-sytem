@@ -41,7 +41,7 @@ import Vue, { PropOptions } from "vue";
 import electionServices, { Election } from "~/services/election.service";
 import ElectionStatusChip from "@/components/chips/ElectionStatusChip.vue";
 import AppImage from "../app/AppImage.vue";
-import { Party } from "../../services/candidate.service";
+import { Party } from "../../services/party.service";
 export default Vue.extend({
   components: { AppImage, ElectionStatusChip },
   props: {
