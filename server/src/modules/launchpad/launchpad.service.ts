@@ -118,9 +118,7 @@ const getElectionDetails = async (_election_id: number) => {
       "The election must be in building status."
     );
 
-  return {
-    election,
-  };
+  return election;
 };
 
 const getElectionBallot = async (_election_id: number) => {
@@ -135,6 +133,8 @@ const getElectionBallot = async (_election_id: number) => {
 
   builder = builder
     .leftJoinAndSelect("position.candidates", "candidates")
+    .leftJoinAndSelect("candidates.profile_photo", "candidates_profile_photo")
+    .leftJoinAndSelect("candidates.cover_photo", "candidates_cover_photo")
     .where("position.election_id = :_election_id", { _election_id })
     .orderBy({
       "position.display_order": "ASC",

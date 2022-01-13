@@ -14,7 +14,7 @@
                   v-model="list.search"
                   :loading="list.loading"
                   append-icon="mdi-magnify"
-                  label="Search organization by title or ticker"
+                  label="Search election by title"
                   single-line
                   hide-details
                   outlined

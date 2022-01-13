@@ -1,9 +1,32 @@
 <template>
-  <h1>launchpad Page</h1>
+  <span>
+    <page-bars title="Launch Election"> </page-bars>
+    <manage-container>
+      <v-row>
+        <v-col class="mx-auto" cols="9">
+          <launchpad-stepper />
+        </v-col>
+      </v-row>
+    </manage-container>
+  </span>
 </template>
 
-<script>
-export default {};
+
+<script lang="ts">
+import Vue, { PropOptions } from "vue";
+import PageBars from "@/components/bars/PageBars.vue";
+import LaunchpadStepper from "@/components/pages/launchpad/LaunchpadStepper.vue";
+import ManageContainer from "@/components/containers/ManageContainer.vue";
+export default Vue.extend({
+  components: {
+    PageBars,
+    LaunchpadStepper,
+    ManageContainer,
+  },
+  head: {
+    title: "Launchpad",
+  },
+});
 </script>
 
 <style>
