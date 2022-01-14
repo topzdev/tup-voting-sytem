@@ -77,7 +77,7 @@
 
             <template v-slot:item.party="{ item }">
               <span v-if="item.party">{{ item.party.title }}</span>
-              <span> <i>Independent</i> </span>
+              <span v-else> <i>Independent</i> </span>
             </template>
           </v-data-table>
         </v-card>

@@ -1,5 +1,5 @@
 <template>
-  <v-stepper flat>
+  <v-stepper flat v-model="step">
     <v-row no-gutters>
       <v-col cols="8" class="mx-auto">
         <v-stepper-header style="box-shadow: none">
@@ -29,6 +29,24 @@
               :back="back"
             />
           </v-stepper-content>
+
+          <v-stepper-content step="2">
+            <check-ballot-card
+              :electionId="electionId"
+              :toPage="toPage"
+              :next="next"
+              :back="back"
+            />
+          </v-stepper-content>
+
+          <v-stepper-content step="3">
+            <launchpad-terms-card
+              :electionId="electionId"
+              :toPage="toPage"
+              :next="next"
+              :back="back"
+            />
+          </v-stepper-content>
         </v-stepper-items>
       </v-col>
     </v-row>
@@ -40,14 +58,18 @@ import Vue from "vue";
 import mixins from "vue-typed-mixins";
 import manageElectionMixins from "../../../mixins/manage-election.mixins";
 import ConfirmDetailsCard from "./cards/ConfirmDetailsCard.vue";
+import CheckBallotCard from "./cards/CheckBallotCard.vue";
+import LaunchpadTermsCard from "./cards/LaunchpadTermsCard.vue";
 export default mixins(manageElectionMixins).extend({
   components: {
     ConfirmDetailsCard,
+    CheckBallotCard,
+    LaunchpadTermsCard,
   },
 
   data() {
     return {
-      step: 1,
+      step: 3,
       max: 3,
     };
   },
@@ -60,7 +82,7 @@ export default mixins(manageElectionMixins).extend({
       if (this.step <= this.max) this.step++;
     },
     back() {
-      if (this.step <= 1) this.step--;
+      if (this.step >= 1) this.step--;
     },
   },
 });
