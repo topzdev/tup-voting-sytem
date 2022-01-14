@@ -112,23 +112,24 @@ const getElectionDetails = async (_election_id: number) => {
       "election.final_status",
     ])
     .addSelect(finalStatusSubquery(builder.alias))
+
     .loadRelationCountAndMap("election.votersCount", "election.voters")
     .loadRelationCountAndMap("election.partiesCount", "election.party")
     .loadRelationCountAndMap("election.candidatesCount", "election.candidates")
     .loadRelationCountAndMap("election.positionsCount", "election.positions")
-    // .addSelect("COUNT(election.voters)", "votersCount")
-    // .addSelect("COUNT(election.positions)", "positionsCount")
-    // .addSelect("COUNT(election.candidates)", "candidatesCount")
-    // .leftJoin("election.voters", "voters")
-    // .leftJoin("election.party", "parties")
-    // .leftJoin("election.candidates", "candidates")
-    // .leftJoin("election.positions", "positions")
     .leftJoinAndSelect("election.logo", "logo")
+    .leftJoinAndSelect("election.positions", "positions")
+    .leftJoin("positions.candidates", "positions_candidates")
+    .loadRelationCountAndMap(
+      "positions.candidatesCount",
+      "positions.candidates"
+    )
+
     .where("election.id = :_election_id", {
       _election_id,
     });
 
-  const election = await builder.getOne();
+  const election = (await builder.getOne()) as LaunchpadValidationData;
 
   if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
 
@@ -177,10 +178,7 @@ const launchpadValidations = async (_election_id: number) => {
 
   if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
 
-  return {
-    data: election,
-    validations: launchpadValidationChecker(election),
-  };
+  return launchpadValidationChecker(election);
 };
 
 const getElectionBallot = async (_election_id: number) => {
@@ -197,6 +195,8 @@ const getElectionBallot = async (_election_id: number) => {
     .leftJoinAndSelect("position.candidates", "candidates")
     .leftJoinAndSelect("candidates.profile_photo", "candidates_profile_photo")
     .leftJoinAndSelect("candidates.cover_photo", "candidates_cover_photo")
+    .leftJoinAndSelect("candidates.party", "candidates_party")
+    .leftJoinAndSelect("candidates_party.logo", "candidates_party_logo")
     .where("position.election_id = :_election_id", { _election_id })
     .orderBy({
       "position.display_order": "ASC",
