@@ -111,6 +111,11 @@ export default votersFormMixin.extend({
       }
     },
   },
+
+  created() {
+    this.generateVoterId();
+    this.generatePin();
+  },
 });
 </script>
 

@@ -1,5 +1,119 @@
+import {
+  LaunchpadValidation,
+  LaunchpadValidationData,
+} from "./launchpad.interface";
+
 export const ifEmptyStringReturnNull = (value: any) => {
   return value === "" ? null : value;
+};
+
+type ValidationIds =
+  | "no-voters"
+  | "no-parties"
+  | "no-positions"
+  | "no-candidates"
+  | "position-no-candidates"
+  | "start-date-behind"
+  | "close-date-behind";
+
+export const validationMessages: Record<ValidationIds, LaunchpadValidation> = {
+  ["no-voters"]: {
+    severity: "error",
+    title: "No Voters Registered",
+    message: "voters is essential in an election",
+  },
+  ["no-parties"]: {
+    severity: "warning",
+    title: "No party added in this election",
+    message: "Np party test test test",
+  },
+  ["no-positions"]: {
+    severity: "error",
+    title: "No positions added in this election",
+    message: "No positi9ons test test test",
+  },
+  ["no-candidates"]: {
+    severity: "error",
+    title: "No candidates added in this election",
+    message: "No candidates test test test",
+  },
+  ["position-no-candidates"]: {
+    severity: "warning",
+    title: "Some of election positions has no candidates ",
+    message: "Hello WOrld Posiution must have Candidates",
+  },
+  ["start-date-behind"]: {
+    severity: "warning",
+    title: "Election start date is behind the current date",
+    message: "Please adjust your ",
+  },
+  ["close-date-behind"]: {
+    severity: "error",
+    title: "Election closing date is behind the current date",
+    message:
+      "We cannot launch an election that closing date is left behind by the current data please update your closing date to adviekjwlej ",
+  },
+};
+
+type ValidateMessagesIds = keyof typeof validationMessages;
+
+export const launchpadValidationChecker = (data: LaunchpadValidationData) => {
+  const {
+    votersCount,
+    partiesCount,
+    positionsCount,
+    candidatesCount,
+    start_date,
+    close_date,
+    positions,
+  } = data;
+
+  let validations: LaunchpadValidation[] = [];
+
+  /* dapat may voters na nakaadd bago mag launch, sino boboto sa election kung wala naman naka add diba? haha */
+  if (votersCount <= 0) {
+    validations.push(validationMessages["no-voters"]);
+  }
+
+  /* kailangan may party - di naman required na may party nakaadd kasi pwede naman iset as independent party yung mga candidates, */
+  if (partiesCount <= 0) {
+    validations.push(validationMessages["no-parties"]);
+  }
+
+  /* Position is required, kung walang position kasi di ka makakapag add ng candidates */
+  if (positionsCount <= 0) {
+    validations.push(validationMessages["no-positions"]);
+  }
+
+  /* Required dapat na may candidates na naka add */
+  if (candidatesCount <= 0) {
+    validations.push(validationMessages["no-candidates"]);
+  }
+
+  /* may candidates dapat bawat position na nilagay pre, pag kasi walang candidates yung position hindi natin iyun isasama sa ballot, so kung gusto nila mag appear yung positio na yun dapat may candidates sila na inaassign dun. */
+  const positonNoCandidates = positions.filter(
+    (item) => item.candidatesCount <= 0
+  );
+  if (positonNoCandidates.length) {
+    validations.push({
+      ...validationMessages["position-no-candidates"],
+      message: `This list of position (${positonNoCandidates
+        .map((item) => item.title)
+        .join(",")}) has no candidates available`,
+    });
+  }
+
+  /* check if election close_date is behind the current date, sample yung closing date is january 14 january tas date ngayun is january 15 edi tapos na election??? bat mo pa ilalaunch hahahah */
+  if (new Date(start_date).getTime() <= new Date().getTime()) {
+    validations.push(validationMessages["start-date-behind"]);
+  }
+
+  /* check if election start_date is less than the current date, sample is start_date na sinet mo is january 12 tas current date ngayun is january 15 edi yung 3 days late na yung election haha */
+  if (new Date(close_date).getTime() <= new Date().getTime()) {
+    validations.push(validationMessages["close-date-behind"]);
+  }
+
+  return validations;
 };
 
 const STATUS_MESSAGE = {

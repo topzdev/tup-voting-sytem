@@ -8,8 +8,17 @@ import {
   ElectionStatusEnum,
 } from "../election/entity/election.entity";
 import { Position } from "../position/entity/position.entity";
-import { finalStatusSubquery } from "./launchpad.helper";
-import { ElectionWithStatusFinal } from "./launchpad.interface";
+import {
+  finalStatusSubquery,
+  launchpadValidationChecker,
+  validationMessages,
+} from "./launchpad.helper";
+import {
+  ElectionWithStatusFinal,
+  LaunchpadValidation,
+  LaunchpadValidationData,
+  LaunchpadValidations,
+} from "./launchpad.interface";
 
 const finalStatus = "final_status";
 
@@ -103,6 +112,17 @@ const getElectionDetails = async (_election_id: number) => {
       "election.final_status",
     ])
     .addSelect(finalStatusSubquery(builder.alias))
+    .loadRelationCountAndMap("election.votersCount", "election.voters")
+    .loadRelationCountAndMap("election.partiesCount", "election.party")
+    .loadRelationCountAndMap("election.candidatesCount", "election.candidates")
+    .loadRelationCountAndMap("election.positionsCount", "election.positions")
+    // .addSelect("COUNT(election.voters)", "votersCount")
+    // .addSelect("COUNT(election.positions)", "positionsCount")
+    // .addSelect("COUNT(election.candidates)", "candidatesCount")
+    // .leftJoin("election.voters", "voters")
+    // .leftJoin("election.party", "parties")
+    // .leftJoin("election.candidates", "candidates")
+    // .leftJoin("election.positions", "positions")
     .leftJoinAndSelect("election.logo", "logo")
     .where("election.id = :_election_id", {
       _election_id,
@@ -119,6 +139,48 @@ const getElectionDetails = async (_election_id: number) => {
     );
 
   return election;
+};
+
+const launchpadValidations = async (_election_id: number) => {
+  const electionRepository = getRepository(Election);
+
+  let builder = electionRepository.createQueryBuilder("election");
+
+  builder = builder
+    .select([
+      "election.title",
+      "election.slug",
+      "election.start_date",
+      "election.close_date",
+      "election.status",
+      "election.archive",
+      "election.final_status",
+    ])
+    .addSelect(finalStatusSubquery(builder.alias))
+
+    .loadRelationCountAndMap("election.votersCount", "election.voters")
+    .loadRelationCountAndMap("election.partiesCount", "election.party")
+    .loadRelationCountAndMap("election.candidatesCount", "election.candidates")
+    .loadRelationCountAndMap("election.positionsCount", "election.positions")
+    .leftJoinAndSelect("election.positions", "positions")
+    .leftJoin("positions.candidates", "positions_candidates")
+    .loadRelationCountAndMap(
+      "positions.candidatesCount",
+      "positions.candidates"
+    )
+
+    .where("election.id = :_election_id", {
+      _election_id,
+    });
+
+  const election = (await builder.getOne()) as LaunchpadValidationData;
+
+  if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
+
+  return {
+    data: election,
+    validations: launchpadValidationChecker(election),
+  };
 };
 
 const getElectionBallot = async (_election_id: number) => {
@@ -178,10 +240,10 @@ const launchpadServices = {
   setElectionCompleted,
   setElectionRunning,
   setElectionStatus,
-
   getElectionBallot,
   getElectionDetails,
   launchElection,
+  launchpadValidations,
 };
 
 export default launchpadServices;
