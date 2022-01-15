@@ -70,6 +70,7 @@
 
           <v-col cols="6">
             <party-picker
+              :prepend="prependParty"
               v-model="form.party_id"
               :electionId="electionId"
             ></party-picker>

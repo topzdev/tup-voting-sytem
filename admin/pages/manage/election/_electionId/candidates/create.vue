@@ -33,8 +33,8 @@ export default mixins(candidateMixin, manageElectionMixins).extend({
 
       try {
         const result = await candidateServices.create({
-          election_id: this.electionId,
           ...data,
+          election_id: this.electionId,
         });
         this.$accessor.snackbar.set({
           show: true,

@@ -63,8 +63,8 @@ export interface GetCandidateDto {
   page?: number;
   take?: number;
   withArchive?: boolean;
-  partyId?: number | null;
-  positionId?: number | null;
+  party?: string | null;
+  position: string | null;
 }
 
 export type CreateCandidateDto = Pick<

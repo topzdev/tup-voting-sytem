@@ -1,3 +1,4 @@
+import { RouteConfig } from "@nuxt/types/config/router";
 import Vue from "vue";
 
 const positionsMixin = Vue.extend({
@@ -8,13 +9,13 @@ const positionsMixin = Vue.extend({
   },
   methods: {
     createPositionRoute() {
-      this.$router.push(`${this.pagePath}/create`);
+      return `${this.pagePath}/create`;
     },
-    editPositionRoute(id: number) {
-      this.$router.push(`${this.pagePath}/${id}/edit`);
-    },
-    importPositionRoute() {
-      this.$router.push(`${this.pagePath}/import`);
+    editPositionRoute(id: number, config?: RouteConfig): RouteConfig {
+      return {
+        ...config,
+        path: `${this.pagePath}/${id}/edit`,
+      };
     },
   },
 });

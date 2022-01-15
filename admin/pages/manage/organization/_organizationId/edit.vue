@@ -17,15 +17,12 @@
 </template>
 
 <script>
-import Vue, { PropOptions } from "vue";
-
 import PageBars from "@/components/bars/PageBars.vue";
 import AccountContainer from "@/components/containers/AccountContainer.vue";
+import organizationServices from "@/services/organization.service";
+import Vue from "vue";
 import OrganizationCreateForm from "~/components/pages/org/forms/OrganizationCreateForm.vue";
 import OrganizationEditForm from "~/components/pages/org/forms/OrganizationEditForm.vue";
-import organizationServices, {
-  UpdateOrganizationDto,
-} from "@/services/organization.service";
 import orgMixin from "../../../../mixins/org.mixins";
 
 export default Vue.extend({

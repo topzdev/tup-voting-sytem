@@ -163,6 +163,8 @@ const launchpadValidations = async (_election_id: number) => {
     .loadRelationCountAndMap("election.partiesCount", "election.party")
     .loadRelationCountAndMap("election.candidatesCount", "election.candidates")
     .loadRelationCountAndMap("election.positionsCount", "election.positions")
+    .leftJoinAndSelect("election.candidates", "candidates")
+    .leftJoinAndSelect("candidates.position", "candidates_position")
     .leftJoinAndSelect("election.positions", "positions")
     .leftJoin("positions.candidates", "positions_candidates")
     .loadRelationCountAndMap(
@@ -178,7 +180,12 @@ const launchpadValidations = async (_election_id: number) => {
 
   if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
 
-  return launchpadValidationChecker(election);
+  // return launchpadValidationChecker(election);
+
+  return {
+    data: election,
+    validations: launchpadValidationChecker(election),
+  };
 };
 
 const getElectionBallot = async (_election_id: number) => {

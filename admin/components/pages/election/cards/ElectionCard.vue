@@ -23,10 +23,7 @@
             <v-col class="">
               <p class="body-2 my-0 text--secondary">Start Date</p>
               <p class="subtitle my-0">
-                {{ startDate
-                }}<v-avatar size="50">
-                  <app-image :size="50" :src="data.logo" :alt="data.title" />
-                </v-avatar>
+                {{ startDate }}
               </p>
             </v-col>
             <v-col class="">

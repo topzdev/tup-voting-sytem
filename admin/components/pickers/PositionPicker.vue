@@ -34,6 +34,12 @@ import electionServices, { Election } from "~/services/election.service";
 import ElectionStatusChip from "@/components/chips/ElectionStatusChip.vue";
 import AppImage from "../app/AppImage.vue";
 import positionServices, { Position } from "../../services/position.service";
+
+type PositionItem = {
+  title: string;
+  id: string | null | number;
+};
+
 export default Vue.extend({
   components: { AppImage, ElectionStatusChip },
   props: {
@@ -60,12 +66,24 @@ export default Vue.extend({
       type: String,
       default: "Select Position",
     },
+    prepend: {
+      type: Array,
+      default() {
+        return [];
+      },
+    } as PropOptions<PositionItem[]>,
+    append: {
+      type: Array,
+      default() {
+        return [];
+      },
+    } as PropOptions<PositionItem[]>,
   },
 
   data() {
     return {
       loading: true,
-      items: [] as Position[],
+      items: [] as PositionItem[],
     };
   },
 
@@ -81,7 +99,11 @@ export default Vue.extend({
 
         console.log(result);
 
-        this.items = result.items.filter((item) => item.id !== this.excludeId);
+        this.items = [
+          ...this.prepend,
+          ...result.items.filter((item) => item.id !== this.excludeId),
+          ...this.append,
+        ];
       } catch (error) {
       } finally {
         this.loading = false;

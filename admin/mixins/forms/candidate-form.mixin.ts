@@ -1,5 +1,11 @@
 import Vue from "vue";
 
+export const INDEPENDENT = {
+  id: null,
+  title: "Independent",
+  logo: null,
+};
+
 const defaultForm = {
   firstname: "",
   lastname: "",
@@ -37,6 +43,10 @@ const votersFormMixin = Vue.extend({
   },
 
   computed: {
+    prependParty() {
+      return [INDEPENDENT];
+    },
+
     rules() {
       return {
         firstname: [(v: any) => !!v || "First Name is required"],

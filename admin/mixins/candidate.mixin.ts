@@ -8,10 +8,10 @@ const candidateMixin = Vue.extend({
   },
   methods: {
     createCandidateRoute() {
-      this.$router.push(`${this.pagePath}/create`);
+      return `${this.pagePath}/create`;
     },
     editCandidateRoute(id: string) {
-      this.$router.push(`${this.pagePath}/${id}/edit`);
+      return `${this.pagePath}/${id}/edit`;
     },
   },
 });

@@ -24,7 +24,7 @@ export type Party = {
   title: string;
   election_id: number;
   election: Election;
-  logo: PartyLogo;
+  logo: PartyLogo | null;
   cover_photo: PartyCoverPhoto;
   archive: boolean;
 } & DataTimestamp;

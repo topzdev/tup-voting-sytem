@@ -14,7 +14,9 @@ type ValidationIds =
   | "no-candidates"
   | "position-no-candidates"
   | "start-date-behind"
-  | "close-date-behind";
+  | "close-date-behind"
+  | "insufficient-candidates"
+  | "candidates-no-position";
 
 export const validationMessages: Record<ValidationIds, LaunchpadValidation> = {
   ["no-voters"]: {
@@ -53,6 +55,17 @@ export const validationMessages: Record<ValidationIds, LaunchpadValidation> = {
     message:
       "We cannot launch an election that closing date is left behind by the current data please update your closing date to adviekjwlej ",
   },
+  ["insufficient-candidates"]: {
+    severity: "error",
+    title: "Insufficient candidates for position minimum vote selection.",
+    message:
+      "These positions (n1, n2, n3) required a specific minimum vote selection but the candidates’ option is insufficient. ",
+  },
+  ["candidates-no-position"]: {
+    severity: "warning",
+    title: "Candidates no position assigned.",
+    message: "These candidates (n1, n2, n3) has no position assigned.",
+  },
 };
 
 type ValidateMessagesIds = keyof typeof validationMessages;
@@ -66,6 +79,7 @@ export const launchpadValidationChecker = (data: LaunchpadValidationData) => {
     start_date,
     close_date,
     positions,
+    candidates,
   } = data;
 
   let validations: LaunchpadValidation[] = [];
@@ -90,6 +104,16 @@ export const launchpadValidationChecker = (data: LaunchpadValidationData) => {
     validations.push(validationMessages["no-candidates"]);
   }
 
+  /* check if election close_date is behind the current date, sample yung closing date is january 14 january tas date ngayun is january 15 edi tapos na election??? bat mo pa ilalaunch hahahah */
+  if (new Date(start_date).getTime() <= new Date().getTime()) {
+    validations.push(validationMessages["start-date-behind"]);
+  }
+
+  /* check if election start_date is less than the current date, sample is start_date na sinet mo is january 12 tas current date ngayun is january 15 edi yung 3 days late na yung election haha */
+  if (new Date(close_date).getTime() <= new Date().getTime()) {
+    validations.push(validationMessages["close-date-behind"]);
+  }
+
   /* may candidates dapat bawat position na nilagay pre, pag kasi walang candidates yung position hindi natin iyun isasama sa ballot, so kung gusto nila mag appear yung positio na yun dapat may candidates sila na inaassign dun. */
   const positonNoCandidates = positions.filter(
     (item) => item.candidatesCount <= 0
@@ -103,14 +127,29 @@ export const launchpadValidationChecker = (data: LaunchpadValidationData) => {
     });
   }
 
-  /* check if election close_date is behind the current date, sample yung closing date is january 14 january tas date ngayun is january 15 edi tapos na election??? bat mo pa ilalaunch hahahah */
-  if (new Date(start_date).getTime() <= new Date().getTime()) {
-    validations.push(validationMessages["start-date-behind"]);
+  /* set a minimum vote each position but the candiddates count is less than the minimum */
+  const positionInsufficientCandidates = positions.filter(
+    (item) => item.min_selected > item.candidatesCount
+  );
+  if (positionInsufficientCandidates.length) {
+    validations.push({
+      ...validationMessages["insufficient-candidates"],
+      message: `These positions (${positionInsufficientCandidates
+        .map((item) => item.title)
+        .join(
+          ","
+        )}) required a specific minimum vote selection but the candidates’ option is insufficient. `,
+    });
   }
 
-  /* check if election start_date is less than the current date, sample is start_date na sinet mo is january 12 tas current date ngayun is january 15 edi yung 3 days late na yung election haha */
-  if (new Date(close_date).getTime() <= new Date().getTime()) {
-    validations.push(validationMessages["close-date-behind"]);
+  const candidatesNoPosition = candidates.filter((item) => !item.position);
+  if (candidatesNoPosition.length) {
+    validations.push({
+      ...validationMessages["candidates-no-position"],
+      message: `These candidates (${candidatesNoPosition
+        .map((item) => `${item.firstname} ${item.lastname}`)
+        .join(",")}) has no position assigned. `,
+    });
   }
 
   return validations;

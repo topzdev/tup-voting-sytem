@@ -216,9 +216,9 @@ export default Vue.extend({
         const data = await launchpadServices.getElectionDetails(
           this.electionId
         );
-        const validations = await launchpadServices.getLaunchpadValidations(
-          this.electionId
-        );
+        const validations = (
+          await launchpadServices.getLaunchpadValidations(this.electionId)
+        ).validations;
 
         console.log(data);
         this.details = data;

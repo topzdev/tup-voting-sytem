@@ -3,19 +3,19 @@
     <v-row no-gutters>
       <v-col cols="8" class="mx-auto">
         <v-stepper-header style="box-shadow: none">
-          <v-stepper-step :complete="step > 1" step="1" editable>
+          <v-stepper-step :complete="step > 1" step="1">
             Confirm Details
           </v-stepper-step>
 
           <v-divider></v-divider>
 
-          <v-stepper-step :complete="step > 2" step="2" editable>
+          <v-stepper-step :complete="step > 2" step="2">
             Check Ballot
           </v-stepper-step>
 
           <v-divider></v-divider>
 
-          <v-stepper-step step="3" editable> Terms </v-stepper-step>
+          <v-stepper-step step="3"> Terms </v-stepper-step>
         </v-stepper-header>
       </v-col>
 
@@ -69,7 +69,7 @@ export default mixins(manageElectionMixins).extend({
 
   data() {
     return {
-      step: 3,
+      step: 1,
       max: 3,
     };
   },

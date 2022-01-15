@@ -41,7 +41,7 @@ export type LaunchpadValidation = {
 };
 
 export type ReturnLaunchpadValidation = {
-  data: LaunchpadValidationData;
+  data?: LaunchpadValidationData;
   validations: LaunchpadValidation[];
 };
 
@@ -62,7 +62,7 @@ const launchpadServices = {
 
   async getLaunchpadValidations(
     election_id: number
-  ): Promise<LaunchpadValidation[]> {
+  ): Promise<ReturnLaunchpadValidation> {
     return (await apiClient.get(`${url}/validations/${election_id}`)).data;
   },
   async getElectionDetails(

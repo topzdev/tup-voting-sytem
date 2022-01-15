@@ -30,16 +30,18 @@
 
               <v-col cols="2" class="ml-auto">
                 <party-picker
+                  :prepend="prependParty"
                   placeholder="Filter by Party"
                   :electionId="electionId"
-                  v-model="partyId"
+                  v-model="filter.party"
                 ></party-picker>
               </v-col>
               <v-col cols="2">
                 <position-picker
+                  :prepend="prependPosition"
                   placeholder="Filter by Position"
                   :electionId="electionId"
-                  v-model="positionId"
+                  v-model="filter.position"
                 ></position-picker>
               </v-col>
             </v-row>
@@ -63,7 +65,7 @@
                     icon
                     v-bind="attrs"
                     v-on="on"
-                    @click="editCandidateRoute(item.id)"
+                    :to="editCandidateRoute(item.id)"
                   >
                     <v-icon> mdi-pencil </v-icon>
                   </v-btn>
@@ -76,8 +78,7 @@
             </template>
 
             <template v-slot:item.party="{ item }">
-              <span v-if="item.party">{{ item.party.title }}</span>
-              <span v-else> <i>Independent</i> </span>
+              <party-chip :data="item.party"></party-chip>
             </template>
           </v-data-table>
         </v-card>
@@ -98,6 +99,7 @@ import AppLoading from "@/components/app/AppLoading.vue";
 import candidateMixin from "@/mixins/candidate.mixin";
 import PositionPicker from "@/components/pickers/PositionPicker.vue";
 import PartyPicker from "@/components/pickers/PartyPicker.vue";
+import PartyChip from "@/components/chips/PartyChip.vue";
 
 export default mixins(manageElectionMixins, candidateMixin).extend({
   components: {
@@ -106,6 +108,7 @@ export default mixins(manageElectionMixins, candidateMixin).extend({
     PositionPicker,
     PartyPicker,
     AppLoading,
+    PartyChip,
   },
 
   data() {
@@ -144,9 +147,27 @@ export default mixins(manageElectionMixins, candidateMixin).extend({
         },
       },
 
-      positionId: null,
-      partyId: null,
+      filter: {
+        position: "all",
+        party: "all",
+      },
     };
+  },
+
+  computed: {
+    prependParty() {
+      return [
+        { logo: null, id: "all", title: "All" },
+        {
+          logo: null,
+          id: "ind",
+          title: "Independent",
+        },
+      ];
+    },
+    prependPosition() {
+      return [{ id: "all", title: "All" }];
+    },
   },
 
   fetchOnServer: false,
@@ -155,11 +176,11 @@ export default mixins(manageElectionMixins, candidateMixin).extend({
   },
 
   watch: {
-    async ["positionId"](val) {
+    async ["filter.position"](val) {
       await this.fetchItems();
     },
 
-    async ["partyId"](val) {
+    async ["filter.party"](val) {
       await this.fetchItems();
     },
 
@@ -184,8 +205,8 @@ export default mixins(manageElectionMixins, candidateMixin).extend({
           page: this.table.pagination.page,
           take: this.table.pagination.perPage,
           search: this.table.search,
-          partyId: this.partyId,
-          positionId: this.positionId,
+          party: this.filter.party,
+          position: this.filter.position,
         });
 
         this.table.items = result.items;

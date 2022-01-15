@@ -4,7 +4,7 @@
       <v-btn
         color="primary"
         class="mr-2 ml-auto"
-        @click="createCandidateRoute"
+        :to="createCandidateRoute()"
         large
         >New Candidate</v-btn
       >
