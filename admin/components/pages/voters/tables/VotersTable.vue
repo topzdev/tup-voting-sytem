@@ -6,7 +6,7 @@
           <v-text-field
             v-model="table.search"
             append-icon="mdi-magnify"
-            label="Search user by Firstname, Lastname or Username"
+            label="Search voter by Voter ID, First Name or Last Name"
             single-line
             hide-details
             outlined

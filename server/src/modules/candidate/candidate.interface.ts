@@ -6,8 +6,8 @@ export interface GetCandidateBody {
   order?: any;
   page: number;
   take: number;
-  partyId: number;
-  positionId: number;
+  party: string | "all";
+  position: string | "all";
   withArchive?: boolean;
 }
 

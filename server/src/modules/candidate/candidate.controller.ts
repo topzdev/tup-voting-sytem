@@ -10,7 +10,7 @@ import candidateService from "./candidate.service";
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const election_id = req.params.election_id;
-    const { page, take, order, search, withArchive, partyId, positionId } =
+    const { page, take, order, search, withArchive, party, position } =
       req.query as any;
 
     res.status(200).json(
@@ -19,8 +19,8 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
         take: take ? parseInt(take) : undefined,
         order,
         search,
-        partyId,
-        positionId,
+        party,
+        position,
         withArchive: withArchive ? Boolean(withArchive) : undefined,
       })
     );

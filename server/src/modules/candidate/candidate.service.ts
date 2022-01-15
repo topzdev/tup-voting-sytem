@@ -1,5 +1,5 @@
 import fileUpload from "express-fileupload";
-import { Brackets, getRepository, Not } from "typeorm";
+import { Brackets, getRepository, IsNull, Not } from "typeorm";
 import {
   File,
   parseCsvToJson,
@@ -30,6 +30,7 @@ const getAll = async (_electionId: string, _query: GetCandidateBody) => {
   let builder = candidateRepository
     .createQueryBuilder("candidate")
     .leftJoinAndSelect("candidate.party", "party")
+    .leftJoinAndSelect("party.logo", "party_logo")
     .leftJoinAndSelect("candidate.position", "position")
     .leftJoinAndSelect("candidate.profile_photo", "profile_photo")
     .leftJoinAndSelect("candidate.cover_photo", "cover_photo")
@@ -54,16 +55,22 @@ const getAll = async (_electionId: string, _query: GetCandidateBody) => {
     );
   }
 
-  if (_query.partyId) {
-    builder = builder.andWhere("candidate.party_id = :partyId", {
-      partyId: _query.partyId,
-    });
+  if (_query.party) {
+    if (_query.party === "ind") {
+      builder = builder.andWhere("candidate.party_id IS NULL");
+    } else if (_query.party !== "all") {
+      builder = builder.andWhere("candidate.party_id = :partyId", {
+        partyId: _query.party,
+      });
+    }
   }
 
-  if (_query.positionId) {
-    builder = builder.andWhere("candidate.position_id = :positionId", {
-      positionId: _query.positionId,
-    });
+  if (_query.position) {
+    if (_query.position !== "all") {
+      builder = builder.andWhere("candidate.position_id = :positionId", {
+        positionId: _query.position,
+      });
+    }
   }
 
   builder = builder.orderBy({
@@ -124,13 +131,13 @@ const create = async (
   if (!_candidate.position_id)
     throw new HttpException("BAD_REQUEST", "Position is required");
 
-  
   // if (!_candidate.party_id)
   //   throw new HttpException("BAD_REQUEST", "Party is required");
 
   console.log("Body Candidate:", _candidate);
-  if (!_profilePhoto) throw new HttpException("BAD_REQUEST", "Profile Photo is required");
-  
+  if (!_profilePhoto)
+    throw new HttpException("BAD_REQUEST", "Profile Photo is required");
+
   const uploadedProfilePhoto = await photoUploader.upload(
     "candidate_photos",
     _profilePhoto.tempFilePath
@@ -143,13 +150,12 @@ const create = async (
 
   let uploadedCoverPhoto;
   let candidateCoverPhoto;
-  if(_coverPhoto)
-  {
+  if (_coverPhoto) {
     uploadedCoverPhoto = await photoUploader.upload(
       "candidate_photos",
       _profilePhoto.tempFilePath
     );
-  
+
     candidateCoverPhoto = CandidateCoverPhoto.create({
       public_id: uploadedCoverPhoto.public_id,
       url: uploadedCoverPhoto.secure_url,
@@ -157,7 +163,6 @@ const create = async (
 
     await candidateCoverPhoto.save();
   }
-  
 
   const candidateSocials = CandidateSocials.create({
     facebook_url: _candidate.facebook_url,

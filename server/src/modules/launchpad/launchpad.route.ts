@@ -15,6 +15,13 @@ router.get(
 );
 
 router.get(
+  "/validations/:election_id",
+  adminAuth,
+  validate(launchpadValidator.getLaunchpadValidors),
+  launchpadController.getElectionValidations
+);
+
+router.get(
   "/ballot/:election_id",
   adminAuth,
   validate(launchpadValidator.getElectionBallot),

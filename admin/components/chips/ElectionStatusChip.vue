@@ -4,33 +4,48 @@
     :small="small"
     :color="style.color"
     :outlined="outlined"
+    :dark="style.dark || dark"
+    style="border-width: 2px"
   >
     {{ style.text }}
   </v-chip>
 </template>
 
-<script>
-const statuses = {
-  completed: { text: "Completed", color: "primary" },
+<script lang="ts">
+import Vue, { PropOptions } from "vue";
+import { ElectionStatus } from "../../services/election.service";
+
+type StatusStyles = Record<
+  ElectionStatus,
+  {
+    text: string;
+    color: string;
+    dark?: boolean;
+  }
+>;
+
+const statuses: StatusStyles = {
+  completed: { text: "Completed", color: "blue" },
   running: { text: "Running", color: "success" },
-  building: { text: "Building", color: "default" },
-  archived: { text: "Archived", color: "warning" },
+  building: { text: "Building", color: "orange" },
+  archived: { text: "Archived", color: "amber", dark: true },
 };
 
-export default {
+export default Vue.extend({
   props: {
-    status: String,
+    status: { type: String } as PropOptions<ElectionStatus>,
     large: Boolean,
     small: Boolean,
-    outlined: Boolean,
+    dark: Boolean,
+    outlined: { type: Boolean, default: false },
   },
 
   computed: {
-    style() {
+    style(): StatusStyles["building"] {
       return statuses[this.status];
     },
   },
-};
+});
 </script>
 
 <style>

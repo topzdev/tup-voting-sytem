@@ -48,8 +48,7 @@ export class Candidate extends Timestamp {
   @Column({ nullable: true, default: null })
   party_id: number;
 
-  @OneToOne(() => Party)
-  @JoinColumn()
+  @ManyToOne(() => Party)
   party: Party;
 
   @Column({ nullable: true })

@@ -5,7 +5,7 @@
         v-if="itemsCount"
         color="primary"
         class="mr-2 ml-auto"
-        @click="createPositionRoute"
+        :to="createPositionRoute()"
         large
         >New Position</v-btn
       >

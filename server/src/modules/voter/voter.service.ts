@@ -1,3 +1,4 @@
+import { exit } from "process";
 import { Brackets, getConnection, getRepository, In, Not } from "typeorm";
 import {
   File,
@@ -137,20 +138,44 @@ const create = async (_voter: CreateVoterBody) => {
     throw new HttpException("BAD_REQUEST", "Election is required");
   }
 
-  const exist = await Voter.findOne({
-    where: [
-      { username: _voter.username },
-      { email_address: _voter.email_address },
-    ],
-  });
+  const voterRepository = getRepository(Voter);
+
+  const builder = voterRepository.createQueryBuilder("voter");
+
+  builder
+    .where("voter.election_id = :election_id", {
+      election_id: _voter.election_id,
+    })
+    .andWhere(
+      new Brackets((qb) => {
+        qb.orWhere("voter.username = :username", {
+          username: _voter.username,
+        });
+        qb.orWhere("voter.email_address = :email_address", {
+          email_address: _voter.email_address,
+        });
+      })
+    );
+
+  const exist = await builder.getOne();
+
+  // const exist = await Voter.findOne({
+  //   where: [
+  //     { username: _voter.username },
+  //     { email_address: _voter.email_address },
+  //     { election_id: _voter.election_id },
+  //   ],
+  // });
 
   if (exist) {
-    throw new HttpException(
-      "BAD_REQUEST",
-      "Voter ID or Email Address is already exist"
-    );
-  }
+    if (exist.username === _voter.username) {
+      throw new HttpException("BAD_REQUEST", "Voter ID is already exist");
+    }
 
+    if (exist.email_address === _voter.email_address) {
+      throw new HttpException("BAD_REQUEST", "Email Address is already exist");
+    }
+  }
   const voter = Voter.create({
     firstname: _voter.firstname,
     lastname: _voter.lastname,
@@ -161,7 +186,10 @@ const create = async (_voter: CreateVoterBody) => {
   });
   const savedVoter = await voter.save();
 
-  return voter;
+  return {
+    exist,
+    created: voter,
+  };
 };
 
 const update = async (_voter: UpdateVoterBody) => {

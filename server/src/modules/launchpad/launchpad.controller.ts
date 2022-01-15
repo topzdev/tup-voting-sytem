@@ -31,6 +31,23 @@ const getElectionDetails = async (
   }
 };
 
+const getElectionValidations = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const election_id = req.params.election_id;
+    res
+      .status(200)
+      .json(
+        await launchpadServices.launchpadValidations(parseInt(election_id))
+      );
+  } catch (error) {
+    next(error);
+  }
+};
+
 const launchElection = async (
   req: Request,
   res: Response,
@@ -82,6 +99,7 @@ const launchpadController = {
   getElectionById,
   getElectionDetails,
   launchElection,
+  getElectionValidations,
 };
 
 export default launchpadController;

@@ -17,7 +17,6 @@ import { finalStatusSubquery } from "../launchpad/launchpad.helper";
 const getAll = async (_orgId: string, _query: GetElectionBody) => {
   const electionRepository = getRepository(Election);
   const searchStirng = _query.search ? _query.search : "";
-  const withArchive = _query.withArchive;
 
   if (!_orgId) {
     throw new HttpException("BAD_REQUEST", "Organization Id is required");
@@ -31,10 +30,6 @@ const getAll = async (_orgId: string, _query: GetElectionBody) => {
     .where("election.organization_id = :orgId", {
       orgId: _orgId,
     });
-
-  if (!withArchive) {
-    builder = builder.andWhere("election.archive = :bol", { bol: false });
-  }
 
   if (searchStirng) {
     builder = builder.andWhere(
@@ -84,12 +79,9 @@ const getBySlug = async (_slug: string) => {
     .addSelect(finalStatusSubquery(builder.alias))
     .leftJoinAndSelect("election.logo", "logo")
     .leftJoinAndSelect("election.organization", "organization")
-    .leftJoinAndSelect("organization.theme", "organization.theme")
-    .leftJoinAndSelect("organization.logo", "organization.logo")
-    .where("election.slug = :_slug", { _slug })
-    .andWhere("election.archive = :_archive", {
-      _archive: false,
-    });
+    .leftJoinAndSelect("organization.theme", "organization_theme")
+    .leftJoinAndSelect("organization.logo", "organization_logo")
+    .where("election.slug = :_slug", { _slug });
 
   const election = await builder.getOne();
 
@@ -125,12 +117,9 @@ const getById = async (_election_id: string) => {
     .addSelect(finalStatusSubquery(builder.alias))
     .leftJoinAndSelect("election.logo", "logo")
     .leftJoinAndSelect("election.organization", "organization")
-    .leftJoinAndSelect("organization.theme", "organization.theme")
-    .leftJoinAndSelect("organization.logo", "organization.logo")
-    .where("election.id = :_election_id", { _election_id })
-    .andWhere("election.archive = :_archive", {
-      _archive: false,
-    });
+    .leftJoinAndSelect("organization.theme", "organization_theme")
+    .leftJoinAndSelect("organization.logo", "organization_logo")
+    .where("election.id = :_election_id", { _election_id });
 
   const election = await builder.getOne();
 

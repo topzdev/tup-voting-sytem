@@ -18,6 +18,7 @@ const getElectionDetails = [param_election_id];
 const launchElection = [param_election_id];
 const getAllElection = [param_organization_id];
 const getElectionById = [param_election_id];
+const getLaunchpadValidors = [param_election_id];
 
 const launchpadValidator = {
   getElectionBallot,
@@ -25,6 +26,7 @@ const launchpadValidator = {
   launchElection,
   getAllElection,
   getElectionById,
+  getLaunchpadValidors,
 };
 
 export default launchpadValidator;

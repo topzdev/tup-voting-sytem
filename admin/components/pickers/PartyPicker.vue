@@ -13,8 +13,8 @@
     @input="$emit('input', $event)"
   >
     <template v-slot:item="data">
-      <v-list-item-avatar size="40">
-        <app-image :size="40" :alt="data.item.title" :src="data.item.logo" />
+      <v-list-item-avatar size="30" v-if="data.item.logo">
+        <app-image :size="30" :alt="data.item.title" :src="data.item.logo" />
       </v-list-item-avatar>
       <v-list-item-content>
         <v-list-item-title class="text-capitilize">
@@ -23,8 +23,8 @@
       </v-list-item-content>
     </template>
     <template v-slot:selection="data">
-      <v-list-item-avatar size="40">
-        <app-image :size="40" :alt="data.item.title" :src="data.item.logo" />
+      <v-list-item-avatar size="30" v-if="data.item.logo">
+        <app-image :size="30" :alt="data.item.title" :src="data.item.logo" />
       </v-list-item-avatar>
       <v-list-item-content>
         <v-list-item-title class="text-capitilize">
@@ -41,7 +41,14 @@ import Vue, { PropOptions } from "vue";
 import electionServices, { Election } from "~/services/election.service";
 import ElectionStatusChip from "@/components/chips/ElectionStatusChip.vue";
 import AppImage from "../app/AppImage.vue";
-import { Party } from "../../services/candidate.service";
+import partyServices, { Party } from "../../services/party.service";
+
+type PartyItem = {
+  id: number | null;
+  title: string;
+  logo?: Party["logo"] | null;
+};
+
 export default Vue.extend({
   components: { AppImage, ElectionStatusChip },
   props: {
@@ -68,12 +75,26 @@ export default Vue.extend({
       type: String,
       default: "Select Party",
     },
+
+    prepend: {
+      type: Array,
+      default() {
+        return [];
+      },
+    } as PropOptions<PartyItem[]>,
+
+    append: {
+      type: Array,
+      default() {
+        return [];
+      },
+    } as PropOptions<PartyItem[]>,
   },
 
   data() {
     return {
       loading: true,
-      items: [] as Party[],
+      items: [] as PartyItem[],
     };
   },
 
@@ -85,11 +106,21 @@ export default Vue.extend({
 
         if (!this.electionId) return;
 
-        const result = [];
+        const result = await partyServices.getAll(this.electionId, {});
 
         console.log(result);
 
-        // this.items = result.items.filter((item) => item.id !== this.excludeId);
+        this.items = [
+          ...this.prepend,
+          ...result.items
+            .filter((item) => item.id !== this.excludeId)
+            .map((item) => ({
+              id: item.id,
+              title: item.title,
+              logo: item.logo,
+            })),
+          ...this.append,
+        ];
       } catch (error) {
       } finally {
         this.loading = false;

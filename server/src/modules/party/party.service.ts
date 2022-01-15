@@ -50,8 +50,8 @@ const getAll = async (_electionId: string, _query: GetPartyBody) => {
   });
 
   if (_query.order) {
-    builder = builder.addOrderBy("party.firstname", _query.order);
-    builder = builder.addOrderBy("party.lastname", _query.order);
+    builder = builder.addOrderBy("party.title", _query.order);
+    builder = builder.addOrderBy("party.ticker", _query.order);
   }
 
   if (_query.page && _query.take) {

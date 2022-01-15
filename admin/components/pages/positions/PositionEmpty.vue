@@ -11,7 +11,7 @@
       large
       width="75%"
       class="mt-1 mx-auto"
-      @click="createPositionRoute"
+      :to="createPositionRoute()"
       >Create Position</v-btn
     >
   </span>

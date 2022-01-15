@@ -11,7 +11,7 @@
       large
       width="75%"
       class="mt-1 mx-auto"
-      @click="createCandidateRoute"
+      :to="createCandidateRoute()"
       >Create Candidate</v-btn
     >
   </span>
