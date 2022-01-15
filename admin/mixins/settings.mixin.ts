@@ -16,7 +16,7 @@ const settingsMixin = mixins(manageElectionMixins).extend({
 
   computed: {
     pagePath() {
-      return `settings/`;
+      return ``;
     },
     pages(): Record<string, SettingLink> {
       return {
@@ -25,15 +25,15 @@ const settingsMixin = mixins(manageElectionMixins).extend({
           title: "General",
           to: this.generalRoute(),
         },
-        ["close-election"]: {
-          icon: "mdi-close-box-outline",
-          title: "Close Election",
-          to: this.closeElectionRoute(),
-        },
         ["election-dates"]: {
           icon: "mdi-calendar-clock-outline",
           title: "Dates",
           to: this.updateElectionDates(),
+        },
+        ["close-election"]: {
+          icon: "mdi-close-box-outline",
+          title: "Close Election",
+          to: this.closeElectionRoute(),
         },
         ["archive-election"]: {
           icon: "mdi-archive-arrow-down-outline",

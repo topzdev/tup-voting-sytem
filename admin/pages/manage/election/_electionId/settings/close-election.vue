@@ -1,13 +1,17 @@
 <template>
-  <h1>Close Election</h1>
+  <close-election-card />
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import mixins from "vue-typed-mixins";
 import settingsMixin from "@/mixins/settings.mixin";
-
-export default mixins(settingsMixin).extend({});
+import CloseElectionCard from "@/components/pages/settings/cards/CloseElectionCard.vue";
+export default mixins(settingsMixin).extend({
+  components: {
+    CloseElectionCard,
+  },
+});
 </script>
 
 <style>
