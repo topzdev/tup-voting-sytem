@@ -109,7 +109,8 @@ export default mixins(manageElectionMixins, partyFormMixin).extend({
   },
 
   computed: {
-    logoPhotoUrl(): string {
+    logoPhotoUrl(): string | null {
+      if (!this.defaultData.logo) return null;
       return this.defaultData.logo.url;
     },
     coverPhotoUrl(): string {

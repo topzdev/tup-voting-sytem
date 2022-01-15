@@ -1,3 +1,4 @@
+import { RouteConfig } from "@nuxt/types/config/router";
 import Vue from "vue";
 import { Election } from "../services/election.service";
 import { Organization } from "../services/organization.service";
@@ -13,6 +14,12 @@ type ElectionPageLinks = Record<string, ManageElectionPage>;
 
 const manageElectionMixins = Vue.extend({
   computed: {
+    manageElectionRoute(): string {
+      if (!this.electionId) return "/";
+
+      return `/manage/election/${this.electionId}/`;
+    },
+
     electionId(): Election["id"] | null {
       return this.electionInfo ? this.electionInfo.id : null;
     },
