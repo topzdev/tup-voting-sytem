@@ -9,6 +9,7 @@ import positionRoute from "./modules/position/position.route";
 import voterRoute from "./modules/voter/voter.route";
 import partyRoute from "./modules/party/party.route";
 import launchpadRoute from "./modules/launchpad/launchpad.route";
+import votingRoute from "./modules/voting/voting.route";
 
 const router = express.Router();
 
@@ -22,5 +23,6 @@ router.use("/position", positionRoute);
 router.use("/voter", voterRoute);
 router.use("/party", partyRoute);
 router.use("/launchpad", launchpadRoute);
+router.use("/voting", votingRoute);
 
 export default router;

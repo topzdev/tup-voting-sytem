@@ -14,7 +14,7 @@ import { Organization } from "../../organization/entity/organization.entity";
 import { Party } from "../../party/entity/party.entity";
 import { Position } from "../../position/entity/position.entity";
 import { ElectionLogo } from "./election-logo.entity";
-import { ElectionVote } from "./election-vote.entity";
+import { ElectionVotes } from "../../voting/entity/votes.entity";
 import { Voter } from "../../voter/entity/voter.entity";
 
 export enum ElectionStatusEnum {
@@ -70,8 +70,8 @@ export class Election extends Timestamp {
   @OneToMany(() => Voter, (voter) => voter.election)
   voters: Voter[];
 
-  @OneToMany(() => ElectionVote, (electionVote) => electionVote.election)
-  votes: ElectionVote[];
+  @OneToMany(() => ElectionVotes, (electionVote) => electionVote.election)
+  votes: ElectionVotes[];
 
   @Column({
     default: false,

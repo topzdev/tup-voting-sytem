@@ -7,12 +7,11 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
-import { Candidate } from "../../candidate/entity/candidate.entity";
 import { Election } from "../../election/entity/election.entity";
 import { Voter } from "../../voter/entity/voter.entity";
 
-@Entity("election_voted")
-export class ElectionVoted extends Timestamp {
+@Entity("election_ballot")
+export class ElectionBallot extends Timestamp {
   @PrimaryGeneratedColumn("identity")
   id: number;
 

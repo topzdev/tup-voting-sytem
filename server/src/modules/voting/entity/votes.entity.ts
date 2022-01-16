@@ -10,8 +10,8 @@ import { Candidate } from "../../candidate/entity/candidate.entity";
 import { Election } from "../../election/entity/election.entity";
 import { Voter } from "../../voter/entity/voter.entity";
 
-@Entity("election_vote")
-export class ElectionVote extends Timestamp {
+@Entity("election_votes")
+export class ElectionVotes extends Timestamp {
   @PrimaryGeneratedColumn()
   id: number;
 
