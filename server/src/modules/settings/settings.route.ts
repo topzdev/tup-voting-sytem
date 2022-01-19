@@ -1,5 +1,6 @@
 import express from "express";
 import { adminAuth } from "../../middlewares/auth.middleware";
+import rolesAllowed from "../../middlewares/roles-allowed.middleware";
 import validate from "../../middlewares/validate.middleware";
 import settingsController from "./settings.controller";
 import settingsValidator from "./settings.validator";
@@ -7,48 +8,27 @@ const router = express.Router();
 
 console.log("module: Settings Module Loaded");
 
-// router.get(
-//   "/detail/:election_id",
-//   adminAuth,
-//   validate(settingsValidator.getElectionDetails),
-//   settingsController.getElectionDetails
-// );
-
-// router.get(
-//   "/validations/:election_id",
-//   adminAuth,
-//   validate(settingsValidator.getLaunchpadValidors),
-//   settingsController.getElectionValidations
-// );
-
-// router.get(
-//   "/ballot/:election_id",
-//   adminAuth,
-//   validate(settingsValidator.getElectionBallot),
-//   settingsController.getElectionBallot
-// );
-
-router.get(
-  "/election/:election_id",
+router.put(
+  "/",
   adminAuth,
-  validate(settingsValidator.getElectionById),
-  settingsController.getOneById
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  validate(settingsValidator.update),
+  settingsController.update
 );
 
-// router.get(
-//   "/election/all/:organization_id",
-//   adminAuth,
-//   validate(settingsValidator.getAllElection),
-//   settingsController.getAllElection
-// );
+router.put(
+  "/archive/:id",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  settingsController.archive
+);
 
-// router.post(
-//   "/launch/:election_id",
-//   adminAuth,
-//   validate(settingsValidator.launchElection),
-//   settingsController.launchElection
-// );
+router.put(
+  "/closeElection/:id",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  settingsController.closeElection
+);
+const settingsRoute = router;
 
-const launchpadRoute = router;
-
-export default launchpadRoute;
+export default settingsRoute;

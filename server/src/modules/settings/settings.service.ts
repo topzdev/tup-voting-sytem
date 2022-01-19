@@ -10,194 +10,252 @@ import {
   ElectionStatusEnum,
 } from "../election/entity/election.entity";
 import {
-    GetElectionBody,
     UpdateElectionBody,
-  } from "../election/election.interface";
-import {
-    ElectionWithStatusFinal,
-} from "./settings.interface";
+  } from "./settings.interface";
 import { ElectionLogo } from "../election/entity/election-logo.entity";
 import { Organization } from "../organization/entity/organization.entity";
-import { finalStatusSubquery } from "../launchpad/launchpad.helper";
 import parseDate from "../../helpers/parse-date.helper";
-// import { Position } from "../position/entity/position.entity";
+import {
+  finalStatusSubquery,
+  launchpadValidationChecker,
+  validationMessages,
+} from "./settings.helper";
+import {
+  ElectionWithStatusFinal,
+  SettingsValidation,
+  SettingsValidationData,
+  SettingsValidations,
+} from "./settings.interface";
 
-
-const getById = async (_election_id: string) => {
-    if (!_election_id)
-      throw new HttpException("BAD_REQUEST", "Election ID is required");
-  
+  const update = async (_logo: Photo, _election: UpdateElectionBody) => {
     const electionRepository = getRepository(Election);
   
     let builder = electionRepository.createQueryBuilder("election");
   
     builder = builder
-      .addSelect(finalStatusSubquery(builder.alias))
-      .leftJoinAndSelect("election.logo", "logo")
-      .leftJoinAndSelect("election.organization", "organization")
-      .leftJoinAndSelect("organization.theme", "organization_theme")
-      .leftJoinAndSelect("organization.logo", "organization_logo")
-      .where("election.id = :_election_id", { _election_id });
-  
-    const election = await builder.getOne();
+    .select([
+      "election.title",
+      "election.slug",
+      "election.start_date",
+      "election.close_date",
+      "election.status",
+      "election.archive",
+      "election.final_status",
+    ])
+    .addSelect(finalStatusSubquery(builder.alias))
 
-    return election || null;
-  };
+  const election = (await builder.getOne()) as SettingsValidationData;
 
-//   const settingsValidations = async (_election_id: number) => {
-//     const electionRepository = getRepository(Election);
+  if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
+      
+  if (!_election.id) {
+    throw new HttpException("BAD_REQUEST", "Election ID is required");
+  }
   
-//     let builder = electionRepository.createQueryBuilder("election");
-  
-//     builder = builder
-//       .select([
-//         "election.title",
-//         "election.slug",
-//         "election.start_date",
-//         "election.close_date",
-//         "election.status",
-//         "election.archive",
-//         "election.final_status",
-//       ])
+  const curElection = await Election.findOne(_election.id, {
+    relations: ["logo"],
+  });
 
-//       .where("election.id = :_election_id", {
-//         _election_id,
-//       });
-  
-//     const election = (await builder.getOne()) as SettingsValidationData;
-  
-//     if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
-  
-//     // return launchpadValidationChecker(election);
-  
-//     return {
-//       data: election,
-//     //   validations: settingsValidationChecker(election),
-//     };
-//   };
+  if (!curElection) {
+    throw new HttpException("NOT_FOUND", "Election not found");
+  }
 
-  const update = async (_logo: Photo, _election: UpdateElectionBody) => {
-    if (!_election.id) {
-      throw new HttpException("BAD_REQUEST", "Election ID is required");
-    }
-  
-    const curElection = await Election.findOne(_election.id, {
-      relations: ["logo"],
-    });
-  
-    if (!curElection) {
-      throw new HttpException("NOT_FOUND", "Election not found");
-    }
-  
-    let toUpdateSlug = curElection.slug;
-  
-    console.log("Prev:", curElection, "Passed:", _election);
+  let toUpdateSlug = curElection.slug;
+
+  console.log("Prev:", curElection, "Passed:", _election);
   
     // Check if slug is different from previous record of slug
-    if (curElection.slug !== _election.slug) {
-      //find if slug exist on other organization
-      const slugExist = await Election.findOne({
-        where: {
-          id: Not(curElection.id),
-          slug: _election.slug,
-        },
-      });
-  
-      // if slug exist on other organization then return an error
-      if (slugExist) {
-        throw new HttpException("BAD_REQUEST", "Election slug has been used");
-      }
-  
-      toUpdateSlug = _election.slug;
-    }
+  if (curElection.slug !== _election.slug) {
+    //find if slug exist on other organization
+    const slugExist = await Election.findOne({
+      where: {
+        id: Not(curElection.id),
+        slug: _election.slug,
+      },
+    });
+
+  // if slug exist on other organization then return an error
+  if (slugExist) {
+    throw new HttpException("BAD_REQUEST", "Election slug has been used");
+  }
+
+  toUpdateSlug = _election.slug;
+  }
   
     // check if organization is not empty
-    if (!_election.organization_id) {
-      throw new HttpException("BAD_REQUEST", "Organization is required");
-    }
+  if (!_election.organization_id) {
+    throw new HttpException("BAD_REQUEST", "Organization is required");
+  }
   
     let toUpdateLogo = curElection.logo;
   
-    if (_logo && _logo.tempFilePath) {
-      //since there is a new logo provided we will destroy the exisiting image then replace before uploading a new one, so when error occcured on destory image the whole process will stop
-      if (curElection.logo) {
-        await photoUploader.destroy(curElection.logo.public_id);
-      }
-  
-      const uploadedLogo = await photoUploader.upload(
-        "org_photos",
-        _logo.tempFilePath
-      );
-  
-      // if the previous logo is null then save the new logo
-      // else replaced the old public_id and url
-      if (!curElection.logo) {
-        toUpdateLogo = ElectionLogo.create({
-          public_id: uploadedLogo.public_id,
-          url: uploadedLogo.url,
-        });
-        await toUpdateLogo.save();
-      } else {
-        toUpdateLogo.public_id = uploadedLogo.public_id;
-        toUpdateLogo.url = uploadedLogo.url;
-      }
+  if (_logo && _logo.tempFilePath) {
+    //since there is a new logo provided we will destroy the exisiting image then replace before uploading a new one, so when error occcured on destory image the whole process will stop
+    if (curElection.logo) {
+      await photoUploader.destroy(curElection.logo.public_id);
     }
-    let startDate;
-    let endDate;
 
-    if(curElection.final_status == "building"){
-        startDate = parseDate(_election.start_date);
-        endDate = parseDate(_election.close_date);
-    }
-    if(curElection.final_status == "running"){
-        endDate = parseDate(_election.close_date);
-    }
-    if(curElection.final_status == "completed"){
-        
-    }
-    const toUpdateElection = Election.merge(curElection, {
-      title: _election.title,
-      description: _election.description,
-      start_date: startDate,
-      close_date: endDate,
-      slug: toUpdateSlug,
-      logo: toUpdateLogo,
+    const uploadedLogo = await photoUploader.upload(
+      "org_photos",
+      _logo.tempFilePath
+    );
+
+    // if the previous logo is null then save the new logo
+    // else replaced the old public_id and url
+  if (!curElection.logo) {
+    toUpdateLogo = ElectionLogo.create({
+      public_id: uploadedLogo.public_id,
+      url: uploadedLogo.url,
     });
-  
-    await ElectionLogo.update(toUpdateLogo.id, toUpdateLogo);
-    await Election.update(_election.id, toUpdateElection);
-    return true;
-  };
+    await toUpdateLogo.save();
+  } else {
+    toUpdateLogo.public_id = uploadedLogo.public_id;
+    toUpdateLogo.url = uploadedLogo.url;
+  }
+  }
+  console.log(election.final_status);
+  let startDate;
+  let endDate;
+    
+  if (election.final_status == "building")
+  {
+    startDate = parseDate(_election.start_date);
+    endDate = parseDate(_election.close_date);
+    if(startDate>endDate){
+      throw new HttpException("BAD_REQUEST", "Starting Date is greater than End Date");
+    }
+  }
 
+  if (election.final_status == "running")
+  {
+    if(curElection.start_date != _election.start_date){
+      throw new HttpException(
+        "BAD_REQUEST",
+        "You can't update starting date when election is running!"
+      );
+    }
+    endDate = parseDate(_election.close_date);
+  }
+
+  if (election.final_status == "completed")
+  {
+    if(curElection.start_date != _election.start_date){
+      throw new HttpException(
+        "BAD_REQUEST",
+        "You can't update starting date when election has been completed!"
+      );
+    }
+    if(curElection.close_date != _election.close_date){
+      throw new HttpException(
+        "BAD_REQUEST",
+        "You can't update starting date when election has been completed!"
+      );
+    }
+  }
+
+  const toUpdateElection = Election.merge(curElection, {
+    title: _election.title,
+    description: _election.description,
+    start_date: startDate,
+    close_date: endDate,
+    slug: toUpdateSlug,
+    logo: toUpdateLogo,
+  });
+  
+  await ElectionLogo.update(toUpdateLogo.id, toUpdateLogo);
+  await Election.update(_election.id, toUpdateElection);
+
+
+  return true;
+  
+  };
+  
   const archive = async (_id: string) => {
+    const electionRepository = getRepository(Election);
+  
+    let builder = electionRepository.createQueryBuilder("election");
+  
+    builder = builder
+    .select([
+      "election.title",
+      "election.slug",
+      "election.start_date",
+      "election.close_date",
+      "election.status",
+      "election.archive",
+      "election.final_status",
+    ])
+    .addSelect(finalStatusSubquery(builder.alias))
+
+  const election = (await builder.getOne()) as SettingsValidationData;
     if (!_id) {
       throw new HttpException("BAD_REQUEST", "Election id is required");
     }
   
-    const election = await Election.findOne(_id);
+    const curElection = await Election.findOne(_id);
   
-    if (!election) {
+    if (!curElection) {
       throw new HttpException("NOT_FOUND", "Election not found");
     }
+    
+    if(election.final_status == "building"){
+      curElection.archive = true;
+    }
+
+    if(election.final_status == "running"){
+      throw new HttpException("BAD_REQUEST", "Cannot Archive Election when it's Running");
+    }
+
+    if(election.final_status == "completed"){
+      curElection.archive = true;
+    }
+
+    await curElection.save();
+    return true;
+  };
+
+  const closeElection = async (_id: string) => {
+    const electionRepository = getRepository(Election);
   
-    election.archive = true;
+    let builder = electionRepository.createQueryBuilder("election");
   
-    await election.save();
+    builder = builder
+    .select([
+      "election.title",
+      "election.slug",
+      "election.start_date",
+      "election.close_date",
+      "election.status",
+      "election.archive",
+      "election.final_status",
+    ])
+    .addSelect(finalStatusSubquery(builder.alias))
+
+  const election = (await builder.getOne()) as SettingsValidationData;
+    if (!_id) {
+      throw new HttpException("BAD_REQUEST", "Election id is required");
+    }
+  
+    const curElection = await Election.findOne(_id);
+  
+    if (!curElection) {
+      throw new HttpException("NOT_FOUND", "Election not found");
+    }
+    
+    if(election.final_status == "running"){
+      curElection.status = 3;
+    }else{
+      throw new HttpException("BAD_REQUEST", "Cannot Close Election When it's not Running!");
+    }
+
+
+    await curElection.save();
     return true;
   };
 
   const settingsService = {
     update,
-    getById,
     archive,
-    // setElectionArchived,
-    // setElectionBuilding,
-    // setElectionCompleted,
-    // setElectionRunning,
-    // setElectionStatus,
-    // getElectionBallot,
-    // getElectionDetails,
-    // launchElection,
-    // launchpadValidations,
+    closeElection,
   };
   export default settingsService;

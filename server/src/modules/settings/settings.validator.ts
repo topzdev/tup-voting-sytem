@@ -2,31 +2,43 @@ import { body, param } from "express-validator";
 
 // docs: https://express-validator.github.io/docs/index.html
 
+
+
 const validations = {
-  param_election_id: param("election_id")
+  id: body("id").notEmpty().withMessage("ID is required"),
+  slug: body("slug")
     .notEmpty()
-    .withMessage("Election ID is required"),
-  param_organization_id: param("organization_id")
+    .withMessage("Slug is required")
+    .not()
+    .contains(" ")
+    .withMessage("Slug must not contain space")
+    .isLowercase()
+    .withMessage("Slug must be lowercase")
+    .not()
+    .matches(/[ `!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?~\.\*\\\t\n\r]+/)
+    .withMessage("Slug must not contain number and special characters"),
+  title: body("title").notEmpty().withMessage("Title is required"),
+  organization_id: body("organization_id")
     .notEmpty()
-    .withMessage("Organization ID is required"),
+    .withMessage("Organization is required"),
+  start_date: body("start_date")
+    .notEmpty()
+    .withMessage("Start Date is required"),
+
+  close_date: body("start_date")
+    .notEmpty()
+    .withMessage("Start Date is required"),
 };
 
-const { param_election_id, param_organization_id } = validations;
+const { id, slug, title, organization_id, close_date, start_date } =
+  validations;
 
-const getElectionBallot = [param_election_id];
-const getElectionDetails = [param_election_id];
-const launchElection = [param_election_id];
-const getAllElection = [param_organization_id];
-const getElectionById = [param_election_id];
-const getLaunchpadValidors = [param_election_id];
+const create = [slug, title, organization_id, close_date, start_date];
+const update = [id, slug, title, close_date, start_date, organization_id];
 
 const settingsValidator = {
-  getElectionBallot,
-  getElectionDetails,
-  launchElection,
-  getAllElection,
-  getElectionById,
-  getLaunchpadValidors,
+  create,
+  update,
 };
 
 export default settingsValidator;

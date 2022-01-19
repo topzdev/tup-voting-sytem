@@ -9,33 +9,33 @@ export type ElectionWithStatusFinal = Election & {
     final_status: ElectionStatus;
   };
 
-//   export type SettingsValidationData = Omit<
-//   ElectionWithStatusFinal,
-//   "positions"
-// > & {
-//   votersCount: number;
-//   partiesCount: number;
-//   candidatesCount: number;
-//   positionsCount: number;
-// } & {
-//   positions: (Position & {
-//     candidatesCount: number;
-//   })[];
-// };
+export type SettingsValidationData = Omit<
+  ElectionWithStatusFinal,
+  "positions"
+> & {
+  votersCount: number;
+  partiesCount: number;
+  candidatesCount: number;
+  positionsCount: number;
+} & {
+  positions: (Position & {
+    candidatesCount: number;
+  })[];
+};
 
-// type ValidationSeverity = "warning" | "error" | "info";
+type ValidationSeverity = "warning" | "error" | "info";
 
-// export type SettingsValidation = {
-//   title: string;
-//   message: string;
-//   severity: ValidationSeverity;
-// };
+export type SettingsValidation = {
+  title: string;
+  message: string;
+  severity: ValidationSeverity;
+};
 
-// export type SettingsValidations = {
-//   errors: SettingsValidation[];
-//   warnings: SettingsValidation[];
-//   info: SettingsValidation[];
-// };
+export type SettingsValidations = {
+  errors: SettingsValidation[];
+  warnings: SettingsValidation[];
+  info: SettingsValidation[];
+};
 
 export type UpdateElectionBody = Pick<
   Election,
