@@ -1,35 +1,29 @@
 {
-  "name": "nextjs-with-typescript",
-  "version": "5.0.0",
+  "name": "tup-voting-web",
+  "version": "1.0.0",
   "private": true,
-  "dependencies": {
-    "@emotion/cache": "latest",
-    "@emotion/react": "latest",
-    "@emotion/server": "latest",
-    "@emotion/styled": "latest",
-    "@fontsource/open-sans": "^4.5.2",
-    "@mui/icons-material": "^5.1.1",
-    "@mui/lab": "^5.0.0-alpha.55",
-    "@mui/material": "latest",
-    "@mui/system": "^5.1.1",
-    "axios": "^0.24.0",
-    "clsx": "latest",
-    "next": "latest",
-    "next-auth": "0.0.0-pr.3217.87a21677",
-    "react": "latest",
-    "react-dom": "latest",
-    "react-hook-form": "^7.20.2"
-  },
   "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "start": "next start",
-    "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/auth-next": "5.0.0-1642674937.d38a8d7",
+    "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/pwa": "^3.3.5",
+    "core-js": "^3.19.3",
+    "nuxt": "^2.15.8",
+    "nuxt-typed-vuex": "^0.2.0",
+    "vue": "^2.6.14",
+    "vue-server-renderer": "^2.6.14",
+    "vue-template-compiler": "^2.6.14",
+    "vuetify": "^2.6.1",
+    "webpack": "^4.46.0"
   },
   "devDependencies": {
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "typescript": "latest"
+    "@nuxt/types": "^2.15.8",
+    "@nuxt/typescript-build": "^2.1.0",
+    "@nuxtjs/vuetify": "^1.12.3"
   }
 }

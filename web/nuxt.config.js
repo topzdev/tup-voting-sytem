@@ -1,14 +1,10 @@
 import colors from "vuetify/es5/util/colors";
 
 export default {
-  env: {
-    // baseUrl: process.env.BASER_SERVER_URL || "http://localhost:5000",
-    // browserBaseUrl: process.env.BASER_CLIENT_URL || "http://localhost:3000",
-  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: "%s - TUP Voting Admin",
-    title: "TUP Voting Admin",
+    titleTemplate: "%s - TUP Election",
+    title: "TUP Election",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -18,20 +14,11 @@ export default {
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
   },
 
-  router: {
-    middleware: ["auth"],
-  },
-
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-    { src: "~/plugins/axios-port.plugins" },
-    { src: "~/plugins/vue-datetime-picker", mode: "client" },
-    { src: "~/plugins/vue-draggable", mode: "client" },
-    { src: "~/plugins/tiptap-vuetify", mode: "client" },
-  ],
+  plugins: [],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -42,7 +29,7 @@ export default {
     "@nuxt/typescript-build",
     // https://go.nuxtjs.dev/vuetify
     "@nuxtjs/vuetify",
-    // https://typed-vuex.roe.dev/
+    // https://typed-vuex.roe.dev/getting-started/getting-started-nuxt
     "nuxt-typed-vuex",
   ],
 
@@ -89,9 +76,9 @@ export default {
           // autoFetch: true
         },
         endpoints: {
-          login: { url: "/api/v1/auth/admin/login", method: "post" },
-          logout: { url: "/api/v1/auth/admin/logout", method: "post" },
-          user: { url: "/api/v1/auth/admin/me", method: "get" },
+          login: { url: "/api/v1/auth/local/login", method: "post" },
+          logout: { url: "/api/v1/auth/local/logout", method: "post" },
+          user: { url: "/api/v1/auth/local/me", method: "get" },
         },
       },
     },
@@ -101,12 +88,12 @@ export default {
   vuetify: {
     customVariables: ["~/assets/variables.scss"],
     theme: {
-      dark: false,
+      dark: true,
       themes: {
         dark: {
           primary: colors.blue.darken2,
-          secondary: colors.amber.darken3,
           accent: colors.grey.darken3,
+          secondary: colors.amber.darken3,
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
@@ -117,7 +104,5 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
-    transpile: ["vue-datetime-picker", "tiptap-vuetify", "vuetify/lib"],
-  },
+  build: {},
 };
