@@ -14,6 +14,8 @@ const adminLogin = async (req: Request, res: Response, next: NextFunction) => {
 
 const adminLogout = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    req.admin = null;
+    req.admin_jwt = null;
     res.status(200).json({ message: "Logout Successfully" });
   } catch (error) {
     next(error);
@@ -86,11 +88,46 @@ const adminSessionLogout = async (
   }
 };
 
+const voterLogin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const credentials = req.body;
+    res.status(200).json(await authServices.voterLogin(credentials));
+  } catch (error) {
+    next(error);
+  }
+};
+
+const voterLogout = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    req.voter = null;
+    req.voter_jwt = null;
+    res.status(200).json({ message: "Logout Successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const voterMe = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const voter = req.voter;
+
+    res
+      .status(200)
+      .json({ message: "Voter Info Succesfully Fetched", user: voter });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const authController = {
   adminLogin,
   adminLogout,
   adminProtectedRoute,
   adminMe,
+
+  voterLogin,
+  voterLogout,
+  voterMe,
 };
 
 export default authController;

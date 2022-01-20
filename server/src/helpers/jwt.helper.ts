@@ -28,7 +28,7 @@ export const signJwtAdminPayload = (_user: PickedUser) => {
 export const signJwtVoterPayload = (_voter: PickedVoter) => {
   const expiresIn = configs.jwt.voter.expiresIn;
 
-  console.log("Payload user: ", _voter);
+  console.log("Payload voter: ", _voter);
 
   const payload: JwtPayload = {
     voter: _voter,
