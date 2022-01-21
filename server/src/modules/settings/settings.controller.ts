@@ -6,10 +6,9 @@ import {
   GetElectionBody,
 } from "../election/election.interface";
 import settingsService from "./settings.service";
-// import electionService from "../election/election.service";
 import { unflatten } from "flat";
 
-const update = async (req: Request, res: Response, next: NextFunction) => {
+const updateGeneral = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const logo = req.files
         ? (req.files.logo as fileUpload.UploadedFile)
@@ -19,12 +18,22 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
   
       console.log(logo, election);
   
-      res.status(200).json(await settingsService.update(logo, election));
+      res.status(200).json(await settingsService.updateGeneral(logo, election));
       
     } catch (error) {
       next(error);
     }
   }; 
+
+const updateDate = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id;
+    const election = unflatten<UpdateElectionBody, any>(req.body);
+    res.status(200).json(await settingsService.updateDate(id, election));
+  } catch (error) {
+    next(error);
+  }
+};
 
 const archive = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -47,7 +56,8 @@ const closeElection = async (req: Request, res: Response, next: NextFunction) =>
 };
 
 const settingsController = {
-    update,
+    updateGeneral,
+    updateDate,
     archive,
     closeElection,
   };

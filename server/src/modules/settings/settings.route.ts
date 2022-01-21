@@ -12,8 +12,16 @@ router.put(
   "/",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
-  validate(settingsValidator.update),
-  settingsController.update
+  validate(settingsValidator.updateGeneral),
+  settingsController.updateGeneral
+);
+
+router.put(
+  "/",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  validate(settingsValidator.updateDate),
+  settingsController.updateDate
 );
 
 router.put(

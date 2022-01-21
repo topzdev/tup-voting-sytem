@@ -34,11 +34,13 @@ const { id, slug, title, organization_id, close_date, start_date } =
   validations;
 
 const create = [slug, title, organization_id, close_date, start_date];
-const update = [id, slug, title, close_date, start_date, organization_id];
+const updateGeneral = [id, slug, title, organization_id];
+const updateDate = [id, start_date, close_date];
 
 const settingsValidator = {
   create,
-  update,
+  updateGeneral,
+  updateDate,
 };
 
 export default settingsValidator;

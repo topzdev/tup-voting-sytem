@@ -27,7 +27,7 @@ import {
   SettingsValidations,
 } from "./settings.interface";
 
-  const update = async (_logo: Photo, _election: UpdateElectionBody) => {
+  const updateGeneral = async (_logo: Photo, _election: UpdateElectionBody) => {
     const electionRepository = getRepository(Election);
   
     let builder = electionRepository.createQueryBuilder("election");
@@ -114,50 +114,10 @@ import {
   }
   }
   console.log(election.final_status);
-  let startDate;
-  let endDate;
-    
-  if (election.final_status == "building")
-  {
-    startDate = parseDate(_election.start_date);
-    endDate = parseDate(_election.close_date);
-    if(startDate>endDate){
-      throw new HttpException("BAD_REQUEST", "Starting Date is greater than End Date");
-    }
-  }
-
-  if (election.final_status == "running")
-  {
-    if(curElection.start_date != _election.start_date){
-      throw new HttpException(
-        "BAD_REQUEST",
-        "You can't update starting date when election is running!"
-      );
-    }
-    endDate = parseDate(_election.close_date);
-  }
-
-  if (election.final_status == "completed")
-  {
-    if(curElection.start_date != _election.start_date){
-      throw new HttpException(
-        "BAD_REQUEST",
-        "You can't update starting date when election has been completed!"
-      );
-    }
-    if(curElection.close_date != _election.close_date){
-      throw new HttpException(
-        "BAD_REQUEST",
-        "You can't update starting date when election has been completed!"
-      );
-    }
-  }
 
   const toUpdateElection = Election.merge(curElection, {
     title: _election.title,
     description: _election.description,
-    start_date: startDate,
-    close_date: endDate,
     slug: toUpdateSlug,
     logo: toUpdateLogo,
   });
@@ -170,6 +130,80 @@ import {
   
   };
   
+  const updateDate = async (_id: string, _election: UpdateElectionBody) => {
+    const electionRepository = getRepository(Election);
+  
+    let builder = electionRepository.createQueryBuilder("election");
+  
+    builder = builder
+    .select([
+      "election.title",
+      "election.slug",
+      "election.start_date",
+      "election.close_date",
+      "election.status",
+      "election.archive",
+      "election.final_status",
+    ])
+    .addSelect(finalStatusSubquery(builder.alias))
+
+  const election = (await builder.getOne()) as SettingsValidationData;
+    if (!_id) {
+      throw new HttpException("BAD_REQUEST", "Election id is required");
+    }
+  
+    const curElection = await Election.findOne(_id);
+  
+    if (!curElection) {
+      throw new HttpException("NOT_FOUND", "Election not found");
+    }
+
+    let startDate;
+    let endDate;
+      
+    if (election.final_status == "building")
+    {
+      startDate = parseDate(_election.start_date);
+      endDate = parseDate(_election.close_date);
+      if(startDate>endDate){
+        throw new HttpException("BAD_REQUEST", "Starting Date is greater than End Date");
+      }
+    }
+  
+    if (election.final_status == "running")
+    {
+      if(curElection.start_date != _election.start_date){
+        throw new HttpException(
+          "BAD_REQUEST",
+          "You can't update starting date when election is running!"
+        );
+      }
+      endDate = parseDate(_election.close_date);
+    }
+  
+    if (election.final_status == "completed")
+    {
+      if(curElection.start_date != _election.start_date){
+        throw new HttpException(
+          "BAD_REQUEST",
+          "You can't update starting date when election has been completed!"
+        );
+      }
+      if(curElection.close_date != _election.close_date){
+        throw new HttpException(
+          "BAD_REQUEST",
+          "You can't update starting date when election has been completed!"
+        );
+      }
+    }
+
+    const toUpdateElection = Election.merge(curElection, {
+      start_date: parseDate(startDate),
+      close_date: parseDate(endDate),
+    });
+    
+    await Election.update(_election.id, toUpdateElection);
+  }
   const archive = async (_id: string) => {
     const electionRepository = getRepository(Election);
   
@@ -254,7 +288,8 @@ import {
   };
 
   const settingsService = {
-    update,
+    updateGeneral,
+    updateDate,
     archive,
     closeElection,
   };
