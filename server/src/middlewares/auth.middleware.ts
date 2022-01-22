@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { HttpException } from "../helpers/errors/http.exception";
 import jwt from "jsonwebtoken";
 import configs from "../configs";
+import { config } from "dotenv";
 
 export const adminAuth = (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -16,6 +17,8 @@ export const adminAuth = (req: Request, res: Response, next: NextFunction) => {
       throw Error();
     }
 
+    console.log(configs.jwt.admin);
+
     console.log("Token Parts", tokenParts[1]);
     const decoded = jwt.verify(tokenParts[1], configs.jwt.admin.secret);
 
@@ -24,6 +27,7 @@ export const adminAuth = (req: Request, res: Response, next: NextFunction) => {
 
     next();
   } catch (error) {
+    console.log("Auth Admin Error: ", error);
     next(
       new HttpException(
         "UNAUTHORIZED",

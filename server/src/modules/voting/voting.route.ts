@@ -8,11 +8,19 @@ const router = express.Router();
 console.log("module: Voting Module Loaded");
 
 router.get(
-  "/election/:election_id",
+  "/election/slug/:slug",
+  // voterAuth,
+  validate(votingValidator.getElectionBySlug),
+  votingController.getElectionBySlug
+);
+
+router.get(
+  "/election/id/:election_id",
   // voterAuth,
   validate(votingValidator.getElectionById),
   votingController.getElectionById
 );
+
 router.get(
   "/candidate/:candidate_id",
   // voterAuth,

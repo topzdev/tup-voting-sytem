@@ -1,7 +1,7 @@
 import { getAccessorType, mutationTree, actionTree } from "typed-vuex";
 import { Context } from "@nuxt/types";
 
-// import * as submodule from './submodule'
+import * as ballot from "./ballot";
 
 export const state = () => ({
   email: "",
@@ -31,9 +31,7 @@ export const actions = actionTree(
       commit("setEmail", "a@a.com");
     },
 
-    async nuxtServerInit(_vuexContext, nuxtContext: Context) {
-      console.log(nuxtContext.req);
-    },
+    async nuxtServerInit(_vuexContext, nuxtContext: Context) {},
   }
 );
 
@@ -43,6 +41,6 @@ export const accessorType = getAccessorType({
   mutations,
   state,
   modules: {
-    // submodule,
+    ballot,
   },
 });

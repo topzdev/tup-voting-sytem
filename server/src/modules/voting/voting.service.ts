@@ -10,8 +10,34 @@ import { Position } from "../position/entity/position.entity";
 import { Voter } from "../voter/entity/voter.entity";
 import { ElectionBallot } from "./entity/ballot.entity";
 import { ElectionVotes } from "./entity/votes.entity";
-import { generateReceipt, VOTING_MESSAGES } from "./voting.helper";
+import {
+  generateBallotError,
+  generateReceipt,
+  VOTING_MESSAGES,
+} from "./voting.helper";
 import { Ballot, BallotOtherInfo, BallotVote } from "./voting.interface";
+
+const getElectionBySlug = async (_slug: string) => {
+  const electionRepository = getRepository(Election);
+
+  let builder = electionRepository.createQueryBuilder("election");
+
+  builder = builder
+    .addSelect(finalStatusSubquery(builder.alias))
+    .leftJoinAndSelect("election.organization", "organization")
+    .leftJoinAndSelect("election.logo", "logo")
+    .leftJoinAndSelect("organization.theme", "organization_theme")
+    .where("election.slug = :_slug AND election.status != '1'", { _slug });
+
+  const election = await builder.getOne();
+
+  let error = generateBallotError(election);
+
+  return {
+    election: election || null,
+    error,
+  };
+};
 
 const getElectionById = async (_election_id: number) => {
   const electionRepository = getRepository(Election);
@@ -23,27 +49,19 @@ const getElectionById = async (_election_id: number) => {
     .leftJoinAndSelect("election.organization", "organization")
     .leftJoinAndSelect("election.logo", "logo")
     .leftJoinAndSelect("organization.theme", "organization_theme")
-    .where("election.id = :_election_id", { _election_id });
+    .where("election.id = :_election_id AND election.status != '1'", {
+      _election_id,
+    });
 
   const election = await builder.getOne();
 
   // check if elexction exist or is in building status
-  if (!election || election.final_status === "building") {
-    throw new HttpException("NOT_FOUND", VOTING_MESSAGES.electionNotFound);
+  let error = generateBallotError(election);
 
-    // check if election is running
-  } else if (election.final_status === "running") {
-    // check if the start date is past with the current date
-    if (new Date().getTime() <= new Date(election.start_date).getTime()) {
-      throw new HttpException("NOT_FOUND", VOTING_MESSAGES.electionNotStarted);
-    }
-
-    // check if the election is completed or close
-  } else if (election.final_status === "completed") {
-    throw new HttpException("BAD_REQUEST", VOTING_MESSAGES.electionClosed);
-  }
-
-  return election || null;
+  return {
+    election: election || null,
+    error,
+  };
 };
 
 const getElectionBallot = async (_election_id: number) => {
@@ -100,16 +118,22 @@ const submitBallot = async (
   const queryRunner = connection.createQueryRunner();
 
   if (!_voter_id)
-    throw new HttpException("BAD_REQUEST", VOTING_MESSAGES.voterIdRequired);
+    throw new HttpException(
+      "BAD_REQUEST",
+      VOTING_MESSAGES.voterIdRequired.title
+    );
 
   if (!_ballot)
-    throw new HttpException("BAD_REQUEST", VOTING_MESSAGES.ballotEmpty);
+    throw new HttpException("BAD_REQUEST", VOTING_MESSAGES.ballotEmpty.title);
 
   const election_id = _ballot.election_id;
   const votes = _ballot.votes;
 
   if (!election_id)
-    throw new HttpException("BAD_REQUEST", VOTING_MESSAGES.electionIdRequired);
+    throw new HttpException(
+      "BAD_REQUEST",
+      VOTING_MESSAGES.electionIdRequired.title
+    );
 
   await queryRunner.connect();
 
@@ -135,7 +159,7 @@ const submitBallot = async (
   console.log("Voter Information: ", voter);
 
   if (!voter) {
-    throw new HttpException("NOT_FOUND", VOTING_MESSAGES.voterNotFound);
+    throw new HttpException("NOT_FOUND", VOTING_MESSAGES.voterNotFound.title);
   }
 
   /* check if election is avaialble */
@@ -147,11 +171,14 @@ const submitBallot = async (
   console.log("Election Information:", election);
 
   if (election) {
-    throw new HttpException("NOT_FOUND", VOTING_MESSAGES.electioNotExist);
+    throw new HttpException("NOT_FOUND", VOTING_MESSAGES.electioNotExist.title);
   }
 
   if (election.final_status === "completed") {
-    throw new HttpException("BAD_REQUEST", VOTING_MESSAGES.electionClosed);
+    throw new HttpException(
+      "BAD_REQUEST",
+      VOTING_MESSAGES.electionClosed.title
+    );
   }
 
   /* check if voter is voted */
@@ -163,7 +190,8 @@ const submitBallot = async (
 
   console.log("Voterd Information", voted);
 
-  if (voted) throw new HttpException("NOT_FOUND", VOTING_MESSAGES.alreadyVoted);
+  if (voted)
+    throw new HttpException("NOT_FOUND", VOTING_MESSAGES.alreadyVoted.title);
 
   /*  -----------------TRANSACTION START HERE------------------- */
 
@@ -207,6 +235,7 @@ const submitBallot = async (
 };
 
 const votingServices = {
+  getElectionBySlug,
   getElectionById,
   getElectionBallot,
   getCandidateInfo,

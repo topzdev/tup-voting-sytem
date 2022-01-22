@@ -2,6 +2,19 @@ import { Request, Response, NextFunction } from "express";
 import { Ballot } from "./voting.interface";
 import votingServices from "./voting.service";
 
+const getElectionBySlug = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const slug = req.params.slug;
+    res.status(200).json(await votingServices.getElectionBySlug(slug));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getElectionById = async (
   req: Request,
   res: Response,
@@ -71,6 +84,7 @@ const votingController = {
   getElectionBallot,
   getElectionById,
   getCandidateInfo,
+  getElectionBySlug,
 };
 
 export default votingController;
