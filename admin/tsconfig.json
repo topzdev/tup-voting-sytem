@@ -24,8 +24,7 @@
       "@types/node",
       "@nuxtjs/auth-next",
       "@nuxtjs/vuetify",
-      "tiptap-vuetify",
-      "nuxt-vite"
+      "tiptap-vuetify"
     ]
   },
   "include": ["./**/*"],
