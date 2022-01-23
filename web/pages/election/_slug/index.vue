@@ -1,48 +1,23 @@
 <template>
   <page-center>
     <v-card width="450" flat>
-      <v-card-title v-if="election">
-        <v-row>
-          <v-col class="d-flex justify-center" md="12">
-            <v-avatar size="80">
-              <app-image
-                :size="80"
-                :src="election.logo"
-                :alt="election.title"
-              />
-            </v-avatar>
-          </v-col>
-          <v-col>
-            <h1
-              class="headline text-center w-100"
-              style="word-break: break-word"
-            >
-              {{ election.title }} <br />
-              <span class="font-weight-bold">Election</span>
-            </h1>
-          </v-col>
-        </v-row>
-      </v-card-title>
+      <v-row>
+        <v-col cols="12">
+          <v-row>
+            <v-col v-if="election" cols="12">
+              <election-header :election="election" />
+            </v-col>
 
-      <v-card-text class="mt-5 text-center" v-if="electionError">
-        <h1
-          class="display-2 font-weight-bold text--primary mx-auto"
-          v-html="electionError.title"
-        >
-          {{ electionError.title }}
-        </h1>
+            <v-col v-if="electionError" cols="12">
+              <election-error :electionError="electionError"></election-error>
+            </v-col>
 
-        <p class="subtitle-1 text--secondary mt-2" v-html="electionError.body">
-          {{ electionError.body }}
-        </p>
-      </v-card-text>
-
-      <v-card-text
-        v-if="!electionError && election"
-        class="d-flex align-center"
-      >
-        <login-form :election_id="electionId" />
-      </v-card-text>
+            <v-col v-if="!electionError && election" cols="12">
+              <login-form :election_id="electionId" />
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
     </v-card>
   </page-center>
 </template>
@@ -54,12 +29,16 @@ import Vue from "vue";
 import ballotMixin from "@/mixins/ballot.mixins";
 
 import mixins from "vue-typed-mixins";
+import ElectionHeader from "@/components/pages/election/ElectionHeader.vue";
+import ElectionError from "@/components/pages/election/ElectionError.vue";
 
 export default mixins(ballotMixin).extend({
   auth: "guest",
   components: {
     LoginForm,
     PageCenter,
+    ElectionHeader,
+    ElectionError,
   },
 });
 </script>

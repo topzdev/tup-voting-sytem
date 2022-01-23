@@ -100,9 +100,13 @@ export default Vue.extend({
     async submit() {
       this.loading = true;
       try {
+        const slug = this.$route.params.slug;
+
         const result = await this.$auth.loginWith("local", {
           data: { ...this.form, election_id: this.election_id },
         });
+
+        this.$router.push(`/election/${slug}/ballot`);
 
         console.log(result);
       } catch (error: any) {

@@ -1,6 +1,7 @@
 import apiClient from ".";
 import {
   Ballot,
+  BallotItems,
   BallotOtherInfo,
   Candidate,
   Election,
@@ -23,7 +24,7 @@ type GetElectionByIdReturn = {
   error: ElectionErrorMessage;
 };
 
-type GetBallotReturn = Position[];
+type GetBallotReturn = BallotItems[];
 
 type GetCandidatesReturn = Candidate[];
 
@@ -45,7 +46,7 @@ const votingServices = {
   },
 
   async getCandidates(candidate_id: number): Promise<GetCandidatesReturn> {
-    return (await apiClient.get(`${url}/candidates/${candidate_id}`)).data;
+    return (await apiClient.get(`${url}/candidate/${candidate_id}`)).data;
   },
 
   async submitBallot(_ballot: Ballot): Promise<GetSubmitBallotReturn> {

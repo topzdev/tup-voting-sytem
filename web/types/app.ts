@@ -173,3 +173,7 @@ export type BallotOtherInfo = {
   ip: string | any;
   ua: string;
 };
+
+export type BallotItem = Position & {
+  candidates: Candidate[];
+};

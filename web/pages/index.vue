@@ -1,5 +1,5 @@
 <template>
-  <h1>Homepage</h1>
+  <h1>Homepage <v-btn @click="$auth.logout('local')"> Logout </v-btn></h1>
 </template>
 
 <script>
