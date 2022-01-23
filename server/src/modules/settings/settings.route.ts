@@ -9,7 +9,7 @@ const router = express.Router();
 console.log("module: Settings Module Loaded");
 
 router.put(
-  "/",
+  "/general/",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   validate(settingsValidator.updateGeneral),
@@ -17,7 +17,7 @@ router.put(
 );
 
 router.put(
-  "/",
+  "/date/",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   validate(settingsValidator.updateDate),
