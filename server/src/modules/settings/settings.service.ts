@@ -148,11 +148,14 @@ import {
     .addSelect(finalStatusSubquery(builder.alias))
 
   const election = (await builder.getOne()) as SettingsValidationData;
-    if (!_id) {
-      throw new HttpException("BAD_REQUEST", "Election id is required");
+
+    if (!_election.id) {
+      throw new HttpException("BAD_REQUEST", "Election ID is required");
     }
-  
-    const curElection = await Election.findOne(_id);
+    
+    const curElection = await Election.findOne(_election.id, {
+      relations: ["logo"],
+    });
   
     if (!curElection) {
       throw new HttpException("NOT_FOUND", "Election not found");
@@ -203,7 +206,10 @@ import {
     });
     
     await Election.update(_election.id, toUpdateElection);
+
+    return true;
   }
+
   const archive = async (_id: string) => {
     const electionRepository = getRepository(Election);
   
