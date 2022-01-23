@@ -1,5 +1,9 @@
 <template>
-  <v-card :class="activeClass" outlined @click="toggle">
+  <v-card :class="activeClass" outlined @click="toggle(data)">
+    <v-icon class="selected__checkmark" color="success" size="30" v-if="active"
+      >mdi-check-decagram</v-icon
+    >
+
     <v-list-item>
       <v-list-item-avatar size="75">
         <app-image :size="75" :alt="data.firstname" :src="data.profile_photo" />
@@ -60,7 +64,7 @@ export default Vue.extend({
     },
 
     activeClass(): string {
-      return this.active ? "success lighten-5" : "";
+      return this.active ? "selected" : "";
     },
   },
 
@@ -73,5 +77,18 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.selected {
+  outline: 3px solid #4caf50;
+  border: none;
+  position: relative;
+  &__checkmark {
+    position: absolute;
+    right: -15px;
+    top: -15px;
+    z-index: 1;
+    border-radius: 100%;
+    background: #fff;
+  }
+}
 </style>

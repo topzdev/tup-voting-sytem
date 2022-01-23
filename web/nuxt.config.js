@@ -62,12 +62,12 @@ export default {
 
   auth: {
     rewriteRedirects: false,
-    redirect: {
-      login: "/login",
-      logout: "/",
-      callback: "/login",
-      home: "/",
-    },
+    // redirect: {
+    //   login: "/login",
+    //   logout: "/",
+    //   callback: "/login",
+    //   home: "/",
+    // },
 
     strategies: {
       local: {

@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card :class="errorClass">
     <v-card-title>
       <v-row class="no-gutters">
         <v-col>
@@ -21,18 +21,18 @@
     <v-card-text v-if="data.candidates && data.candidates.length">
       <v-row no-gutters>
         <v-col cols="12">
-          <v-item-group v-model="selected" multiple>
+          <v-item-group>
             <v-row>
               <v-col
                 cols="4"
-                v-for="(candidates, idx) in data.candidates"
+                v-for="(candidate, idx) in data.candidates"
                 :key="idx"
               >
-                <v-item v-slot="{ active, toggle }">
+                <v-item>
                   <candidate-card
-                    :active="active"
-                    :data="candidates"
-                    :toggle="toggle"
+                    :active="isSelected(candidate.id)"
+                    :data="candidate"
+                    :toggle="vote"
                   />
                 </v-item>
               </v-col>
@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { BallotItem } from "@/types/app";
+import { BallotItem, Candidate } from "@/types/app";
 import CandidateCard from "@/components/pages/ballot/cards/CandidateCard.vue";
 
 export default Vue.extend({
@@ -56,12 +56,12 @@ export default Vue.extend({
     data: {
       type: Object,
     } as PropOptions<BallotItem>,
+
+    error: { type: Boolean, default: false },
   },
 
   data() {
-    return {
-      selected: [1],
-    };
+    return {};
   },
 
   components: {
@@ -77,11 +77,65 @@ export default Vue.extend({
       const minimum = this.data.min_selected;
       if (minimum <= 1) return "";
 
-      return `Choosen 1 / ${minimum}`;
+      return `Selected ${this.selected.length} / ${minimum}`;
+    },
+
+    isMultiple(): any {
+      return this.data.min_selected > 1;
+    },
+
+    errorClass(): string {
+      return this.error ? "ballot--error" : "";
+    },
+
+    ballotVotes() {
+      return this.$accessor.ballot.votes;
+    },
+
+    selected(): Candidate[] {
+      return this.ballotVotes.filter(
+        (item) => item.position_id === this.data.id
+      );
     },
   },
+
+  methods: {
+    isSelected(candidate_id: number) {
+      return !!this.selected.find((item) => item.id === candidate_id);
+    },
+
+    vote(candidate: Candidate) {
+      if (this.isMultiple) {
+        if (this.selected.length >= this.data.min_selected) {
+          if (this.selected.find((item) => item.id === candidate.id)) {
+            this.$accessor.ballot.vote(candidate);
+          }
+
+          return;
+        }
+        this.$accessor.ballot.vote(candidate);
+      } else {
+        if (this.selected.find((item) => item.id === candidate.id)) {
+          this.$accessor.ballot.vote(candidate);
+        } else {
+          // remove the current vote t
+          this.$accessor.ballot.vote(this.selected[0]);
+
+          // replace the old vote new vote
+          this.$accessor.ballot.vote(candidate);
+        }
+      }
+    },
+  },
+
+  watch: {},
 });
 </script>
 
-<style>
+<style scoped lang="scss">
+.ballot {
+  &--error {
+    outline: 3px solid #f44336 !important ;
+  }
+}
 </style>

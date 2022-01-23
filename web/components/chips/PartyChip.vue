@@ -4,7 +4,7 @@
     :large="large"
     v-if="data"
     :title="data.title"
-    outlined
+    :outlined="outlined"
     style="user-select: none"
   >
     <v-avatar v-if="data.logo" left size="20">
@@ -24,6 +24,7 @@ export default Vue.extend({
     data: Object as PropOptions<Party>,
     large: Boolean,
     small: Boolean,
+    outlined: Boolean,
   },
 
   components: {

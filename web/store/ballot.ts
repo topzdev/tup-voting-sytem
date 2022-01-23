@@ -15,6 +15,8 @@ export const state = () => ({
   dialog: {
     candidate: true,
   },
+
+  votes: [] as Candidate[],
 });
 
 export const mutations = mutationTree(state, {
@@ -38,6 +40,10 @@ export const mutations = mutationTree(state, {
 
   setCandidateDialog(state, _payload) {
     state.dialog.candidate = _payload;
+  },
+
+  setVote(state, _payload) {
+    state.votes = _payload;
   },
 });
 
@@ -71,6 +77,25 @@ export const actions = actionTree(
     async fetchCandidate({ commit }, candidate_id: number) {
       const result = await votingServices.getCandidates(candidate_id);
       commit("setCandidate", result);
+    },
+
+    async vote({ commit, state }, candidate: Candidate) {
+      let current = state.votes;
+
+      console.log("Store Vote", candidate);
+
+      console.log(
+        "Find",
+        current.findIndex((item) => item.id === candidate.id) === -1
+      );
+      if (current.findIndex((item) => item.id === candidate.id) === -1) {
+        commit("setVote", [...current, candidate]);
+      } else {
+        commit(
+          "setVote",
+          current.filter((item) => item.id !== candidate.id)
+        );
+      }
     },
   }
 );

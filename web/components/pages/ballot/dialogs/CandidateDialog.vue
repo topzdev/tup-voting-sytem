@@ -116,7 +116,7 @@ export default Vue.extend({
     fullname(): string {
       if (!this.data) return "";
       const { firstname, lastname, middlename } = this.data;
-      return [firstname, lastname, middlename].join(" ");
+      return [firstname, middlename, lastname].join(" ");
     },
 
     positionText(): string {
