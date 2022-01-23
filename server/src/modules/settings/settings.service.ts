@@ -130,7 +130,7 @@ import {
   
   };
   
-  const updateDate = async (_id: string, _election: UpdateElectionBody) => {
+  const updateDate = async (_election: UpdateElectionBody) => {
     const electionRepository = getRepository(Election);
   
     let builder = electionRepository.createQueryBuilder("election");

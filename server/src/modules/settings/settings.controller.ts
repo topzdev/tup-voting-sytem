@@ -27,9 +27,8 @@ const updateGeneral = async (req: Request, res: Response, next: NextFunction) =>
 
 const updateDate = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const id = req.params.id;
     const election = unflatten<UpdateElectionBody, any>(req.body);
-    res.status(200).json(await settingsService.updateDate(id, election));
+    res.status(200).json(await settingsService.updateDate(election));
   } catch (error) {
     next(error);
   }
