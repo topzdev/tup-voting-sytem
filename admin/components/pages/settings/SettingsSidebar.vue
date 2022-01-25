@@ -1,5 +1,5 @@
 <template>
-  <v-card flat width="300">
+  <v-card flat width="300" outlined>
     <v-list>
       <v-list-item-group color="secondary">
         <v-list-item

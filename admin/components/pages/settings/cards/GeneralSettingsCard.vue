@@ -1,18 +1,24 @@
 <template>
-  <v-card>
+  <v-card outlined>
     <v-card-title> General Settings </v-card-title>
     <v-divider></v-divider>
     <v-card-text>
       <v-form ref="form" v-model="valid">
         <v-row no-gutters>
           <v-col v-if="alert.show" cols="12">
-            <v-alert :type="alert.type">
+            <v-alert v-model="alert.show" :type="alert.type" dismissible>
               {{ alert.message }}
             </v-alert>
           </v-col>
 
-          <v-col class="mb-5" cols="12">
-            <logo-uploader :size="130" v-model="photoData" :url="logoUrl" />
+          <v-col class="mb-5 d-flex flex-column align-start" cols="12">
+            <label for="">Logo</label>
+            <logo-uploader
+              size="130"
+              v-model="form.logo"
+              :url="logoUrl"
+              :withBtn="true"
+            />
           </v-col>
 
           <v-col cols="12" class="mb-3">
@@ -50,7 +56,7 @@
     <v-card-actions>
       <v-btn
         color="primary"
-        :disabled="loading"
+        :disabled="!valid || loading"
         :loading="loading"
         large
         @click="submit"
@@ -65,7 +71,10 @@ import Vue, { PropOptions } from "vue";
 import ThemePicker from "@/components/pickers/ThemePicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
 import configs from "@/configs";
-import { Election } from "@/services/election.service";
+import mixins from "vue-typed-mixins";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
+import settingsService from "@/services/settings.service";
+import { Election } from "../../../../services/election.service";
 
 const defaultForm = {
   slug: "",
@@ -80,7 +89,7 @@ const defaultAlert = {
   message: "",
 };
 
-export default Vue.extend({
+export default mixins(manageElectionMixins).extend({
   components: { LogoUploader },
 
   data() {
@@ -96,11 +105,15 @@ export default Vue.extend({
   },
 
   computed: {
-    logoUrl(): string {
-      return "https://res.cloudinary.com/topzdev/image/upload/v1640079580/tup_voting_dev/election_photos/yeiocjtv1krayub4knyj.png";
+    logoUrl(): string | null {
+      const logo = this.electionInfo?.logo;
+
+      if (!logo) return null;
+
+      return logo.url;
       // return this.defaultData.logo.url;
     },
-    rules: function (): any {
+    rules(): any {
       return {
         slug: [
           (v: any) => !!v || "Slug is required",
@@ -113,38 +126,47 @@ export default Vue.extend({
   },
 
   methods: {
-    async submit() {
-      this.loading = true;
-
-      if (!this.form.logo) {
-        return (this.alert = {
-          show: true,
-          type: "error",
-          message: "Logo is required",
-        });
-      }
-
+    async submit(): Promise<void> {
       (this.$refs.form as any).validate();
 
-      if (this.valid) {
+      if (this.valid && this.electionId) {
+        this.loading = true;
         try {
+          await settingsService.updateGeneral(this.electionId, this.form);
         } catch (error: any) {
-          if (error) {
+          const message = error.response?.data?.error?.message || error.message;
+
+          if (message) {
             this.alert = {
               show: true,
               type: "error",
-              message: error.message,
+              message: message,
             };
           }
+        } finally {
+          this.loading = false;
         }
       }
-      this.loading = false;
     },
 
-    reset() {
+    reset(): void {
       (this.$refs as any).form.reset();
       (this.$refs as any).form.resetValidation();
       this.alert = Object.assign({}, defaultAlert);
+    },
+  },
+
+  watch: {
+    electionInfo: {
+      immediate: true,
+      handler: function (value: Election) {
+        this.form = {
+          slug: value.slug,
+          title: value.title,
+          description: value.description,
+          logo: null,
+        };
+      },
     },
   },
 });

@@ -2,9 +2,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-export default Vue.extend({
+import mixins from "vue-typed-mixins";
+import settingsMixin from "../../../../../mixins/settings.mixin";
+export default mixins(settingsMixin).extend({
   created() {
-    // this.$router.replace("general");
+    // this.$router.push(this.generalRoute());
   },
 });
 </script>

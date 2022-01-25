@@ -16,7 +16,7 @@ const settingsMixin = mixins(manageElectionMixins).extend({
 
   computed: {
     pagePath() {
-      return ``;
+      return `/manage/election/${this.electionId}/settings/`;
     },
     pages(): Record<string, SettingLink> {
       return {

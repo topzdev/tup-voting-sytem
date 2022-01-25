@@ -88,7 +88,7 @@ const manageElectionMixins = Vue.extend({
         settings: {
           icon: "mdi-cog",
           title: "Settings",
-          to: `${basePath}/settings`,
+          to: `${basePath}/settings/general`,
           status: ["building"],
         },
 

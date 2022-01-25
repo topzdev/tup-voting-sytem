@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card outlined>
     <v-card-title> Archive Election </v-card-title>
     <v-divider></v-divider>
     <v-card-text>
@@ -35,6 +35,9 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import configs from "@/configs";
+import settingsServices from "@/services/settings.service";
+import mixins from "vue-typed-mixins";
+import manageElectionMixins from "../../../../mixins/manage-election.mixins";
 
 const defaultAlert = {
   show: false,
@@ -42,7 +45,7 @@ const defaultAlert = {
   message: "",
 };
 
-export default Vue.extend({
+export default mixins(manageElectionMixins).extend({
   data() {
     return {
       valid: false,
@@ -56,23 +59,26 @@ export default Vue.extend({
 
   methods: {
     async submit() {
-      this.loading = true;
-
       (this.$refs.form as any).validate();
 
-      if (this.valid) {
+      if (this.valid && this.electionId) {
+        this.loading = true;
         try {
+          await settingsServices.close(this.electionId);
         } catch (error: any) {
-          if (error) {
+          const message = error.response?.data?.error?.message || error.message;
+
+          if (message) {
             this.alert = {
               show: true,
               type: "error",
-              message: error.message,
+              message: message,
             };
           }
+        } finally {
+          this.loading = false;
         }
       }
-      this.loading = false;
     },
 
     reset() {

@@ -1,19 +1,19 @@
 <template>
-  <v-card>
+  <v-card outlined>
     <v-card-title> Election Dates </v-card-title>
     <v-divider></v-divider>
     <v-card-text>
       <v-form ref="form" v-model="valid">
         <v-row>
           <v-col v-if="alert.show" cols="12">
-            <v-alert :type="alert.type">
+            <v-alert v-if="alert.show" :type="alert.type" dismissible>
               {{ alert.message }}
             </v-alert>
           </v-col>
 
           <v-col cols="6">
             <date-time-picker
-              label="Start Date *"
+              label="Start DateTime *"
               v-model="form.start_date"
               :rules="rules.start_date"
             />
@@ -21,7 +21,7 @@
 
           <v-col cols="6">
             <date-time-picker
-              label="Close Date *"
+              label="Close DateTime *"
               v-model="form.close_date"
               :rules="rules.close_date"
             />
@@ -46,10 +46,14 @@
 import Vue, { PropOptions } from "vue";
 import DateTimePicker from "@/components/pickers/DateTimePicker.vue";
 import configs from "@/configs";
+import mixins from "vue-typed-mixins";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
+import settingsService from "@/services/settings.service";
+import { Election } from "@/services/election.service";
 
 const defaultForm = {
-  start_date: "2022-01-14 04:25",
-  close_date: "2022-01-14 04:25",
+  start_date: "",
+  close_date: "",
 };
 
 const defaultAlert = {
@@ -58,7 +62,7 @@ const defaultAlert = {
   message: "",
 };
 
-export default Vue.extend({
+export default mixins(manageElectionMixins).extend({
   components: { DateTimePicker },
 
   data() {
@@ -84,29 +88,46 @@ export default Vue.extend({
 
   methods: {
     async submit() {
-      this.loading = true;
-
       (this.$refs.form as any).validate();
 
-      if (this.valid) {
+      if (this.valid && this.electionId) {
+        this.loading = true;
         try {
+          await settingsService.updateDates(this.electionId, this.form);
         } catch (error: any) {
-          if (error) {
+          const message = error.response?.data?.error?.message || error.message;
+
+          if (message) {
             this.alert = {
               show: true,
               type: "error",
-              message: error.message,
+              message: message,
             };
           }
+        } finally {
+          this.loading = false;
         }
       }
-      this.loading = false;
     },
 
     reset() {
       (this.$refs as any).form.reset();
       (this.$refs as any).form.resetValidation();
       this.alert = Object.assign({}, defaultAlert);
+    },
+  },
+
+  watch: {
+    electionInfo: {
+      immediate: true,
+      handler: function (value: Election) {
+        console.log(value);
+
+        this.form = {
+          start_date: value.start_date,
+          close_date: value.start_date,
+        };
+      },
     },
   },
 });
