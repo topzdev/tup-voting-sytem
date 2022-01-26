@@ -5,7 +5,7 @@ import { body, param } from "express-validator";
 
 
 const validations = {
-  id: body("id").notEmpty().withMessage("ID is required"),
+  // id: body("id").notEmpty().withMessage("ID is required"),
   slug: body("slug")
     .notEmpty()
     .withMessage("Slug is required")
@@ -18,9 +18,6 @@ const validations = {
     .matches(/[ `!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?~\.\*\\\t\n\r]+/)
     .withMessage("Slug must not contain number and special characters"),
   title: body("title").notEmpty().withMessage("Title is required"),
-  organization_id: body("organization_id")
-    .notEmpty()
-    .withMessage("Organization is required"),
   start_date: body("start_date")
     .notEmpty()
     .withMessage("Start Date is required"),
@@ -30,15 +27,13 @@ const validations = {
     .withMessage("Start Date is required"),
 };
 
-const { id, slug, title, organization_id, close_date, start_date } =
+const {  slug, title,  close_date, start_date } =
   validations;
 
-const create = [slug, title, organization_id, close_date, start_date];
-const updateGeneral = [id, slug, title, organization_id];
-const updateDate = [id, start_date, close_date];
+const updateGeneral = [ slug, title, ];
+const updateDate = [ start_date, close_date];
 
 const settingsValidator = {
-  create,
   updateGeneral,
   updateDate,
 };

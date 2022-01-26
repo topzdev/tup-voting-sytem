@@ -10,6 +10,7 @@ import { unflatten } from "flat";
 
 const updateGeneral = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const election_id = req.params.election_id;
       const logo = req.files
         ? (req.files.logo as fileUpload.UploadedFile)
         : undefined;
@@ -18,7 +19,7 @@ const updateGeneral = async (req: Request, res: Response, next: NextFunction) =>
   
       console.log(logo, election);
   
-      res.status(200).json(await settingsService.updateGeneral(logo, election));
+      res.status(200).json(await settingsService.updateGeneral(logo, election, parseInt(election_id)));
       
     } catch (error) {
       next(error);
@@ -27,8 +28,9 @@ const updateGeneral = async (req: Request, res: Response, next: NextFunction) =>
 
 const updateDate = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const election_id = req.params.election_id;
     const election = unflatten<UpdateElectionBody, any>(req.body);
-    res.status(200).json(await settingsService.updateDate(election));
+    res.status(200).json(await settingsService.updateDate(election, parseInt(election_id)));
   } catch (error) {
     next(error);
   }
@@ -36,19 +38,29 @@ const updateDate = async (req: Request, res: Response, next: NextFunction) => {
 
 const archive = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = req.params.id;
+      const election_id = req.params.election_id;
   
-      res.status(200).json(await settingsService.archive(id));
+      res.status(200).json(await settingsService.archive(parseInt(election_id)));
     } catch (error) {
       next(error);
     }
 };
 
+const unArchive = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const election_id = req.params.election_id;
+
+    res.status(200).json(await settingsService.unArchive(parseInt(election_id)));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const closeElection = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const id = req.params.id;
+    const election_id = req.params.election_id;
 
-    res.status(200).json(await settingsService.closeElection(id));
+    res.status(200).json(await settingsService.closeElection(parseInt(election_id)));
   } catch (error) {
     next(error);
   }
@@ -58,6 +70,7 @@ const settingsController = {
     updateGeneral,
     updateDate,
     archive,
+    unArchive,
     closeElection,
   };
 
