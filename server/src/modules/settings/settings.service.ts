@@ -146,19 +146,19 @@ const updateDate = async (_election: UpdateElectionBody, _election_id: number) =
 
   let startDate;
   let endDate;
-        
+
   if (election.final_status == "building")
   {
     startDate = parseDate(_election.start_date);
     endDate = parseDate(_election.close_date);
-    if(startDate>endDate){
+    if(startDate > endDate){
       throw new HttpException("BAD_REQUEST", "Starting Date is greater than End Date");
     }
   }
 
   if (election.final_status == "running")
   {
-    if(election.start_date != _election.start_date){
+    if(parseDate(election.start_date) != parseDate(_election.start_date)){
       throw new HttpException(
         "BAD_REQUEST",
         "You can't update starting date when election is running!"
@@ -169,21 +169,14 @@ const updateDate = async (_election: UpdateElectionBody, _election_id: number) =
     
   if (election.final_status == "completed")
   {
-    if(election.start_date != _election.start_date){
-      throw new HttpException(
-        "BAD_REQUEST",
-        "You can't update starting date when election has been completed!"
-      );
-    }
-    if(election.close_date != _election.close_date){
-      throw new HttpException(
-        "BAD_REQUEST",
-        "You can't update starting date when election has been completed!"
-      );
-    }
+    throw new HttpException(
+      "BAD_REQUEST",
+      "You can't update starting date when election has been completed!"
+    );
   }
 
-  if (election.final_status == 'archived'){
+  if (election.final_status == 'archived')
+  {
     throw new HttpException(
       "BAD_REQUEST",
       "You can't update starting date when election has been Archived!"
@@ -191,8 +184,8 @@ const updateDate = async (_election: UpdateElectionBody, _election_id: number) =
   }
 
   const toUpdateElection = Election.merge(election, {
-    start_date: parseDate(startDate),
-    close_date: parseDate(endDate),
+    start_date: startDate,
+    close_date: endDate,
   });
   
   await Election.update(_election_id, toUpdateElection);
@@ -219,18 +212,13 @@ const election = (await builder.getOne()) as SettingsValidationData;
     throw new HttpException("NOT_FOUND", "Election not found");
   }
   
-  if(election.final_status == "building"){
-    election.archive = true;
-    election.status = 4;
-  }
-
-  if(election.final_status == "running"){
-    throw new HttpException("BAD_REQUEST", "Cannot Archive Election when it's Running");
-  }
 
   if(election.final_status == "completed"){
     election.archive = true;
     election.status = 4;
+  }
+  else {
+    throw new HttpException("BAD_REQUEST", "You can't archived an election when it's not completed!");
   }
 
   const toUpdateElection = Election.merge(election, {
