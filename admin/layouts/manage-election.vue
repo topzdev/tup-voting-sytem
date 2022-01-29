@@ -68,19 +68,22 @@
     </v-main>
 
     <app-snackbar />
+
+    <app-dialog />
   </v-app>
 </template>
 
 <script lang="ts">
 import pageConfig from "@/configs/pages.config";
 import AppSnackbar from "~/components/app/AppSnackbar.vue";
+import AppDialog from "@/components/app/AppDialog.vue";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import AppImage from "~/components/app/AppImage.vue";
 import ElectionStatusChip from "~/components/chips/ElectionStatusChip.vue";
 import mixins from "vue-typed-mixins";
 
 export default mixins(manageElectionMixins).extend({
-  components: { AppSnackbar, AppImage, ElectionStatusChip },
+  components: { AppSnackbar, AppImage, ElectionStatusChip, AppDialog },
   data() {
     return {
       clipped: true,

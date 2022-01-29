@@ -4,7 +4,7 @@
     <v-divider></v-divider>
     <v-card-text>
       <v-form ref="form" v-model="valid">
-        <v-row>
+        <v-row class="no-gutters">
           <v-col v-if="alert.show" cols="12">
             <v-alert v-model="alert.show" :type="alert.type" dismissible>
               {{ alert.message }}
@@ -68,34 +68,48 @@ export default mixins(manageElectionMixins).extend({
   methods: {
     async submit() {
       (this.$refs.form as any).validate();
+      this.$accessor.system.showAppDialog({
+        show: true,
+        title: "Close Election",
+        message: "Are you sure to close this election?",
+        button: {
+          anyEventHide: false,
+          yesFunction: async ({ hideDialog }) => {
+            if (this.valid && this.electionId) {
+              this.loading = true;
+              try {
+                await settingsServices.closeElection(this.electionId);
+                this.$accessor.snackbar.set({
+                  show: true,
+                  message: "Election has been closed!",
+                  color: "warning",
+                  timeout: 2000,
+                });
+                await this.$accessor.manageElection.fetchElection(
+                  this.electionId
+                );
+              } catch (error: any) {
+                const message =
+                  error.response?.data?.error?.message || error.message;
 
-      if (this.valid && this.electionId) {
-        this.loading = true;
-        try {
-          await settingsServices.closeElection(this.electionId);
-
-          this.$accessor.snackbar.set({
-            show: true,
-            message: "Election has been closed!",
-            color: "warning",
-            timeout: 2000,
-          });
-
-          await this.$accessor.manageElection.fetchElection(this.electionId);
-        } catch (error: any) {
-          const message = error.response?.data?.error?.message || error.message;
-
-          if (message) {
-            this.alert = {
-              show: true,
-              type: "error",
-              message: message,
-            };
-          }
-        } finally {
-          this.loading = false;
-        }
-      }
+                if (message) {
+                  this.alert = {
+                    show: true,
+                    type: "error",
+                    message: message,
+                  };
+                }
+              } finally {
+                hideDialog();
+                this.loading = false;
+              }
+            }
+          },
+          noFunction: ({ hideDialog }) => {
+            hideDialog();
+          },
+        },
+      });
     },
 
     reset() {

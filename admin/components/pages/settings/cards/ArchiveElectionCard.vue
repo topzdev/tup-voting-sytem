@@ -71,33 +71,49 @@ export default mixins(manageElectionMixins).extend({
     async submit() {
       (this.$refs.form as any).validate();
 
-      if (this.valid && this.electionId) {
-        this.loading = true;
-        try {
-          await settingsServices.archive(this.electionId);
+      this.$accessor.system.showAppDialog({
+        show: true,
+        title: "Close Election",
+        message: "Are you sure to close this election?",
+        button: {
+          anyEventHide: false,
+          yesFunction: async ({ hideDialog }) => {
+            if (this.valid && this.electionId) {
+              this.loading = true;
+              try {
+                await settingsServices.archive(this.electionId);
 
-          this.$accessor.snackbar.set({
-            show: true,
-            message: "Election Archived Successfully",
-            timeout: 5000,
-            color: "success",
-          });
+                this.$accessor.snackbar.set({
+                  show: true,
+                  message: "Election Archived Successfully",
+                  timeout: 5000,
+                  color: "success",
+                });
 
-          await this.$accessor.manageElection.fetchElection(this.electionId);
-        } catch (error: any) {
-          const message = error.response?.data?.error?.message || error.message;
+                await this.$accessor.manageElection.fetchElection(
+                  this.electionId
+                );
+              } catch (error: any) {
+                const message =
+                  error.response?.data?.error?.message || error.message;
 
-          if (message) {
-            this.alert = {
-              show: true,
-              type: "error",
-              message: message,
-            };
-          }
-        } finally {
-          this.loading = false;
-        }
-      }
+                if (message) {
+                  this.alert = {
+                    show: true,
+                    type: "error",
+                    message: message,
+                  };
+                }
+              } finally {
+                this.loading = false;
+              }
+            }
+          },
+          noFunction: ({ hideDialog }) => {
+            hideDialog();
+          },
+        },
+      });
     },
 
     reset() {
