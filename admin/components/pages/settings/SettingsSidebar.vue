@@ -1,7 +1,7 @@
 <template>
   <v-card flat width="300" outlined>
     <v-list>
-      <v-list-item-group color="secondary">
+      <v-list-item-group color="primary">
         <v-list-item
           v-for="(item, i) in links"
           :key="i"

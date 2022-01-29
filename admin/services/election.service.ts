@@ -71,7 +71,7 @@ const electionServices = {
       await apiClient.get(`${url}/all/${orgId}${transformParamsToUrl(query)}`)
     ).data;
   },
-  async getById(id: string): Promise<Election> {
+  async getById(id: number): Promise<Election> {
     return (await apiClient.get(`${url}/${id}`)).data;
   },
 

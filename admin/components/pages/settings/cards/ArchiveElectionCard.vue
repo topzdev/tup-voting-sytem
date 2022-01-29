@@ -1,9 +1,9 @@
 <template>
-  <v-card outlined>
-    <v-card-title> Archive Election </v-card-title>
-    <v-divider></v-divider>
-    <v-card-text>
-      <v-form ref="form" v-model="valid">
+  <v-form disabled ref="form" v-model="valid">
+    <v-card outlined>
+      <v-card-title> Archive Election </v-card-title>
+      <v-divider></v-divider>
+      <v-card-text>
         <v-row>
           <v-col v-if="alert.show" cols="12">
             <v-alert :type="alert.type">
@@ -17,19 +17,19 @@
             </p>
           </v-col>
         </v-row>
-      </v-form>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn
-        color="warning"
-        :disabled="loading"
-        :loading="loading"
-        large
-        @click="submit"
-        >Archive Election</v-btn
-      >
-    </v-card-actions>
-  </v-card>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          color="warning"
+          :disabled="loading || disabled.overall"
+          :loading="loading"
+          large
+          @click="submit"
+          >Archive Election</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-form>
 </template>
 
 <script lang="ts">
@@ -37,7 +37,8 @@ import Vue, { PropOptions } from "vue";
 import configs from "@/configs";
 import settingsServices from "@/services/settings.service";
 import mixins from "vue-typed-mixins";
-import manageElectionMixins from "../../../../mixins/manage-election.mixins";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
+import { statusOnlyAllowed } from "@/helpers/isAllowedByStatus.helper";
 
 const defaultAlert = {
   show: false,
@@ -57,6 +58,15 @@ export default mixins(manageElectionMixins).extend({
     };
   },
 
+  computed: {
+    disabled(): any {
+      if (!this.electionStatus) return;
+      return {
+        overall: !statusOnlyAllowed(this.electionStatus, ["completed"]),
+      };
+    },
+  },
+
   methods: {
     async submit() {
       (this.$refs.form as any).validate();
@@ -64,7 +74,16 @@ export default mixins(manageElectionMixins).extend({
       if (this.valid && this.electionId) {
         this.loading = true;
         try {
-          await settingsServices.close(this.electionId);
+          await settingsServices.archive(this.electionId);
+
+          this.$accessor.snackbar.set({
+            show: true,
+            message: "Election Archived Successfully",
+            timeout: 5000,
+            color: "success",
+          });
+
+          await this.$accessor.manageElection.fetchElection(this.electionId);
         } catch (error: any) {
           const message = error.response?.data?.error?.message || error.message;
 

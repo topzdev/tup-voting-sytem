@@ -11,21 +11,33 @@ type UpdateGeneralDto = Pick<Election, "slug" | "title" | "description"> & {
 
 const settingsServices = {
   async updateGeneral(election_id: Election["id"], body: UpdateGeneralDto) {
+    const formData = new FormData();
+
+    console.log("Body Test", body);
+
+    formData.append("title", body.title);
+    formData.append("slug", body.slug);
+    formData.append("description", body.description);
+    if (body.logo) formData.append("logo", body.logo);
+
     return (
-      await apiClient.put(`${url}/general/`, { id: election_id, ...body })
+      await apiClient.put(`${url}/general/${election_id}`, formData, {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      })
     ).data;
   },
 
   async updateDates(election_id: Election["id"], body: UpdateDatesDto) {
-    return (await apiClient.put(`${url}/date/`, { id: election_id, ...body }))
-      .data;
+    return (await apiClient.put(`${url}/date/${election_id}`, body)).data;
   },
 
   async archive(election_id: Election["id"]) {
     return (await apiClient.put(`${url}/archive/${election_id}`)).data;
   },
-  async close(election_id: Election["id"]) {
-    return (await apiClient.put(`${url}/close/${election_id}`)).data;
+  async closeElection(election_id: Election["id"]) {
+    return (await apiClient.put(`${url}/closeElection/${election_id}`)).data;
   },
 };
 

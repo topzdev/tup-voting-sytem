@@ -2,8 +2,6 @@ import { body, param } from "express-validator";
 
 // docs: https://express-validator.github.io/docs/index.html
 
-
-
 const validations = {
   // id: body("id").notEmpty().withMessage("ID is required"),
   slug: body("slug")
@@ -27,11 +25,10 @@ const validations = {
     .withMessage("Start Date is required"),
 };
 
-const {  slug, title,  close_date, start_date } =
-  validations;
+const { slug, title, close_date, start_date } = validations;
 
-const updateGeneral = [ slug, title, ];
-const updateDate = [ start_date, close_date];
+const updateGeneral = [slug, title];
+const updateDate = [start_date, close_date];
 
 const settingsValidator = {
   updateGeneral,

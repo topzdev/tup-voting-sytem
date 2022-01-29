@@ -1,6 +1,6 @@
 import { RouteConfig } from "@nuxt/types/config/router";
 import Vue from "vue";
-import { Election } from "../services/election.service";
+import { Election, ElectionStatus } from "../services/election.service";
 import { Organization } from "../services/organization.service";
 
 type ManageElectionPage = {
@@ -8,6 +8,7 @@ type ManageElectionPage = {
   title: string;
   to: string;
   status: string[];
+  exactPath?: string;
 };
 
 type ElectionPageLinks = Record<string, ManageElectionPage>;
@@ -36,6 +37,11 @@ const manageElectionMixins = Vue.extend({
       return this.electionOrganizationInfo
         ? this.electionOrganizationInfo.id
         : null;
+    },
+
+    electionStatus(): ElectionStatus | null {
+      if (!this.electionInfo) return null;
+      return this.electionInfo?.final_status;
     },
 
     links(): ElectionPageLinks {
@@ -88,7 +94,7 @@ const manageElectionMixins = Vue.extend({
         settings: {
           icon: "mdi-cog",
           title: "Settings",
-          to: `${basePath}/settings/general`,
+          to: `${basePath}/settings`,
           status: ["building"],
         },
 

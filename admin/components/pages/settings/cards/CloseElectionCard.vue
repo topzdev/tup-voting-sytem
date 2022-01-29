@@ -22,7 +22,7 @@
     <v-card-actions>
       <v-btn
         color="error"
-        :disabled="loading"
+        :disabled="loading || overallDisable"
         :loading="loading"
         large
         @click="submit"
@@ -38,6 +38,7 @@ import configs from "@/configs";
 import settingsServices from "../../../../services/settings.service";
 import mixins from "vue-typed-mixins";
 import manageElectionMixins from "../../../../mixins/manage-election.mixins";
+import { statusOnlyAllowed } from "../../../../helpers/isAllowedByStatus.helper";
 
 const defaultAlert = {
   show: false,
@@ -57,6 +58,13 @@ export default mixins(manageElectionMixins).extend({
     };
   },
 
+  computed: {
+    overallDisable() {
+      if (!this.electionStatus) return true;
+      return !statusOnlyAllowed(this.electionStatus, ["running"]);
+    },
+  },
+
   methods: {
     async submit() {
       (this.$refs.form as any).validate();
@@ -64,7 +72,16 @@ export default mixins(manageElectionMixins).extend({
       if (this.valid && this.electionId) {
         this.loading = true;
         try {
-          await settingsServices.archive(this.electionId);
+          await settingsServices.closeElection(this.electionId);
+
+          this.$accessor.snackbar.set({
+            show: true,
+            message: "Election has been closed!",
+            color: "warning",
+            timeout: 2000,
+          });
+
+          await this.$accessor.manageElection.fetchElection(this.electionId);
         } catch (error: any) {
           const message = error.response?.data?.error?.message || error.message;
 

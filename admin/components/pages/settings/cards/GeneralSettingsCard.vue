@@ -1,9 +1,9 @@
 <template>
-  <v-card outlined>
-    <v-card-title> General Settings </v-card-title>
-    <v-divider></v-divider>
-    <v-card-text>
-      <v-form ref="form" v-model="valid">
+  <v-form :disabled="disabled.overall" ref="form" v-model="valid">
+    <v-card outlined>
+      <v-card-title> General Settings </v-card-title>
+      <v-divider></v-divider>
+      <v-card-text>
         <v-row no-gutters>
           <v-col v-if="alert.show" cols="12">
             <v-alert v-model="alert.show" :type="alert.type" dismissible>
@@ -14,6 +14,7 @@
           <v-col class="mb-5 d-flex flex-column align-start" cols="12">
             <label for="">Logo</label>
             <logo-uploader
+              :disabled="disabled.overall"
               size="130"
               v-model="form.logo"
               :url="logoUrl"
@@ -29,9 +30,11 @@
               :prefix="baseURL"
               v-model="form.slug"
               :rules="rules.slug"
+              :disabled="disabled.slug"
               hide-details="auto"
             ></v-text-field>
           </v-col>
+
           <v-col cols="12" class="mb-3">
             <v-text-field
               label="Title *"
@@ -51,36 +54,37 @@
             ></v-textarea>
           </v-col>
         </v-row>
-      </v-form>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn
-        color="primary"
-        :disabled="!valid || loading"
-        :loading="loading"
-        large
-        @click="submit"
-        >Submit</v-btn
-      >
-    </v-card-actions>
-  </v-card>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          color="primary"
+          :disabled="!valid || loading || disabled.overall"
+          :loading="loading"
+          large
+          @click="submit"
+          >Save</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-form>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import ThemePicker from "@/components/pickers/ThemePicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
 import configs from "@/configs";
 import mixins from "vue-typed-mixins";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import settingsService from "@/services/settings.service";
-import { Election } from "../../../../services/election.service";
+import { Election } from "@/services/election.service";
+import globalRules from "@/configs/global-rules.config";
+import { statusOnlyAllowed } from "../../../../helpers/isAllowedByStatus.helper";
 
 const defaultForm = {
-  slug: "",
   title: "",
   description: "",
   logo: null,
+  slug: "",
 };
 
 const defaultAlert = {
@@ -105,6 +109,17 @@ export default mixins(manageElectionMixins).extend({
   },
 
   computed: {
+    disabled(): any {
+      if (!this.electionStatus) return;
+      return {
+        overall: !statusOnlyAllowed(this.electionStatus, [
+          "building",
+          "running",
+        ]),
+        slug: !statusOnlyAllowed(this.electionStatus, ["building"]),
+      };
+    },
+
     logoUrl(): string | null {
       const logo = this.electionInfo?.logo;
 
@@ -115,11 +130,7 @@ export default mixins(manageElectionMixins).extend({
     },
     rules(): any {
       return {
-        slug: [
-          (v: any) => !!v || "Slug is required",
-          (v: any) =>
-            /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.test(v) || "Slug must be valid",
-        ],
+        slug: globalRules.slug,
         title: [(v: any) => !!v || "Title is required"],
       };
     },
@@ -133,6 +144,15 @@ export default mixins(manageElectionMixins).extend({
         this.loading = true;
         try {
           await settingsService.updateGeneral(this.electionId, this.form);
+
+          this.$accessor.snackbar.set({
+            show: true,
+            message: "Settings Updated",
+            timeout: 5000,
+            color: "success",
+          });
+
+          await this.$accessor.manageElection.fetchElection(this.electionId);
         } catch (error: any) {
           const message = error.response?.data?.error?.message || error.message;
 

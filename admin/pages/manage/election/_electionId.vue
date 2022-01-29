@@ -21,7 +21,7 @@ export default {
 
   async fetch() {
     const id = this.$route.params.electionId;
-    await this.$accessor.manageElection.fetchElection(id);
+    await this.$accessor.manageElection.fetchElection(parseInt(id));
   },
 
   destroyed() {

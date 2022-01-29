@@ -13,6 +13,7 @@
 
           <v-col cols="6">
             <date-time-picker
+              :disabled="startDateDisable"
               label="Start DateTime *"
               v-model="form.start_date"
               :rules="rules.start_date"
@@ -21,6 +22,7 @@
 
           <v-col cols="6">
             <date-time-picker
+              :disabled="closeDateDisable"
               label="Close DateTime *"
               v-model="form.close_date"
               :rules="rules.close_date"
@@ -32,11 +34,11 @@
     <v-card-actions>
       <v-btn
         color="primary"
-        :disabled="loading"
+        :disabled="!valid || loading || overallDisable"
         :loading="loading"
         large
         @click="submit"
-        >Submit</v-btn
+        >Save</v-btn
       >
     </v-card-actions>
   </v-card>
@@ -50,7 +52,8 @@ import mixins from "vue-typed-mixins";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import settingsService from "@/services/settings.service";
 import { Election } from "@/services/election.service";
-
+import { statusOnlyAllowed } from "@/helpers/isAllowedByStatus.helper";
+import globalRules from "@/configs/global-rules.config";
 const defaultForm = {
   start_date: "",
   close_date: "",
@@ -72,16 +75,34 @@ export default mixins(manageElectionMixins).extend({
       loading: false,
       form: Object.assign({}, defaultForm),
       photoData: null,
-
+      loaded: false,
       baseURL: configs.baseURL,
     };
   },
 
   computed: {
+    startDateDisable(): boolean {
+      if (!this.electionInfo) return true;
+      return this.electionInfo.final_status !== "building";
+    },
+
+    closeDateDisable(): boolean {
+      if (!this.electionStatus) return true;
+
+      return !statusOnlyAllowed(this.electionStatus, ["running", "building"]);
+    },
+
+    overallDisable(): boolean {
+      if (!this.electionStatus) return true;
+      return !statusOnlyAllowed(this.electionStatus, ["running", "building"]);
+    },
+
     rules: function (): any {
       return {
-        start_date: [(v: any) => !!v || "Start Date is required"],
-        close_date: [(v: any) => !!v || "Close Date is required"],
+        start_date: this.overallDisable
+          ? []
+          : globalRules.start_date(this.form.close_date),
+        close_date: this.overallDisable ? [] : globalRules.close_date,
       };
     },
   },
@@ -94,6 +115,15 @@ export default mixins(manageElectionMixins).extend({
         this.loading = true;
         try {
           await settingsService.updateDates(this.electionId, this.form);
+
+          this.$accessor.snackbar.set({
+            show: true,
+            message: "Election Dates Updated",
+            timeout: 5000,
+            color: "success",
+          });
+
+          await this.$accessor.manageElection.fetchElection(this.electionId);
         } catch (error: any) {
           const message = error.response?.data?.error?.message || error.message;
 
@@ -118,14 +148,20 @@ export default mixins(manageElectionMixins).extend({
   },
 
   watch: {
+    ["form"]: {
+      deep: true,
+      handler: function () {
+        (this.$refs.form as any).validate();
+      },
+    },
+
     electionInfo: {
       immediate: true,
       handler: function (value: Election) {
         console.log(value);
-
         this.form = {
           start_date: value.start_date,
-          close_date: value.start_date,
+          close_date: value.close_date,
         };
       },
     },

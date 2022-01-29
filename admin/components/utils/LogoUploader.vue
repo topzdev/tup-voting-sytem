@@ -1,6 +1,11 @@
 <template>
   <v-hover v-slot="{ hover }">
-    <span class="logo-uploader text-center">
+    <span
+      :class="[
+        'logo-uploader text-center',
+        !disabled || 'logo-uploader--disabled',
+      ]"
+    >
       <v-avatar :color="hover ? hoverBackground : background" :size="size">
         <div class="d-flex flex-column" v-if="!parsedUrl">
           <h4>
@@ -13,6 +18,7 @@
         </template>
 
         <input
+          :disabled="disabled"
           ref="logoUploader"
           type="file"
           class="logo-uploader__input"
@@ -23,6 +29,7 @@
 
       <v-btn
         v-if="withBtn"
+        :disabled="disabled"
         class="logo-uploader__btn"
         fab
         small
@@ -70,6 +77,10 @@ export default Vue.extend({
     withBtn: {
       type: Boolean,
     },
+
+    disabled: {
+      type: Boolean,
+    },
   },
 
   data() {
@@ -98,6 +109,7 @@ export default Vue.extend({
 
   methods: {
     openUploader() {
+      if (this.disabled) return;
       (this.$refs as any).logoUploader.click();
     },
     onFileChange(events): void {
@@ -137,6 +149,15 @@ export default Vue.extend({
     position: absolute;
     bottom: 15px;
     right: 15px;
+  }
+
+  &--disabled {
+    opacity: 0.6 !important;
+    .logo-uploader {
+      &__input {
+        cursor: default !important;
+      }
+    }
   }
 }
 </style>

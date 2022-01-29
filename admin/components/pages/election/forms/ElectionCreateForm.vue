@@ -60,7 +60,7 @@
       <v-col class="d-flex" cols="12">
         <v-btn
           color="primary"
-          :disabled="loading"
+          :disabled="!valid || loading"
           :loading="loading"
           large
           block
@@ -78,12 +78,13 @@ import DateTimePicker from "@/components/pickers/DateTimePicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
 import configs from "@/configs";
 import organizationApi from "@/services/organization.service";
+import globalRules from "../../../../configs/global-rules.config";
 const defaultForm = {
   slug: "",
   title: "",
   description: "",
-  start_date: "2022-01-14 04:25",
-  close_date: "2022-01-14 04:25",
+  start_date: new Date(),
+  close_date: new Date(),
   logo: null,
 };
 
@@ -111,16 +112,12 @@ export default Vue.extend({
   },
 
   computed: {
-    rules() {
+    rules(): any {
       return {
-        slug: [
-          (v: any) => !!v || "Slug is required",
-          (v: any) =>
-            /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.test(v) || "Slug must be valid",
-        ],
+        slug: globalRules.slug,
         title: [(v: any) => !!v || "Title is required"],
-        start_date: [(v: any) => !!v || "Start Date is required"],
-        close_date: [(v: any) => !!v || "Close Date is required"],
+        start_date: globalRules.start_date(this.form.close_date),
+        close_date: globalRules.close_date,
       };
     },
   },
@@ -146,10 +143,11 @@ export default Vue.extend({
           await this.createFunc(this.form);
           this.reset();
         } catch (error: any) {
+          const message = error.response?.data?.error?.message || error.message;
           this.alert = {
             show: true,
             type: "error",
-            message: error.message,
+            message: message,
           };
         }
       }
