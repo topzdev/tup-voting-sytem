@@ -1,0 +1,31 @@
+[
+  {
+    "path": "/election/:slug?",
+    "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug.vue",
+    "chunkName": "pages/election/_slug",
+    "children": [
+      {
+        "name": "election-slug",
+        "path": "",
+        "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\index.vue",
+        "chunkName": "pages/election/_slug/index",
+        "_name": "_2c66a0f2"
+      },
+      {
+        "name": "election-slug-ballot",
+        "path": "ballot",
+        "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\ballot\\\\index.vue",
+        "chunkName": "pages/election/_slug/ballot/index",
+        "_name": "_9495a264"
+      }
+    ],
+    "_name": "_1a57d190"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\index.vue",
+    "chunkName": "pages/index",
+    "_name": "_274d10d1"
+  }
+]

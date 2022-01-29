@@ -25,11 +25,7 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state, mutations },
   {
-    async fetchElection({ commit }, id: string) {
-      if (id == "NaN" || id == "undefined" || id === undefined) {
-        throw Error("Please provide proper Election ID");
-      }
-
+    async fetchElection({ commit }, id: number) {
       const result = await electionServices.getById(id);
 
       commit("setElection", result);

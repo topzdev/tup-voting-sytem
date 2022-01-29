@@ -1,5 +1,6 @@
+import { RouteConfig } from "@nuxt/types/config/router";
 import Vue from "vue";
-import { Election } from "../services/election.service";
+import { Election, ElectionStatus } from "../services/election.service";
 import { Organization } from "../services/organization.service";
 
 type ManageElectionPage = {
@@ -7,12 +8,19 @@ type ManageElectionPage = {
   title: string;
   to: string;
   status: string[];
+  exactPath?: string;
 };
 
 type ElectionPageLinks = Record<string, ManageElectionPage>;
 
 const manageElectionMixins = Vue.extend({
   computed: {
+    manageElectionRoute(): string {
+      if (!this.electionId) return "/";
+
+      return `/manage/election/${this.electionId}/`;
+    },
+
     electionId(): Election["id"] | null {
       return this.electionInfo ? this.electionInfo.id : null;
     },
@@ -29,6 +37,11 @@ const manageElectionMixins = Vue.extend({
       return this.electionOrganizationInfo
         ? this.electionOrganizationInfo.id
         : null;
+    },
+
+    electionStatus(): ElectionStatus | null {
+      if (!this.electionInfo) return null;
+      return this.electionInfo?.final_status;
     },
 
     links(): ElectionPageLinks {
