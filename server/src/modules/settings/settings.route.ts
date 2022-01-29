@@ -9,7 +9,7 @@ const router = express.Router();
 console.log("module: Settings Module Loaded");
 
 router.put(
-  "/general/",
+  "/general/:election_id",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   validate(settingsValidator.updateGeneral),
@@ -17,7 +17,7 @@ router.put(
 );
 
 router.put(
-  "/date/",
+  "/date/:election_id",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   validate(settingsValidator.updateDate),
@@ -25,14 +25,21 @@ router.put(
 );
 
 router.put(
-  "/archive/:id",
+  "/archive/:election_id",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   settingsController.archive
 );
 
 router.put(
-  "/closeElection/:id",
+  "/unarchive/:election_id",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  settingsController.unArchive
+);
+
+router.put(
+  "/closeElection/:election_id",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   settingsController.closeElection
