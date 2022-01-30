@@ -35,10 +35,11 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import configs from "@/configs";
-import settingsServices from "../../../../services/settings.service";
+import settingsServices from "@/services/settings.service";
 import mixins from "vue-typed-mixins";
-import manageElectionMixins from "../../../../mixins/manage-election.mixins";
-import { statusOnlyAllowed } from "../../../../helpers/isAllowedByStatus.helper";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
+import { statusOnlyAllowed } from "@/helpers/isAllowedByStatus.helper";
+import settingsMixin from "@/mixins/settings.mixin";
 
 const defaultAlert = {
   show: false,
@@ -46,7 +47,7 @@ const defaultAlert = {
   message: "",
 };
 
-export default mixins(manageElectionMixins).extend({
+export default mixins(settingsMixin).extend({
   data() {
     return {
       valid: false,
@@ -85,9 +86,12 @@ export default mixins(manageElectionMixins).extend({
                   color: "warning",
                   timeout: 2000,
                 });
-                await this.$accessor.manageElection.fetchElection(
+
+                await this.$accessor.manageElection.reFetchElection(
                   this.electionId
                 );
+
+                this.$router.push(this.generalRoute());
               } catch (error: any) {
                 const message =
                   error.response?.data?.error?.message || error.message;

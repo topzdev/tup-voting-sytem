@@ -21,6 +21,7 @@
     "shortid": "^2.2.16",
     "tiptap-vuetify": "^2.24.0",
     "vee-validate": "^3.4.14",
+    "vue-awesome-countdown": "^1.1.4",
     "vue-typed-mixins": "^0.2.0",
     "vuedraggable": "^2.24.3",
     "vuetify": "^2.5.5",

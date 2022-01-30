@@ -10,6 +10,7 @@ export default {
   auth: true,
   layout: "manage-election",
   mixins: [themeMixin],
+  middleware: ["status"],
 
   watch: {
     ["$accessor.manageElection.organization"](value) {

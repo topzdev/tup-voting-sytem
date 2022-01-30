@@ -1,18 +1,25 @@
 <template>
   <span>
     <page-bars title="Voters">
+      <v-spacer />
       <v-btn
+        v-if="hideByStatus(pageStatus.voters.import)"
         color="primary"
-        class="mr-2 ml-auto"
+        class="mr-2"
         outlined
         large
         @click="importVoterRoute"
         >Import Voters</v-btn
       >
-      <v-btn color="primary" class="mr-2" @click="createVoterRoute" large
+      <v-btn
+        v-if="hideByStatus(pageStatus.voters.create)"
+        color="primary"
+        class="mr-2"
+        @click="createVoterRoute"
+        large
         >Add Voters</v-btn
       >
-      <v-menu offset-y>
+      <v-menu v-if="hideByStatus(pageStatus.voters.export)" offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn color="primary" dark icon v-bind="attrs" v-on="on">
             <v-icon>mdi-dots-vertical</v-icon>
@@ -43,7 +50,12 @@ import votersMixin from "~/mixins/voters.mixin";
 import userServices from "~/services/user.service";
 import votersServices from "~/services/voters.service";
 import blobDownloader from "~/helpers/blob-downloader.helper";
-export default mixins(votersMixin, manageElectionMixins).extend({
+import restrictionsMixin from "@/mixins/restrictions.mixin";
+export default mixins(
+  votersMixin,
+  manageElectionMixins,
+  restrictionsMixin
+).extend({
   components: { PageBars, VotersTable },
   head: {
     title: "Voters",

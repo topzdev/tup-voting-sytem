@@ -28,7 +28,7 @@
 
     <v-data-table
       :loading="table.loading"
-      :headers="table.headers"
+      :headers="headers"
       :items="table.items"
       :server-items-length="table.pagination.total"
       :page.sync="table.pagination.page"
@@ -61,35 +61,19 @@ import debounce from "@/helpers/debounce";
 import mixins from "vue-typed-mixins";
 import votersMixin from "~/mixins/voters.mixin";
 import votersServices from "~/services/voters.service";
-import manageElectionMixins from "../../../../mixins/manage-election.mixins";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
+import restrictionsMixin from "@/mixins/restrictions.mixin";
 
-export default mixins(manageElectionMixins, votersMixin).extend({
+export default mixins(
+  manageElectionMixins,
+  votersMixin,
+  restrictionsMixin
+).extend({
   data() {
     return {
       table: {
         loading: false,
-        headers: [
-          {
-            text: "Voter ID",
-            value: "username",
-          },
-          {
-            text: "Email Address",
-            value: "email_address",
-          },
-          {
-            text: "Firstname",
-            value: "firstname",
-          },
-          {
-            text: "Lastname",
-            value: "lastname",
-          },
-          {
-            text: "Action",
-            value: "actions",
-          },
-        ],
+
         pagination: {
           page: 1,
           perPage: 10,
@@ -100,6 +84,39 @@ export default mixins(manageElectionMixins, votersMixin).extend({
         items: [],
       },
     };
+  },
+
+  computed: {
+    headers() {
+      return this.filterByStatus([
+        {
+          text: "Is Voted",
+          value: "",
+          status: this.pageStatus.voters.table.isVoted,
+        },
+        {
+          text: "Voter ID",
+          value: "username",
+        },
+        {
+          text: "Email Address",
+          value: "email_address",
+        },
+        {
+          text: "Firstname",
+          value: "firstname",
+        },
+        {
+          text: "Lastname",
+          value: "lastname",
+        },
+        {
+          text: "Action",
+          value: "actions",
+          status: this.pageStatus.voters.table.action,
+        },
+      ]);
+    },
   },
 
   watch: {

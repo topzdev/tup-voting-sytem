@@ -1,29 +1,16 @@
-import { unflatten } from "flat";
-import { stat } from "fs";
-import { close } from "inspector";
-import { Brackets, getRepository, Not } from "typeorm";
+import { getRepository, Not } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
+import parseDate from "../../helpers/parse-date.helper";
 import photoUploader from "../../helpers/photo-uploader.helper";
-import { Photo } from "../photo/photo.service";
+import { ElectionLogo } from "../election/entity/election-logo.entity";
 import {
   Election,
   ElectionStatusEnum,
 } from "../election/entity/election.entity";
+import { Photo } from "../photo/photo.service";
+import { finalStatusSubquery } from "../launchpad/launchpad.helper";
 import { UpdateElectionBody } from "./settings.interface";
-import { ElectionLogo } from "../election/entity/election-logo.entity";
-import { Organization } from "../organization/entity/organization.entity";
-import parseDate from "../../helpers/parse-date.helper";
-import {
-  finalStatusSubquery,
-  launchpadValidationChecker,
-  validationMessages,
-} from "./settings.helper";
-import {
-  ElectionWithStatusFinal,
-  SettingsValidation,
-  SettingsValidationData,
-  SettingsValidations,
-} from "./settings.interface";
+import { LaunchpadValidationData } from "../launchpad/launchpad.interface";
 
 const updateGeneral = async (
   _logo: Photo,
@@ -51,7 +38,7 @@ const updateGeneral = async (
       _election_id,
     });
 
-  const election = (await builder.getOne()) as SettingsValidationData;
+  const election = (await builder.getOne()) as LaunchpadValidationData;
 
   if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
 
@@ -145,7 +132,7 @@ const updateDate = async (
       _election_id,
     });
 
-  const election = (await builder.getOne()) as SettingsValidationData;
+  const election = (await builder.getOne()) as LaunchpadValidationData;
 
   if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
 
@@ -201,16 +188,17 @@ const archive = async (_election_id: number) => {
   let builder = electionRepository.createQueryBuilder("election");
 
   const election = (await builder
-    .select(["election.status", "election.archive", "election.final_status"])
     .addSelect(finalStatusSubquery(builder.alias))
     .where("election.id = :_election_id", {
       _election_id,
     })
-    .getOne()) as SettingsValidationData;
+    .getOne()) as LaunchpadValidationData;
 
   if (!election) {
     throw new HttpException("NOT_FOUND", "Election not found");
   }
+
+  console.log("Archvie", election);
 
   if (election.final_status !== "completed") {
     throw new HttpException(
@@ -243,7 +231,7 @@ const unArchive = async (_election_id: number) => {
       _election_id,
     });
 
-  const election = (await builder.getOne()) as SettingsValidationData;
+  const election = (await builder.getOne()) as LaunchpadValidationData;
   if (!_election_id) {
     throw new HttpException("BAD_REQUEST", "Election id is required");
   }
@@ -271,7 +259,7 @@ const closeElection = async (_election_id: number) => {
     .where("election.id = :_election_id", {
       _election_id,
     })
-    .getOne()) as SettingsValidationData;
+    .getOne()) as LaunchpadValidationData;
 
   if (!election) {
     throw new HttpException("NOT_FOUND", "Election not found");

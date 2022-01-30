@@ -60,6 +60,8 @@
         />
       </div>
       <v-spacer />
+
+      <election-clock />
     </v-app-bar>
 
     <!-- App Main -->
@@ -80,10 +82,18 @@ import AppDialog from "@/components/app/AppDialog.vue";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import AppImage from "~/components/app/AppImage.vue";
 import ElectionStatusChip from "~/components/chips/ElectionStatusChip.vue";
+import ElectionClock from "@/components/utils/ElectionClock.vue";
+
 import mixins from "vue-typed-mixins";
 
 export default mixins(manageElectionMixins).extend({
-  components: { AppSnackbar, AppImage, ElectionStatusChip, AppDialog },
+  components: {
+    AppSnackbar,
+    AppImage,
+    ElectionStatusChip,
+    AppDialog,
+    ElectionClock,
+  },
   data() {
     return {
       clipped: true,

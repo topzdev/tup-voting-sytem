@@ -47,9 +47,13 @@ import positionMixins from "@/mixins/position.mixins";
 import mixins from "vue-typed-mixins";
 import PageBars from "~/components/bars/PageBars.vue";
 import PositionEditForm from "@/components/pages/positions/forms/PositionEditForm.vue";
-import positionServices from "../../../../../../services/position.service";
-import manageElectionMixins from "../../../../../../mixins/manage-election.mixins";
+import positionServices from "@/services/position.service";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
+import pageStatus from "@/configs/page-status.config";
 export default mixins(manageElectionMixins, positionMixins).extend({
+  meta: {
+    status: pageStatus.positions.edit,
+  },
   components: {
     PageBars,
     ManageContainer,

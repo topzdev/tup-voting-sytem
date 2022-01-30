@@ -1,14 +1,16 @@
-import { RouteConfig } from "@nuxt/types/config/router";
+import { statusOnlyAllowed } from "@/helpers/isAllowedByStatus.helper";
+import { Election, ElectionStatus } from "@/services/election.service";
+import { Organization } from "@/services/organization.service";
 import Vue from "vue";
-import { Election, ElectionStatus } from "../services/election.service";
-import { Organization } from "../services/organization.service";
+import pageStatus from "@/configs/page-status.config";
 
 type ManageElectionPage = {
   icon: string;
   title: string;
   to: string;
-  status: string[];
+  status?: any[];
   exactPath?: string;
+  show?: boolean;
 };
 
 type ElectionPageLinks = Record<string, ManageElectionPage>;
@@ -53,62 +55,62 @@ const manageElectionMixins = Vue.extend({
           icon: "mdi-view-dashboard",
           title: "Overview",
           to: `${basePath}/overview`,
-          status: ["all"],
         },
 
         results: {
           icon: "mdi-chart-box-outline",
           title: "Results",
           to: `${basePath}/results`,
-          status: ["running", "election"],
+          status: pageStatus.results,
         },
 
         party: {
           icon: "mdi-account-group",
           title: "Party",
           to: `${basePath}/party`,
-          status: ["all"],
         },
 
         positions: {
           icon: "mdi-account-details",
           title: "Positions",
           to: `${basePath}/positions`,
-          status: ["running", "election"],
         },
 
         candidates: {
           icon: "mdi-account-tie",
           title: "Candidates",
           to: `${basePath}/candidates`,
-          status: ["all"],
         },
 
         voters: {
           icon: "mdi-account-group",
           title: "Voters",
           to: `${basePath}/voters`,
-          status: ["all"],
         },
 
         settings: {
           icon: "mdi-cog",
           title: "Settings",
           to: `${basePath}/settings`,
-          status: ["building"],
         },
 
         launchpad: {
           icon: "mdi-rocket",
           title: "Launchpad",
           to: `${basePath}/launchpad`,
-          status: ["building"],
+          status: pageStatus.launchpad,
         },
       };
     },
 
     sidebarLinks(): ManageElectionPage[] {
-      return Object.keys(this.links).map((item) => this.links[item]);
+      return Object.keys(this.links)
+        .map((item) => this.links[item])
+        .filter((item) => {
+          if (!this.electionStatus || !item.status) return item;
+
+          if (statusOnlyAllowed(this.electionStatus, item.status)) return item;
+        });
     },
   },
 });
