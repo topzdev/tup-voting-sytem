@@ -15,6 +15,7 @@ import {
     "positions"
   > & {
     votersCount: number;
+    votesCount: number;
     partiesCount: number;
     candidatesCount: number;
     positionsCount: number;

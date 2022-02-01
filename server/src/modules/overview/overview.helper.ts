@@ -79,6 +79,7 @@ import {
   export const launchpadValidationChecker = (data: LaunchpadValidationData) => {
     const {
       votersCount,
+      votesCount,
       partiesCount,
       positionsCount,
       candidatesCount,
@@ -93,6 +94,10 @@ import {
     /* dapat may voters na nakaadd bago mag launch, sino boboto sa election kung wala naman naka add diba? haha */
     if (votersCount <= 0) {
       validations.push(validationMessages["no-voters"]);
+    }
+
+    if (votesCount <= 0) {
+      validations.push(validationMessages["no-votes"]);
     }
   
     /* kailangan may party - di naman required na may party nakaadd kasi pwede naman iset as independent party yung mga candidates, */

@@ -13,3 +13,7 @@ router.get(
     validate(overviewValidator.getElectionDetails),
     overviewController.getElectionDetails
   );
+
+const overviewRoute = router;
+
+export default overviewRoute;
