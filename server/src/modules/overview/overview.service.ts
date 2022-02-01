@@ -40,7 +40,8 @@ const getElectionDetails = async (_election_id: number) => {
       ])
       .addSelect(finalStatusSubquery(builder.alias))
   
-      // .loadRelationCountAndMap("election.votersCount", "election.voters")
+      .loadRelationCountAndMap("election.votersCount", "election.voters")
+      .loadRelationCountAndMap("election.electionVote", "election.votes")
       .loadRelationCountAndMap("election.partiesCount", "election.party")
       .loadRelationCountAndMap("election.candidatesCount", "election.candidates")
       .loadRelationCountAndMap("election.positionsCount", "election.positions")
@@ -64,17 +65,7 @@ const getElectionDetails = async (_election_id: number) => {
     // }
     if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
   
-    if (election.final_status != "running"){
-      builder.loadRelationCountAndMap("election.votersCount", "election.voters")
-      builder.loadRelationCountAndMap("election.electionVote", "election.votes")
-      const election = (await builder.getOne()) as LaunchpadValidationData;
-      return election;
-    } else {
-      builder.loadRelationCountAndMap("election.votersCount", "election.voters")
-      builder.loadRelationCountAndMap("election.electionVote", "election.votes")
-      const election = (await builder.getOne()) as LaunchpadValidationData;
-      return election;
-    }
+  return election;
 
   };
 
