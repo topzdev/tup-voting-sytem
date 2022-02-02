@@ -17,7 +17,13 @@ import Vue, { PropOptions } from "vue";
 import PageBars from "@/components/bars/PageBars.vue";
 import LaunchpadStepper from "@/components/pages/launchpad/LaunchpadStepper.vue";
 import ManageContainer from "@/components/containers/ManageContainer.vue";
+import pageStatus from "@/configs/page-status.config";
+
 export default Vue.extend({
+  meta: {
+    status: pageStatus.launchpad,
+  },
+
   components: {
     PageBars,
     LaunchpadStepper,

@@ -4,9 +4,9 @@
       <v-card-title> Archive Election </v-card-title>
       <v-divider></v-divider>
       <v-card-text>
-        <v-row>
+        <v-row class="no-gutters">
           <v-col v-if="alert.show" cols="12">
-            <v-alert :type="alert.type">
+            <v-alert v-model="alert.show" dismissible :type="alert.type">
               {{ alert.message }}
             </v-alert>
           </v-col>
@@ -39,6 +39,7 @@ import settingsServices from "@/services/settings.service";
 import mixins from "vue-typed-mixins";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import { statusOnlyAllowed } from "@/helpers/isAllowedByStatus.helper";
+import settingsMixin from "@/mixins/settings.mixin";
 
 const defaultAlert = {
   show: false,
@@ -46,7 +47,7 @@ const defaultAlert = {
   message: "",
 };
 
-export default mixins(manageElectionMixins).extend({
+export default mixins(settingsMixin).extend({
   data() {
     return {
       valid: false,
@@ -73,8 +74,8 @@ export default mixins(manageElectionMixins).extend({
 
       this.$accessor.system.showAppDialog({
         show: true,
-        title: "Close Election",
-        message: "Are you sure to close this election?",
+        title: "Archive Election",
+        message: "Are you sure to archive this election?",
         button: {
           anyEventHide: false,
           yesFunction: async ({ hideDialog }) => {
@@ -90,9 +91,11 @@ export default mixins(manageElectionMixins).extend({
                   color: "success",
                 });
 
-                await this.$accessor.manageElection.fetchElection(
+                await this.$accessor.manageElection.reFetchElection(
                   this.electionId
                 );
+
+                this.$router.push(this.generalRoute());
               } catch (error: any) {
                 const message =
                   error.response?.data?.error?.message || error.message;
@@ -105,6 +108,7 @@ export default mixins(manageElectionMixins).extend({
                   };
                 }
               } finally {
+                hideDialog();
                 this.loading = false;
               }
             }

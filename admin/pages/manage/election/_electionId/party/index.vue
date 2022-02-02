@@ -2,6 +2,7 @@
   <span>
     <page-bars title="Partylist">
       <v-btn
+        v-if="hideByStatus(pageStatus.candidate.create)"
         color="primary"
         class="mr-2 ml-auto"
         @click="createPartyRoute"
@@ -23,7 +24,8 @@ import PageBars from "~/components/bars/PageBars.vue";
 import ManageContainer from "@/components/containers/ManageContainer.vue";
 import partyMixins from "@/mixins/party.mixin";
 import PartyList from "@/components/pages/party/PartyList.vue";
-export default mixins(partyMixins).extend({
+import restrictionsMixin from "@/mixins/restrictions.mixin";
+export default mixins(partyMixins, restrictionsMixin).extend({
   components: {
     PageBars,
     ManageContainer,

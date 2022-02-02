@@ -1,12 +1,15 @@
 import { RouteConfig } from "@nuxt/types/config/router";
 import Vue from "vue";
 import mixins from "vue-typed-mixins";
+import pageStatus from "../configs/page-status.config";
+import { Election, ElectionStatus } from "../services/election.service";
 import manageElectionMixins from "./manage-election.mixins";
 
 export type SettingLink = {
   icon: string;
   title: string;
   to: RouteConfig | string;
+  status?: any[];
 };
 
 const settingsMixin = mixins(manageElectionMixins).extend({
@@ -34,11 +37,13 @@ const settingsMixin = mixins(manageElectionMixins).extend({
           icon: "mdi-close-box-outline",
           title: "Close Election",
           to: this.closeElectionRoute(),
+          status: pageStatus.settings.closeElection,
         },
         ["archive-election"]: {
           icon: "mdi-archive-arrow-down-outline",
           title: "Archive Election",
           to: this.archiveElectionRoute(),
+          status: pageStatus.settings.archiveElection,
         },
       };
     },

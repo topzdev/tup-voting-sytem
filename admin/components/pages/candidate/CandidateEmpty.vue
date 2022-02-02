@@ -7,6 +7,7 @@
       autem sed facilis deserunt corrupti aliquid odit dolorem, provident
     </p>
     <v-btn
+      v-if="hideByStatus(pageStatus.candidate.create)"
       color="primary"
       large
       width="75%"
@@ -20,7 +21,12 @@
 import mixins from "vue-typed-mixins";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import candidateMixins from "@/mixins/candidate.mixin";
-export default mixins(manageElectionMixins, candidateMixins).extend({
+import restrictionsMixin from "@/mixins/restrictions.mixin";
+export default mixins(
+  manageElectionMixins,
+  candidateMixins,
+  restrictionsMixin
+).extend({
   computed: {
     thisPageConfig() {
       return this.links["candidates"];

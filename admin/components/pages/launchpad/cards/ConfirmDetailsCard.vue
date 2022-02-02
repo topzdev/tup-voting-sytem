@@ -186,7 +186,6 @@ export default mixins(settingsMixin).extend({
     toPage: Function,
     next: Function,
     back: Function,
-    electionId: Number,
   },
 
   data() {

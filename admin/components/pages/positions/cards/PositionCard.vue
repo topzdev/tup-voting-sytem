@@ -22,7 +22,7 @@
 
         <v-col cols="auto" class="ml-auto">
           <v-btn
-            v-if="!isArranging"
+            v-if="hideByStatus(pageStatus.candidate.create) && !isArranging"
             color="primary"
             text
             :to="editPositionRoute(data.id)"
@@ -38,9 +38,10 @@
 import positionsMixin from "@/mixins/position.mixins";
 import { PropOptions } from "vue";
 import mixins from "vue-typed-mixins";
+import restrictionsMixin from "../../../../mixins/restrictions.mixin";
 import { Position } from "../../../../services/position.service";
 
-export default mixins(positionsMixin).extend({
+export default mixins(positionsMixin, restrictionsMixin).extend({
   props: {
     index: Number,
     isDragging: Boolean,

@@ -50,7 +50,11 @@ import PageBars from "~/components/bars/PageBars.vue";
 import CandidateEditForm from "~/components/pages/candidate/forms/CandidateEditForm.vue";
 import candidateServices from "@/services/candidate.service";
 import candidateMixin from "@/mixins/candidate.mixin";
+import pageStatus from "@/configs/page-status.config";
 export default mixins(candidateMixin).extend({
+  meta: {
+    status: pageStatus.candidate.edit,
+  },
   components: {
     PageBars,
     ManageContainer,

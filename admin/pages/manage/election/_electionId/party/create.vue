@@ -18,7 +18,13 @@ import PartyCreateForm from "@/components/pages/party/forms/PartyCreateForm.vue"
 import partyServices from "@/services/party.service";
 import partyMixin from "@/mixins/party.mixin";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
+import pageStatus from "@/configs/page-status.config";
+
 export default mixins(partyMixin, manageElectionMixins).extend({
+  meta: {
+    status: pageStatus.party.create,
+  },
+
   components: {
     PageBars,
     ManageContainer,

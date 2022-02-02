@@ -25,12 +25,19 @@
 import { RouteConfig } from "@nuxt/types/config/router";
 import Vue, { PropOptions } from "vue";
 import mixins from "vue-typed-mixins";
-import settingsMixin, { SettingLink } from "../../../mixins/settings.mixin";
+import { statusOnlyAllowed } from "@/helpers/isAllowedByStatus.helper";
+import settingsMixin, { SettingLink } from "@/mixins/settings.mixin";
 
 export default mixins(settingsMixin).extend({
   computed: {
     links(): SettingLink[] {
-      return Object.keys(this.pages).map((item) => this.pages[item]);
+      return Object.keys(this.pages)
+        .map((item) => this.pages[item])
+        .filter((item) => {
+          if (!this.electionStatus || !item.status) return item;
+
+          if (statusOnlyAllowed(this.electionStatus, item.status)) return item;
+        });
     },
   },
 });

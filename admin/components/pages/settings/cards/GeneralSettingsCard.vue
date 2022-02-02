@@ -152,7 +152,7 @@ export default mixins(manageElectionMixins).extend({
             color: "success",
           });
 
-          await this.$accessor.manageElection.fetchElection(this.electionId);
+          await this.$accessor.manageElection.reFetchElection(this.electionId);
         } catch (error: any) {
           const message = error.response?.data?.error?.message || error.message;
 

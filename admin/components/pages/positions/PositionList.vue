@@ -1,56 +1,74 @@
 <template>
-  <span>
-    <draggable
-      class="mb-4"
-      v-model="itemsLocal"
-      draggable=".item"
-      v-bind="dragOptions"
-      @start="start"
-      @end="dragging = false"
-    >
-      <transition-group
-        tag="v-row"
-        class="no-gutters"
-        type="transition"
-        :name="!dragging ? 'flip-list' : null"
-      >
-        <v-col
-          v-for="(item, idx) in itemsLocal"
-          :key="item.id"
-          cols="12"
-          class="item pt-2 pb-0"
+  <v-row style="height: 100%">
+    <v-col v-if="list.loading" class="text-center" cols="12">
+      <app-loading></app-loading>
+    </v-col>
+    <template v-if="!list.loading">
+      <v-col cols="6" class="mx-auto" v-if="list.pagination.total">
+        <draggable
+          class="mb-4"
+          :disabled="disabledByStatus(pageStatus.positions.arrange)"
+          v-model="list.items"
+          draggable=".item"
+          v-bind="dragOptions"
+          @start="start"
+          @end="dragging = false"
         >
-          <position-card
-            :index="idx + 1"
-            :data="item"
-            :isDragging="dragging"
-            :isArranging="isArranging"
-          />
-        </v-col>
-      </transition-group>
-    </draggable>
-    <v-row no-gutters class="w-100">
-      <v-col v-if="!isArranging" cols="12">
-        <p class="caption">Drag one item on list to start items arrangement.</p>
-      </v-col>
-      <v-col class="d-flex" cols="12" v-if="isArranging">
-        <v-btn :disabled="loading" depressed large @click="cancel"
-          >Cancel</v-btn
-        >
+          <transition-group
+            tag="v-row"
+            class="no-gutters"
+            type="transition"
+            :name="!dragging ? 'flip-list' : null"
+          >
+            <v-col
+              v-for="(item, idx) in list.items"
+              :key="item.id"
+              cols="12"
+              class="item pt-2 pb-0"
+            >
+              <position-card
+                :index="idx + 1"
+                :data="item"
+                :isDragging="dragging"
+                :isArranging="isArranging"
+              />
+            </v-col>
+          </transition-group>
+        </draggable>
+        <v-row no-gutters class="w-100">
+          <v-col v-if="!isArranging" cols="12">
+            <p class="caption">
+              Drag one item on list to start items arrangement.
+            </p>
+          </v-col>
+          <v-col class="d-flex" cols="12" v-if="isArranging">
+            <v-btn :disabled="loading" depressed large @click="cancel"
+              >Cancel</v-btn
+            >
 
-        <v-btn
-          class="ml-auto"
-          depressed
-          color="primary"
-          large
-          @click="save"
-          :disabled="loading"
-          :loading="loading"
-          >Save Arrangement
-        </v-btn>
+            <v-btn
+              class="ml-auto"
+              depressed
+              color="primary"
+              large
+              @click="save"
+              :disabled="loading"
+              :loading="loading"
+              >Save Arrangement
+            </v-btn>
+          </v-col>
+        </v-row>
       </v-col>
-    </v-row>
-  </span>
+
+      <v-col
+        v-else
+        class="mx-auto text-center d-flex align-center justify-center h-100"
+        md="5"
+      >
+        <position-empty />
+      </v-col>
+    </template>
+  </v-row>
 </template>
 
 <script lang="ts">
@@ -60,12 +78,16 @@ import positionServices, {
   Position,
 } from "@/services/position.service";
 import PositionCard from "./cards/PositionCard.vue";
+import PositionEmpty from "./PositionEmpty.vue";
 import mixins from "vue-typed-mixins";
 import manageElectionMixins from "../../../mixins/manage-election.mixins";
+import positionService from "@/services/position.service";
+import restrictionsMixin from "../../../mixins/restrictions.mixin";
 
-export default mixins(manageElectionMixins).extend({
+export default mixins(manageElectionMixins, restrictionsMixin).extend({
   components: {
     PositionCard,
+    PositionEmpty,
   },
 
   data() {
@@ -74,7 +96,21 @@ export default mixins(manageElectionMixins).extend({
       dragging: false,
       started: false,
       isArranging: false,
-      itemsLocal: this.items,
+
+      oldItems: [] as Position[],
+
+      list: {
+        loading: true,
+        items: [] as Position[],
+        search: "",
+        pagination: {
+          page: 1,
+          perPage: 10,
+          total: 0,
+          itemsPerPageOptions: [5, 10, 15, 20],
+        },
+      },
+      // itemsLocal: this.list.items,
     };
   },
 
@@ -92,13 +128,36 @@ export default mixins(manageElectionMixins).extend({
     },
   },
 
+  fetchOnServer: false,
+  async fetch() {
+    await this.fetchItems();
+  },
+
   methods: {
+    async fetchItems() {
+      this.list.loading = true;
+
+      if (!this.electionId) return;
+
+      try {
+        const result = await positionService.getAll(this.electionId, {});
+        console.log(result);
+        this.list.items = result.items;
+        this.list.pagination.total = result.totalCount;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.list.loading = false;
+      }
+    },
+
     cancel() {
       this.isArranging = false;
-      this.itemsLocal = this.items;
+      this.list.items = this.oldItems;
     },
 
     start() {
+      this.oldItems = this.list.items;
       this.isArranging = true;
       this.dragging = true;
     },
@@ -110,7 +169,7 @@ export default mixins(manageElectionMixins).extend({
       try {
         const body: ArragePositionDto = {
           election_id: this.electionId,
-          displayOrder: this.itemsLocal.map((item, idx) => ({
+          displayOrder: this.list.items.map((item, idx) => ({
             id: item.id,
             order: idx + 1,
           })),
@@ -144,11 +203,11 @@ export default mixins(manageElectionMixins).extend({
     },
   },
 
-  props: {
-    items: {
-      types: Array,
-    } as PropOptions<Position[]>,
-  },
+  // props: {
+  //   items: {
+  //     types: Array,
+  //   } as PropOptions<Position[]>,
+  // },
 });
 </script>
 
