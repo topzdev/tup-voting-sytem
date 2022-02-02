@@ -12,7 +12,7 @@ import {
   finalStatusSubquery,
   launchpadValidationChecker,
   validationMessages,
-} from "./overview.helper";
+} from "../launchpad/launchpad.helper";
 import {
   ElectionWithStatusFinal,
   LaunchpadValidation,
@@ -24,46 +24,34 @@ import {
 
 
 const getElectionDetails = async (_election_id: number) => {
-    const electionRepository = getRepository(Election);
-  
-    let builder = electionRepository.createQueryBuilder("election");
-  
-    builder = builder
-      .select([
-        "election.title",
-        "election.slug",
-        "election.start_date",
-        "election.close_date",
-        "election.status",
-        "election.archive",
-        "election.final_status",
-      ])
-      .addSelect(finalStatusSubquery(builder.alias))
-  
-      .loadRelationCountAndMap("election.votersCount", "election.voters")
-      .loadRelationCountAndMap("election.electionVote", "election.votes")
-      .loadRelationCountAndMap("election.partiesCount", "election.party")
-      .loadRelationCountAndMap("election.candidatesCount", "election.candidates")
-      .loadRelationCountAndMap("election.positionsCount", "election.positions")
-      .leftJoinAndSelect("election.logo", "logo")
-      .leftJoinAndSelect("election.positions", "positions")
-      .leftJoin("positions.candidates", "positions_candidates")
-      .loadRelationCountAndMap(
-        "positions.candidatesCount",
-        "positions.candidates"
-      )
-  
-      .where("election.id = :_election_id", {
-        _election_id,
-      });
+  const electionRepository = getRepository(Election);
+
+  let builder = electionRepository.createQueryBuilder("election");
+
+  builder = builder
+    .select([
+      "election.title",
+      "election.slug",
+      "election.start_date",
+      "election.close_date",
+      "election.status",
+      "election.archive",
+      "election.final_status",
+    ])
+    .addSelect(finalStatusSubquery(builder.alias))
+
+    .loadRelationCountAndMap("election.votersCount", "election.voters")
+    .loadRelationCountAndMap("election.electionVote", "election.votes")
+    .loadRelationCountAndMap("election.partiesCount", "election.party")
+    .loadRelationCountAndMap("election.candidatesCount", "election.candidates")
+    .loadRelationCountAndMap("election.positionsCount", "election.positions")
+    .where("election.id = :_election_id", {
+      _election_id,
+    });
     
-    const election = (await builder.getOne()) as LaunchpadValidationData;
-    // if (election.final_status == "running"){
-      
-    //   builder 
-    //   .select
-    // }
-    if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
+  const election = (await builder.getOne()) as LaunchpadValidationData;
+  
+  if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
   
   return election;
 
