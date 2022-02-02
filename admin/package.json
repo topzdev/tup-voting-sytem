@@ -9,6 +9,7 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@chenfengyuan/vue-countdown": "1.x",
     "@nuxtjs/auth-next": "5.0.0-1637745161.ea53f98",
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/pwa": "^3.3.5",

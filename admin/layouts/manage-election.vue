@@ -25,6 +25,12 @@
           </v-list-item>
         </v-list>
       </div>
+      <template v-slot:append>
+        <v-divider></v-divider>
+        <div class="pa-2">
+          <election-dates />
+        </div>
+      </template>
     </v-navigation-drawer>
 
     <!-- App Bar -->
@@ -60,7 +66,6 @@
         />
       </div>
       <v-spacer />
-
       <election-clock />
     </v-app-bar>
 
@@ -83,6 +88,7 @@ import manageElectionMixins from "@/mixins/manage-election.mixins";
 import AppImage from "~/components/app/AppImage.vue";
 import ElectionStatusChip from "~/components/chips/ElectionStatusChip.vue";
 import ElectionClock from "@/components/utils/ElectionClock.vue";
+import ElectionDates from "@/components/utils/ElectionDates.vue";
 
 import mixins from "vue-typed-mixins";
 
@@ -93,6 +99,7 @@ export default mixins(manageElectionMixins).extend({
     ElectionStatusChip,
     AppDialog,
     ElectionClock,
+    ElectionDates,
   },
   data() {
     return {
