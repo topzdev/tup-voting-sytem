@@ -20,7 +20,7 @@
     </v-card-text>
 
     <v-card-subtitle
-      class="overview-count__title white--text"
+      :class="['overview-count__title white--text', color, 'darken-2']"
       dark
       v-html="title"
     >
@@ -78,7 +78,7 @@ export default Vue.extend({
     justify-content: flex-end;
     height: 100%;
     text-align: right;
-    padding: 15px 15px;
+    padding: 18px 15px;
   }
 
   &__progress {
@@ -88,17 +88,18 @@ export default Vue.extend({
     left: 0;
     height: 100%;
     width: 0;
+    opacity: 0.6;
     z-index: 1;
   }
 
   &__icon {
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 15px;
-    font-size: 65px;
+    font-size: 55px;
     transform: translateY(-50%);
     opacity: 0.7;
-    z-index: 2;
+    z-index: 3;
   }
 
   &__count {
@@ -118,7 +119,7 @@ export default Vue.extend({
     padding: 8px 15px;
     text-align: right;
     font-weight: 400;
-    opacity: 0.8;
+    opacity: 1;
   }
 }
 </style>

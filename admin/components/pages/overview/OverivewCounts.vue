@@ -84,7 +84,7 @@ export default mixins(restrictionsMixin).extend({
 
         {
           title: "Candidates",
-          color: "pink darken-2",
+          color: "pink",
           icon: icons.candidates,
           count: localCounts.candidatesCount,
           show: true,
