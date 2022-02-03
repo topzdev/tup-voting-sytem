@@ -39,8 +39,20 @@ export default mixins(
     PositionEmpty,
     ManageContainer,
   },
-  head: {
-    title: "Positions",
+
+  computed: {
+    pageTitle(): string {
+      return this.links.positions.title;
+    },
+
+    toolbarTitle(): string {
+      return this.links.positions.toolbarTitle || this.pageTitle;
+    },
+  },
+  head(): any {
+    return {
+      title: this.pageTitle,
+    };
   },
 });
 </script>

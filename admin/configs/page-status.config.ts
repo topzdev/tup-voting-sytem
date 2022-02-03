@@ -31,6 +31,12 @@ const pageStatus = {
     closeElection: ["running"],
     archiveElection: ["completed"],
   },
+
+  overview: {
+    counts: {
+      participation: ["running", "completed", "archived"],
+    },
+  },
 };
 
 export default pageStatus;
