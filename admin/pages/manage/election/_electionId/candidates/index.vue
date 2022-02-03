@@ -25,15 +25,32 @@ import ManageContainer from "@/components/containers/ManageContainer.vue";
 import candidateMixins from "@/mixins/candidate.mixin";
 import CandidateTable from "@/components/pages/candidate/CandidateTable.vue";
 import restrictionsMixins from "@/mixins/restrictions.mixin";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
 
-export default mixins(candidateMixins, restrictionsMixins).extend({
+export default mixins(
+  candidateMixins,
+  restrictionsMixins,
+  manageElectionMixins
+).extend({
   components: {
     PageBars,
     CandidateTable,
     ManageContainer,
   },
-  head: {
-    title: "Candidates",
+
+  computed: {
+    pageTitle(): string {
+      return this.links.candidates.title;
+    },
+
+    toolbarTitle(): string {
+      return this.links.candidates.toolbarTitle || this.pageTitle;
+    },
+  },
+  head(): any {
+    return {
+      title: this.pageTitle,
+    };
   },
 });
 </script>

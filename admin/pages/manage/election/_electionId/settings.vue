@@ -23,8 +23,20 @@ import settingsMixin from "~/mixins/settings.mixin";
 import SettingsSidebar from "@/components/pages/settings/SettingsSidebar.vue";
 export default mixins(settingsMixin).extend({
   components: { PageBars, SettingsSidebar },
-  head: {
-    title: "Election Settings",
+
+  computed: {
+    pageTitle(): string {
+      return this.links.settings.title;
+    },
+
+    toolbarTitle(): string {
+      return this.links.settings.toolbarTitle || this.pageTitle;
+    },
+  },
+  head(): any {
+    return {
+      title: this.pageTitle,
+    };
   },
 });
 </script>

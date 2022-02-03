@@ -25,14 +25,31 @@ import ManageContainer from "@/components/containers/ManageContainer.vue";
 import partyMixins from "@/mixins/party.mixin";
 import PartyList from "@/components/pages/party/PartyList.vue";
 import restrictionsMixin from "@/mixins/restrictions.mixin";
-export default mixins(partyMixins, restrictionsMixin).extend({
+import manageElectionMixins from "@/mixins/manage-election.mixins";
+export default mixins(
+  partyMixins,
+  restrictionsMixin,
+  manageElectionMixins
+).extend({
   components: {
     PageBars,
     ManageContainer,
     PartyList,
   },
-  head: {
-    title: "Partylist",
+
+  computed: {
+    pageTitle(): string {
+      return this.links.party.title;
+    },
+
+    toolbarTitle(): string {
+      return this.links.party.toolbarTitle || this.pageTitle;
+    },
+  },
+  head(): any {
+    return {
+      title: this.pageTitle,
+    };
   },
 });
 </script>

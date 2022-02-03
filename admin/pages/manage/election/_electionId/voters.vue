@@ -57,8 +57,20 @@ export default mixins(
   restrictionsMixin
 ).extend({
   components: { PageBars, VotersTable },
-  head: {
-    title: "Voters",
+
+  computed: {
+    pageTitle(): string {
+      return this.links.voters.title;
+    },
+
+    toolbarTitle(): string {
+      return this.links.voters.toolbarTitle || this.pageTitle;
+    },
+  },
+  head(): any {
+    return {
+      title: this.pageTitle,
+    };
   },
   methods: {
     async exportVoters() {

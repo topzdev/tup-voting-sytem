@@ -20,9 +20,6 @@ import {
   LaunchpadValidations,
 } from "./overview.interface";
 
-
-
-
 const getElectionDetails = async (_election_id: number) => {
   const electionRepository = getRepository(Election);
 
@@ -41,24 +38,23 @@ const getElectionDetails = async (_election_id: number) => {
     .addSelect(finalStatusSubquery(builder.alias))
 
     .loadRelationCountAndMap("election.votersCount", "election.voters")
-    .loadRelationCountAndMap("election.electionVote", "election.votes")
+    .loadRelationCountAndMap("election.votesCount", "election.votes")
     .loadRelationCountAndMap("election.partiesCount", "election.party")
     .loadRelationCountAndMap("election.candidatesCount", "election.candidates")
     .loadRelationCountAndMap("election.positionsCount", "election.positions")
     .where("election.id = :_election_id", {
       _election_id,
     });
-    
+
   const election = (await builder.getOne()) as LaunchpadValidationData;
-  
+
   if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
-  
+
   return election;
+};
 
-  };
+const overviewServices = {
+  getElectionDetails,
+};
 
-  const overviewServices = {
-    getElectionDetails,
-  }
-
-  export default overviewServices;
+export default overviewServices;

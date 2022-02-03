@@ -3,6 +3,7 @@ import { Election, ElectionStatus } from "@/services/election.service";
 import { Organization } from "@/services/organization.service";
 import Vue from "vue";
 import pageStatus from "@/configs/page-status.config";
+import icons from "../configs/icons";
 
 type ManageElectionPage = {
   icon: string;
@@ -11,9 +12,20 @@ type ManageElectionPage = {
   status?: any[];
   exactPath?: string;
   show?: boolean;
+  toolbarTitle?: string;
 };
+type ElectionPages =
+  | "overview"
+  | "results"
+  | "candidates"
+  | "party"
+  | "positions"
+  | "voters"
+  | "settings"
+  | "launchpad"
+  | "extra";
 
-type ElectionPageLinks = Record<string, ManageElectionPage>;
+type ElectionPageLinks = Record<ElectionPages, ManageElectionPage>;
 
 const manageElectionMixins = Vue.extend({
   computed: {
@@ -52,53 +64,62 @@ const manageElectionMixins = Vue.extend({
 
       return {
         overview: {
-          icon: "mdi-view-dashboard",
+          icon: icons.overview,
           title: "Overview",
           to: `${basePath}/overview`,
         },
 
         results: {
-          icon: "mdi-chart-box-outline",
+          icon: icons.results,
           title: "Results",
           to: `${basePath}/results`,
           status: pageStatus.results,
         },
 
         party: {
-          icon: "mdi-account-group",
+          icon: icons.party,
           title: "Party",
           to: `${basePath}/party`,
         },
 
         positions: {
-          icon: "mdi-account-details",
+          icon: icons.positions,
           title: "Positions",
           to: `${basePath}/positions`,
         },
 
         candidates: {
-          icon: "mdi-account-tie",
+          icon: icons.candidates,
           title: "Candidates",
           to: `${basePath}/candidates`,
         },
 
         voters: {
-          icon: "mdi-account-group",
+          icon: icons.voters,
           title: "Voters",
           to: `${basePath}/voters`,
         },
 
         settings: {
-          icon: "mdi-cog",
+          icon: icons.settings,
           title: "Settings",
+          toolbarTitle: "Election Settings",
           to: `${basePath}/settings`,
         },
 
         launchpad: {
-          icon: "mdi-rocket",
+          icon: icons.launchpad,
           title: "Launchpad",
           to: `${basePath}/launchpad`,
+          toolbarTitle: "Launch Election",
           status: pageStatus.launchpad,
+        },
+
+        extra: {
+          icon: icons.development,
+          title: "Development",
+          toolbarTitle: "Development Extra",
+          to: `${basePath}/extra`,
         },
       };
     },
