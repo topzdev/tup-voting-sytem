@@ -27,6 +27,7 @@ const getElectionDetails = async (_election_id: number) => {
 
   builder = builder
     .select([
+      "election.id",
       "election.title",
       "election.slug",
       "election.start_date",

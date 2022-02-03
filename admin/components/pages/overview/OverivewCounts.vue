@@ -1,14 +1,16 @@
 <template>
   <v-row>
-    <v-col v-for="item in overviewCounts" :key="item.title">
-      <overview-count-card
-        :color="item.color"
-        :title="item.title"
-        :icon="item.icon"
-        :count="item.count"
-        :progress="item.progress"
-      />
-    </v-col>
+    <template v-for="item in overviewCounts">
+      <v-col v-if="item.show" :key="item.title">
+        <overview-count-card
+          :color="item.color"
+          :title="item.title"
+          :icon="item.icon"
+          :count="item.count"
+          :progress="item.progress"
+        />
+      </v-col>
+    </template>
   </v-row>
 </template>
 
@@ -17,15 +19,18 @@ import Vue, { PropOptions } from "vue";
 import OverviewCountCard from "@/components/pages/overview/cards/OverviewCountCard.vue";
 import icons from "@/configs/icons";
 import { OverviewDetails } from "@/services/overview.service";
+import mixins from "vue-typed-mixins";
+import restrictionsMixin from "@/mixins/restrictions.mixin";
 type CountItem = {
   color: string;
   icon: string;
   count: number | string;
   title: string;
   progress?: string | number;
+  show: boolean;
 };
 
-export default Vue.extend({
+export default mixins(restrictionsMixin).extend({
   props: {
     counts: {
       type: Object,
@@ -58,12 +63,13 @@ export default Vue.extend({
       let items: CountItem[] = [];
 
       items.push({
-        title: `Participation (${localCounts.votesCount}/${localCounts.votersCount} Voted)`,
+        title: `Participated (${localCounts.votesCount}/${localCounts.votersCount} Voters)`,
         color: "green lighten-1",
         icon: icons.voteParticipation,
         count: localCounts.votesCount,
         progress:
           (localCounts.votesCount / localCounts.votersCount) * 100 + "%",
+        show: this.hideByStatus(this.pageStatus.overview.counts.participation),
       });
 
       items = [
@@ -73,6 +79,7 @@ export default Vue.extend({
           color: "blue",
           icon: icons.voters,
           count: localCounts.votersCount,
+          show: true,
         },
 
         {
@@ -80,6 +87,7 @@ export default Vue.extend({
           color: "pink darken-2",
           icon: icons.candidates,
           count: localCounts.candidatesCount,
+          show: true,
         },
 
         {
@@ -87,6 +95,7 @@ export default Vue.extend({
           color: "purple",
           icon: icons.party,
           count: localCounts.partiesCount,
+          show: true,
         },
 
         {
@@ -94,6 +103,7 @@ export default Vue.extend({
           color: "cyan",
           icon: icons.positions,
           count: localCounts.positionsCount,
+          show: true,
         },
       ];
 

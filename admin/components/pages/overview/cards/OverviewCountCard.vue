@@ -78,7 +78,7 @@ export default Vue.extend({
     justify-content: flex-end;
     height: 100%;
     text-align: right;
-    padding: 20px 15px;
+    padding: 15px 15px;
   }
 
   &__progress {
@@ -95,7 +95,7 @@ export default Vue.extend({
     position: absolute;
     top: 50%;
     left: 15px;
-    font-size: 80px;
+    font-size: 65px;
     transform: translateY(-50%);
     opacity: 0.7;
     z-index: 2;
@@ -106,7 +106,7 @@ export default Vue.extend({
     z-index: 2;
     margin: 0;
     text-align: right;
-    font-size: 50px;
+    font-size: 45px;
     line-height: 100%;
   }
 

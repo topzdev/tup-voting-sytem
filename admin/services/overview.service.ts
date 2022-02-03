@@ -5,7 +5,7 @@ import { Position } from "./position.service";
 
 export type OverviewDetails = Pick<
   Election,
-  "slug" | "title" | "start_date" | "close_date" | "archive"
+  "id" | "slug" | "title" | "start_date" | "close_date" | "archive"
 > & {
   final_status: ElectionStatus;
   votersCount: number;

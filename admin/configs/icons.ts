@@ -9,6 +9,7 @@ const icons = {
   voteParticipation: "mdi-vote",
   launchpad: "mdi-rocket",
   development: "mdi-developer-board",
+  clipboard: "mdi-clipboard-multiple-outline",
 };
 
 export default icons;

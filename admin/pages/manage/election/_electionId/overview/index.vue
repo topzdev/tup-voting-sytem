@@ -9,7 +9,15 @@
         </v-col>
 
         <v-col cols="6" class="mx-auto">
-          <overview-details-component />
+          <v-row>
+            <v-col cols="12">
+              <overview-dates :overviewDates="details" />
+            </v-col>
+
+            <v-col cols="12">
+              <overview-links :details="details" />
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </v-container>
@@ -21,10 +29,11 @@ import mixins from "vue-typed-mixins";
 import PageBars from "~/components/bars/PageBars.vue";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import OverviewCounts from "@/components/pages/overview/OverivewCounts.vue";
-import OverviewDetailsComponent from "~/components/pages/overview/OverviewDates.vue";
+import OverviewDates from "~/components/pages/overview/OverviewDates.vue";
 import overviewServices, { OverviewDetails } from "@/services/overview.service";
+import OverviewLinks from "~/components/pages/overview/OverviewLinks.vue";
 export default mixins(manageElectionMixins).extend({
-  components: { PageBars, OverviewCounts, OverviewDetailsComponent },
+  components: { PageBars, OverviewCounts, OverviewDates, OverviewLinks },
 
   data() {
     return {
