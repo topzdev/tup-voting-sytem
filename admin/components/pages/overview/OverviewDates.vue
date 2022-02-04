@@ -13,7 +13,7 @@
         <v-card-title class="title py-2"> Close Date </v-card-title>
         <v-divider></v-divider>
 
-        <v-card-text class="body-1" v-text="endDate"> </v-card-text>
+        <v-card-text class="body-1" v-text="closeDate"> </v-card-text>
       </v-card>
     </v-col>
   </v-row>
@@ -37,7 +37,7 @@ export default Vue.extend({
         "MMMM DD, YYYY - hh:mm a"
       );
     },
-    endDate(): string {
+    closeDate(): string {
       if (!this.overviewDates) return "";
       return dayjs(this.overviewDates.close_date).format(
         "MMMM DD, YYYY - hh:mm a"

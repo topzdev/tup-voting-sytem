@@ -149,19 +149,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import AppImage from "../../../app/AppImage.vue";
+import CandidatesCard from "@/components/cards/CandidatesCard.vue";
+import candidateMixin from "@/mixins/candidate.mixin";
+import positionsMixin from "@/mixins/position.mixins";
 import launchpadServices, {
   LaunchpadElectionBallot,
-  LaunchpadElectionDetails,
-  LaunchpadValidations,
 } from "@/services/launchpad.services";
 import dayjs from "dayjs";
 import mixins from "vue-typed-mixins";
-import candidateMixin from "@/mixins/candidate.mixin";
-import positionsMixin from "@/mixins/position.mixins";
-import CandidatesCard from "@/components/cards/CandidatesCard.vue";
-import { Position } from "../../../../services/position.service";
+import AppImage from "@/components/app/AppImage.vue";
 export default mixins(candidateMixin, positionsMixin).extend({
   components: {
     AppImage,
@@ -222,7 +218,7 @@ export default mixins(candidateMixin, positionsMixin).extend({
     submit() {
       if (!this.valid) return;
 
-      this.toPage(2);
+      this.toPage(3);
     },
   },
 });

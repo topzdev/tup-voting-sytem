@@ -69,6 +69,7 @@ export default mixins(settingsMixin).extend({
   methods: {
     async submit() {
       (this.$refs.form as any).validate();
+
       this.$accessor.system.showAppDialog({
         show: true,
         title: "Close Election",

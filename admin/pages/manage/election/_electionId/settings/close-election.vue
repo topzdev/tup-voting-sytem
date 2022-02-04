@@ -10,7 +10,7 @@ import CloseElectionCard from "@/components/pages/settings/cards/CloseElectionCa
 import pageStatus from "@/configs/page-status.config";
 export default mixins(settingsMixin).extend({
   meta: {
-    status: pageStatus.settings.archiveElection,
+    status: pageStatus.settings.closeElection,
   },
   components: {
     CloseElectionCard,

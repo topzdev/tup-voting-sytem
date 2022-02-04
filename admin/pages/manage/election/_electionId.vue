@@ -13,9 +13,13 @@ export default {
   middleware: ["status"],
 
   watch: {
-    ["$accessor.manageElection.organization"](value) {
-      console.log(value.theme);
-      this.changeTheme(value.theme);
+    ["$accessor.manageElection.organization"]: {
+      immediate: true,
+      deep: true,
+      handler: function (value) {
+        console.log(value.theme);
+        this.changeTheme(value.theme);
+      },
     },
   },
   fetchOnServer: false,

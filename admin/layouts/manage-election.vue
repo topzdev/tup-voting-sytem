@@ -77,6 +77,8 @@
     <app-snackbar />
 
     <app-dialog />
+
+    <election-information-dialog />
   </v-app>
 </template>
 
@@ -89,6 +91,7 @@ import AppImage from "~/components/app/AppImage.vue";
 import ElectionStatusChip from "~/components/chips/ElectionStatusChip.vue";
 import ElectionClock from "@/components/utils/ElectionClock.vue";
 import ElectionDates from "@/components/utils/ElectionDates.vue";
+import ElectionInformationDialog from "@/components/utils/ElectionInformationDialog.vue";
 
 import mixins from "vue-typed-mixins";
 
@@ -100,6 +103,7 @@ export default mixins(manageElectionMixins).extend({
     AppDialog,
     ElectionClock,
     ElectionDates,
+    ElectionInformationDialog,
   },
   data() {
     return {
