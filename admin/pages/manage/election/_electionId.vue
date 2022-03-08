@@ -10,18 +10,23 @@ export default {
   auth: true,
   layout: "manage-election",
   mixins: [themeMixin],
+  middleware: ["status"],
 
   watch: {
-    ["$accessor.manageElection.organization"](value) {
-      console.log(value.theme);
-      this.changeTheme(value.theme);
+    ["$accessor.manageElection.organization"]: {
+      immediate: true,
+      deep: true,
+      handler: function (value) {
+        console.log(value.theme);
+        this.changeTheme(value.theme);
+      },
     },
   },
   fetchOnServer: false,
 
   async fetch() {
     const id = this.$route.params.electionId;
-    await this.$accessor.manageElection.fetchElection(id);
+    await this.$accessor.manageElection.fetchElection(parseInt(id));
   },
 
   destroyed() {

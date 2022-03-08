@@ -18,7 +18,11 @@ import CandidateCreateForm from "@/components/pages/candidate/forms/CandidateCre
 import candidateServices from "@/services/candidate.service";
 import candidateMixin from "@/mixins/candidate.mixin";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
+import pageStatus from "@/configs/page-status.config";
 export default mixins(candidateMixin, manageElectionMixins).extend({
+  meta: {
+    status: pageStatus.candidate.create,
+  },
   components: {
     PageBars,
     ManageContainer,

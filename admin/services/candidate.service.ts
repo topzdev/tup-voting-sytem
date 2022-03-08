@@ -64,7 +64,7 @@ export interface GetCandidateDto {
   take?: number;
   withArchive?: boolean;
   party?: string | null;
-  position: string | null;
+  position?: string | null;
 }
 
 export type CreateCandidateDto = Pick<

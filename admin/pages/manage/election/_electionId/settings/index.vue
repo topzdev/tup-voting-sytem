@@ -1,9 +1,14 @@
-<template>
-  <h1>Settings Page</h1>
-</template>
+<template></template>
 
-<script>
-export default {};
+<script lang="ts">
+import Vue from "vue";
+import mixins from "vue-typed-mixins";
+import settingsMixin from "../../../../../mixins/settings.mixin";
+export default mixins(settingsMixin).extend({
+  created() {
+    this.$router.push(this.generalRoute());
+  },
+});
 </script>
 
 <style>

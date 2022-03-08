@@ -70,7 +70,7 @@
       <v-col class="d-flex" cols="12">
         <v-btn
           color="primary"
-          :disabled="loading"
+          :disabled="!valid || loading"
           :loading="loading"
           large
           block
@@ -156,10 +156,12 @@ export default Vue.extend({
           await this.createFunc(this.form);
           this.reset();
         } catch (error: any) {
+          const message = error.response?.data?.error?.message || error.message;
+
           this.alert = {
             show: true,
             type: "error",
-            message: error.message,
+            message: message,
           };
         }
       }

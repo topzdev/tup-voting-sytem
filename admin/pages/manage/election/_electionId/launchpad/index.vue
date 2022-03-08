@@ -17,14 +17,34 @@ import Vue, { PropOptions } from "vue";
 import PageBars from "@/components/bars/PageBars.vue";
 import LaunchpadStepper from "@/components/pages/launchpad/LaunchpadStepper.vue";
 import ManageContainer from "@/components/containers/ManageContainer.vue";
-export default Vue.extend({
+import pageStatus from "@/configs/page-status.config";
+import mixins from "vue-typed-mixins";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
+
+export default mixins(manageElectionMixins).extend({
+  meta: {
+    status: pageStatus.launchpad,
+  },
+
   components: {
     PageBars,
     LaunchpadStepper,
     ManageContainer,
   },
-  head: {
-    title: "Launchpad",
+
+  computed: {
+    pageTitle(): string {
+      return this.links.launchpad.title;
+    },
+
+    toolbarTitle(): string {
+      return this.links.launchpad.toolbarTitle || this.pageTitle;
+    },
+  },
+  head(): any {
+    return {
+      title: this.pageTitle,
+    };
   },
 });
 </script>

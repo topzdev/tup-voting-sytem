@@ -22,18 +22,28 @@ export const mutations = mutationTree(state, {
   },
 });
 
+const _fetchElection = async (commit: any, id: any) => {
+  const result = await electionServices.getById(id);
+
+  commit("setElection", result);
+  commit("setOrganization", result.organization);
+};
+
 export const actions = actionTree(
   { state, mutations },
   {
-    async fetchElection({ commit }, id: string) {
-      if (id == "NaN" || id == "undefined" || id === undefined) {
-        throw Error("Please provide proper Election ID");
+    async fetchElection({ commit, state }, id: number) {
+      if (state.election) {
+        if (state.election.id !== id) {
+          await _fetchElection(commit, id);
+        }
+      } else {
+        await _fetchElection(commit, id);
       }
+    },
 
-      const result = await electionServices.getById(id);
-
-      commit("setElection", result);
-      commit("setOrganization", result.organization);
+    async reFetchElection({ commit }, id: number) {
+      await _fetchElection(commit, id);
     },
   }
 );

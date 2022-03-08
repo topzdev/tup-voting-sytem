@@ -50,7 +50,13 @@ import PageBars from "~/components/bars/PageBars.vue";
 import PartyEditForm from "~/components/pages/party/forms/PartyEditForm.vue";
 import partyServices from "@/services/party.service";
 import partyMixin from "@/mixins/party.mixin";
+import pageStatus from "@/configs/page-status.config";
+
 export default mixins(partyMixin).extend({
+  meta: {
+    status: pageStatus.party.edit,
+  },
+
   components: {
     PageBars,
     ManageContainer,

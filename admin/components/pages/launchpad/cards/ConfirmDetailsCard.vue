@@ -77,7 +77,7 @@
               </td>
 
               <td class="text-right">
-                <v-btn icon>
+                <v-btn icon :to="generalRoute()" target="_blank">
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
               </td>
@@ -93,7 +93,7 @@
                 ></p>
               </td>
               <td class="text-right">
-                <v-btn icon>
+                <v-btn icon :to="generalRoute()" target="_blank">
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
               </td>
@@ -107,7 +107,7 @@
                 <p class="body-1 mb-0" v-text="details.slug"></p>
               </td>
               <td class="text-right">
-                <v-btn icon>
+                <v-btn icon :to="generalRoute()" target="_blank">
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
               </td>
@@ -125,7 +125,7 @@
               </td>
 
               <td class="text-right">
-                <v-btn icon>
+                <v-btn icon :to="updateElectionDates()" target="_blank">
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
               </td>
@@ -143,7 +143,7 @@
               </td>
 
               <td class="text-right">
-                <v-btn icon>
+                <v-btn icon :to="updateElectionDates()" target="_blank">
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
               </td>
@@ -169,14 +169,16 @@
 
 <script lang="ts">
 import Vue from "vue";
-import AppImage from "../../../app/AppImage.vue";
+import AppImage from "@/components/app/AppImage.vue";
 import launchpadServices, {
   LaunchpadElectionDetails,
   LaunchpadValidations,
 } from "@/services/launchpad.services";
 import dayjs from "dayjs";
+import mixins from "vue-typed-mixins";
+import settingsMixin from "@/mixins/settings.mixin";
 
-export default Vue.extend({
+export default mixins(settingsMixin).extend({
   components: {
     AppImage,
   },
@@ -184,7 +186,6 @@ export default Vue.extend({
     toPage: Function,
     next: Function,
     back: Function,
-    electionId: Number,
   },
 
   data() {

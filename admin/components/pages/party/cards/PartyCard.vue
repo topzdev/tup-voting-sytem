@@ -21,7 +21,11 @@
         </v-col>
 
         <v-col cols="auto" class="ml-auto">
-          <v-btn color="primary" text @click="editPartyRoute(data.id)"
+          <v-btn
+            v-if="hideByStatus(pageStatus.party.edit)"
+            color="primary"
+            text
+            @click="editPartyRoute(data.id)"
             >View</v-btn
           >
         </v-col>
@@ -36,8 +40,9 @@ import { PropOptions } from "vue";
 import mixins from "vue-typed-mixins";
 import AppImage from "@/components/app/AppImage.vue";
 import { Party } from "@/services/party.service";
+import restrictionsMixin from "../../../../mixins/restrictions.mixin";
 
-export default mixins(partyMixin).extend({
+export default mixins(partyMixin, restrictionsMixin).extend({
   components: { AppImage },
   props: {
     data: {

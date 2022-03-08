@@ -71,7 +71,7 @@
         <v-btn text to="/" large class="mr-auto">Cancel</v-btn>
         <v-btn
           color="primary"
-          :disabled="loading"
+          :disabled="!valid || loading"
           :loading="loading"
           large
           @click="submit"
@@ -166,12 +166,12 @@ export default Vue.extend({
           });
           this.reset();
         } catch (error: any) {
-          console.log(error);
+          const message = error.response?.data?.error?.message || error.message;
           if (error) {
             this.alert = {
               show: true,
               type: "error",
-              message: error.message,
+              message,
             };
           }
         }

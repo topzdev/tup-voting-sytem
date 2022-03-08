@@ -53,13 +53,20 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import AppImage from "../../../app/AppImage.vue";
-
+import AppImage from "@/components/app/AppImage.vue";
+import launchpadServices from "@/services/launchpad.services";
 import dayjs from "dayjs";
-import launchpadServices from "../../../../services/launchpad.services";
+import Vue from "vue";
+import mixins from "vue-typed-mixins";
+import overviewMixin from "@/mixins/overview.mixins";
 
-export default Vue.extend({
+const defaultAlert = {
+  show: false,
+  type: "",
+  message: "",
+};
+
+export default mixins(overviewMixin).extend({
   components: {
     AppImage,
   },
@@ -74,6 +81,7 @@ export default Vue.extend({
     return {
       loading: false,
       valid: false,
+      alert: Object.assign({}, defaultAlert),
     };
   },
 
@@ -83,20 +91,54 @@ export default Vue.extend({
     },
 
     async submit() {
-      if (!this.valid) return;
-      this.loading = true;
-      try {
-        const result = await launchpadServices.launchElection(this.electionId);
-        this.$accessor.snackbar.set({
-          show: true,
-          message: "Election Successfully Launched",
-          timeout: 10000,
-          color: "success",
-        });
-      } catch (error) {
-      } finally {
-        this.loading = false;
-      }
+      this.$accessor.system.showAppDialog({
+        show: true,
+        title: "Launch Election",
+        message: "Are you sure to launch this election?",
+        button: {
+          anyEventHide: false,
+          yesFunction: async ({ hideDialog }) => {
+            if (!this.valid) return;
+            this.loading = true;
+
+            try {
+              const result = await launchpadServices.launchElection(
+                this.electionId
+              );
+
+              await this.$accessor.manageElection.reFetchElection(
+                this.electionId
+              );
+
+              this.$accessor.snackbar.set({
+                show: true,
+                message: "Election successfully launched",
+                timeout: 10000,
+                color: "success",
+              });
+
+              this.$router.push(this.overviewPage());
+            } catch (error: any) {
+              const message =
+                error.response?.data?.error?.message || error.message;
+
+              if (message) {
+                this.alert = {
+                  show: true,
+                  type: "error",
+                  message: message,
+                };
+              }
+            } finally {
+              this.loading = false;
+              hideDialog();
+            }
+          },
+          noFunction: ({ hideDialog }) => {
+            hideDialog();
+          },
+        },
+      });
     },
   },
 });

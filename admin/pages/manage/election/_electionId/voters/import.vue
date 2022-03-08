@@ -6,8 +6,12 @@
 
 <script lang="ts">
 import VotersImportDialog from "~/components/pages/voters/dialogs/VotersImportDialog.vue";
+import pageStatus from "@/configs/page-status.config";
 
 export default {
+  meta: {
+    status: pageStatus.voters.import,
+  },
   components: {
     VotersImportDialog,
   },

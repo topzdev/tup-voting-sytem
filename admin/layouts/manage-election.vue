@@ -25,6 +25,12 @@
           </v-list-item>
         </v-list>
       </div>
+      <template v-slot:append>
+        <v-divider></v-divider>
+        <div class="pa-2">
+          <election-dates />
+        </div>
+      </template>
     </v-navigation-drawer>
 
     <!-- App Bar -->
@@ -60,6 +66,7 @@
         />
       </div>
       <v-spacer />
+      <election-clock />
     </v-app-bar>
 
     <!-- App Main -->
@@ -68,19 +75,36 @@
     </v-main>
 
     <app-snackbar />
+
+    <app-dialog />
+
+    <election-information-dialog />
   </v-app>
 </template>
 
 <script lang="ts">
 import pageConfig from "@/configs/pages.config";
 import AppSnackbar from "~/components/app/AppSnackbar.vue";
+import AppDialog from "@/components/app/AppDialog.vue";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import AppImage from "~/components/app/AppImage.vue";
 import ElectionStatusChip from "~/components/chips/ElectionStatusChip.vue";
+import ElectionClock from "@/components/utils/ElectionClock.vue";
+import ElectionDates from "@/components/utils/ElectionDates.vue";
+import ElectionInformationDialog from "@/components/utils/ElectionInformationDialog.vue";
+
 import mixins from "vue-typed-mixins";
 
 export default mixins(manageElectionMixins).extend({
-  components: { AppSnackbar, AppImage, ElectionStatusChip },
+  components: {
+    AppSnackbar,
+    AppImage,
+    ElectionStatusChip,
+    AppDialog,
+    ElectionClock,
+    ElectionDates,
+    ElectionInformationDialog,
+  },
   data() {
     return {
       clipped: true,

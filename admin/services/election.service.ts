@@ -26,6 +26,7 @@ export type Election = {
   start_date: string;
   close_date: string;
   organization_id: number;
+  archive: boolean;
   organization: Organization;
   logo: ElectionLogo;
   final_status: ElectionStatus;
@@ -71,7 +72,7 @@ const electionServices = {
       await apiClient.get(`${url}/all/${orgId}${transformParamsToUrl(query)}`)
     ).data;
   },
-  async getById(id: string): Promise<Election> {
+  async getById(id: number): Promise<Election> {
     return (await apiClient.get(`${url}/${id}`)).data;
   },
 

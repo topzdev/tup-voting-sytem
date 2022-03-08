@@ -1,18 +1,40 @@
+import { statusOnlyAllowed } from "@/helpers/isAllowedByStatus.helper";
+import { Election, ElectionStatus } from "@/services/election.service";
+import { Organization } from "@/services/organization.service";
 import Vue from "vue";
-import { Election } from "../services/election.service";
-import { Organization } from "../services/organization.service";
+import pageStatus from "@/configs/page-status.config";
+import icons from "../configs/icons";
 
 type ManageElectionPage = {
   icon: string;
   title: string;
   to: string;
-  status: string[];
+  status?: any[];
+  exactPath?: string;
+  show?: boolean;
+  toolbarTitle?: string;
 };
+type ElectionPages =
+  | "overview"
+  | "results"
+  | "candidates"
+  | "party"
+  | "positions"
+  | "voters"
+  | "settings"
+  | "launchpad"
+  | "extra";
 
-type ElectionPageLinks = Record<string, ManageElectionPage>;
+type ElectionPageLinks = Record<ElectionPages, ManageElectionPage>;
 
 const manageElectionMixins = Vue.extend({
   computed: {
+    manageElectionRoute(): string {
+      if (!this.electionId) return "/";
+
+      return `/manage/election/${this.electionId}/`;
+    },
+
     electionId(): Election["id"] | null {
       return this.electionInfo ? this.electionInfo.id : null;
     },
@@ -31,71 +53,85 @@ const manageElectionMixins = Vue.extend({
         : null;
     },
 
+    electionStatus(): ElectionStatus | null {
+      if (!this.electionInfo) return null;
+      return this.electionInfo?.final_status;
+    },
+
     links(): ElectionPageLinks {
       const electionId = this.$route.params.electionId;
       const basePath = `/manage/election/${electionId}`;
 
       return {
         overview: {
-          icon: "mdi-view-dashboard",
+          icon: icons.overview,
           title: "Overview",
           to: `${basePath}/overview`,
-          status: ["all"],
         },
 
         results: {
-          icon: "mdi-chart-box-outline",
+          icon: icons.results,
           title: "Results",
           to: `${basePath}/results`,
-          status: ["running", "election"],
+          status: pageStatus.results,
         },
 
         party: {
-          icon: "mdi-account-group",
+          icon: icons.party,
           title: "Party",
           to: `${basePath}/party`,
-          status: ["all"],
         },
 
         positions: {
-          icon: "mdi-account-details",
+          icon: icons.positions,
           title: "Positions",
           to: `${basePath}/positions`,
-          status: ["running", "election"],
         },
 
         candidates: {
-          icon: "mdi-account-tie",
+          icon: icons.candidates,
           title: "Candidates",
           to: `${basePath}/candidates`,
-          status: ["all"],
         },
 
         voters: {
-          icon: "mdi-account-group",
+          icon: icons.voters,
           title: "Voters",
           to: `${basePath}/voters`,
-          status: ["all"],
         },
 
         settings: {
-          icon: "mdi-cog",
+          icon: icons.settings,
           title: "Settings",
+          toolbarTitle: "Election Settings",
           to: `${basePath}/settings`,
-          status: ["building"],
         },
 
         launchpad: {
-          icon: "mdi-rocket",
+          icon: icons.launchpad,
           title: "Launchpad",
           to: `${basePath}/launchpad`,
-          status: ["building"],
+          toolbarTitle: "Launch Election",
+          status: pageStatus.launchpad,
+        },
+
+        extra: {
+          icon: icons.development,
+          title: "Development",
+          toolbarTitle: "Development Extra",
+          to: `${basePath}/extra`,
         },
       };
     },
 
     sidebarLinks(): ManageElectionPage[] {
-      return Object.keys(this.links).map((item) => this.links[item]);
+      return Object.keys(this.links)
+        .map((item) => this.links[item])
+        .filter((item) => {
+          if (!this.electionStatus || !item.status) return item;
+
+          if (statusOnlyAllowed(this.electionStatus, item.status)) return item;
+        });
     },
   },
 });

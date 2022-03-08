@@ -18,7 +18,12 @@ import PageBars from "~/components/bars/PageBars.vue";
 import PositionCreateForm from "@/components/pages/positions/forms/PositionCreateForm.vue";
 import positionServices from "@/services/position.service";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
+import pageStatus from "@/configs/page-status.config";
+
 export default mixins(positionMixins, manageElectionMixins).extend({
+  meta: {
+    status: pageStatus.positions.create,
+  },
   components: {
     PageBars,
     ManageContainer,
