@@ -16,7 +16,8 @@ type ValidationIds =
   | "start-date-behind"
   | "close-date-behind"
   | "insufficient-candidates"
-  | "candidates-no-position";
+  | "candidates-no-position"
+  | "no-slug-edit";
 
 export const validationMessages: Record<ValidationIds, LaunchpadValidation> = {
   ["no-voters"]: {
@@ -65,6 +66,11 @@ export const validationMessages: Record<ValidationIds, LaunchpadValidation> = {
     severity: "warning",
     title: "Candidates no position assigned.",
     message: "These candidates (n1, n2, n3) has no position assigned.",
+  },
+  ["no-slug-edit"]: {
+    severity: "info",
+    title: "The slug cannot be changed after launched",
+    message: "The election slug cannot be changed after the building phase",
   },
 };
 
@@ -152,6 +158,8 @@ export const launchpadValidationChecker = (data: LaunchpadValidationData) => {
     });
   }
 
+  validations.push(validationMessages["no-slug-edit"]);
+
   return validations;
 };
 
@@ -216,10 +224,10 @@ export const statusAsTextSubquery = () => {
 export const finalStatusSubquery = (alias) => {
   return `
    CASE	
-      WHEN "election"."status" >= '3' AND "election"."archive" = TRUE 					
+      WHEN "election"."status" > '3' OR "election"."archive" = TRUE 					
 			    THEN '${STATUS_MESSAGE[4]}' 
 		
-      WHEN "election"."status" >= '2' AND CURRENT_TIMESTAMP >= "election"."close_date"  
+      WHEN "election"."status" > '2' OR CURRENT_TIMESTAMP >= "election"."close_date"  
           THEN '${STATUS_MESSAGE[3]}'
 
       WHEN "election"."status" > '1' 													
