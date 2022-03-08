@@ -1,7 +1,7 @@
 import apiClient from ".";
 import {
   Ballot,
-  BallotItems,
+  BallotItem,
   BallotOtherInfo,
   Candidate,
   Election,
@@ -24,7 +24,7 @@ type GetElectionByIdReturn = {
   error: ElectionErrorMessage;
 };
 
-type GetBallotReturn = BallotItems[];
+type GetBallotReturn = BallotItem[];
 
 type GetCandidatesReturn = Candidate[];
 

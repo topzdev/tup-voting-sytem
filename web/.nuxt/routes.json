@@ -12,11 +12,26 @@
         "_name": "_2c66a0f2"
       },
       {
-        "name": "election-slug-ballot",
         "path": "ballot",
-        "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\ballot\\\\index.vue",
-        "chunkName": "pages/election/_slug/ballot/index",
-        "_name": "_9495a264"
+        "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\ballot.vue",
+        "chunkName": "pages/election/_slug/ballot",
+        "children": [
+          {
+            "name": "election-slug-ballot",
+            "path": "",
+            "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\ballot\\\\index.vue",
+            "chunkName": "pages/election/_slug/ballot/index",
+            "_name": "_9495a264"
+          },
+          {
+            "name": "election-slug-ballot-review",
+            "path": "review",
+            "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\ballot\\\\review.vue",
+            "chunkName": "pages/election/_slug/ballot/review",
+            "_name": "_6603be0c"
+          }
+        ],
+        "_name": "_5eb63998"
       }
     ],
     "_name": "_1a57d190"

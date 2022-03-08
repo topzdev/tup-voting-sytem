@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="activeClass" outlined @click="toggle(data)">
+  <v-card :class="activeClass" outlined @[!readonly&&`click`]="toggle(data)">
     <v-icon class="selected__checkmark" color="success" size="30" v-if="active"
       >mdi-check-decagram</v-icon
     >
@@ -18,7 +18,7 @@
         </v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
-    <v-card-actions>
+    <v-card-actions v-if="!readonly">
       <v-btn small color="primary" text @click="moreInfo($event)">
         More Info
       </v-btn>
@@ -51,6 +51,10 @@ export default Vue.extend({
     },
     toggle: {
       type: Function,
+    },
+
+    readonly: {
+      type: Boolean,
     },
   },
 

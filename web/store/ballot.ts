@@ -1,4 +1,4 @@
-import { actionTree, mutationTree } from "typed-vuex";
+import { actionTree, mutationTree, getterTree } from "typed-vuex";
 import votingServices, {
   ElectionErrorMessage,
 } from "@/services/voting.services";
@@ -17,6 +17,16 @@ export const state = () => ({
   },
 
   votes: [] as Candidate[],
+});
+
+export const getters = getterTree(state, {
+  reviewItems: (state) =>
+    state.items.map((_ballotItem) => ({
+      ..._ballotItem,
+      candidates: state.votes.filter(
+        (_voteItem) => _voteItem.position_id === _ballotItem.id
+      ),
+    })),
 });
 
 export const mutations = mutationTree(state, {

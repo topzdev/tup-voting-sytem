@@ -3,6 +3,10 @@ import { Election, Organization } from "../types/app";
 
 const ballotMixins = Vue.extend({
   computed: {
+    pagePath() {
+      return `/election/${this.$route.params.slug}/`;
+    },
+
     electionId(): Election["id"] | null {
       return this.election ? this.election.id : null;
     },
@@ -17,6 +21,10 @@ const ballotMixins = Vue.extend({
 
     ballotItems() {
       return this.$accessor.ballot.items;
+    },
+
+    reviewItems() {
+      return this.$accessor.ballot.reviewItems;
     },
 
     electionOrganization(): Organization | null {

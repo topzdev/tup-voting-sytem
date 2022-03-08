@@ -1,10 +1,6 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12">
-        <election-header :election="election" />
-      </v-col>
-
       <v-col
         v-for="(item, idx) in ballotItems"
         :key="idx"
@@ -15,13 +11,6 @@
       </v-col>
     </v-row>
     <candidate-dialog />
-    <v-app-bar app bottom fixed elevation="10">
-      <v-app-bar-title>Ballot</v-app-bar-title>
-
-      <v-btn class="ml-auto" color="primary" large>
-        Next - Review Ballot
-      </v-btn>
-    </v-app-bar>
   </v-container>
 </template>
 
