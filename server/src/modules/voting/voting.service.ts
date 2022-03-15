@@ -117,6 +117,8 @@ const submitBallot = async (
   const connection = getConnection();
   const queryRunner = connection.createQueryRunner();
 
+  console.log("Ballot Information: ", _voter_id, _ballot, _other_info);
+
   if (!_voter_id)
     throw new HttpException(
       "BAD_REQUEST",
@@ -151,7 +153,7 @@ const submitBallot = async (
 
   /* Check if voter is a legit voter of that election */
   const voter = await voterBuilder
-    .where("voter.id = :_voter_id", {
+    .where("voter.id = :voter_id", {
       voter_id: _voter_id,
     })
     .getOne();
@@ -170,7 +172,7 @@ const submitBallot = async (
 
   console.log("Election Information:", election);
 
-  if (election) {
+  if (!election) {
     throw new HttpException("NOT_FOUND", VOTING_MESSAGES.electioNotExist.title);
   }
 
@@ -190,14 +192,16 @@ const submitBallot = async (
 
   console.log("Voterd Information", voted);
 
-  if (voted)
+  if (voted) {
     throw new HttpException("NOT_FOUND", VOTING_MESSAGES.alreadyVoted.title);
+  }
 
   /*  -----------------TRANSACTION START HERE------------------- */
 
   await queryRunner.startTransaction();
 
   try {
+    console.log("Transaction Started");
     /* Start -  Save the vote */
     const finalBallot = votes.map((item) => ({
       voter_id: voter.id,
@@ -226,9 +230,12 @@ const submitBallot = async (
 
     await queryRunner.commitTransaction();
 
+    console.log("Transaction Ended");
+    console.log("Voter Receipt", voterReceipt);
     return voterReceipt;
   } catch (error) {
     await queryRunner.rollbackTransaction();
+    throw error;
   } finally {
     await queryRunner.release();
   }

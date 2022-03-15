@@ -18,6 +18,15 @@
       v-html="ballotRuleText"
     />
 
+    <v-card-subtitle class="error--text pt-1" v-if="error">
+      <h3>Errors</h3>
+      <ul>
+        <li v-for="(item, idx) in error.messages" :key="idx">
+          {{ item }}
+        </li>
+      </ul>
+    </v-card-subtitle>
+
     <v-card-text v-if="data.candidates && data.candidates.length">
       <v-row no-gutters>
         <v-col cols="12">
@@ -48,7 +57,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { BallotItem, Candidate } from "@/types/app";
+import { BallotError, BallotItem, Candidate } from "@/types/app";
 import CandidateCard from "@/components/pages/ballot/cards/CandidateCard.vue";
 
 export default Vue.extend({
@@ -57,7 +66,7 @@ export default Vue.extend({
       type: Object,
     } as PropOptions<BallotItem>,
 
-    error: { type: Boolean, default: false },
+    error: { type: Object } as PropOptions<BallotError | null>,
   },
 
   data() {
@@ -136,6 +145,7 @@ export default Vue.extend({
 .ballot {
   &--error {
     outline: 3px solid #f44336 !important ;
+    box-shadow: 0px 0px 20px 0px rgba(#f44336, 0.2) !important;
   }
 }
 </style>

@@ -177,3 +177,11 @@ export type BallotOtherInfo = {
 export type BallotItem = Position & {
   candidates: Candidate[];
 };
+
+export type BallotError = {
+  position_id: Position["id"];
+  messages: string[];
+  totalVotes?: number;
+  min_selected?: number;
+  max_selected?: number;
+};

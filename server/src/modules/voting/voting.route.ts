@@ -9,35 +9,35 @@ console.log("module: Voting Module Loaded");
 
 router.get(
   "/election/slug/:slug",
-  // voterAuth,
+  voterAuth,
   validate(votingValidator.getElectionBySlug),
   votingController.getElectionBySlug
 );
 
 router.get(
   "/election/id/:election_id",
-  // voterAuth,
+  voterAuth,
   validate(votingValidator.getElectionById),
   votingController.getElectionById
 );
 
 router.get(
   "/candidate/:candidate_id",
-  // voterAuth,
+  voterAuth,
   validate(votingValidator.getCandidateInfo),
   votingController.getCandidateInfo
 );
 
 router.get(
   "/ballot/:election_id",
-  // voterAuth,
+  voterAuth,
   validate(votingValidator.getElectionBallot),
   votingController.getElectionBallot
 );
 
 router.post(
   "/ballot",
-  // voterAuth,
+  voterAuth,
   validate(votingValidator.submitBallot),
   votingController.submitBallot
 );

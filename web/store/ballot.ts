@@ -2,12 +2,20 @@ import { actionTree, mutationTree, getterTree } from "typed-vuex";
 import votingServices, {
   ElectionErrorMessage,
 } from "@/services/voting.services";
-import { BallotItem, Candidate, Election, Organization } from "../types/app";
+import {
+  BallotError,
+  BallotItem,
+  Candidate,
+  Election,
+  Organization,
+  Position,
+} from "../types/app";
 
 export const state = () => ({
   error: {
     election: null as ElectionErrorMessage | null,
   },
+  ballotErrors: [],
   election: null as Election | null,
   organization: null as Organization | null,
   items: [] as BallotItem[],
@@ -55,6 +63,10 @@ export const mutations = mutationTree(state, {
   setVote(state, _payload) {
     state.votes = _payload;
   },
+
+  setBallotErrors(state, _payload) {
+    state.ballotErrors = _payload;
+  },
 });
 
 export const actions = actionTree(
@@ -91,21 +103,79 @@ export const actions = actionTree(
 
     async vote({ commit, state }, candidate: Candidate) {
       let current = state.votes;
+      console.log("-------");
+      console.log("Candidaite", candidate);
 
-      console.log("Store Vote", candidate);
-
-      console.log(
-        "Find",
-        current.findIndex((item) => item.id === candidate.id) === -1
-      );
-      if (current.findIndex((item) => item.id === candidate.id) === -1) {
-        commit("setVote", [...current, candidate]);
+      if (
+        !state.votes.filter((item) => {
+          console.log(
+            "Item",
+            item,
+            "ITEM ID: ",
+            item.id,
+            "CANDIDATE ID:",
+            candidate.id
+          );
+          return item.id === candidate.id;
+        }).length
+      ) {
+        console.log("If");
+        commit("setVote", [...state.votes, candidate]);
       } else {
+        console.log("Else");
         commit(
           "setVote",
-          current.filter((item) => item.id !== candidate.id)
+          state.votes.filter((item) => item.id !== candidate.id)
         );
       }
+
+      this.app.$accessor.ballot.ballotErrorChecker();
+    },
+
+    async ballotErrorChecker({ commit, state }) {
+      let ballotErrors: BallotError[] = [];
+
+      console.log("Error Checking..");
+
+      state.items.forEach((_position) => {
+        let errors: string[] = [];
+
+        // get the count of current votes casted on specific position
+        let totalVotesOfPosition = state.votes.filter(
+          (_vote) => _vote.position_id === _position.id
+        ).length;
+
+        console.log(
+          "Total Votes: ",
+          totalVotesOfPosition,
+          "Min Selected: ",
+          _position.min_selected,
+
+          totalVotesOfPosition < _position.min_selected
+        );
+
+        if (totalVotesOfPosition < _position.min_selected) {
+          errors.push(
+            `Must select atleast ${_position.min_selected} candidates`
+          );
+        }
+
+        if (totalVotesOfPosition > _position.max_selected) {
+          errors.push(`The max select is ${_position.max_selected} `);
+        }
+
+        if (errors.length) {
+          ballotErrors.push({
+            position_id: _position.id,
+            messages: errors,
+            totalVotes: totalVotesOfPosition,
+            min_selected: _position.min_selected,
+            max_selected: _position.max_selected,
+          });
+        }
+      });
+
+      commit("setBallotErrors", ballotErrors);
     },
   }
 );

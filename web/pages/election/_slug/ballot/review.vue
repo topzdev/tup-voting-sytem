@@ -18,6 +18,16 @@
         </v-row>
       </v-col>
     </v-row>
+
+    <ballot-stepper>
+      <v-btn color="primary" large text @click="back"> Back </v-btn>
+
+      <v-app-bar-title class="ml-3">Review Your Ballot</v-app-bar-title>
+
+      <v-btn class="ml-auto" color="primary" large @click="submit">
+        Submit Ballot
+      </v-btn>
+    </ballot-stepper>
   </v-container>
 </template>
 
@@ -26,9 +36,21 @@ import Vue, { PropOptions } from "vue";
 import mixins from "vue-typed-mixins";
 import ballotMixins from "@/mixins/ballot.mixins";
 import CandidateCard from "@/components/pages/ballot/cards/CandidateCard.vue";
+import BallotStepper from "@/components/pages/ballot/BallotStepper.vue";
 export default mixins(ballotMixins).extend({
   components: {
     CandidateCard,
+    BallotStepper,
+  },
+
+  methods: {
+    back() {
+      this.$router.push(`${this.pagePath}ballot`);
+    },
+
+    submit() {
+      alert("Submitting...");
+    },
   },
 });
 </script>

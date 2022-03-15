@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { unflatten } from "flat";
 import { Ballot } from "./voting.interface";
 import votingServices from "./voting.service";
 
@@ -66,14 +67,18 @@ const submitBallot = async (
   next: NextFunction
 ) => {
   try {
+    console.log(req.voter);
+
     const ua = req.ua;
     const ip = req.client_ip;
     const voter_id = req.voter.id;
     const ballot = req.body as Ballot;
 
-    res
-      .status(200)
-      .json(await votingServices.submitBallot(voter_id, ballot, { ua, ip }));
+    // res
+    //   .status(200)
+    //   .json(await votingServices.submitBallot(voter_id, ballot, { ua, ip }));
+
+    res.status(200).json(ballot);
   } catch (error) {
     next(error);
   }

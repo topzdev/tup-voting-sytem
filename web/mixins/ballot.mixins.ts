@@ -34,6 +34,10 @@ const ballotMixins = Vue.extend({
     organizationId(): Organization["id"] | null {
       return this.electionOrganization ? this.electionOrganization.id : null;
     },
+
+    ballotErrors() {
+      return this.$accessor.ballot.ballotErrors;
+    },
   },
 
   methods: {
