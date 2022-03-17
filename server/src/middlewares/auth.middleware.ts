@@ -50,14 +50,22 @@ export const voterAuth = (req: Request, res: Response, next: NextFunction) => {
       throw Error();
     }
 
-    console.log("Token Parts", tokenParts[1]);
+    console.log(
+      "Token Parts",
+      tokenParts[1],
+      "Configs",
+      configs.jwt.voter.secret
+    );
     const decoded = jwt.verify(tokenParts[1], configs.jwt.voter.secret);
+
+    console.log("Decoded", decoded);
 
     req.voter_jwt = decoded;
     if (typeof decoded !== "string") req.voter = decoded.voter;
 
     next();
   } catch (error) {
+    console.error("Catch Error: ", error);
     next(new HttpException("UNAUTHORIZED", "Something went wrong"));
   }
 };

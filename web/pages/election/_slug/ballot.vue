@@ -14,6 +14,7 @@ import BallotCard from "@/components/pages/ballot/cards/BallotCard.vue";
 import CandidateDialog from "@/components/pages/ballot/dialogs/CandidateDialog.vue";
 
 export default mixins(ballotMixins).extend({
+  auth: true,
   components: {
     ElectionHeader,
     BallotCard,

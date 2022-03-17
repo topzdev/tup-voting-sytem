@@ -9,7 +9,7 @@ console.log("module: Voting Module Loaded");
 
 router.get(
   "/election/slug/:slug",
-  voterAuth,
+  // voterAuth,
   validate(votingValidator.getElectionBySlug),
   votingController.getElectionBySlug
 );

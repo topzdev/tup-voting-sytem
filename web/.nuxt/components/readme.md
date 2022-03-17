@@ -6,10 +6,10 @@ You can directly use them in pages and other components without the need to impo
 
 **Tip:** If a component is conditionally rendered with `v-if` and is big, it is better to use `Lazy` or `lazy-` prefix to lazy load.
 
-- `<FormsLoginForm>` | `<forms-login-form>` (components/forms/LoginForm.vue)
-- `<ChipsPartyChip>` | `<chips-party-chip>` (components/chips/PartyChip.vue)
 - `<AppImage>` | `<app-image>` (components/app/AppImage.vue)
 - `<AppLoading>` | `<app-loading>` (components/app/AppLoading.vue)
+- `<ChipsPartyChip>` | `<chips-party-chip>` (components/chips/PartyChip.vue)
+- `<FormsLoginForm>` | `<forms-login-form>` (components/forms/LoginForm.vue)
 - `<InputsPasswordField>` | `<inputs-password-field>` (components/inputs/PasswordField.vue)
 - `<UtilsPageCenter>` | `<utils-page-center>` (components/utils/PageCenter.vue)
 - `<PagesBallotStepper>` | `<pages-ballot-stepper>` (components/pages/ballot/BallotStepper.vue)

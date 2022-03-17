@@ -1,15 +1,15 @@
 {
-  "FormsLoginForm": {
-    "description": "Auto imported from components/forms/LoginForm.vue"
-  },
-  "ChipsPartyChip": {
-    "description": "Auto imported from components/chips/PartyChip.vue"
-  },
   "AppImage": {
     "description": "Auto imported from components/app/AppImage.vue"
   },
   "AppLoading": {
     "description": "Auto imported from components/app/AppLoading.vue"
+  },
+  "ChipsPartyChip": {
+    "description": "Auto imported from components/chips/PartyChip.vue"
+  },
+  "FormsLoginForm": {
+    "description": "Auto imported from components/forms/LoginForm.vue"
   },
   "InputsPasswordField": {
     "description": "Auto imported from components/inputs/PasswordField.vue"

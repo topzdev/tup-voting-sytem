@@ -206,8 +206,10 @@ const submitBallot = async (
     const finalBallot = votes.map((item) => ({
       voter_id: voter.id,
       election_id: election.id,
-      candidate_id: item.candidates_id,
+      candidate_id: item.candidate_id,
     }));
+
+    console.log("Final Ballot", finalBallot);
 
     const createBallot = queryRunner.manager.create(ElectionVotes, finalBallot);
 

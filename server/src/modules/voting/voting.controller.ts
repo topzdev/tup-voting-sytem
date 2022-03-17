@@ -74,11 +74,11 @@ const submitBallot = async (
     const voter_id = req.voter.id;
     const ballot = req.body as Ballot;
 
-    // res
-    //   .status(200)
-    //   .json(await votingServices.submitBallot(voter_id, ballot, { ua, ip }));
+    res
+      .status(200)
+      .json(await votingServices.submitBallot(voter_id, ballot, { ua, ip }));
 
-    res.status(200).json(ballot);
+    // res.status(200).json(ballot);
   } catch (error) {
     next(error);
   }

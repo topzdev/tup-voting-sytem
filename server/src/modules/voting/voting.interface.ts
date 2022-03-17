@@ -4,7 +4,7 @@ import { Position } from "../position/entity/position.entity";
 
 export type BallotVote = {
   position_id: Position["id"];
-  candidates_id: Candidate["id"];
+  candidate_id: Candidate["id"];
 };
 
 export type Ballot = {

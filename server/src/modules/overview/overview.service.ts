@@ -40,6 +40,7 @@ const getElectionDetails = async (_election_id: number) => {
 
     .loadRelationCountAndMap("election.votersCount", "election.voters")
     .loadRelationCountAndMap("election.votesCount", "election.votes")
+    .loadRelationCountAndMap("election.votedCount", "election.voted")
     .loadRelationCountAndMap("election.partiesCount", "election.party")
     .loadRelationCountAndMap("election.candidatesCount", "election.candidates")
     .loadRelationCountAndMap("election.positionsCount", "election.positions")

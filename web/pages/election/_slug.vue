@@ -13,6 +13,7 @@ export default mixins(ballotMixins).extend({
 
   async fetch() {
     const slug = this.$route.params.slug;
+    console.log(slug);
     await this.$accessor.ballot.fetchElection(slug);
   },
 
