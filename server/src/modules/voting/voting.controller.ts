@@ -38,9 +38,12 @@ const getElectionBallot = async (
 ) => {
   try {
     const election_id = req.params.election_id;
+    const voter_id = req.voter.id;
     res
       .status(200)
-      .json(await votingServices.getElectionBallot(parseInt(election_id)));
+      .json(
+        await votingServices.getElectionBallot(parseInt(election_id), voter_id)
+      );
   } catch (error) {
     next(error);
   }

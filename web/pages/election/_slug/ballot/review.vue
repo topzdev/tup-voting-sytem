@@ -50,6 +50,8 @@ export default mixins(ballotMixins).extend({
 
     submit() {
       alert("Submitting...");
+
+      this.$router.push(`${this.pagePath}ballot/final`);
     },
   },
 });

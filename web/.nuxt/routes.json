@@ -24,6 +24,13 @@
             "_name": "_9495a264"
           },
           {
+            "name": "election-slug-ballot-final",
+            "path": "final",
+            "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\ballot\\\\final.vue",
+            "chunkName": "pages/election/_slug/ballot/final",
+            "_name": "_09f8551c"
+          },
+          {
             "name": "election-slug-ballot-review",
             "path": "review",
             "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\ballot\\\\review.vue",

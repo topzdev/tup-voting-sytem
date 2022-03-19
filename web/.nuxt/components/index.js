@@ -9,6 +9,7 @@ export { default as PagesElectionError } from '../..\\components\\pages\\electio
 export { default as PagesElectionHeader } from '../..\\components\\pages\\election\\ElectionHeader.vue'
 export { default as PagesBallotCard } from '../..\\components\\pages\\ballot\\cards\\BallotCard.vue'
 export { default as PagesBallotCardsCandidateCard } from '../..\\components\\pages\\ballot\\cards\\CandidateCard.vue'
+export { default as PagesBallotReceiptDialog } from '../..\\components\\pages\\ballot\\dialogs\\BallotReceiptDialog.vue'
 export { default as PagesBallotDialogsCandidateDialog } from '../..\\components\\pages\\ballot\\dialogs\\CandidateDialog.vue'
 
 // nuxt/nuxt.js#8607

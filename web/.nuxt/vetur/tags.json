@@ -32,6 +32,9 @@
   "PagesBallotCardsCandidateCard": {
     "description": "Auto imported from components/pages/ballot/cards/CandidateCard.vue"
   },
+  "PagesBallotReceiptDialog": {
+    "description": "Auto imported from components/pages/ballot/dialogs/BallotReceiptDialog.vue"
+  },
   "PagesBallotDialogsCandidateDialog": {
     "description": "Auto imported from components/pages/ballot/dialogs/CandidateDialog.vue"
   }

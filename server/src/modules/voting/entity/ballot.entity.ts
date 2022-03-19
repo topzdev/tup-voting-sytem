@@ -27,8 +27,7 @@ export class ElectionBallot extends Timestamp {
   @Column()
   voter_id: number;
 
-  @OneToOne(() => Voter)
-  @JoinColumn()
+  @ManyToOne(() => Voter, (voter) => voter.ballot)
   voter: Voter;
 
   @Column()

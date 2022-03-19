@@ -64,10 +64,10 @@ const getElectionById = async (_election_id: number) => {
   };
 };
 
-const getElectionBallot = async (_election_id: number) => {
+const getElectionBallot = async (_election_id: number, voter_id: number) => {
   const positionRepository = getRepository(Position);
   const electionRepository = getRepository(Election);
-
+  const voterRepository = getRepository(Voter);
   const election = await electionRepository.findOne(_election_id);
 
   if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");

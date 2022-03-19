@@ -17,4 +17,5 @@ You can directly use them in pages and other components without the need to impo
 - `<PagesElectionHeader>` | `<pages-election-header>` (components/pages/election/ElectionHeader.vue)
 - `<PagesBallotCard>` | `<pages-ballot-card>` (components/pages/ballot/cards/BallotCard.vue)
 - `<PagesBallotCardsCandidateCard>` | `<pages-ballot-cards-candidate-card>` (components/pages/ballot/cards/CandidateCard.vue)
+- `<PagesBallotReceiptDialog>` | `<pages-ballot-receipt-dialog>` (components/pages/ballot/dialogs/BallotReceiptDialog.vue)
 - `<PagesBallotDialogsCandidateDialog>` | `<pages-ballot-dialogs-candidate-dialog>` (components/pages/ballot/dialogs/CandidateDialog.vue)
