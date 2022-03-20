@@ -5,7 +5,7 @@
         <v-col cols="12">
           <v-row>
             <v-col v-if="election" cols="12">
-              <election-header :election="election" />
+              <election-header :show-logout="false" />
             </v-col>
 
             <v-col v-if="electionError" cols="12">

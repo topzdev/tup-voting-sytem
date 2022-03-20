@@ -17,10 +17,16 @@
         <v-btn color="primary" large class="mt-2 mb-2" @click="show = true">
           View Ballot Receipt
         </v-btn>
-        <v-btn text color="primary" width="200" large> Logout </v-btn>
+        <v-btn text color="primary" width="200" large @click="ballotLogout">
+          Logout
+        </v-btn>
       </v-col>
     </v-row>
-    <ballot-receipt-dialog :show="show" />
+    <ballot-receipt-dialog
+      v-if="ballotReceipt"
+      :receipt="ballotReceipt"
+      :show.sync="show"
+    />
   </page-center>
 </template>
 
@@ -29,7 +35,18 @@ import Vue, { PropOptions } from "vue";
 import AppImage from "@/components/app/AppImage.vue";
 import PageCenter from "@/components/utils/PageCenter.vue";
 import BallotReceiptDialog from "@/components/pages/ballot/dialogs/BallotReceiptDialog.vue";
-export default Vue.extend({
+import mixins from "vue-typed-mixins";
+import ballotMixins from "@/mixins/ballot.mixins";
+export default mixins(ballotMixins).extend({
+  validate({ $accessor, route, redirect }) {
+    if (!$accessor.ballot.votes.length) {
+      redirect(`/election/${route.params.slug}/ballot`);
+    } else if (!$accessor.ballot.ballotReceipt) {
+      redirect(`/election/${route.params.slug}/review`);
+    }
+    return true;
+  },
+
   components: { AppImage, PageCenter, BallotReceiptDialog },
   data() {
     return {

@@ -1,4 +1,5 @@
 import shortid from "shortid";
+import configs from "../../configs";
 import { Election } from "../election/entity/election.entity";
 
 type ElectionErrorMessage = {
@@ -24,8 +25,10 @@ export const VOTING_MESSAGES = {
   voterIdRequired: { title: "Voter ID is required", body: "" },
 };
 
-export const generateReceipt = (election_id: number) => {
-  return `${election_id}-${shortid.generate()}`.toUpperCase();
+export const generateReceipt = (election: Election) => {
+  return `${configs.ballotReceiptPreWord}-${
+    election.id
+  }-${shortid.generate()}`.toUpperCase();
 };
 
 export const generateBallotError = (election: Election) => {

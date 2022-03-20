@@ -1,18 +1,20 @@
 import apiClient from ".";
 import {
-  Ballot,
   BallotItem,
   BallotOtherInfo,
+  BallotVotes,
   Candidate,
   Election,
   ElectionBallot,
   Position,
 } from "@/types/app";
 
-export type ElectionErrorMessage = {
-  title: string;
-  body: string;
-};
+export type ElectionErrorMessage =
+  | string
+  | {
+      title: string;
+      body: string;
+    };
 
 type GetElectionBySlugReturn = {
   election: Election;
@@ -49,7 +51,7 @@ const votingServices = {
     return (await apiClient.get(`${url}/candidate/${candidate_id}`)).data;
   },
 
-  async submitBallot(_ballot: Ballot): Promise<GetSubmitBallotReturn> {
+  async submitBallot(_ballot: BallotVotes): Promise<GetSubmitBallotReturn> {
     return (await apiClient.post(`${url}/ballot`, _ballot)).data;
   },
 };

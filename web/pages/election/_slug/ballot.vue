@@ -1,8 +1,27 @@
 <template>
-  <span>
-    <election-header :election="election" />
-    <nuxt-child />
-  </span>
+  <v-row>
+    <v-col v-if="election" cols="12">
+      <election-header :election="election" />
+    </v-col>
+
+    <v-col v-if="$fetchState.pending">
+      <page-center style="min-height: 70vh">
+        <app-loading />
+      </page-center>
+    </v-col>
+
+    <template v-else>
+      <v-col v-if="electionError" cols="12">
+        <page-center style="min-height: 70vh">
+          <election-error :electionError="electionError"></election-error>
+        </page-center>
+      </v-col>
+
+      <v-col v-if="!electionError && election" cols="12">
+        <nuxt-child />
+      </v-col>
+    </template>
+  </v-row>
 </template>
 
 <script lang="ts">
@@ -12,6 +31,9 @@ import ballotMixins from "@/mixins/ballot.mixins";
 import ElectionHeader from "@/components/pages/election/ElectionHeader.vue";
 import BallotCard from "@/components/pages/ballot/cards/BallotCard.vue";
 import CandidateDialog from "@/components/pages/ballot/dialogs/CandidateDialog.vue";
+import ElectionError from "@/components/pages/election/ElectionError.vue";
+import PageCenter from "@/components/utils/PageCenter.vue";
+import AppLoading from "@/components/app/AppLoading.vue";
 
 export default mixins(ballotMixins).extend({
   auth: true,
@@ -19,6 +41,13 @@ export default mixins(ballotMixins).extend({
     ElectionHeader,
     BallotCard,
     CandidateDialog,
+    ElectionError,
+    PageCenter,
+    AppLoading,
+  },
+
+  async fetch() {
+    await this.$accessor.ballot.fetchBallot();
   },
 
   data() {
@@ -38,6 +67,10 @@ export default mixins(ballotMixins).extend({
         this.$router.push(`${this.pagePath}ballot/submit`);
       }
     },
+  },
+
+  destroyed() {
+    this.$accessor.ballot.resetBallot();
   },
 });
 </script>

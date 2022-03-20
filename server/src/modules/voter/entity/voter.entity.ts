@@ -1,14 +1,17 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   Unique,
 } from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
 import { Election } from "../../election/entity/election.entity";
-import { ElectionBallot } from "../../voting/entity/ballot.entity";
+import { ElectionVoted } from "../../voting/entity/voted.entity";
+import voterValidator from "../voter.validator";
 
 @Entity("voter")
 @Unique(["username", "email_address", "election_id"])
@@ -42,8 +45,8 @@ export class Voter extends Timestamp {
   @ManyToOne(() => Election, (election) => election.voters)
   election: Election;
 
-  @OneToMany(() => ElectionBallot, (ballot) => ballot.voter)
-  ballot: ElectionBallot;
+  @OneToOne(() => ElectionVoted, (voted) => voted.voter)
+  voted: ElectionVoted;
 
   @Column({
     default: false,

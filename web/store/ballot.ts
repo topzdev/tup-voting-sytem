@@ -5,6 +5,8 @@ import votingServices, {
 import {
   BallotError,
   BallotItem,
+  BallotReceipt,
+  BallotVote,
   Candidate,
   Election,
   Organization,
@@ -15,7 +17,15 @@ export const state = () => ({
   error: {
     election: null as ElectionErrorMessage | null,
   },
-  ballotErrors: [],
+  ballotReceipt: {
+    ip: "::1",
+    ua: "PostmanRuntime/7.29.0",
+    receipt_id: "TUPELECT-3-WDAVEMJRJ",
+    created_at: "2022-03-20T11:01:35.836Z",
+    election_title: "TUP Tite Annual Election",
+    id: 3,
+  } as BallotReceipt | null,
+  ballotErrors: [] as BallotError[],
   election: null as Election | null,
   organization: null as Organization | null,
   items: [] as BallotItem[],
@@ -67,6 +77,10 @@ export const mutations = mutationTree(state, {
   setBallotErrors(state, _payload) {
     state.ballotErrors = _payload;
   },
+
+  setBallotReceipt(state, _payload) {
+    state.ballotReceipt = _payload;
+  },
 });
 
 export const actions = actionTree(
@@ -87,9 +101,39 @@ export const actions = actionTree(
     async fetchBallot({ commit, state }) {
       if (!state.election) return;
 
-      const result = await votingServices.getBallot(state.election.id);
+      try {
+        const result = await votingServices.getBallot(state.election.id);
+        commit("setBallotItems", result);
+      } catch (err: any) {
+        const error = err.response.data.error.message;
+        console.error(error);
+        commit("setElectionError", error);
+      }
+    },
 
-      commit("setBallotItems", result);
+    async submitBallot({ commit, state }) {
+      try {
+        if (!state.election || !state?.election.id || state.ballotErrors.length)
+          return;
+
+        const ballotVote: BallotVote[] = state.votes.map((item) => ({
+          position_id: item.position_id,
+          candidate_id: item.id,
+        }));
+
+        const result = await votingServices.submitBallot({
+          election_id: state.election.id,
+          votes: ballotVote,
+        });
+
+        console.log("Result", result);
+
+        commit("setBallotReceipt", result);
+      } catch (err: any) {
+        const error = err.response.data.error.message;
+        console.error(error);
+        commit("setElectionError", error);
+      }
     },
 
     async toggleCandidateDialog({ commit }, show: boolean) {
@@ -166,6 +210,7 @@ export const actions = actionTree(
 
         if (errors.length) {
           ballotErrors.push({
+            title: _position.title,
             position_id: _position.id,
             messages: errors,
             totalVotes: totalVotesOfPosition,
@@ -176,6 +221,12 @@ export const actions = actionTree(
       });
 
       commit("setBallotErrors", ballotErrors);
+    },
+
+    resetBallot({ commit }) {
+      commit("setBallotReceipt", null);
+      commit("setElectionError", null);
+      commit("setVote", []);
     },
   }
 );

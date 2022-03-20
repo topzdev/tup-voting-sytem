@@ -1,35 +1,59 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="8">
-        <pre
-          style="
-            position: fixed;
-            left: 0;
-            top: 10%;
-            background: white;
-            padding: 20px;
-            font-size: 14px;
-          "
-        >
+      <v-col cols="8" class="mx-auto">
+        <v-row>
+          <v-col cols="12">
+            <pre
+              style="
+                position: fixed;
+                left: 0;
+                top: 10%;
+                background: white;
+                padding: 20px;
+                font-size: 14px;
+              "
+            >
           <h1>Errors</h1>
 
           {{ ballotErrors }}
           ------
           <h1>Votes</h1>
-          <!-- {{ ballotVotes }} -->
-        </pre>
-      </v-col>
-      <v-col
-        v-for="(item, idx) in ballotItems"
-        :key="idx"
-        cols="8"
-        class="mx-auto"
-      >
-        <ballot-card
-          :data="item"
-          :error="showError ? hasError(item.id) : null"
-        />
+        </pre
+            >
+          </v-col>
+
+          <v-col v-if="summaryError.length" cols="12" class="mx-auto">
+            <v-alert type="error" outlined>
+              <ul>
+                <li v-for="item in summaryError" :key="item.id">
+                  <span v-html="item.title"></span>
+
+                  <v-btn
+                    text
+                    small
+                    color="error"
+                    @click="scrollToElement(item.id)"
+                    >Fix me!</v-btn
+                  >
+                </li>
+              </ul>
+            </v-alert>
+          </v-col>
+
+          <v-col
+            v-for="(item, idx) in ballotItems"
+            :key="idx"
+            cols="12"
+            class="mx-auto"
+          >
+            <ballot-card
+              :id="postionIdGenerator(item.id)"
+              :data="item"
+              :error="showError ? hasError(item.id) : null"
+            />
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
     <ballot-stepper>
@@ -51,6 +75,12 @@ import ElectionHeader from "@/components/pages/election/ElectionHeader.vue";
 import BallotCard from "@/components/pages/ballot/cards/BallotCard.vue";
 import CandidateDialog from "@/components/pages/ballot/dialogs/CandidateDialog.vue";
 import BallotStepper from "@/components/pages/ballot/BallotStepper.vue";
+import { scrollToTop, scrollToElement } from "@/utils/scrolls";
+type SummaryErrors = {
+  title: string;
+  id: string;
+}[];
+
 export default mixins(ballotMixins).extend({
   components: {
     ElectionHeader,
@@ -59,18 +89,16 @@ export default mixins(ballotMixins).extend({
     BallotStepper,
   },
 
-  async fetch() {
-    await this.$accessor.ballot.fetchBallot();
-  },
-
   data() {
     return {
-      error: [],
+      summaryError: [] as SummaryErrors,
       showError: false,
     };
   },
 
   methods: {
+    scrollToElement,
+
     hasError(position_id: number) {
       return this.ballotErrors.length
         ? this.ballotErrors.filter(
@@ -79,18 +107,49 @@ export default mixins(ballotMixins).extend({
         : null;
     },
 
+    generateErrorSummary() {
+      this.summaryError = [];
+
+      if (this.ballotErrors.length) {
+        this.ballotErrors.forEach((item) => {
+          const errorLength = item.messages.length;
+          this.summaryError.push({
+            title: `<b>${item.title}</b> field ${
+              errorLength > 1 ? "have" : "has"
+            } ${errorLength} error(s)`,
+            id: this.postionIdGenerator(item.position_id),
+          });
+        });
+
+        if (this.ballotErrors.length > 1) {
+          scrollToTop();
+        } else {
+          scrollToElement(this.summaryError[0].id);
+        }
+      }
+    },
+
     submit() {
       this.$accessor.ballot.ballotErrorChecker();
 
       if (this.ballotErrors.length) {
         this.showError = true;
+        this.generateErrorSummary();
       } else {
         this.$router.push(`${this.pagePath}ballot/review`);
       }
+    },
+
+    postionIdGenerator(position_id: number) {
+      return `pos-${position_id}`;
     },
   },
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+body,
+html {
+  scroll-behavior: smooth;
+}
 </style>

@@ -161,10 +161,10 @@ export type ElectionBallot = {
 
 export type BallotVote = {
   position_id: Position["id"];
-  candidates_id: Candidate["id"];
+  candidate_id: Candidate["id"];
 };
 
-export type Ballot = {
+export type BallotVotes = {
   election_id: Election["id"];
   votes: BallotVote[];
 };
@@ -179,9 +179,42 @@ export type BallotItem = Position & {
 };
 
 export type BallotError = {
+  title: Position["title"];
   position_id: Position["id"];
   messages: string[];
   totalVotes?: number;
   min_selected?: number;
   max_selected?: number;
+};
+
+export type Voter = {
+  id: number;
+  firstname: string;
+  lastname: string;
+  usernamne: string;
+  email_address: string;
+  pin: string;
+  is_allowed: boolean;
+  election_id: number;
+  election: Election;
+  voted: ElectionVoted;
+  archive: boolean;
+} & DataTimestamp;
+
+export type ElectionVoted = {
+  id: number;
+  ip: string;
+  ua: string;
+  receipt_id: string;
+  voted_id: number;
+  voter: Voter;
+  election_id: number;
+  election: Election;
+} & DataTimestamp;
+
+export type BallotReceipt = Pick<
+  ElectionVoted,
+  "created_at" | "id" | "receipt_id" | "ip" | "ua"
+> & {
+  election_title: Election["title"];
 };

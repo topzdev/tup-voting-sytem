@@ -9,18 +9,13 @@ Middleware.auth = authMiddleware
 export default function (ctx, inject) {
   // Options
   const options = {
-  "resetOnError": false,
+  "resetOnError": true,
   "ignoreExceptions": false,
   "scopeKey": "scope",
-  "rewriteRedirects": false,
+  "rewriteRedirects": true,
   "fullPathRedirect": false,
   "watchLoggedIn": true,
-  "redirect": {
-    "login": "/login",
-    "logout": "/",
-    "home": "/",
-    "callback": "/login"
-  },
+  "redirect": false,
   "vuex": {
     "namespace": "auth"
   },

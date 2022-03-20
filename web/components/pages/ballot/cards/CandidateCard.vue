@@ -1,5 +1,9 @@
 <template>
-  <v-card :class="activeClass" outlined @[!readonly&&`click`]="toggle(data)">
+  <v-card
+    :class="activeClass"
+    v-on="!readonly ? { click: () => toggle(data) } : {}"
+    outlined
+  >
     <v-icon class="selected__checkmark" color="success" size="30" v-if="active"
       >mdi-check-decagram</v-icon
     >
@@ -55,6 +59,7 @@ export default Vue.extend({
 
     readonly: {
       type: Boolean,
+      default: false,
     },
   },
 

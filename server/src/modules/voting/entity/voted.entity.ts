@@ -10,8 +10,8 @@ import { Timestamp } from "../../../entity/timestamp.inherit";
 import { Election } from "../../election/entity/election.entity";
 import { Voter } from "../../voter/entity/voter.entity";
 
-@Entity("election_ballot")
-export class ElectionBallot extends Timestamp {
+@Entity("election_voted")
+export class ElectionVoted extends Timestamp {
   @PrimaryGeneratedColumn("identity")
   id: number;
 
@@ -27,12 +27,13 @@ export class ElectionBallot extends Timestamp {
   @Column()
   voter_id: number;
 
-  @ManyToOne(() => Voter, (voter) => voter.ballot)
+  @OneToOne(() => Voter, (voter) => voter.voted)
+  @JoinColumn()
   voter: Voter;
 
   @Column()
   election_id: number;
 
-  @ManyToOne(() => Election, (election) => election.votes)
+  @ManyToOne(() => Election, (election) => election.voted)
   election: Election;
 }

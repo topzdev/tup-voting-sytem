@@ -1,6 +1,11 @@
 <template>
   <v-container>
-    <h2 class="text-center my-5">Review your ballot</h2>
+    <div class="text-center my-5">
+      <h2>Review your ballot</h2>
+      <p class="text--secondary">
+        We recommend to review your ballot before submitting it
+      </p>
+    </div>
 
     <v-row class="mt-5" no-gutters v-for="item in reviewItems" :key="item.id">
       <v-col cols="12" class="mb-3">
@@ -20,11 +25,20 @@
     </v-row>
 
     <ballot-stepper>
-      <v-btn color="primary" large text @click="back"> Back </v-btn>
+      <v-btn color="primary" large text @click="back" :disabled="loading">
+        Back
+      </v-btn>
 
       <v-app-bar-title class="ml-3">Review Your Ballot</v-app-bar-title>
 
-      <v-btn class="ml-auto" color="primary" large @click="submit">
+      <v-btn
+        class="ml-auto"
+        color="primary"
+        large
+        @click="submit"
+        :loading="loading"
+        :disabled="loading"
+      >
         Submit Ballot
       </v-btn>
     </ballot-stepper>
@@ -43,15 +57,32 @@ export default mixins(ballotMixins).extend({
     BallotStepper,
   },
 
+  validate({ $accessor, route, redirect }) {
+    if (!$accessor.ballot.votes.length) {
+      redirect(`/election/${route.params.slug}/ballot`);
+    }
+    return true;
+  },
+
+  data() {
+    return {
+      loading: false,
+    };
+  },
   methods: {
     back() {
-      this.$router.push(`${this.pagePath}ballot`);
+      this.gotoBallot();
     },
 
-    submit() {
-      alert("Submitting...");
-
-      this.$router.push(`${this.pagePath}ballot/final`);
+    async submit() {
+      try {
+        this.loading = true;
+        await this.$accessor.ballot.submitBallot();
+        this.gotoFinal();
+      } catch (error) {
+      } finally {
+        this.loading = false;
+      }
     },
   },
 });

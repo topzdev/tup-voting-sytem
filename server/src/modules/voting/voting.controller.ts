@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { unflatten } from "flat";
-import { Ballot } from "./voting.interface";
+import { BallotVotes } from "./voting.interface";
 import votingServices from "./voting.service";
 
 const getElectionBySlug = async (
@@ -75,7 +75,7 @@ const submitBallot = async (
     const ua = req.ua;
     const ip = req.client_ip;
     const voter_id = req.voter.id;
-    const ballot = req.body as Ballot;
+    const ballot = req.body as BallotVotes;
 
     res
       .status(200)

@@ -100,16 +100,18 @@ type StatusCodeNumber =
   | 505;
 type StatusCodeString = keyof typeof httpStatus;
 
-export class HttpException extends Error {
+export class HttpException {
+  name: string;
   statusCode: number;
   error: string;
+  message: string | object;
+  stack?: string;
   fields?: { [key: string]: string | [] };
   constructor(
     statusCode: StatusCodeString | StatusCodeNumber,
-    message: string,
+    message: string | object,
     fields?: { [key: string]: string | [] }
   ) {
-    super();
     this.fields = fields;
     this.statusCode =
       typeof statusCode === "number"

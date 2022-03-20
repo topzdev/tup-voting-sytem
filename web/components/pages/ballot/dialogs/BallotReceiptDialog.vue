@@ -18,22 +18,23 @@
               <tr>
                 <td class="text-center pt-2">
                   <v-chip> Election </v-chip>
-                  <p>Test Election</p>
+                  <p>
+                    {{ receipt.election_title }}
+                  </p>
                 </td>
               </tr>
               <tr>
                 <td class="text-center pt-2">
                   <v-chip> Voted On </v-chip>
                   <p>
-                    Sat Mar 19 2022 13:38:44 GMT+0800 (Philippines Standard
-                    Time)
+                    {{ votedOn }}
                   </p>
                 </td>
               </tr>
               <tr>
                 <td class="text-center pt-2">
                   <v-chip> Receipt ID </v-chip>
-                  <p>ABC123X-YZ-N</p>
+                  <p>{{ receipt.receipt_id }}</p>
                 </td>
               </tr>
             </tbody>
@@ -54,11 +55,13 @@
   </v-dialog>
 </template>
 <script lang="ts">
+import { BallotReceipt } from "@/types/app";
 import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
   props: {
     show: Boolean,
+    receipt: {} as PropOptions<BallotReceipt>,
   },
 
   data() {
@@ -68,11 +71,17 @@ export default Vue.extend({
   },
 
   watch: {
-    show(value) {
+    show(value): any {
       this.showLocal = value;
     },
-    showLocal(value) {
+    showLocal(value): any {
       this.$emit("update:show", value);
+    },
+  },
+
+  computed: {
+    votedOn(): string {
+      return new Date(this.receipt.created_at).toString();
     },
   },
 });

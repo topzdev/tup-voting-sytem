@@ -22,8 +22,10 @@
       "@nuxt/types",
       "@nuxtjs/axios",
       "@types/node",
-      "@nuxtjs/auth-next"
+      "@nuxtjs/auth-next",
+      "~/types/typed-vuex"
     ]
   },
+  "include": ["./**/*"],
   "exclude": ["node_modules", ".nuxt", "dist"]
 }

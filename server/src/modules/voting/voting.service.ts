@@ -8,14 +8,19 @@ import {
 import { finalStatusSubquery } from "../launchpad/launchpad.helper";
 import { Position } from "../position/entity/position.entity";
 import { Voter } from "../voter/entity/voter.entity";
-import { ElectionBallot } from "./entity/ballot.entity";
+import { ElectionVoted } from "./entity/voted.entity";
 import { ElectionVotes } from "./entity/votes.entity";
 import {
   generateBallotError,
   generateReceipt,
   VOTING_MESSAGES,
 } from "./voting.helper";
-import { Ballot, BallotOtherInfo, BallotVote } from "./voting.interface";
+import {
+  BallotOtherInfo,
+  BallotReceipt,
+  BallotVote,
+  BallotVotes,
+} from "./voting.interface";
 
 const getElectionBySlug = async (_slug: string) => {
   const electionRepository = getRepository(Election);
@@ -64,13 +69,26 @@ const getElectionById = async (_election_id: number) => {
   };
 };
 
-const getElectionBallot = async (_election_id: number, voter_id: number) => {
+const getElectionBallot = async (_election_id: number, _voter_id: number) => {
   const positionRepository = getRepository(Position);
   const electionRepository = getRepository(Election);
   const voterRepository = getRepository(Voter);
   const election = await electionRepository.findOne(_election_id);
 
-  if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
+  let voterBuilder = await voterRepository
+    .createQueryBuilder("voter")
+    .leftJoinAndSelect("voter.voted", "voted")
+    .where("voter.id = :_voter_id", { _voter_id })
+    .getOne();
+
+  console.log("Voter Builder", voterBuilder);
+
+  if (voterBuilder.voted) {
+    throw new HttpException("BAD_REQUEST", VOTING_MESSAGES.alreadyVoted);
+  }
+
+  if (!election)
+    throw new HttpException("BAD_REQUEST", VOTING_MESSAGES.electioNotExist);
 
   let builder = await positionRepository.createQueryBuilder("position");
 
@@ -111,9 +129,9 @@ const getCandidateInfo = async (candidate_id: number) => {
 
 const submitBallot = async (
   _voter_id: number,
-  _ballot: Ballot,
+  _ballot: BallotVotes,
   _other_info: BallotOtherInfo
-) => {
+): Promise<BallotReceipt> => {
   const connection = getConnection();
   const queryRunner = connection.createQueryRunner();
 
@@ -126,7 +144,7 @@ const submitBallot = async (
     );
 
   if (!_ballot)
-    throw new HttpException("BAD_REQUEST", VOTING_MESSAGES.ballotEmpty.title);
+    throw new HttpException("BAD_REQUEST", VOTING_MESSAGES.ballotEmpty);
 
   const election_id = _ballot.election_id;
   const votes = _ballot.votes;
@@ -145,7 +163,7 @@ const submitBallot = async (
   );
 
   let votedBuilder = queryRunner.manager.createQueryBuilder(
-    ElectionBallot,
+    ElectionVoted,
     "voted"
   );
 
@@ -161,7 +179,7 @@ const submitBallot = async (
   console.log("Voter Information: ", voter);
 
   if (!voter) {
-    throw new HttpException("NOT_FOUND", VOTING_MESSAGES.voterNotFound.title);
+    throw new HttpException("NOT_FOUND", VOTING_MESSAGES.voterNotFound);
   }
 
   /* check if election is avaialble */
@@ -173,7 +191,7 @@ const submitBallot = async (
   console.log("Election Information:", election);
 
   if (!election) {
-    throw new HttpException("NOT_FOUND", VOTING_MESSAGES.electioNotExist.title);
+    throw new HttpException("NOT_FOUND", VOTING_MESSAGES.electioNotExist);
   }
 
   if (election.final_status === "completed") {
@@ -193,7 +211,7 @@ const submitBallot = async (
   console.log("Voterd Information", voted);
 
   if (voted) {
-    throw new HttpException("NOT_FOUND", VOTING_MESSAGES.alreadyVoted.title);
+    throw new HttpException("NOT_FOUND", VOTING_MESSAGES.alreadyVoted);
   }
 
   /*  -----------------TRANSACTION START HERE------------------- */
@@ -216,10 +234,10 @@ const submitBallot = async (
     await queryRunner.manager.save(createBallot);
     /* End -  Save the vote */
 
-    let receipt_id = generateReceipt(election.id);
+    let receipt_id = generateReceipt(election);
 
     /* Start -  save the voter as voted  */
-    const voterReceipt = queryRunner.manager.create(ElectionBallot, {
+    const voterReceipt = queryRunner.manager.create(ElectionVoted, {
       ip: _other_info.ip,
       ua: _other_info.ua,
       receipt_id: receipt_id,
@@ -234,7 +252,7 @@ const submitBallot = async (
 
     console.log("Transaction Ended");
     console.log("Voter Receipt", voterReceipt);
-    return voterReceipt;
+    return { ...voterReceipt, election_title: election.title };
   } catch (error) {
     await queryRunner.rollbackTransaction();
     throw error;

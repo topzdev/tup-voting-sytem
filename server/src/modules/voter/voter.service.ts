@@ -6,7 +6,7 @@ import {
   parseJsontoCsv,
 } from "../../helpers/csv-parser.helper";
 import { HttpException } from "../../helpers/errors/http.exception";
-import { ElectionBallot } from "../voting/entity/ballot.entity";
+import { ElectionVoted } from "../voting/entity/voted.entity";
 import { Election } from "../election/entity/election.entity";
 import { Organization } from "../organization/entity/organization.entity";
 import { Photo } from "../photo/photo.service";
@@ -291,7 +291,7 @@ const checkVotedOnElectionById = async (
     throw new HttpException("BAD_REQUEST", "Election ID is required");
   if (!_voterId) throw new HttpException("BAD_REQUEST", "Voter ID is required");
 
-  const data = await ElectionBallot.findOne({
+  const data = await ElectionVoted.findOne({
     where: {
       election_id: _electionId,
       username: _voterId,

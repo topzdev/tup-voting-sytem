@@ -72,6 +72,8 @@ const configs = {
       expiresIn: !__prod__ ? "30d" : "1d",
     },
   },
+
+  ballotReceiptPreWord: "TUPELECT",
 };
 
 export default configs;

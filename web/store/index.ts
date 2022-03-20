@@ -1,5 +1,6 @@
 import { getAccessorType, mutationTree, actionTree } from "typed-vuex";
 import { Context } from "@nuxt/types";
+import VuexPersistence from "vuex-persist";
 
 import * as ballot from "./ballot";
 

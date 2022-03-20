@@ -38,9 +38,31 @@ const ballotMixins = Vue.extend({
     ballotErrors() {
       return this.$accessor.ballot.ballotErrors;
     },
+
+    ballotReceipt() {
+      return this.$accessor.ballot.ballotReceipt;
+    },
   },
 
   methods: {
+    gotoBallot() {
+      this.$router.push(`${this.pagePath}ballot`);
+    },
+
+    gotoReview() {
+      this.$router.push(`${this.pagePath}ballot/review`);
+    },
+
+    gotoFinal() {
+      this.$router.push(`${this.pagePath}ballot/final`);
+    },
+
+    ballotLogout() {
+      this.$auth.logout();
+      this.$router.push(this.pagePath);
+      this.$accessor.ballot.resetBallot();
+      return;
+    },
     ballotRules(min_selected: number, max_selected: number) {
       let rules: string[] = [];
 
