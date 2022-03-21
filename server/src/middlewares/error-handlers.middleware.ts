@@ -19,7 +19,7 @@ const errorHandler = (
         fields: err.fields,
       },
     });
-    // return;
+    return;
   }
 
   next();

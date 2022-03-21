@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="8" class="mx-auto">
         <v-row>
-          <v-col cols="12">
+          <!-- <v-col cols="12">
             <pre
               style="
                 position: fixed;
@@ -16,12 +16,9 @@
             >
           <h1>Errors</h1>
 
-          {{ ballotErrors }}
-          ------
-          <h1>Votes</h1>
         </pre
             >
-          </v-col>
+          </v-col> -->
 
           <v-col v-if="summaryError.length" cols="12" class="mx-auto">
             <v-alert type="error" outlined>

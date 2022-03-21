@@ -128,8 +128,9 @@ export default Vue.extend({
           this.$accessor.ballot.vote(candidate);
         } else {
           // remove the current vote t
-          this.$accessor.ballot.vote(this.selected[0]);
-
+          if (this.selected.length) {
+            this.$accessor.ballot.vote(this.selected[0]);
+          }
           // replace the old vote new vote
           this.$accessor.ballot.vote(candidate);
         }

@@ -5,7 +5,7 @@
         <!-- <app-image src=""></app-image> -->
         <app-image
           :src="require('~/assets/images/vote-submitted.png')"
-          alt=""
+          alt="Vote Submitted"
         />
 
         <p class="my-3">Vote Submitted</p>
@@ -13,7 +13,6 @@
         <h1 class="display-2 font-weight-bold text--primary mx-auto mb-4">
           Thank you for voting!
         </h1>
-
         <v-btn color="primary" large class="mt-2 mb-2" @click="show = true">
           View Ballot Receipt
         </v-btn>
@@ -22,11 +21,13 @@
         </v-btn>
       </v-col>
     </v-row>
+    <!-- <client-only> -->
     <ballot-receipt-dialog
       v-if="ballotReceipt"
       :receipt="ballotReceipt"
       :show.sync="show"
     />
+    <!-- </client-only> -->
   </page-center>
 </template>
 

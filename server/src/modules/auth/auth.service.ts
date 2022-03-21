@@ -58,12 +58,14 @@ const voterLogin = async (_credentials: VoterLoginCredentials) => {
     })
     .getOne();
 
+  console.log(voter);
+
   if (!voter) {
-    return new HttpException("NOT_FOUND", "Voter is not exist");
+    throw new HttpException("NOT_FOUND", "Voter is not exist");
   }
 
   if (voter.pin !== _credentials.pin) {
-    return new HttpException("NOT_FOUND", "Incorrect Pin");
+    throw new HttpException("NOT_FOUND", "Incorrect Pin");
   }
 
   delete voter.pin;

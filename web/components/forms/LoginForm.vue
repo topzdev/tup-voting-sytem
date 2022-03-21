@@ -54,8 +54,8 @@ import PasswordField from "@/components/inputs/PasswordField.vue";
 import AppImage from "@/components/app/AppImage.vue";
 
 const defaultForm = {
-  voter_id: "GK55SJXEG9",
-  pin: "0D3-HIJ4XM",
+  voter_id: "",
+  pin: "",
 };
 
 const defaultAlert = {

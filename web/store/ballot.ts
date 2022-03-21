@@ -185,6 +185,9 @@ export const actions = actionTree(
         let errors: string[] = [];
 
         // get the count of current votes casted on specific position
+
+        console.log("Current Vote:", state.votes);
+
         let totalVotesOfPosition = state.votes.filter(
           (_vote) => _vote.position_id === _position.id
         ).length;
