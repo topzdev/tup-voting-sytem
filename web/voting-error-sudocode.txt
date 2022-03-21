@@ -1,0 +1,18 @@
+- While adding candidate on ballot we check the error
+- the error will only show when they click next - review ballot
+  - when clicking submit button the error will only show
+- error will immideatly remove when resolve 
+  - when submitting ballot individidual check it
+
+
+
+
+	[
+		{
+			position_id: 1,
+			errors: [
+				'',
+			]
+		}
+
+	]

@@ -14,11 +14,18 @@ export default {
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
   },
 
+  router: {
+    middleware: ["auth"],
+  },
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    { src: "~/plugins/axios-port.plugins" },
+    // { src: "~/plugins/vuex-persist", mode: "client" },
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -57,12 +64,9 @@ export default {
   },
 
   auth: {
-    redirect: {
-      login: "/login",
-      logout: "/",
-      callback: "/login",
-      home: "/",
-    },
+    redirect: false,
+    rewriteRedirects: true,
+    resetOnError: true,
     strategies: {
       local: {
         token: {
@@ -76,9 +80,9 @@ export default {
           // autoFetch: true
         },
         endpoints: {
-          login: { url: "/api/v1/auth/local/login", method: "post" },
-          logout: { url: "/api/v1/auth/local/logout", method: "post" },
-          user: { url: "/api/v1/auth/local/me", method: "get" },
+          login: { url: "/api/v1/auth/voter/login", method: "post" },
+          logout: { url: "/api/v1/auth/voter/logout", method: "post" },
+          user: { url: "/api/v1/auth/voter/me", method: "get" },
         },
       },
     },
@@ -88,7 +92,7 @@ export default {
   vuetify: {
     customVariables: ["~/assets/variables.scss"],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,

@@ -42,6 +42,7 @@ export default mixins(restrictionsMixin).extend({
         | "candidatesCount"
         | "positionsCount"
         | "votesCount"
+        | "votedCount"
       >
     >,
   },
@@ -57,18 +58,19 @@ export default mixins(restrictionsMixin).extend({
         partiesCount: this.counts?.partiesCount || 0,
         candidatesCount: this.counts?.candidatesCount || 0,
         votesCount: this.counts?.votesCount || 0,
+        votedCount: this.counts?.votedCount || 0,
         positionsCount: this.counts?.positionsCount || 0,
       };
 
       let items: CountItem[] = [];
 
       items.push({
-        title: `Participated (${localCounts.votesCount}/${localCounts.votersCount} Voters)`,
+        title: `Participated (${localCounts.votedCount}/${localCounts.votersCount} Voters)`,
         color: "green lighten-1",
         icon: icons.voteParticipation,
-        count: localCounts.votesCount,
+        count: localCounts.votedCount,
         progress:
-          (localCounts.votesCount / localCounts.votersCount) * 100 + "%",
+          (localCounts.votedCount / localCounts.votersCount) * 100 + "%",
         show: this.hideByStatus(this.pageStatus.overview.counts.participation),
       });
 

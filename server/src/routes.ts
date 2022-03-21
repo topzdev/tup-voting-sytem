@@ -11,7 +11,7 @@ import partyRoute from "./modules/party/party.route";
 import launchpadRoute from "./modules/launchpad/launchpad.route";
 import settingsRoute from "./modules/settings/settings.route";
 import overviewRoute from "./modules/overview/overview.route";
-
+import votingRoute from "./modules/voting/voting.route";
 const router = express.Router();
 
 router.use("/user", userRoute);
@@ -26,6 +26,6 @@ router.use("/party", partyRoute);
 router.use("/launchpad", launchpadRoute);
 router.use("/settings", settingsRoute);
 router.use("/overview", overviewRoute);
-
+router.use("/voting", votingRoute);
 
 export default router;

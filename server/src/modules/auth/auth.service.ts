@@ -1,9 +1,13 @@
-import { AdminLoginCredentials } from "./auth.inteface";
+import { AdminLoginCredentials, VoterLoginCredentials } from "./auth.inteface";
 import { getRepository } from "typeorm";
 import { User } from "../user/entity/user.entity";
 import { validatePassword } from "../../helpers/password.helper";
 import { HttpException } from "../../helpers/errors/http.exception";
-import { signJwtAdminPayload } from "../../helpers/jwt.helper";
+import {
+  signJwtAdminPayload,
+  signJwtVoterPayload,
+} from "../../helpers/jwt.helper";
+import { Voter } from "../voter/entity/voter.entity";
 
 const adminLogin = async (_credentials: AdminLoginCredentials) => {
   const user = await getRepository(User)
@@ -36,8 +40,48 @@ const adminLogin = async (_credentials: AdminLoginCredentials) => {
   };
 };
 
+const voterLogin = async (_credentials: VoterLoginCredentials) => {
+  const voter = await getRepository(Voter)
+    .createQueryBuilder("voter")
+    .select([
+      "voter.id",
+      "voter.firstname",
+      "voter.lastname",
+      "voter.username",
+      "voter.pin",
+      "voter.is_allowed",
+      "voter.election_id",
+    ])
+    .where("voter.username = :voter_id AND voter.election_id = :election_id", {
+      voter_id: _credentials.voter_id,
+      election_id: _credentials.election_id,
+    })
+    .getOne();
+
+  console.log(voter);
+
+  if (!voter) {
+    throw new HttpException("NOT_FOUND", "Voter is not exist");
+  }
+
+  if (voter.pin !== _credentials.pin) {
+    throw new HttpException("NOT_FOUND", "Incorrect Pin");
+  }
+
+  delete voter.pin;
+
+  const { token, expiresIn } = signJwtVoterPayload(voter);
+
+  return {
+    token,
+    expiresIn,
+    voter,
+  };
+};
+
 const authServices = {
   adminLogin,
+  voterLogin,
 };
 
 export default authServices;

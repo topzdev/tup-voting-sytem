@@ -6,7 +6,7 @@ import {
   parseJsontoCsv,
 } from "../../helpers/csv-parser.helper";
 import { HttpException } from "../../helpers/errors/http.exception";
-import { ElectionVoted } from "../election/entity/election-voted.entity";
+import { ElectionVoted } from "../voting/entity/voted.entity";
 import { Election } from "../election/entity/election.entity";
 import { Organization } from "../organization/entity/organization.entity";
 import { Photo } from "../photo/photo.service";

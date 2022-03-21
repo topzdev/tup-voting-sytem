@@ -11,7 +11,7 @@ import {
 } from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
 import { isEmptyStringReturnNull } from "../../election/election.helper";
-import { ElectionVote } from "../../election/entity/election-vote.entity";
+import { ElectionVotes } from "../../voting/entity/votes.entity";
 import { Election } from "../../election/entity/election.entity";
 import { Party } from "../../party/entity/party.entity";
 import { Position } from "../../position/entity/position.entity";
@@ -80,8 +80,8 @@ export class Candidate extends Timestamp {
   @JoinColumn()
   cover_photo: CandidateCoverPhoto;
 
-  @OneToMany(() => ElectionVote, (electionVote) => electionVote.candidate)
-  votes: ElectionVote[];
+  @OneToMany(() => ElectionVotes, (electionVote) => electionVote.candidate)
+  votes: ElectionVotes[];
 
   @Column({
     default: false,

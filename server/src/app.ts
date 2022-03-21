@@ -6,6 +6,7 @@ import configs from "./configs";
 import fileUploadConfig from "./configs/file-upload.config";
 import morganConfig from "./configs/morgan.config";
 import errorHandler from "./middlewares/error-handlers.middleware";
+import { getClientInfo } from "./middlewares/get-client-info.middleware";
 import router from "./routes";
 
 const port = configs.port || 5000;
@@ -18,6 +19,7 @@ const bootsrap = async () => {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
   app.use(flash());
+  app.use(getClientInfo);
 
   fileUploadConfig(app);
   // sessionConfig(app);

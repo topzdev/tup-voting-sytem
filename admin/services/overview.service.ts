@@ -10,6 +10,7 @@ export type OverviewDetails = Pick<
   final_status: ElectionStatus;
   votersCount: number;
   votesCount: number;
+  votedCount: number;
   partiesCount: number;
   candidatesCount: number;
   positionsCount: number;

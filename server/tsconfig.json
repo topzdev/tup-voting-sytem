@@ -14,7 +14,8 @@
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "*": ["node_modules/*"]
-    }
+    },
+    "typeRoots": ["src/type"]
   },
   "include": ["src/**/*", "ormconfig.ts"]
 }

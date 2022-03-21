@@ -71,6 +71,8 @@ export default {
   },
 
   auth: {
+    // rewriteRedirects: true,
+    // resetOnError: true,
     redirect: {
       login: "/login",
       logout: "/",
