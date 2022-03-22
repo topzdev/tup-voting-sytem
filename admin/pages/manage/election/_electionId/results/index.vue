@@ -1,8 +1,13 @@
 <template>
   <span>
-    <page-bars title="Election Results"> </page-bars>
+    <page-bars title="Election Results">
+      <v-btn class="ml-auto" large outlined color="primary">Reload</v-btn>
+      <v-btn class="ml-2" color="primary" large>Download Results</v-btn>
+    </page-bars>
 
-    <v-container> </v-container>
+    <v-container>
+      <winner-section />
+    </v-container>
   </span>
 </template>
 
@@ -16,6 +21,12 @@ export default Vue.extend({
   },
   meta: {
     status: pageStatus.results,
+  },
+
+  data() {
+    return {
+      winners: [{}],
+    };
   },
 });
 </script>
