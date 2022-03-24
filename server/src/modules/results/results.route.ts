@@ -8,10 +8,31 @@ const router = express.Router();
 console.log("module: Results Module Loaded");
 
 router.get(
-  "/election/id/:election_id",
-  voterAuth,
-  validate(resultsValidator.getElectionById),
-  resultsController.getElectionById
+  "/final-results/:election_id",
+  // voterAuth,
+  // // validate(resultsValidator.getElectionBySlug),
+  resultsController.getElectionResults
+);
+
+router.get(
+  "/winners/:election_id",
+  // voterAuth,
+  // // validate(resultsValidator.getElectionBySlug),
+  resultsController.getElectionWinners
+);
+
+router.get(
+  "/export-results/:election_id",
+  // voterAuth,
+  // // validate(resultsValidator.getElectionBySlug),
+  resultsController.downloadElectionResults
+);
+
+router.get(
+  "/export-vote-audit/:election_id",
+  // voterAuth,
+  // // validate(resultsValidator.getElectionBySlug),
+  resultsController.downloadVoteAudit
 );
 
 const resultsRoute = router;
