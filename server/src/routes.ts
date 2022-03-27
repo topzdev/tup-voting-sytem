@@ -12,6 +12,7 @@ import launchpadRoute from "./modules/launchpad/launchpad.route";
 import settingsRoute from "./modules/settings/settings.route";
 import overviewRoute from "./modules/overview/overview.route";
 import votingRoute from "./modules/voting/voting.route";
+import mailerRoute from "./modules/mailer/mailer.route";
 const router = express.Router();
 
 router.use("/user", userRoute);
@@ -27,5 +28,6 @@ router.use("/launchpad", launchpadRoute);
 router.use("/settings", settingsRoute);
 router.use("/overview", overviewRoute);
 router.use("/voting", votingRoute);
+router.use("/mailer", mailerRoute);
 
 export default router;

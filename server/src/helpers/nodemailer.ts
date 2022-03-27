@@ -1,13 +1,12 @@
 import nodemailer, { SendMailOptions } from "nodemailer";
 import hbs from "nodemailer-express-handlebars";
-import { type } from "os";
 import path from "path";
 import configs from "../configs";
+import { EmailTemplates } from "../modules/mailer/mailer.helper";
 
-type Templates = "voter-credentails" | "election-ended" | "election-started";
-
-type NewSendMailOptions = {
-  template: Templates;
+export type NewSendMailOptions<T = object> = {
+  template: EmailTemplates;
+  context: T;
 } & SendMailOptions;
 
 const transporter = nodemailer.createTransport({
@@ -23,15 +22,15 @@ transporter.use(
   hbs({
     viewEngine: {
       extname: ".html",
-      partialsDir: path.resolve("./**/templates"),
+      partialsDir: path.resolve(__dirname, "../templates/emails"),
       defaultLayout: false,
     },
-    viewPath: path.resolve("./**/templates"),
+    viewPath: path.resolve(__dirname, "../templates/emails"),
     extName: ".hbs",
   })
 );
 
-const sendBulkMail = (messages: NewSendMailOptions[]) => {
+export const sendBulkMail = (messages: NewSendMailOptions[]) => {
   for (let i = 0; i < messages.length; i++) {
     try {
       transporter.sendMail(messages[i]);
@@ -41,6 +40,10 @@ const sendBulkMail = (messages: NewSendMailOptions[]) => {
   }
 };
 
-const sendSingleMail = (message: NewSendMailOptions) => {
-  transporter.sendMail(message);
+export const sendSingleMail = (message: NewSendMailOptions) => {
+  try {
+    transporter.sendMail(message);
+  } catch (error) {
+    console.log(error);
+  }
 };

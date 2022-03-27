@@ -77,6 +77,10 @@ const configs = {
     password: process.env.NODEMAILER_PASSWORD,
   },
 
+  platform: {
+    url: process.env.VOTING_PLATFORM_URL,
+  },
+
   ballotReceiptPreWord: "TUPELECT",
 };
 
