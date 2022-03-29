@@ -1,4 +1,5 @@
 import { QueryFailedError } from "typeorm";
+import {} from "nanoid";
 
 export const isEmptyStringReturnNull = (str: string) => {
   return str === "" ? null : str;
@@ -18,4 +19,15 @@ export const exportCSVDetailedError = (error: any) => {
   } else {
     return error;
   }
+};
+
+const { customAlphabet } = require("nanoid");
+const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const nanoid = customAlphabet(alphabet, 10);
+
+export const generateCredentials = () => {
+  return {
+    pin: nanoid(),
+    voter_id: nanoid(),
+  };
 };

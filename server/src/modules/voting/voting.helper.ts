@@ -1,4 +1,4 @@
-import shortid from "shortid";
+import { customAlphabet } from "nanoid";
 import configs from "../../configs";
 import { Election } from "../election/entity/election.entity";
 
@@ -25,10 +25,13 @@ export const VOTING_MESSAGES = {
   voterIdRequired: { title: "Voter ID is required", body: "" },
 };
 
+const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const nanoid = customAlphabet(alphabet, 10);
+
 export const generateReceipt = (election: Election) => {
   return `${configs.ballotReceiptPreWord}-${
     election.id
-  }-${shortid.generate()}`.toUpperCase();
+  }-${nanoid()}`.toUpperCase();
 };
 
 export const generateBallotError = (election: Election) => {
