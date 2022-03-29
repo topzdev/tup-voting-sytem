@@ -1,20 +1,20 @@
+<template>
+  <client-only>
+    <div>
+      <VueApexCharts
+        width="500"
+        :options="chartOptions"
+        :series="series"
+      ></VueApexCharts>
+    </div>
+  </client-only>
+</template>
 
 <script>
-import { Pie } from "vue-chartjs/legacy";
 export default {
-  extends: Pie,
-  props: {
-    chartdata: {
-      type: Object,
-      default: null,
-    },
-    options: {
-      type: Object,
-      default: null,
-    },
-  },
-  mounted() {
-    this.renderChart(this.chartData, this.options);
+  props: ["chartOptions", "series"],
+  components: {
+    VueApexCharts: () => import("vue-apexcharts"),
   },
 };
 </script>

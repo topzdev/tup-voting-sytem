@@ -1,6 +1,6 @@
 <template>
   <v-data-table :items="candidates" :headers="headers" hide-default-footer>
-    <template v-slot:item.legend="{}">
+    <!-- <template v-slot:item.legend="{}">
       <span
         style="
           display: flex;
@@ -10,7 +10,7 @@
           background: green;
         "
       ></span>
-    </template>
+    </template> -->
 
     <template v-slot:item.candidateName="{ item }">
       <div class="d-flex align-center">
@@ -20,6 +20,10 @@
 
         <span class="ml-2"> {{ item.candidateName }}</span>
       </div>
+    </template>
+
+    <template v-slot:item.votePercentage="{ item }">
+      {{ item.votePercentage }}%
     </template>
 
     <template v-slot:item.party="{ item }">
@@ -46,11 +50,11 @@ export default Vue.extend({
   data() {
     return {
       headers: [
-        {
-          text: "Legend",
-          sortable: false,
-          value: "legend",
-        },
+        // {
+        //   text: "Legend",
+        //   sortable: false,
+        //   value: "legend",
+        // },
         {
           text: "Candidate",
           value: "candidateName",

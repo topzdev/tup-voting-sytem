@@ -1,12 +1,16 @@
 import { Candidate } from "../candidate/entity/candidate.entity";
 import { Position } from "../position/entity/position.entity";
 
-type Candidates = Candidate & {
+export type ResultCandidate = Candidate & {
   votesCount: number;
+  candidateName: string;
+  votePercentage: number;
 };
 
 type ElectionResult = Omit<Position, "candidates"> & {
-  candidates: Candidates[];
+  candidates: ResultCandidate[];
+  winners?: ResultCandidate[];
+  totalVotes: number;
 };
 
 export type ElectionResults = ElectionResult[];

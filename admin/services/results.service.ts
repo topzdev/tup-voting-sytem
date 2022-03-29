@@ -4,14 +4,15 @@ import { Position } from "./position.service";
 
 const url = "/api/v1/results";
 
-type Candidates = Candidate & {
+type ElectionCandidate = Candidate & {
   votesCount: number;
+  candidateName: string;
+  votePercentage: string;
 };
 
 export type ElectionResult = Omit<Position, "candidates"> & {
-  candidates: Candidates[];
-  candidateName: string;
-  votePercentage: string;
+  candidates: ElectionCandidate[];
+  winners?: ElectionCandidate[];
 };
 
 export type ElectionResults = ElectionResult[];
@@ -30,7 +31,8 @@ const resultsServices = {
   },
 
   async exportVoteAudit(election_id: number) {
-    return (await apiClient.get(`${url}/export-results/${election_id}`)).data;
+    return (await apiClient.get(`${url}/export-vote-audit/${election_id}`))
+      .data;
   },
 };
 

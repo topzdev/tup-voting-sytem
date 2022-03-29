@@ -4,12 +4,18 @@
 
     <v-card-text>
       <v-row>
+        <v-col v-if="winners" cols="12" class="pt-0">
+          <result-winner-section :winners="winners" />
+
+          <v-divider></v-divider>
+        </v-col>
+
         <v-col cols="6">
           <result-candidate-table :candidates="candidates" />
         </v-col>
 
         <v-col cols="6">
-          <!-- <result-candidate-chart /> -->
+          <result-candidate-chart :results="candidates" />
         </v-col>
       </v-row>
     </v-card-text>
@@ -21,7 +27,7 @@ import Vue, { PropOptions } from "vue";
 import { ElectionResult } from "@/services/results.service";
 import ResultCandidateTable from "@/components/pages/results/tables/ResultCandidateTable.vue";
 import ResultCandidateChart from "@/components/pages/results/charts/ResultCandidateCharts.vue";
-
+import ResultWinnerSection from "@/components/pages/results/sections/ResultWinnerSection.vue";
 export default Vue.extend({
   props: {
     result: {
@@ -31,22 +37,15 @@ export default Vue.extend({
   components: {
     ResultCandidateTable,
     ResultCandidateChart,
+    ResultWinnerSection,
   },
 
   computed: {
-    candidates(): any {
-      const totalVotes = this.result.candidates.reduce(
-        (partialSum, a) => partialSum + a.votesCount,
-        0
-      );
-
-      return this.result.candidates.map((item) => ({
-        candidateName: `${item.lastname}, ${item.lastname} ${
-          item.middlename.toUpperCase().split("")[0]
-        }.`,
-        votePercentage: `${Math.round((item.votesCount / totalVotes) * 100)}%`,
-        ...item,
-      }));
+    candidates(): ElectionResult["candidates"] {
+      return this.result.candidates;
+    },
+    winners(): ElectionResult["winners"] {
+      return this.result.winners;
     },
   },
 });
