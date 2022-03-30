@@ -11,7 +11,7 @@ import { Election } from "../election/entity/election.entity";
 import { Organization } from "../organization/entity/organization.entity";
 import { Photo } from "../photo/photo.service";
 import { Voter } from "./entity/voter.entity";
-import { exportCSVDetailedError } from "./voter.helper";
+import { exportCSVDetailedError, generateCredentials } from "./voter.helper";
 import {
   AllowVotersDto,
   CreateVoterBody,
@@ -43,6 +43,16 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
 
   let builder = voterRepository
     .createQueryBuilder("voter")
+    .leftJoinAndSelect("voter.voted", "voted")
+    .select([
+      "voted.id",
+      "voter.id",
+      "voter.firstname",
+      "voter.lastname",
+      "voter.username",
+      "voter.email_address",
+      "voter.is_allowed",
+    ])
     .where("voter.election_id = :electionId", {
       electionId: _electionId,
     });
@@ -148,9 +158,6 @@ const create = async (_voter: CreateVoterBody) => {
     })
     .andWhere(
       new Brackets((qb) => {
-        qb.orWhere("voter.username = :username", {
-          username: _voter.username,
-        });
         qb.orWhere("voter.email_address = :email_address", {
           email_address: _voter.email_address,
         });
@@ -168,20 +175,19 @@ const create = async (_voter: CreateVoterBody) => {
   // });
 
   if (exist) {
-    if (exist.username === _voter.username) {
-      throw new HttpException("BAD_REQUEST", "Voter ID is already exist");
-    }
-
     if (exist.email_address === _voter.email_address) {
       throw new HttpException("BAD_REQUEST", "Email Address is already exist");
     }
   }
+
+  const { pin, voter_id } = generateCredentials();
+
   const voter = Voter.create({
     firstname: _voter.firstname,
     lastname: _voter.lastname,
     email_address: _voter.email_address,
-    username: _voter.username,
-    pin: _voter.pin,
+    username: voter_id,
+    pin: pin,
     election_id: _voter.election_id,
   });
   const savedVoter = await voter.save();
@@ -193,6 +199,8 @@ const create = async (_voter: CreateVoterBody) => {
 };
 
 const update = async (_voter: UpdateVoterBody) => {
+  console.log("Updates: ", _voter);
+
   if (!_voter.id) {
     throw new HttpException("BAD_REQUEST", "Voter ID is required");
   }
@@ -201,23 +209,6 @@ const update = async (_voter: UpdateVoterBody) => {
 
   if (!curVoter) {
     throw new HttpException("NOT_FOUND", "Voter not found");
-  }
-
-  let toUpdateUsername = curVoter.username;
-
-  if (_voter.username !== curVoter.username) {
-    const voterExist = await Voter.findOne({
-      where: {
-        id: Not(curVoter.id),
-        username: _voter.username,
-      },
-    });
-
-    if (voterExist) {
-      throw new HttpException("BAD_REQUEST", "Voter Id has been used");
-    }
-
-    toUpdateUsername = _voter.username;
   }
 
   let toUpdateEmail = curVoter.email_address;
@@ -241,8 +232,6 @@ const update = async (_voter: UpdateVoterBody) => {
     firstname: _voter.firstname,
     lastname: _voter.lastname,
     email_address: toUpdateEmail,
-    username: toUpdateUsername,
-    pin: _voter.pin,
   });
 
   await Voter.update(_voter.id, toUpdateVoter);
@@ -307,8 +296,6 @@ const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
     firstname: "string",
     lastname: "string",
     email_address: "string",
-    voter_id: "string",
-    pin: "string",
   };
 
   // check if election id has value
@@ -352,6 +339,44 @@ const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
 
   console.log("Default Column", columns, "Columns", dataColumns);
 
+  // adding organization_id to voters info
+  const parsedVoter = csvData.map((item) => {
+    const { pin, voter_id } = generateCredentials();
+
+    return {
+      ...item,
+      username: voter_id,
+      pin,
+      election_id: _dto.election_id,
+    };
+  });
+
+  const voterRepository = getRepository(Voter);
+
+  const duplicateEntry = await voterRepository
+    .createQueryBuilder("voter")
+    .where(
+      "voter.email_address IN(:...email_addresses) AND voter.election_id = :election_id",
+      {
+        email_addresses: parsedVoter.map((item) => item.email_address),
+        election_id: _dto.election_id,
+      }
+    )
+    .addSelect(["voter.id", "voter.email_address"])
+    .distinctOn(["voter.email_address"])
+    .getMany();
+
+  console.log(duplicateEntry);
+
+  if (duplicateEntry.length) {
+    throw new HttpException(
+      "BAD_REQUEST",
+      `Some of email address is already exist. Those email addresses are: [${duplicateEntry
+        .map((item) => item.email_address)
+        .join(", ")}]`
+    );
+  }
+
   let voterInserted;
 
   // create transaction
@@ -364,13 +389,6 @@ const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
   console.log("Transaction started", queryRunner.isTransactionActive);
 
   try {
-    // adding organization_id to voters info
-    const parsedVoter = csvData.map((item) => ({
-      ...item,
-      username: item.voter_id,
-      election_id: _dto.election_id,
-    }));
-
     //inserting the parse voter data and returning the saved id's
     voterInserted = await queryRunner.manager
       .createQueryBuilder(Voter, "voter")
@@ -464,16 +482,16 @@ const exportVotersToCSV = async (_electionId: number) => {
   }-${Date.now()}-items-${count}.csv`.toLowerCase();
 
   const data = voter.map((item) => {
-    const { firstname, lastname, email_address, username, pin } = item;
-    return { firstname, lastname, email_address, username, pin };
+    const { firstname, lastname, email_address } = item;
+    return { firstname, lastname, email_address };
   });
 
   const fields = [
-    { label: "Voter ID", value: "username" },
+    // { label: "Voter ID", value: "username" },
     { label: "First Name", value: "firstname" },
     { label: "Last Name", value: "lastname" },
     { label: "Email Address", value: "email_address" },
-    { label: "Pin", value: "pin" },
+    // { label: "Pin", value: "pin" },
   ];
 
   return {

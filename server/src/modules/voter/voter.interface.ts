@@ -20,17 +20,12 @@ export type GetElectionMembersDto = {
 
 export type CreateVoterBody = Pick<
   Voter,
-  | "firstname"
-  | "lastname"
-  | "pin"
-  | "email_address"
-  | "election_id"
-  | "username"
+  "firstname" | "lastname" | "email_address" | "election_id"
 >;
 
 export type UpdateVoterBody = Pick<
   Voter,
-  "id" | "firstname" | "lastname" | "pin" | "email_address" | "username"
+  "id" | "firstname" | "lastname" | "pin" | "email_address"
 >;
 
 export type ImportVotersByElectionDto = {

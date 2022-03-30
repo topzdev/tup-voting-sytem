@@ -1,5 +1,5 @@
-firstname,lastname,email_address,voter_id,pin
-Christian,Lugod,testchristian@gmail.com,topzdev123test,123456789
-Errol,Capistrano,testerrol@gmail.com,errol123test,123456789
-Siasol,Daniel Dave,testdaniel@gmail.com,siasol123test,123456789
-Tungala,Harold,testharold@gmail.com,harold123test,123456789
+firstname,lastname,email_address
+Christian,Lugod,testchristian@gmail.com
+Errol,Capistrano,testerrol@gmail.com
+Siasol,Daniel Dave,testdaniel@gmail.com
+Tungala,Harold,testharold@gmail.com
