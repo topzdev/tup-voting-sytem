@@ -30,31 +30,16 @@ const votersFormMixin = Vue.extend({
       return {
         firstname: [(v: any) => !!v || "Firstname is required"],
         lastname: [(v: any) => !!v || "Lastname is required"],
-        username: [(v: any) => !!v || "Voters ID is required"],
         email_address: [
           (v: any) => !!v || "Email Address is required",
           (v: any) =>
             /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
             "Email Address must be valid",
         ],
-        pin: [(v: any) => !!v || "Pin is required"],
       };
     },
   },
   methods: {
-    forceUppercase() {
-      this.form.username = this.form.username.toUpperCase();
-      this.form.pin = this.form.pin.toUpperCase();
-    },
-
-    generateVoterId() {
-      this.form.username = generateId();
-    },
-
-    generatePin() {
-      this.form.pin = generateId();
-    },
-
     reset() {
       (this.$refs as any).form.reset();
       (this.$refs as any).form.resetValidation();

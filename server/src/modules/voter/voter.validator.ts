@@ -17,7 +17,7 @@ const validations = {
 const { id, firstname, lastname, username, pin, election_id } = validations;
 
 const create = [firstname, lastname, election_id];
-const update = [id, firstname, lastname, username];
+const update = [id, firstname, lastname];
 
 const voterValidator = {
   create,

@@ -199,6 +199,8 @@ const create = async (_voter: CreateVoterBody) => {
 };
 
 const update = async (_voter: UpdateVoterBody) => {
+  console.log("Updates: ", _voter);
+
   if (!_voter.id) {
     throw new HttpException("BAD_REQUEST", "Voter ID is required");
   }
@@ -337,6 +339,44 @@ const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
 
   console.log("Default Column", columns, "Columns", dataColumns);
 
+  // adding organization_id to voters info
+  const parsedVoter = csvData.map((item) => {
+    const { pin, voter_id } = generateCredentials();
+
+    return {
+      ...item,
+      username: voter_id,
+      pin,
+      election_id: _dto.election_id,
+    };
+  });
+
+  const voterRepository = getRepository(Voter);
+
+  const duplicateEntry = await voterRepository
+    .createQueryBuilder("voter")
+    .where(
+      "voter.email_address IN(:...email_addresses) AND voter.election_id = :election_id",
+      {
+        email_addresses: parsedVoter.map((item) => item.email_address),
+        election_id: _dto.election_id,
+      }
+    )
+    .addSelect(["voter.id", "voter.email_address"])
+    .distinctOn(["voter.email_address"])
+    .getMany();
+
+  console.log(duplicateEntry);
+
+  if (duplicateEntry.length) {
+    throw new HttpException(
+      "BAD_REQUEST",
+      `Some of email address is already exist. Those email addresses are: [${duplicateEntry
+        .map((item) => item.email_address)
+        .join(", ")}]`
+    );
+  }
+
   let voterInserted;
 
   // create transaction
@@ -349,18 +389,6 @@ const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
   console.log("Transaction started", queryRunner.isTransactionActive);
 
   try {
-    // adding organization_id to voters info
-    const parsedVoter = csvData.map((item) => {
-      const { pin, voter_id } = generateCredentials();
-
-      return {
-        ...item,
-        username: voter_id,
-        pin,
-        election_id: _dto.election_id,
-      };
-    });
-
     //inserting the parse voter data and returning the saved id's
     voterInserted = await queryRunner.manager
       .createQueryBuilder(Voter, "voter")

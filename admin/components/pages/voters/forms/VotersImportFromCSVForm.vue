@@ -7,6 +7,7 @@
           v-model="alert.show"
           dismissible
           class="mb-0"
+          style="text-wrap: wrap"
         >
           {{ alert.message }}
         </v-alert>

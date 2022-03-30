@@ -33,32 +33,6 @@
 
       <v-col cols="12">
         <v-text-field
-          label="Voter ID"
-          outlined
-          v-model="form.username"
-          :rules="rules.username"
-          hide-details="auto"
-          append-icon="mdi-reload"
-          @click:append="generateVoterId"
-          @keyup="forceUppercase"
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="12">
-        <v-text-field
-          label="Pin"
-          outlined
-          v-model="form.pin"
-          :rules="rules.pin"
-          hide-details="auto"
-          append-icon="mdi-reload"
-          @click:append="generatePin"
-          @keyup="forceUppercase"
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="12">
-        <v-text-field
           label="Email Address"
           outlined
           v-model="form.email_address"
@@ -110,11 +84,6 @@ export default votersFormMixin.extend({
         }
       }
     },
-  },
-
-  created() {
-    this.generateVoterId();
-    this.generatePin();
   },
 });
 </script>

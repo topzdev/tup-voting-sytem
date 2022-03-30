@@ -32,11 +32,18 @@
       :items="table.items"
       :server-items-length="table.pagination.total"
       :page.sync="table.pagination.page"
+      :sort-by="table.sortBy"
+      :sort-desc="table.sortDesc"
+      :multi-sort="table.multiSort"
       :items-per-page.sync="table.pagination.perPage"
       :footer-props="{
         'items-per-page-options': table.pagination.itemsPerPageOptions,
       }"
     >
+      <template v-slot:item.voted="{ item }">
+        <v-icon v-if="item.voted" color="green">mdi-check-all</v-icon>
+        <v-icon v-else>mdi-minus-circle-outline</v-icon>
+      </template>
       <template v-slot:item.actions="{ item }">
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
@@ -81,7 +88,10 @@ export default mixins(
           itemsPerPageOptions: [5, 10, 15, 20],
         },
         search: "",
-        items: [],
+        items: [,],
+        multiSort: true,
+        sortDesc: [true, true, true, true, true],
+        sortBy: ["voted", "username", "email_address", "firstname", "lastname"],
       },
     };
   },
@@ -91,7 +101,7 @@ export default mixins(
       return this.filterByStatus([
         {
           text: "Is Voted",
-          value: "",
+          value: "voted",
           status: this.pageStatus.voters.table.isVoted,
         },
         {
