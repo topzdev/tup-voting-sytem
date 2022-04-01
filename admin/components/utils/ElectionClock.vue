@@ -1,11 +1,12 @@
 <template>
-  <client-only v-if="countdownShow">
+  <client-only>
     <vue-countdown
-      :time="countdownTime"
+      v-if="countdown"
+      :time="countdown.time"
       :transform="transformSlotProps"
       v-slot="{ days, hours, minutes, seconds }"
     >
-      {{ countdownText }} <b>{{ days }}</b
+      {{ countdown.text }} <b>{{ days }}</b
       >d, <b>{{ hours }}</b
       >h, <b> {{ minutes }}</b
       >m, <b>{{ seconds }}</b
@@ -19,6 +20,12 @@ import Vue, { PropOptions } from "vue";
 import mixins from "vue-typed-mixins";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import manageElectionMixins from "../../mixins/manage-election.mixins";
+
+type Countdown = {
+  time: number;
+  text: string;
+};
+
 export default mixins(manageElectionMixins).extend({
   components: {
     VueCountdown,
@@ -46,42 +53,35 @@ export default mixins(manageElectionMixins).extend({
     countdownShow(): boolean {
       if (!this.electionStatus) return false;
 
-      if (this.electionStatus === "running") {
+      if (
+        this.electionStatus === "running" ||
+        this.electionStatus === "preview"
+      ) {
         return true;
       } else {
         return false;
       }
     },
 
-    countdownText(): string | undefined {
-      if (!this.electionInfo) return;
-
-      const start_date = new Date(this.electionInfo.start_date).getTime();
-      const close_date = new Date(this.electionInfo.close_date).getTime();
-      const one_day_seconds = 86400;
-      const current_date = new Date().getTime();
-      if (this.electionStatus === "running") {
-        if (current_date <= start_date) {
-          return "Election will start: ";
-        } else {
-          return "Election time remaining: ";
-        }
-      }
-    },
-
-    countdownTime(): number | undefined {
+    countdown(): Countdown | undefined {
       if (!this.electionInfo) return;
 
       const start_date = new Date(this.electionInfo.start_date).getTime();
       const close_date = new Date(this.electionInfo.close_date).getTime();
       const current_date = new Date().getTime();
-      if (this.electionStatus === "running") {
-        if (new Date().getTime() <= new Date(start_date).getTime()) {
-          return new Date(start_date).getTime() - current_date;
-        } else {
-          return new Date(close_date).getTime() - current_date;
-        }
+      if (this.electionStatus === "preview") {
+        return {
+          text: "Election will start: ",
+          time: start_date - current_date,
+        };
+      } else if (this.electionStatus === "running") {
+        return {
+          text: "Election will end: ",
+          time: close_date - current_date,
+        };
       }
+
+      return;
     },
   },
 });

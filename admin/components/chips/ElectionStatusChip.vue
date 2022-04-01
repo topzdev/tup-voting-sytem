@@ -26,8 +26,9 @@ type StatusStyles = Record<
 
 const statuses: StatusStyles = {
   completed: { text: "Completed", color: "blue" },
+  preview: { text: "Preview", color: "orange" },
   running: { text: "Running", color: "success" },
-  building: { text: "Building", color: "orange" },
+  building: { text: "Building", color: "yellow darken-1" },
   archived: { text: "Archived", color: "amber", dark: true },
 };
 
