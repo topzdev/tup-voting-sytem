@@ -58,6 +58,7 @@
 
         <v-toolbar-title class="text-capitalize">
           {{ appBarTitle }}
+          <publicity-icon :size="20" :value="electionInfo.is_public" />
         </v-toolbar-title>
 
         <election-status-chip
@@ -92,6 +93,7 @@ import ElectionStatusChip from "~/components/chips/ElectionStatusChip.vue";
 import ElectionClock from "@/components/utils/ElectionClock.vue";
 import ElectionDates from "@/components/utils/ElectionDates.vue";
 import ElectionInformationDialog from "@/components/utils/ElectionInformationDialog.vue";
+import PublicityIcon from "~/components/icon/PublicityIcon.vue";
 
 import mixins from "vue-typed-mixins";
 
@@ -104,6 +106,7 @@ export default mixins(manageElectionMixins).extend({
     ElectionClock,
     ElectionDates,
     ElectionInformationDialog,
+    PublicityIcon,
   },
   data() {
     return {

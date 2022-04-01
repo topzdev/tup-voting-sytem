@@ -17,7 +17,8 @@ type ValidationIds =
   | "close-date-behind"
   | "insufficient-candidates"
   | "candidates-no-position"
-  | "no-slug-edit";
+  | "no-slug-edit"
+  | "preview-mode";
 
 export const validationMessages: Record<ValidationIds, LaunchpadValidation> = {
   ["no-voters"]: {
@@ -67,6 +68,12 @@ export const validationMessages: Record<ValidationIds, LaunchpadValidation> = {
     title: "Candidates no position assigned.",
     message: "These candidates (n1, n2, n3) has no position assigned.",
   },
+  ["preview-mode"]: {
+    severity: "info",
+    title: "Election will be in preview mode",
+    message:
+      "Since the election is behind the election start date the election will be in preview mode but when the start date reach the election it will automatically set as running phase and the voter can start voting.",
+  },
   ["no-slug-edit"]: {
     severity: "info",
     title: "The slug cannot be changed after launched",
@@ -87,7 +94,7 @@ export const launchpadValidationChecker = (data: LaunchpadValidationData) => {
     positions,
     candidates,
   } = data;
-
+  let currentDate = new Date().getTime();
   let validations: LaunchpadValidation[] = [];
 
   /* dapat may voters na nakaadd bago mag launch, sino boboto sa election kung wala naman naka add diba? haha */
@@ -110,13 +117,18 @@ export const launchpadValidationChecker = (data: LaunchpadValidationData) => {
     validations.push(validationMessages["no-candidates"]);
   }
 
+  /* Since the election will launch behind the start date the election will automatically in preview mode */
+  if (currentDate < new Date(start_date).getTime()) {
+    validations.push(validationMessages["preview-mode"]);
+  }
+
   /* check if election close_date is behind the current date, sample yung closing date is january 14 january tas date ngayun is january 15 edi tapos na election??? bat mo pa ilalaunch hahahah */
-  if (new Date(start_date).getTime() <= new Date().getTime()) {
+  if (new Date(start_date).getTime() <= currentDate) {
     validations.push(validationMessages["start-date-behind"]);
   }
 
   /* check if election start_date is less than the current date, sample is start_date na sinet mo is january 12 tas current date ngayun is january 15 edi yung 3 days late na yung election haha */
-  if (new Date(close_date).getTime() <= new Date().getTime()) {
+  if (new Date(close_date).getTime() <= currentDate) {
     validations.push(validationMessages["close-date-behind"]);
   }
 
@@ -165,9 +177,10 @@ export const launchpadValidationChecker = (data: LaunchpadValidationData) => {
 
 const STATUS_MESSAGE = {
   1: "building",
-  2: "running",
-  3: "completed",
-  4: "archived",
+  2: "preview",
+  3: "running",
+  4: "completed",
+  5: "archived",
 };
 
 export const statusAsTextSubquery = () => {
@@ -216,6 +229,7 @@ export const statusAsTextSubquery = () => {
 
 /*  
 	BUILDING = 1,
+  PREVIEW = 2 but when election is not yet on start date
 	RUNNING = 2,
 	COMPLETED = 3,
   ARCHIVED = 4,
@@ -224,13 +238,20 @@ export const statusAsTextSubquery = () => {
 export const finalStatusSubquery = (alias) => {
   return `
    CASE	
-      WHEN "election"."status" > '3' OR "election"."archive" = TRUE 					
-			    THEN '${STATUS_MESSAGE[4]}' 
-		
-      WHEN "election"."status" > '2' OR CURRENT_TIMESTAMP >= "election"."close_date"  
+      /*THE ELECTION IS IN ARCHIVE STATUS*/
+      WHEN "election"."status" > '4' OR "election"."archive" = TRUE 					
+			    THEN '${STATUS_MESSAGE[5]}' 
+
+      /*THE ELECTION IS IN COMPLETED STATUS*/  
+      WHEN "election"."status" > '3' OR CURRENT_TIMESTAMP >= "election"."close_date"  
+          THEN '${STATUS_MESSAGE[4]}'
+
+      /*THE ELECTION IS RUNNING STATUS*/ 
+      WHEN "election"."status" > '1' AND CURRENT_TIMESTAMP >= "election"."start_date"
           THEN '${STATUS_MESSAGE[3]}'
 
-      WHEN "election"."status" > '1' 													
+      /*THE ELECTION IS IN PREVIEW STATE*/
+      WHEN "election"."status" > '1' AND CURRENT_TIMESTAMP < "election"."start_date"													
 			    THEN '${STATUS_MESSAGE[2]}'
   
       ELSE '${STATUS_MESSAGE[1]}'

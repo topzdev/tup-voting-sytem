@@ -39,6 +39,28 @@ const settingsServices = {
   async closeElection(election_id: Election["id"]) {
     return (await apiClient.put(`${url}/closeElection/${election_id}`)).data;
   },
+
+  async electionPublicity(
+    election_id: Election["id"],
+    is_public: Election["is_public"]
+  ) {
+    return (
+      await apiClient.put(`${url}/isElectionPublic/${election_id}`, {
+        is_public,
+      })
+    ).data;
+  },
+
+  async electionTallyPublicity(
+    election_id: Election["id"],
+    is_tally_public: Election["is_tally_public"]
+  ) {
+    return (
+      await apiClient.put(`${url}/isElectionTallyPublic/${election_id}`, {
+        is_tally_public,
+      })
+    ).data;
+  },
 };
 
 export default settingsServices;

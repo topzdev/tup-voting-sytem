@@ -44,6 +44,21 @@ router.put(
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   settingsController.closeElection
 );
+
+router.put(
+  "/isElectionPublic/:election_id",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  settingsController.electionPublicity
+);
+
+router.put(
+  "/isElectionTallyPublic/:election_id",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  settingsController.electionTallyPublicity
+);
+
 const settingsRoute = router;
 
 export default settingsRoute;

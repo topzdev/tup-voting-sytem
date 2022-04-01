@@ -30,6 +30,7 @@ const pageStatus = {
   settings: {
     closeElection: ["running"],
     archiveElection: ["completed"],
+    publicity: ["running", "running", "preview", "completed"],
   },
 
   overview: {
