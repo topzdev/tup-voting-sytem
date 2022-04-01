@@ -3,7 +3,12 @@ import transformParamsToUrl from "@/helpers/paramsToUrl.helpers";
 import { DataTimestamp } from "./voters.service";
 import { Organization } from "./organization.service";
 
-export type ElectionStatus = "building" | "running" | "completed" | "archived";
+export type ElectionStatus =
+  | "building"
+  | "preview"
+  | "running"
+  | "completed"
+  | "archived";
 
 type ElectionLogo = {
   id: number;

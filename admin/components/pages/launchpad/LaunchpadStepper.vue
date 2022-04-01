@@ -41,6 +41,7 @@
 
           <v-stepper-content step="3">
             <launchpad-terms-card
+              :election="electionInfo"
               :electionId="electionId"
               :toPage="toPage"
               :next="next"
