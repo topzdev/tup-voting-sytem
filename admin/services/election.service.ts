@@ -26,6 +26,8 @@ export type Election = {
   start_date: string;
   close_date: string;
   organization_id: number;
+  is_public: boolean;
+  is_tally_public: boolean;
   archive: boolean;
   organization: Organization;
   logo: ElectionLogo;

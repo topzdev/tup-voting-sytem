@@ -85,12 +85,12 @@ export class Election extends Timestamp {
   @Column({
     default: false,
   })
-  isTallyPublic: boolean;
+  is_tally_public: boolean;
 
   @Column({
     default: false,
   })
-  isPublic: boolean;
+  is_public: boolean;
 
   @Column({
     select: false,

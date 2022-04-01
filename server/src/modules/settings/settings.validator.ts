@@ -23,9 +23,15 @@ const validations = {
   close_date: body("start_date")
     .notEmpty()
     .withMessage("Start Date is required"),
+
+  is_public: body("is_public").notEmpty().withMessage("Is Public is required"),
+  is_tally_public: body("is_tally_public")
+    .notEmpty()
+    .withMessage("Is Public is required"),
 };
 
-const { slug, title, close_date, start_date } = validations;
+const { slug, title, close_date, start_date, is_public, is_tally_public } =
+  validations;
 
 const updateGeneral = [slug, title];
 const updateDate = [start_date, close_date];
