@@ -45,6 +45,11 @@ const settingsMixin = mixins(manageElectionMixins).extend({
           to: this.archiveElectionRoute(),
           status: pageStatus.settings.archiveElection,
         },
+        ["election-emails"]: {
+          icon: "mdi-email-multiple-outline",
+          title: "E-Mails",
+          to: this.emailRoute(),
+        },
       };
     },
   },
@@ -61,6 +66,9 @@ const settingsMixin = mixins(manageElectionMixins).extend({
     },
     archiveElectionRoute() {
       return `${this.pagePath}archive-election`;
+    },
+    emailRoute() {
+      return `${this.pagePath}emails`;
     },
   },
 });
