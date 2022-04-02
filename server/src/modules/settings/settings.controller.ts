@@ -93,7 +93,7 @@ const sendCredentialsEmail = async (
   next: NextFunction
 ) => {
   try {
-    const voters_ids = req.body.voters_id;
+    const voters_ids = req.body.voters_ids;
     const election_id = req.params.election_id;
 
     res

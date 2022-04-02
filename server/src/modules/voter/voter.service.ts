@@ -59,6 +59,9 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
         sqb.orWhere("voter.username ILIKE :username", {
           username: `%${searchStirng}%`,
         });
+        sqb.orWhere("voter.email_address ILIKE :email_address", {
+          email_address: `%${searchStirng}%`,
+        });
       })
     );
   }
@@ -76,6 +79,19 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
     const offset = _query.page * _query.take - _query.take;
     builder = builder.offset(offset).limit(_query.take);
   }
+
+  builder = builder.addSelect([
+    "voter.firstname",
+    "voter.lastname",
+    "voter.created_at",
+    "voter.deleted_at",
+    "voter.id",
+    "voter.username",
+    "voter.email_address",
+    "voter.is_allowed",
+    "voter.election_id",
+    "voter.archive",
+  ]);
 
   const items = await builder.getMany();
 
