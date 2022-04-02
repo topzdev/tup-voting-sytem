@@ -11,6 +11,7 @@ import { Photo } from "../photo/photo.service";
 import { finalStatusSubquery } from "../launchpad/launchpad.helper";
 import { UpdateElectionBody } from "./settings.interface";
 import { LaunchpadValidationData } from "../launchpad/launchpad.interface";
+import mailerServices from "../mailer/mailer.service";
 
 const updateGeneral = async (
   _logo: Photo,
@@ -283,12 +284,37 @@ const closeElection = async (_election_id: number) => {
   return true;
 };
 
+const sendCredentialsEmail = async (
+  _election_id,
+  _voters_ids: number[] | "all"
+) => {
+  const sent = await mailerServices.sendVotersCredentialsEmail(
+    _election_id,
+    _voters_ids
+  );
+
+  return true;
+};
+
+const sendElectionHasLaunched = async (_election_id: number) => {
+  const sent = await mailerServices.sendElectionHasLaunched([_election_id]);
+  return true;
+};
+
+const sendElectionHasEnded = async (_election_id: number) => {
+  const sent = await mailerServices.sendElectionHasEnded([_election_id]);
+  return true;
+};
+
 const settingsService = {
   updateGeneral,
   updateDate,
   archive,
   unArchive,
   closeElection,
+  sendCredentialsEmail,
+  sendElectionHasLaunched,
+  sendElectionHasEnded,
 };
 
 export default settingsService;
