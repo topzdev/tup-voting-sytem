@@ -33,6 +33,12 @@ const settingsMixin = mixins(manageElectionMixins).extend({
           title: "Dates",
           to: this.updateElectionDates(),
         },
+        ["election-emails"]: {
+          icon: "mdi-email-multiple-outline",
+          title: "Emails",
+          to: this.emailRoute(),
+          status: pageStatus.settings.emails.page,
+        },
         ["close-election"]: {
           icon: "mdi-close-box-outline",
           title: "Close Election",
@@ -44,11 +50,6 @@ const settingsMixin = mixins(manageElectionMixins).extend({
           title: "Archive Election",
           to: this.archiveElectionRoute(),
           status: pageStatus.settings.archiveElection,
-        },
-        ["election-emails"]: {
-          icon: "mdi-email-multiple-outline",
-          title: "E-Mails",
-          to: this.emailRoute(),
         },
       };
     },

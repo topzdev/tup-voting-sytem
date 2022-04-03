@@ -1,6 +1,6 @@
 <template>
   <v-autocomplete
-    color="primary"
+    :color="color"
     label="Search Voters"
     v-model="selected"
     :loading="loading"
@@ -8,6 +8,7 @@
     item-text="searchString"
     item-value="id"
     :search-input.sync="search"
+    :rules="rules"
     cache-items
     filled
     chips
@@ -66,6 +67,11 @@ export default mixins(manageElectionMixins).extend({
       type: Array,
     },
 
+    color: {
+      type: String,
+      default: "primary",
+    },
+
     rules: {
       type: Array,
     },
@@ -86,15 +92,15 @@ export default mixins(manageElectionMixins).extend({
       items: [],
       selected: [],
       model: null,
-      search: null,
+      search: "",
       tab: null,
     };
   },
 
   methods: {
     async fetchItems() {
-      if (!this.electionId || !this.search) return;
-
+      if (!this.electionId) return;
+      if (!this.search) return;
       try {
         this.loading = true;
         const data = await votersServices.getAll(this.electionId, {

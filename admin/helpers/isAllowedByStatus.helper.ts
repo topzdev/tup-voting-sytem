@@ -4,6 +4,8 @@ export const statusOnlyAllowed = (
   currentStatus: ElectionStatus,
   allowedStatus: ElectionStatus[]
 ) => {
+  console.log("Allowed", allowedStatus);
+
   return !!allowedStatus.find((item) => item === currentStatus);
 };
 

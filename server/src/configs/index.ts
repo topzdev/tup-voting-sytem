@@ -79,6 +79,7 @@ const configs = {
 
   platform: {
     url: process.env.VOTING_PLATFORM_URL,
+    shortUrl: process.env.VOTIING_PLATFORM_SHORT_URL,
   },
 
   ballotReceiptPreWord: "TUPELECT",

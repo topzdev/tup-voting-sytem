@@ -26,6 +26,9 @@
             <li>Add, Edit and Delete Voters</li>
             <li>Extend your election end date</li>
             <li>Close the election</li>
+            <li>Send Credentials to voters</li>
+            <li>Send "Election has launched" email</li>
+            <li>Send "Election has ended" email after election ended</li>
           </ul>
         </v-col>
       </v-row>

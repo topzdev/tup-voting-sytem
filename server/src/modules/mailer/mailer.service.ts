@@ -58,6 +58,9 @@ const sendVotersCredentialsEmail = async (
   );
 
   if (_voters_ids !== "all") {
+    if (!_voters_ids.length)
+      throw new HttpException("BAD_REQUEST", "No voters selected");
+
     voterBuilder = voterBuilder.andWhereInIds(_voters_ids);
   }
 
@@ -80,8 +83,7 @@ const sendVotersCredentialsEmail = async (
 
   const voters = await voterBuilder.getMany();
 
-  if (!voters.length)
-    throw new HttpException("BAD_REQUEST", "No voters selected");
+  if (!voters.length) throw new HttpException("BAD_REQUEST", "No voters found");
 
   const messages: NewSendMailOptions<VoterCredentialsContextTemplate>[] =
     voters.map((item) => ({
@@ -241,10 +243,7 @@ const sendElectionHasEnded = async (_election_ids: number[]) => {
         _election_ids: _election_ids,
         is_allowed: true,
       }
-    )
-    .andWhere("voter.id IN(:...voters_ids)", {
-      voters_ids: [32, 24, 6], // remove this
-    });
+    );
 
   const voters = await voterBuilder.getMany();
 
