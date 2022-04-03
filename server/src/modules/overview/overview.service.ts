@@ -1,24 +1,11 @@
-import { unflatten } from "flat";
-import { stat } from "fs";
-import { close } from "inspector";
 import { getRepository } from "typeorm";
+import platformLinks, {
+  platformShortLinks,
+} from "../../configs/platform-links.config";
 import { HttpException } from "../../helpers/errors/http.exception";
-import {
-  Election,
-  ElectionStatusEnum,
-} from "../election/entity/election.entity";
-import { Position } from "../position/entity/position.entity";
-import {
-  finalStatusSubquery,
-  launchpadValidationChecker,
-  validationMessages,
-} from "../launchpad/launchpad.helper";
-import {
-  ElectionWithStatusFinal,
-  LaunchpadValidation,
-  LaunchpadValidationData,
-  LaunchpadValidations,
-} from "./overview.interface";
+import { Election } from "../election/entity/election.entity";
+import { finalStatusSubquery } from "../launchpad/launchpad.helper";
+import { OverviewDetails } from "./overview.interface";
 
 const getElectionDetails = async (_election_id: number) => {
   const electionRepository = getRepository(Election);
@@ -48,11 +35,17 @@ const getElectionDetails = async (_election_id: number) => {
       _election_id,
     });
 
-  const election = (await builder.getOne()) as LaunchpadValidationData;
+  const election = await builder.getOne();
 
   if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
 
-  return election;
+  const longUrl = platformLinks.voting.replace("$electionSlug", election.slug);
+  const shortUrl = platformShortLinks.voting.replace(
+    "$electionId",
+    election.id.toString()
+  );
+
+  return { ...election, shortUrl, longUrl } as OverviewDetails;
 };
 
 const overviewServices = {

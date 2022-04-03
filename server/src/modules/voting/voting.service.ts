@@ -6,6 +6,8 @@ import {
   ElectionStatusEnum,
 } from "../election/entity/election.entity";
 import { finalStatusSubquery } from "../launchpad/launchpad.helper";
+import mailerController from "../mailer/mailer.controller";
+import mailerServices from "../mailer/mailer.service";
 import { Position } from "../position/entity/position.entity";
 import { Voter } from "../voter/entity/voter.entity";
 import { ElectionVoted } from "./entity/voted.entity";
@@ -252,6 +254,10 @@ const submitBallot = async (
 
     console.log("Transaction Ended");
     console.log("Voter Receipt", voterReceipt);
+
+    // send email after submitting voter
+    mailerServices.sendThankYouForVotingEmail(voter.id);
+
     return { ...voterReceipt, election_title: election.title };
   } catch (error) {
     await queryRunner.rollbackTransaction();

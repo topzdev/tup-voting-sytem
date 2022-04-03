@@ -87,7 +87,7 @@ const votersServices = {
   async getAll(electionId: number, query: GetVotersDto) {
     return (
       await apiClient.get(
-        `${url}/all/${electionId}/${transformParamsToUrl(query)}`
+        `${url}/all/${electionId}${transformParamsToUrl(query)}`
       )
     ).data;
   },

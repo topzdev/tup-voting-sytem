@@ -131,12 +131,71 @@ const electionTallyPublicity = async (
   }
 };
 
+const sendCredentialsEmail = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const voters_ids = req.body.voters_ids;
+    const election_id = req.params.election_id;
+
+    res
+      .status(200)
+      .json(
+        await settingsService.sendCredentialsEmail(
+          parseInt(election_id),
+          voters_ids
+        )
+      );
+  } catch (error) {
+    next(error);
+  }
+};
+
+const sendElectionHasLaunched = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const election_id = req.params.election_id;
+
+    res
+      .status(200)
+      .json(
+        await settingsService.sendElectionHasLaunched(parseInt(election_id))
+      );
+  } catch (error) {
+    next(error);
+  }
+};
+
+const sendElectionHasEnded = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const election_id = req.params.election_id;
+
+    res
+      .status(200)
+      .json(await settingsService.sendElectionHasEnded(parseInt(election_id)));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const settingsController = {
   updateGeneral,
   updateDate,
   archive,
   unArchive,
   closeElection,
+  sendCredentialsEmail,
+  sendElectionHasEnded,
+  sendElectionHasLaunched,
   electionPublicity,
   electionTallyPublicity,
 };

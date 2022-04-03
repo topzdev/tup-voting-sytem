@@ -69,10 +69,12 @@ export default Vue.extend({
       return this.details ? this.details.id + "" : "";
     },
     longUrl(): string {
-      return `${configs.platformUrl}/${this.electionSlug}`;
+      if (!this.details) return "";
+      return this.details.longUrl;
     },
     shortUrl(): string {
-      return `${configs.platformShortUrl}/${this.electionId}`;
+      if (!this.details) return "";
+      return this.details.shortUrl;
     },
   },
 

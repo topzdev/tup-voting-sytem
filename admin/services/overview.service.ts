@@ -5,15 +5,22 @@ import { Position } from "./position.service";
 
 export type OverviewDetails = Pick<
   Election,
-  "id" | "slug" | "title" | "start_date" | "close_date" | "archive"
+  | "id"
+  | "slug"
+  | "title"
+  | "start_date"
+  | "close_date"
+  | "archive"
+  | "final_status"
 > & {
-  final_status: ElectionStatus;
   votersCount: number;
   votesCount: number;
   votedCount: number;
   partiesCount: number;
   candidatesCount: number;
   positionsCount: number;
+  longUrl: string;
+  shortUrl: string;
 };
 
 const url = "/api/v1/overview";

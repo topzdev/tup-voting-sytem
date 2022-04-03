@@ -59,6 +59,27 @@ router.put(
   settingsController.electionTallyPublicity
 );
 
+router.post(
+  "/voters-credentials/:election_id",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  settingsController.sendCredentialsEmail
+);
+
+router.post(
+  "/election-has-launched/:election_id",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  settingsController.sendElectionHasLaunched
+);
+
+router.post(
+  "/election-has-ended/:election_id",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  settingsController.sendElectionHasEnded
+);
+
 const settingsRoute = router;
 
 export default settingsRoute;

@@ -7,6 +7,8 @@ import configs from "./configs";
 cloudinary.v2.config(configs.cloudinary);
 
 const main = async () => {
+  console.log(__dirname, process.cwd());
+
   await createConnection()
     .then((connect) => {
       console.log("Database Host:", configs.database.host);

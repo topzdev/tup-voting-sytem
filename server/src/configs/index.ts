@@ -75,6 +75,15 @@ const configs = {
       expiresIn: !__prod__ ? "30d" : "1d",
     },
   },
+  nodemailer: {
+    username: process.env.NODEMAILER_USERNAME,
+    password: process.env.NODEMAILER_PASSWORD,
+  },
+
+  platform: {
+    url: process.env.VOTING_PLATFORM_URL,
+    shortUrl: process.env.VOTIING_PLATFORM_SHORT_URL,
+  },
 
   ballotReceiptPreWord: "TUPELECT",
 };
