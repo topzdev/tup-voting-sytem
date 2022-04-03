@@ -30,12 +30,18 @@ const pageStatus = {
   settings: {
     closeElection: ["running"],
     archiveElection: ["completed"],
+    emails: {
+      page: ["preview", "running", "completed"],
+      credentials: ["preview", "running"],
+      electionHasLaunched: ["preview", "running"],
+      electionHasEnded: ["completed"],
+    },
     publicity: ["running", "running", "preview", "completed"],
   },
 
   overview: {
     counts: {
-      participation: ["running", "completed", "archived"],
+      participation: ["preview", "completed", "archived"],
     },
   },
 };

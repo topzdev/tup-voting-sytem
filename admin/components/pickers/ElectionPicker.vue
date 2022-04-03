@@ -8,8 +8,8 @@
     outlined
     hide-details="auto"
     :items="items"
-    :value="value"
     :rules="rules"
+    :value="value"
     @input="$emit('input', $event)"
   >
     <template v-slot:item="data">

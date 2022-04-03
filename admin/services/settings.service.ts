@@ -40,6 +40,17 @@ const settingsServices = {
     return (await apiClient.put(`${url}/closeElection/${election_id}`)).data;
   },
 
+  async sendCredentialsEmail(
+    election_id: Election["id"],
+    voters_ids: number[] | "all"
+  ) {
+    return (
+      await apiClient.post(`${url}/voters-credentials/${election_id}`, {
+        voters_ids,
+      })
+    ).data;
+  },
+
   async electionPublicity(
     election_id: Election["id"],
     is_public: Election["is_public"]
@@ -49,6 +60,16 @@ const settingsServices = {
         is_public,
       })
     ).data;
+  },
+
+  async sendElectionHasLaunched(election_id: Election["id"]) {
+    return (await apiClient.post(`${url}/election-has-launched/${election_id}`))
+      .data;
+  },
+
+  async sendElectionHasEnded(election_id: Election["id"]) {
+    return (await apiClient.post(`${url}/election-has-ended/${election_id}`))
+      .data;
   },
 
   async electionTallyPublicity(
