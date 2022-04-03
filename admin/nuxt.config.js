@@ -2,7 +2,7 @@ import colors from "vuetify/es5/util/colors";
 
 export default {
   ssr: false,
-  enva: {
+  env: {
     // baseUrl: process.env.BASER_SERVER_URL || "http://localhost:5000",
     // browserBaseUrl: process.env.BASER_CLIENT_URL || "http://localhost:3000",
   },
@@ -57,10 +57,11 @@ export default {
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {
-    baseURL: "http://localhost:5000",
-    // browserBaseURL: process.env.browserBaseUrl,
-    progress: true,
+  publicRuntimeConfig: {
+    axios: {
+      baseURL: process.env.BASE_SERVER_URL || "http://localhost:5000",
+      progress: true,
+    },
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
