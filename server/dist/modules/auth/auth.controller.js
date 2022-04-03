@@ -26,6 +26,8 @@ const adminLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 });
 const adminLogout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        req.admin = null;
+        req.admin_jwt = null;
         res.status(200).json({ message: "Logout Successfully" });
     }
     catch (error) {
@@ -80,11 +82,44 @@ const adminSessionLogout = (req, res, next) => __awaiter(void 0, void 0, void 0,
         next(error);
     }
 });
+const voterLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const credentials = req.body;
+        res.status(200).json(yield auth_service_1.default.voterLogin(credentials));
+    }
+    catch (error) {
+        next(error);
+    }
+});
+const voterLogout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        req.voter = null;
+        req.voter_jwt = null;
+        res.status(200).json({ message: "Logout Successfully" });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+const voterMe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const voter = req.voter;
+        res
+            .status(200)
+            .json({ message: "Voter Info Succesfully Fetched", user: voter });
+    }
+    catch (error) {
+        next(error);
+    }
+});
 const authController = {
     adminLogin,
     adminLogout,
     adminProtectedRoute,
     adminMe,
+    voterLogin,
+    voterLogout,
+    voterMe,
 };
 exports.default = authController;
 //# sourceMappingURL=auth.controller.js.map

@@ -54,6 +54,24 @@ const update = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
         next(error);
     }
 });
+const changePassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const passwords = req.body;
+        res.status(200).json(yield user_service_1.default.changePassword(passwords));
+    }
+    catch (error) {
+        next(error);
+    }
+});
+const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = req.params.id;
+        res.status(200).json(yield user_service_1.default.resetPassword(id));
+    }
+    catch (error) {
+        next(error);
+    }
+});
 const remove = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
@@ -79,6 +97,8 @@ const userController = {
     update,
     remove,
     restore,
+    changePassword,
+    resetPassword,
 };
 exports.default = userController;
 //# sourceMappingURL=user.controller.js.map

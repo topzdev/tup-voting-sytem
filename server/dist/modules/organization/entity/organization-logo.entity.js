@@ -32,7 +32,7 @@ __decorate([
     __metadata("design:type", String)
 ], OrganizationLogo.prototype, "service", void 0);
 OrganizationLogo = __decorate([
-    (0, typeorm_1.Entity)("organization-logo")
+    (0, typeorm_1.Entity)("organization_logo")
 ], OrganizationLogo);
 exports.OrganizationLogo = OrganizationLogo;
 //# sourceMappingURL=organization-logo.entity.js.map

@@ -13,6 +13,8 @@ exports.Organization = void 0;
 const typeorm_1 = require("typeorm");
 const timestamp_inherit_1 = require("../../../entity/timestamp.inherit");
 const organization_logo_entity_1 = require("./organization-logo.entity");
+const election_entity_1 = require("../../election/entity/election.entity");
+const organization_theme_entity_1 = require("./organization-theme.entity");
 let Organization = class Organization extends timestamp_inherit_1.Timestamp {
 };
 __decorate([
@@ -40,28 +42,25 @@ __decorate([
     __metadata("design:type", String)
 ], Organization.prototype, "description", void 0);
 __decorate([
-    (0, typeorm_1.Column)({
-        default: false,
-    }),
-    __metadata("design:type", Boolean)
-], Organization.prototype, "archive", void 0);
-__decorate([
-    (0, typeorm_1.Column)({
-        default: "blue",
-    }),
-    __metadata("design:type", String)
-], Organization.prototype, "themePrimary", void 0);
-__decorate([
-    (0, typeorm_1.Column)({
-        default: "pink",
-    }),
-    __metadata("design:type", String)
-], Organization.prototype, "themeSecondary", void 0);
+    (0, typeorm_1.OneToOne)(() => organization_theme_entity_1.OrganizationTheme),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", organization_theme_entity_1.OrganizationTheme)
+], Organization.prototype, "theme", void 0);
 __decorate([
     (0, typeorm_1.OneToOne)(() => organization_logo_entity_1.OrganizationLogo),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", organization_logo_entity_1.OrganizationLogo)
 ], Organization.prototype, "logo", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => election_entity_1.Election, (election) => election.organization),
+    __metadata("design:type", Array)
+], Organization.prototype, "elections", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        default: false,
+    }),
+    __metadata("design:type", Boolean)
+], Organization.prototype, "archive", void 0);
 Organization = __decorate([
     (0, typeorm_1.Entity)("organization")
 ], Organization);

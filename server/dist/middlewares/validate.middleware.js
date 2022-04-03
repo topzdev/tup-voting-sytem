@@ -19,7 +19,7 @@ const validate = (validations) => {
         yield Promise.all(validations.map((validation) => validation.run(req)));
         const errors = (0, express_validator_1.validationResult)(req).formatWith(errorFormatter);
         if (!errors.isEmpty()) {
-            next(new http_exception_1.HttpException("BAD_REQUEST", "Body validation error", errors.mapped()));
+            next(new http_exception_1.HttpException("BAD_REQUEST", errors.array({ onlyFirstError: true })[0]));
         }
         return next();
     });

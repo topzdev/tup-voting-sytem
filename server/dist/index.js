@@ -21,6 +21,8 @@ cloudinary_1.default.v2.config(configs_1.default.cloudinary);
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, typeorm_1.createConnection)()
         .then((connect) => {
+        console.log("Database Host:", configs_1.default.database.host);
+        console.log("Connection Name:", connect.name);
         console.log("Database Created Successfully");
     })
         .catch((err) => {

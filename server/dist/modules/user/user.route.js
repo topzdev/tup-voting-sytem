@@ -13,8 +13,13 @@ const router = express_1.default.Router();
 console.log("module: User Module Loaded");
 router.get("/", auth_middleware_1.adminAuth, (0, roles_allowed_middleware_1.default)("SUPER_ADMIN"), user_controller_1.default.getUsers);
 router.get("/:id", auth_middleware_1.adminAuth, user_controller_1.default.getUserById);
-router.post("/", auth_middleware_1.adminAuth, (0, roles_allowed_middleware_1.default)(["ADMIN", "SUPER_ADMIN"]), (0, validate_middleware_1.default)(user_validator_1.default.create), user_controller_1.default.create);
+router.post("/", 
+// adminAuth,
+// rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+(0, validate_middleware_1.default)(user_validator_1.default.create), user_controller_1.default.create);
 router.put("/", auth_middleware_1.adminAuth, (0, roles_allowed_middleware_1.default)(["ADMIN", "SUPER_ADMIN"]), (0, validate_middleware_1.default)(user_validator_1.default.update), user_controller_1.default.update);
+router.put("/change-password", auth_middleware_1.adminAuth, (0, roles_allowed_middleware_1.default)(["ADMIN", "SUPER_ADMIN"]), user_controller_1.default.changePassword);
+router.put("/reset-password/:id", auth_middleware_1.adminAuth, (0, roles_allowed_middleware_1.default)(["ADMIN", "SUPER_ADMIN"]), user_controller_1.default.resetPassword);
 router.delete("/:id", auth_middleware_1.adminAuth, (0, roles_allowed_middleware_1.default)(["ADMIN", "SUPER_ADMIN"]), user_controller_1.default.remove);
 router.put("/:id", auth_middleware_1.adminAuth, (0, roles_allowed_middleware_1.default)(["ADMIN", "SUPER_ADMIN"]), user_controller_1.default.restore);
 const userRoute = router;

@@ -11,7 +11,7 @@ const validations = {
     role: (0, express_validator_1.body)("role").notEmpty().withMessage("Role is required"),
 };
 const { id, firstname, lastname, username, password, role } = validations;
-const create = [firstname, lastname, username, password, role];
+const create = [firstname, lastname, username, role];
 const update = [id, firstname, lastname, role];
 const userValidator = {
     create,

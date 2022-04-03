@@ -51,9 +51,8 @@ exports.httpStatus = {
     GATEWAY_TIMEOUT: 504,
     HTTP_VERSION_NOT_SUPPORTED: 505,
 };
-class HttpException extends Error {
+class HttpException {
     constructor(statusCode, message, fields) {
-        super();
         this.fields = fields;
         this.statusCode =
             typeof statusCode === "number"

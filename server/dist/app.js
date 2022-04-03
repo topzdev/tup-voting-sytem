@@ -16,11 +16,13 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const connect_flash_1 = __importDefault(require("connect-flash"));
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
+const configs_1 = __importDefault(require("./configs"));
 const file_upload_config_1 = __importDefault(require("./configs/file-upload.config"));
 const morgan_config_1 = __importDefault(require("./configs/morgan.config"));
 const error_handlers_middleware_1 = __importDefault(require("./middlewares/error-handlers.middleware"));
+const get_client_info_middleware_1 = require("./middlewares/get-client-info.middleware");
 const routes_1 = __importDefault(require("./routes"));
-const port = 5000;
+const port = configs_1.default.port || 5000;
 const app = (0, express_1.default)();
 const bootsrap = () => __awaiter(void 0, void 0, void 0, function* () {
     // middlewares
@@ -28,6 +30,7 @@ const bootsrap = () => __awaiter(void 0, void 0, void 0, function* () {
     app.use(body_parser_1.default.urlencoded({ extended: false }));
     app.use(body_parser_1.default.json());
     app.use((0, connect_flash_1.default)());
+    app.use(get_client_info_middleware_1.getClientInfo);
     (0, file_upload_config_1.default)(app);
     // sessionConfig(app);
     // passportConfig(app);

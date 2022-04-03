@@ -21,18 +21,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importStar(require("path"));
 const constant_1 = require("../constant");
-require("dotenv").config();
+require("dotenv").config(!constant_1.__prod__
+    ? { path: path_1.default.resolve(process.cwd(), "development.env") }
+    : undefined);
 console.log("config loaded at: ", path_1.default.resolve(path_1.default.resolve(process.cwd(), process.env.NODE_ENV + ".env")));
 console.log("------------");
 console.log("is development? ", !constant_1.__prod__);
 const configs = {
+    port: process.env.PORT,
     auth: {
         saltRounds: parseInt(process.env.SALT_ROUNDS),
     },
     database: {
         type: process.env.DATABASE_TYPE,
         host: process.env.DATABASE_HOST,
-        port: parseInt(process.env.PORT),
+        port: parseInt(process.env.DATABASE_PORT),
         username: process.env.DATABASE_USERNAME,
         password: process.env.DATABASE_PASSWORD,
         database: process.env.DATABASE_NAME,
@@ -75,12 +78,13 @@ const configs = {
             algo: process.env.JWT_ADMIN_ALGO,
             expiresIn: !constant_1.__prod__ ? "30d" : "1d",
         },
-        local: {
+        voter: {
             secret: process.env.JWT_LOCAL_SECRET,
             algo: process.env.JWT_LOCAL_ALGO,
             expiresIn: !constant_1.__prod__ ? "30d" : "1d",
         },
     },
+    ballotReceiptPreWord: "TUPELECT",
 };
 exports.default = configs;
 //# sourceMappingURL=index.js.map

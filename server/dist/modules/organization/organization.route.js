@@ -21,6 +21,6 @@ router.delete("/:id", auth_middleware_1.adminAuth, (0, roles_allowed_middleware_
 router.put("/restore/:id", auth_middleware_1.adminAuth, (0, roles_allowed_middleware_1.default)(["ADMIN", "SUPER_ADMIN"]), organization_controller_1.default.restore);
 router.put("/archive/:id", auth_middleware_1.adminAuth, (0, roles_allowed_middleware_1.default)(["ADMIN", "SUPER_ADMIN"]), organization_controller_1.default.archive);
 router.put("/unarchive/:id", auth_middleware_1.adminAuth, (0, roles_allowed_middleware_1.default)(["ADMIN", "SUPER_ADMIN"]), organization_controller_1.default.unarchive);
-const userRoute = router;
-exports.default = userRoute;
+const organizationRoute = router;
+exports.default = organizationRoute;
 //# sourceMappingURL=organization.route.js.map

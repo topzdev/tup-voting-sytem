@@ -44,6 +44,9 @@ const configs = {
       migrationsDir: join(__dirname, "migration"),
       subscribersDir: join(__dirname, "subscriber"),
     },
+    extra: {
+      ssl: true,
+    },
   },
   cloudinary: {
     cloud_name: process.env.CLOUDINARY_API_NAME,
