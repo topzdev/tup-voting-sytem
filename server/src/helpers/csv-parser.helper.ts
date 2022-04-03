@@ -17,3 +17,9 @@ export const parseJsontoCsv = async (fields: any[], data: any[]) => {
   const parsedData = json2csv.parse(data);
   return parsedData;
 };
+
+export const parseCustomJsonToCsv = async (data: any[]) => {
+  const json2csv = new Parser({ header: false });
+  const parsedData = json2csv.parse(data);
+  return parsedData;
+};

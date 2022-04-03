@@ -87,6 +87,50 @@ const closeElection = async (
   }
 };
 
+const electionPublicity = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const election_id = req.params.election_id;
+    const is_public = req.body.is_public as boolean;
+
+    res
+      .status(200)
+      .json(
+        await settingsService.electionPublicity(
+          parseInt(election_id),
+          Boolean(is_public)
+        )
+      );
+  } catch (error) {
+    next(error);
+  }
+};
+
+const electionTallyPublicity = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const election_id = req.params.election_id;
+    const is_tally_public = req.body.is_tally_public as boolean;
+
+    res
+      .status(200)
+      .json(
+        await settingsService.electionTallyPublicity(
+          parseInt(election_id),
+          Boolean(is_tally_public)
+        )
+      );
+  } catch (error) {
+    next(error);
+  }
+};
+
 const sendCredentialsEmail = async (
   req: Request,
   res: Response,
@@ -152,6 +196,8 @@ const settingsController = {
   sendCredentialsEmail,
   sendElectionHasEnded,
   sendElectionHasLaunched,
+  electionPublicity,
+  electionTallyPublicity,
 };
 
 export default settingsController;

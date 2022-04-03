@@ -4,6 +4,15 @@
     <v-divider></v-divider>
     <v-card-text>
       <v-row>
+        <v-col v-if="previewMode" cols="12">
+          <h2 class="title mb-2 text--primary">
+            The Election will be in Preview Mode until the election started
+          </h2>
+          <p class="subtitle-1">
+            The voting will start when election reaches {{ start_date }}
+          </p>
+        </v-col>
+
         <v-col cols="12">
           <h2 class="title mb-2 text--primary">
             You <span class="error--text">will not be allowed</span> to change
@@ -59,9 +68,10 @@
 import AppImage from "@/components/app/AppImage.vue";
 import launchpadServices from "@/services/launchpad.services";
 import dayjs from "dayjs";
-import Vue from "vue";
+import Vue, { PropOptions } from "vue";
 import mixins from "vue-typed-mixins";
 import overviewMixin from "@/mixins/overview.mixins";
+import { Election } from "../../../../services/election.service";
 
 const defaultAlert = {
   show: false,
@@ -77,6 +87,7 @@ export default mixins(overviewMixin).extend({
     toPage: Function,
     next: Function,
     back: Function,
+    election: Object as PropOptions<Election>,
     electionId: Number,
   },
 
@@ -86,6 +97,20 @@ export default mixins(overviewMixin).extend({
       valid: false,
       alert: Object.assign({}, defaultAlert),
     };
+  },
+
+  computed: {
+    start_date() {
+      return dayjs(this.election.start_date).format("MMMM DD, YYYY hh:mm:ss a");
+    },
+    end_date() {
+      return;
+    },
+    previewMode() {
+      return (
+        new Date().getTime() < new Date(this.election.start_date).getTime()
+      );
+    },
   },
 
   methods: {

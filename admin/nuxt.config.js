@@ -1,8 +1,8 @@
 import colors from "vuetify/es5/util/colors";
 
 export default {
-  mode: "spa",
-  env: {
+  ssr: false,
+  enva: {
     // baseUrl: process.env.BASER_SERVER_URL || "http://localhost:5000",
     // browserBaseUrl: process.env.BASER_CLIENT_URL || "http://localhost:3000",
   },

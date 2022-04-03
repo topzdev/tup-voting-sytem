@@ -13,6 +13,7 @@
         >
           <h2 class="title text-truncate text--primary" :title="data.title">
             {{ data.title }}
+            <publicity-icon :size="20" :value="data.is_public" />
           </h2>
           <p v-if="data.description" class="body-2 my-0 text--secondary">
             {{ data.description }}
@@ -62,6 +63,7 @@ import { Election } from "@/services/election.service";
 import ElectionStatusChip from "~/components/chips/ElectionStatusChip.vue";
 import dayjs from "dayjs";
 import AppImage from "@/components/app/AppImage.vue";
+import PublicityIcon from "~/components/icon/PublicityIcon.vue";
 
 export default Vue.extend({
   props: {
@@ -74,6 +76,7 @@ export default Vue.extend({
   components: {
     ElectionStatusChip,
     AppImage,
+    PublicityIcon,
   },
 
   computed: {

@@ -13,6 +13,7 @@ import settingsRoute from "./modules/settings/settings.route";
 import overviewRoute from "./modules/overview/overview.route";
 import votingRoute from "./modules/voting/voting.route";
 import mailerRoute from "./modules/mailer/mailer.route";
+import resultsRoute from "./modules/results/results.route";
 const router = express.Router();
 
 router.use("/user", userRoute);
@@ -29,5 +30,6 @@ router.use("/settings", settingsRoute);
 router.use("/overview", overviewRoute);
 router.use("/voting", votingRoute);
 router.use("/mailer", mailerRoute);
+router.use("/results", resultsRoute);
 
 export default router;

@@ -36,6 +36,7 @@ const pageStatus = {
       electionHasLaunched: ["preview", "running"],
       electionHasEnded: ["completed"],
     },
+    publicity: ["running", "running", "preview", "completed"],
   },
 
   overview: {

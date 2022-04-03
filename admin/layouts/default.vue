@@ -82,6 +82,11 @@ export default {
           title: "Dashboard",
           to: "/",
         },
+        {
+          icon: "mdi-users",
+          title: "Users",
+          to: "/settings/user",
+        },
       ],
 
       miniVariant: false,

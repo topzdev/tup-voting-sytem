@@ -284,6 +284,73 @@ const closeElection = async (_election_id: number) => {
   return true;
 };
 
+const electionPublicity = async (_election_id: number, _is_public: boolean) => {
+  const electionRepository = getRepository(Election);
+
+  if (!_election_id) {
+    throw new HttpException("BAD_REQUEST", "Election id is required");
+  }
+
+  let builder = electionRepository.createQueryBuilder("election");
+
+  builder = builder
+    .select(["election.is_public"])
+    .where("election.id = :_election_id", {
+      _election_id,
+    });
+
+  const election = await builder.getOne();
+
+  if (!election) {
+    throw new HttpException("NOT_FOUND", "Election not found");
+  }
+
+  const savedElection = await builder
+    .update()
+    .set({
+      is_public: _is_public,
+    })
+    .where("election.id = :_election_id", { _election_id })
+    .execute();
+
+  return _is_public;
+};
+
+const electionTallyPublicity = async (
+  _election_id: number,
+  _is_tally_public: boolean
+) => {
+  const electionRepository = getRepository(Election);
+
+  if (!_election_id) {
+    throw new HttpException("BAD_REQUEST", "Election id is required");
+  }
+
+  let builder = electionRepository.createQueryBuilder("election");
+
+  builder = builder
+    .select(["election.is_tally_public"])
+    .where("election.id = :_election_id", {
+      _election_id,
+    });
+
+  const election = await builder.getOne();
+
+  if (!election) {
+    throw new HttpException("NOT_FOUND", "Election not found");
+  }
+
+  const savedElection = await builder
+    .update()
+    .set({
+      is_tally_public: _is_tally_public,
+    })
+    .where("election.id = :_election_id", { _election_id })
+    .execute();
+
+  return _is_tally_public;
+};
+
 const sendCredentialsEmail = async (
   _election_id,
   _voters_ids: number[] | "all"
@@ -315,6 +382,8 @@ const settingsService = {
   sendCredentialsEmail,
   sendElectionHasLaunched,
   sendElectionHasEnded,
+  electionPublicity,
+  electionTallyPublicity,
 };
 
 export default settingsService;

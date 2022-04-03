@@ -1,4 +1,4 @@
-import shortid from "shortid";
+import { customAlphabet } from "nanoid";
 import configs from "../../configs";
 import { Election } from "../election/entity/election.entity";
 
@@ -25,19 +25,21 @@ export const VOTING_MESSAGES = {
   voterIdRequired: { title: "Voter ID is required", body: "" },
 };
 
+const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const nanoid = customAlphabet(alphabet, 10);
+
 export const generateReceipt = (election: Election) => {
   return `${configs.ballotReceiptPreWord}-${
     election.id
-  }-${shortid.generate()}`.toUpperCase();
+  }-${nanoid()}`.toUpperCase();
 };
 
 export const generateBallotError = (election: Election) => {
   let error: ElectionErrorMessage;
-
+  // Start - Election with Final Tally Results Public Module - CL -
   // check if elexction exist or is in building status
   if (!election || election.final_status === "building") {
     error = VOTING_MESSAGES.electionNotFound;
-
     // check if election is running
   } else if (election.final_status === "running") {
     // check if the start date is past with the current date
@@ -46,9 +48,13 @@ export const generateBallotError = (election: Election) => {
     }
 
     // check if the election is completed or close
-  } else if (election.final_status === "completed") {
+  } else if (
+    election.final_status === "completed" ||
+    election.final_status === "archived"
+  ) {
     error = VOTING_MESSAGES.electionClosed;
   }
+  // End - Election with Final Tally Results Public Module
 
   return error;
 };

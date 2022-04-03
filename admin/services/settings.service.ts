@@ -51,6 +51,17 @@ const settingsServices = {
     ).data;
   },
 
+  async electionPublicity(
+    election_id: Election["id"],
+    is_public: Election["is_public"]
+  ) {
+    return (
+      await apiClient.put(`${url}/isElectionPublic/${election_id}`, {
+        is_public,
+      })
+    ).data;
+  },
+
   async sendElectionHasLaunched(election_id: Election["id"]) {
     return (await apiClient.post(`${url}/election-has-launched/${election_id}`))
       .data;
@@ -59,6 +70,17 @@ const settingsServices = {
   async sendElectionHasEnded(election_id: Election["id"]) {
     return (await apiClient.post(`${url}/election-has-ended/${election_id}`))
       .data;
+  },
+
+  async electionTallyPublicity(
+    election_id: Election["id"],
+    is_tally_public: Election["is_tally_public"]
+  ) {
+    return (
+      await apiClient.put(`${url}/isElectionTallyPublic/${election_id}`, {
+        is_tally_public,
+      })
+    ).data;
   },
 };
 
