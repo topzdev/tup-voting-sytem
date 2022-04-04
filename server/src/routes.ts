@@ -14,6 +14,8 @@ import overviewRoute from "./modules/overview/overview.route";
 import votingRoute from "./modules/voting/voting.route";
 import mailerRoute from "./modules/mailer/mailer.route";
 import resultsRoute from "./modules/results/results.route";
+import candidatePublicRoute from "./modules/public/candidate/candidate.route";
+import partyPublicRoute from "./modules/public/party/party.route";
 const router = express.Router();
 
 router.use("/user", userRoute);
@@ -31,5 +33,7 @@ router.use("/overview", overviewRoute);
 router.use("/voting", votingRoute);
 router.use("/mailer", mailerRoute);
 router.use("/results", resultsRoute);
+router.use("/candidate-public", candidatePublicRoute);
+router.use("/party-public", partyPublicRoute);
 
 export default router;
