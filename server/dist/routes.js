@@ -17,6 +17,7 @@ const launchpad_route_1 = __importDefault(require("./modules/launchpad/launchpad
 const settings_route_1 = __importDefault(require("./modules/settings/settings.route"));
 const overview_route_1 = __importDefault(require("./modules/overview/overview.route"));
 const voting_route_1 = __importDefault(require("./modules/voting/voting.route"));
+const mailer_route_1 = __importDefault(require("./modules/mailer/mailer.route"));
 const results_route_1 = __importDefault(require("./modules/results/results.route"));
 const router = express_1.default.Router();
 router.use("/user", user_route_1.default);
@@ -32,6 +33,7 @@ router.use("/launchpad", launchpad_route_1.default);
 router.use("/settings", settings_route_1.default);
 router.use("/overview", overview_route_1.default);
 router.use("/voting", voting_route_1.default);
+router.use("/mailer", mailer_route_1.default);
 router.use("/results", results_route_1.default);
 exports.default = router;
 //# sourceMappingURL=routes.js.map

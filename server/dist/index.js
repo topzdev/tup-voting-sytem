@@ -19,6 +19,7 @@ const cloudinary_1 = __importDefault(require("cloudinary"));
 const configs_1 = __importDefault(require("./configs"));
 cloudinary_1.default.v2.config(configs_1.default.cloudinary);
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(__dirname, process.cwd());
     yield (0, typeorm_1.createConnection)()
         .then((connect) => {
         console.log("Database Host:", configs_1.default.database.host);

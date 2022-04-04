@@ -18,5 +18,6 @@
     },
     "typeRoots": ["src/type"]
   },
-  "include": ["src/**/*", "ormconfig.ts"]
+
+  "include": ["src/templates/*", "src/**/*", "ormconfig.ts", "*.hbs"]
 }

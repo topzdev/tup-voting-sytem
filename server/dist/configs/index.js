@@ -56,6 +56,9 @@ const configs = {
             migrationsDir: (0, path_1.join)(__dirname, "migration"),
             subscribersDir: (0, path_1.join)(__dirname, "subscriber"),
         },
+        extra: {
+            ssl: true,
+        },
     },
     cloudinary: {
         cloud_name: process.env.CLOUDINARY_API_NAME,
@@ -83,6 +86,14 @@ const configs = {
             algo: process.env.JWT_LOCAL_ALGO,
             expiresIn: !constant_1.__prod__ ? "30d" : "1d",
         },
+    },
+    nodemailer: {
+        username: process.env.NODEMAILER_USERNAME,
+        password: process.env.NODEMAILER_PASSWORD,
+    },
+    platform: {
+        url: process.env.VOTING_PLATFORM_URL,
+        shortUrl: process.env.VOTIING_PLATFORM_SHORT_URL,
     },
     ballotReceiptPreWord: "TUPELECT",
 };

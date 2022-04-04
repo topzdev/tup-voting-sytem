@@ -54,10 +54,12 @@ export default {
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {
-    baseURL: "http://localhost:5000",
-    // browserBaseURL: process.env.browserBaseUrl,
-    progress: true,
+  publicRuntimeConfig: {
+    axios: {
+      // baseURL: "https://tup-voting-server-dev.herokuapp.com/",
+      baseURL: process.env.BASE_SERVER_URL || "http://localhost:5000",
+      progress: true,
+    },
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
