@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist/",
-    "copy-files": "copyfiles -u 1 src/templates/** dist/",
+    "copy-files": "copyfiles -u 1  \"src/templates/**\" \"dist/\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "typeorm": "set NODE_ENV=development&&node --require ts-node/register ./node_modules/typeorm/cli.js --config src/ormconfig",
     "build": "yarn clean && tsc && yarn copy-files",
