@@ -200,7 +200,7 @@ export async function setContext (app, context) {
       payload: context.payload,
       error: context.error,
       base: app.router.options.base,
-      env: {}
+      env: {"GOOGLE_OAUTH_CLIENT_ID":"193167905393-lfmi2jajb0e9nec0e5jttd7kodeof50c.apps.googleusercontent.com","BASE_SERVER_URL":"https://tup-voting-server-dev.herokuapp.com/"}
     }
     // Only set once
 

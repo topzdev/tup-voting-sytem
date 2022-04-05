@@ -79,6 +79,8 @@ const voterLogin = async (_credentials: VoterLoginCredentials) => {
   };
 };
 
+const googleToken = async () => {};
+
 const authServices = {
   adminLogin,
   voterLogin,

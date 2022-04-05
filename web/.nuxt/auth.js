@@ -2,6 +2,7 @@ import Middleware from './middleware'
 import { Auth, authMiddleware, ExpiredAuthSessionError } from '~auth/runtime'
 
 // Active schemes
+import { Oauth2Scheme } from '~auth/runtime'
 import { LocalScheme } from '~auth/runtime'
 
 Middleware.auth = authMiddleware
@@ -28,13 +29,38 @@ export default function (ctx, inject) {
   "localStorage": {
     "prefix": "auth."
   },
-  "defaultStrategy": "local"
+  "defaultStrategy": "google"
 }
 
   // Create a new Auth instance
   const $auth = new Auth(ctx, options)
 
   // Register strategies
+  // google
+  $auth.registerStrategy('google', new Oauth2Scheme($auth, {
+  "clientId": "193167905393-lfmi2jajb0e9nec0e5jttd7kodeof50c.apps.googleusercontent.com",
+  "redirectUri": "http://localhost:3000/register/",
+  "accessType": "offline",
+  "responseType": "code",
+  "scope": [
+    "openid",
+    "profile",
+    "email",
+    "profile",
+    "email"
+  ],
+  "prompt": "consent",
+  "codeChallengeMethod": "",
+  "responseMode": "",
+  "acrValues": "",
+  "endpoints": {
+    "authorization": "https://accounts.google.com/o/oauth2/auth",
+    "userInfo": "/api/v1/auth/voter/me",
+    "token": "/api/v1/auth/voter/google/token"
+  },
+  "name": "google"
+}))
+
   // local
   $auth.registerStrategy('local', new LocalScheme($auth, {
   "token": {

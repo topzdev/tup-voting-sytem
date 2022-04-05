@@ -1,5 +1,12 @@
 [
   {
+    "name": "register",
+    "path": "/register",
+    "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\register.vue",
+    "chunkName": "pages/register",
+    "_name": "_0aa4fbf4"
+  },
+  {
     "path": "/election/:slug?",
     "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug.vue",
     "chunkName": "pages/election/_slug",
