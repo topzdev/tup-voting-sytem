@@ -11,6 +11,7 @@ import { Election } from "../../election/entity/election.entity"
 
 const getAll = async (_electionId: string, _query: GetCandidateBody) => {
   const candidateRepository = getRepository(Candidate);
+  const electionRepository = getRepository(Election);
   const searchStirng = _query.search ? _query.search : "";
   const withArchive = _query.withArchive;
 
@@ -19,15 +20,22 @@ const getAll = async (_electionId: string, _query: GetCandidateBody) => {
 
   let builder = candidateRepository
     .createQueryBuilder("candidate")
+    .leftJoinAndSelect("candidate.election", "election")
+    .where("candidate.election_id = :electionId", {
+      electionId: _electionId,
+    })
+    .andWhere("election.is_public = :isPublic", {
+      isPublic: true,
+    })
     .leftJoinAndSelect("candidate.party", "party")
     .leftJoinAndSelect("party.logo", "party_logo")
     .leftJoinAndSelect("candidate.position", "position")
     .leftJoinAndSelect("candidate.profile_photo", "profile_photo")
-    .leftJoinAndSelect("candidate.cover_photo", "cover_photo")
-    .where("candidate.election_id = :electionId", {
-      electionId: _electionId,
-    });
-
+    .leftJoinAndSelect("candidate.cover_photo", "cover_photo");
+    // .where("candidate.election_id = :electionId", {
+    //   electionId: _electionId,
+    // })
+    // .andWhere("election.is_public = :bol", { bol: true });
   if (!withArchive) {
     builder = builder.andWhere("candidate.archive = :bol", { bol: false });
   }

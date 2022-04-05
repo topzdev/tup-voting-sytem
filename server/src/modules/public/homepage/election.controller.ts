@@ -1,22 +1,25 @@
 import { NextFunction, Request, Response } from "express";
 import fileUpload from "express-fileupload";
+import {
+  CreateElectionBody,
+  UpdateElectionBody,
+  GetElectionBody,
+} from "../../election/election.interface";
+import electionService from "./election.service";
 import { unflatten } from "flat";
-import candidateService from "./candidate.service";
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const election_id = req.params.election_id;
-    const { page, take, order, search, withArchive, party, position, } =
-      req.query as any;
+    const orgId = req.params.org_id;
+
+    const { page, take, order, search, withArchive } = req.query as any;
 
     res.status(200).json(
-      await candidateService.getAll(election_id, {
+      await electionService.getAll(orgId, {
         page: page ? parseInt(page) : undefined,
         take: take ? parseInt(take) : undefined,
         order,
         search,
-        party,
-        position,
         withArchive: withArchive ? Boolean(withArchive) : undefined,
       })
     );
@@ -25,8 +28,8 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const candidateController = {
-  getAll,
-};
-
-export default candidateController;
+const electionController = {
+    getAll,
+  };
+  
+export default electionController;

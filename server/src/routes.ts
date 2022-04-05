@@ -16,6 +16,7 @@ import mailerRoute from "./modules/mailer/mailer.route";
 import resultsRoute from "./modules/results/results.route";
 import candidatePublicRoute from "./modules/public/candidate/candidate.route";
 import partyPublicRoute from "./modules/public/party/party.route";
+import homepageRoute from "./modules/public/homepage/election.route";
 const router = express.Router();
 
 router.use("/user", userRoute);
@@ -35,5 +36,6 @@ router.use("/mailer", mailerRoute);
 router.use("/results", resultsRoute);
 router.use("/candidate-public", candidatePublicRoute);
 router.use("/party-public", partyPublicRoute);
+router.use("/homepage", homepageRoute);
 
 export default router;

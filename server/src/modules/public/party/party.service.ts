@@ -8,7 +8,7 @@ import {
   CreatePartyBody,
   GetPartyBody,
   UpdatePartyBody,
-} from "./party.interface";
+} from "../../party/party.interface";
 import { PartyLogo } from "../../party/entity/party-logo.entity";
 import { PartyCoverPhoto } from "../../party/entity/party-cover-photo.entity";
 
@@ -22,11 +22,15 @@ const getAll = async (_electionId: string, _query: GetPartyBody) => {
 
   let builder = partyRepository
     .createQueryBuilder("party")
-    .leftJoinAndSelect("party.logo", "logo")
-    .leftJoinAndSelect("party.cover_photo", "cover")
+    .leftJoinAndSelect("party.election", "election")
     .where("party.election_id = :electionId", {
       electionId: _electionId,
-    });
+    })
+    .andWhere("election.is_public = :isPublic", {
+      isPublic: true,
+    })
+    .leftJoinAndSelect("party.logo", "logo")
+    .leftJoinAndSelect("party.cover_photo", "cover");
 
   if (!withArchive) {
     builder = builder.andWhere("party.archive = :bol", { bol: false });
