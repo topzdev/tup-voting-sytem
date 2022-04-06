@@ -131,6 +131,28 @@ const electionTallyPublicity = async (
   }
 };
 
+const electionAllowPreRegister = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const election_id = req.params.election_id;
+    const allow_pre_register = req.body.allow_pre_register as boolean;
+
+    res
+      .status(200)
+      .json(
+        await settingsService.electionAllowPreRegister(
+          parseInt(election_id),
+          Boolean(allow_pre_register)
+        )
+      );
+  } catch (error) {
+    next(error);
+  }
+};
+
 const sendCredentialsEmail = async (
   req: Request,
   res: Response,
@@ -198,6 +220,7 @@ const settingsController = {
   sendElectionHasLaunched,
   electionPublicity,
   electionTallyPublicity,
+  electionAllowPreRegister,
 };
 
 export default settingsController;

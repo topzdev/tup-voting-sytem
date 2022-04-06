@@ -18,6 +18,12 @@ router.get(
   rolesAllowed("SUPER_ADMIN"),
   voterController.getAll
 );
+router.get(
+  "/all-pre-registered/:election_id",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  voterController.getAllPreRegistered
+);
 
 router.get("/voter-id/:voterId", adminAuth, voterController.getOneByVoterId);
 
@@ -105,6 +111,13 @@ router.post(
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   voterController.removeVoters
+);
+
+router.post(
+  "/grant-pre-register",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  voterController.grantPreRegister
 );
 
 const voterRoute = router;

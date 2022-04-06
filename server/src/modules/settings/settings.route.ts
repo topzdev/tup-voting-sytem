@@ -59,6 +59,13 @@ router.put(
   settingsController.electionTallyPublicity
 );
 
+router.put(
+  "/allow-pre-register/:election_id",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  settingsController.electionAllowPreRegister
+);
+
 router.post(
   "/voters-credentials/:election_id",
   adminAuth,

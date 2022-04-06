@@ -31,6 +31,46 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const getAllPreRegistered = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const election_id = req.params.election_id;
+    const { page, take, order, search } = req.query as any;
+
+    res.status(200).json(
+      await voterService.getAllPreRegistered(election_id, {
+        page: page ? parseInt(page) : undefined,
+        take: take ? parseInt(take) : undefined,
+        order,
+        search,
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+const grantPreRegister = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const election_id = req.body.election_id;
+    const voters_ids = req.body.voter_ids;
+    res
+      .status(200)
+      .json(
+        await voterService.grantPreRegister(parseInt(election_id), voters_ids)
+      );
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getOneById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
@@ -255,6 +295,9 @@ const voterController = {
   allowVoters,
   removeVoters,
   getElectionVoters,
+
+  grantPreRegister,
+  getAllPreRegistered,
 };
 
 export default voterController;

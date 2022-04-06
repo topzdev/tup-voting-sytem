@@ -8,6 +8,7 @@ import {
   signJwtVoterPayload,
 } from "../../helpers/jwt.helper";
 import { Voter } from "../voter/entity/voter.entity";
+import authHelpers from "./auth.helpers";
 
 const adminLogin = async (_credentials: AdminLoginCredentials) => {
   const user = await getRepository(User)
@@ -78,8 +79,6 @@ const voterLogin = async (_credentials: VoterLoginCredentials) => {
     voter,
   };
 };
-
-const googleToken = async () => {};
 
 const authServices = {
   adminLogin,

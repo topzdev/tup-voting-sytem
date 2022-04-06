@@ -116,6 +116,108 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
   };
 };
 
+const getAllPreRegistered = async (
+  _electionId: string,
+  _query: GetVoterBody
+) => {
+  const voterRepository = getRepository(Voter);
+  const searchStirng = _query.search ? _query.search : "";
+
+  if (!_electionId)
+    throw new HttpException("BAD_REQUEST", "Election id is required");
+
+  let builder = voterRepository
+    .createQueryBuilder("voter")
+    .leftJoinAndSelect("voter.voted", "voted")
+    .where("voter.election_id = :electionId AND voter.is_pre_register", {
+      electionId: _electionId,
+    });
+
+  if (searchStirng) {
+    builder = builder.andWhere(
+      new Brackets((sqb) => {
+        sqb.orWhere("voter.firstname ILIKE :firstname", {
+          firstname: `%${searchStirng}%`,
+        });
+        sqb.orWhere("voter.lastname ILIKE :lastname", {
+          lastname: `%${searchStirng}%`,
+        });
+        sqb.orWhere("voter.username ILIKE :username", {
+          username: `%${searchStirng}%`,
+        });
+        sqb.orWhere("voter.email_address ILIKE :email_address", {
+          email_address: `%${searchStirng}%`,
+        });
+      })
+    );
+  }
+
+  builder = builder.orderBy({
+    "voter.created_at": "DESC",
+  });
+
+  if (_query.order) {
+    builder = builder.addOrderBy("voter.firstname", _query.order);
+    builder = builder.addOrderBy("voter.lastname", _query.order);
+  }
+
+  if (_query.page && _query.take) {
+    const offset = _query.page * _query.take - _query.take;
+    builder = builder.offset(offset).limit(_query.take);
+  }
+
+  builder = builder.addSelect([
+    "voter.firstname",
+    "voter.lastname",
+    "voter.created_at",
+    "voter.deleted_at",
+    "voter.id",
+    "voter.username",
+    "voter.email_address",
+    "voter.is_allowed",
+    "voter.election_id",
+    "voter.archive",
+  ]);
+
+  const items = await builder.getMany();
+
+  const totalCount = await voterRepository.count({
+    where: { election_id: _electionId },
+  });
+
+  return {
+    items,
+    totalCount,
+    itemsCount: items.length,
+  };
+};
+
+const grantPreRegister = async (
+  _election_id: number,
+  _voters_ids: string[]
+) => {
+  if (!_election_id)
+    throw new HttpException("BAD_REQUEST", "Election id is required");
+
+  if (!_voters_ids.length)
+    throw new HttpException("BAD_REQUEST", "Voter id's is required");
+
+  const voterRepository = getRepository(Voter);
+
+  const voters = await voterRepository
+    .createQueryBuilder("voter")
+    .update()
+    .set({
+      is_pre_register: false,
+    })
+    .where({
+      id: In(_voters_ids),
+    })
+    .execute();
+
+  return true;
+};
+
 const getByVoterId = async (_voterId: string) => {
   if (!_voterId) throw new HttpException("BAD_REQUEST", "Voter ID is required");
 
@@ -618,6 +720,8 @@ const voterServices = {
   allowVoters,
   getElectionVoters,
   removeVoters,
+  grantPreRegister,
+  getAllPreRegistered,
 };
 
 export default voterServices;

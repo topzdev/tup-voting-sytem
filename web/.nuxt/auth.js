@@ -50,13 +50,14 @@ export default function (ctx, inject) {
     "email"
   ],
   "prompt": "consent",
+  "state": "UNIQUE_AND_NON_GUESSABLE",
   "codeChallengeMethod": "",
   "responseMode": "",
   "acrValues": "",
   "endpoints": {
     "authorization": "https://accounts.google.com/o/oauth2/auth",
-    "userInfo": "/api/v1/auth/voter/me",
-    "token": "/api/v1/auth/voter/google/token"
+    "userInfo": "http://localhost:5000/api/v1/auth/voter/me",
+    "token": "http://localhost:5000/api/v1/auth/voter/google/token"
   },
   "name": "google"
 }))

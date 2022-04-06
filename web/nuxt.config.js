@@ -88,8 +88,8 @@ export default {
         responseMode: "",
         acrValues: "",
         endpoints: {
-          token: "/api/v1/auth/voter/google/token", // somm backend url to resolve your auth with google and give you the token back
-          userInfo: "/api/v1/auth/voter/me", // the endpoint to get the user info after you recived the token
+          token: "http://localhost:5000/api/v1/auth/voter/google/token", // somm backend url to resolve your auth with google and give you the token back
+          userInfo: "http://localhost:5000/api/v1/auth/voter/me", // the endpoint to get the user info after you recived the token
         },
       },
       local: {
