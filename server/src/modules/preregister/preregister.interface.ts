@@ -1,7 +1,16 @@
 export type PreRegisterVoterInfo = {
-  firstname: string;
-  lastname: string;
-  email_address: string;
-  google_id: string;
+  code: string;
   election_id: number;
+};
+
+export type GoogleUserInfo = {
+  id: string;
+  email: string;
+  verified_email: string;
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+  local: string;
+  hd: string;
 };

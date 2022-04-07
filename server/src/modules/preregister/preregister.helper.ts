@@ -1,7 +1,8 @@
 import axios from "axios";
 import qs from "qs";
 import configs from "../../configs";
-import { GoogleTokensResult } from "../auth/auth.inteface";
+import { HttpException } from "../../helpers/errors/http.exception";
+import { GoogleTokensResult, GoogleUserInfo } from "../auth/auth.inteface";
 
 export const PREREGISTER_MESSAGES = {
   is_preregistered: {
@@ -42,11 +43,14 @@ const getGoogleTokens = async (code: string): Promise<GoogleTokensResult> => {
     return response.data;
   } catch (error) {
     console.log(error.response.data.error);
-    throw Error(error.message);
+    throw new HttpException("BAD_REQUEST", "Something went wrong");
   }
 };
 
-const getGoogleUserInfo = async ({ id_token, access_token }) => {
+const getGoogleUserInfo = async ({
+  id_token,
+  access_token,
+}): Promise<GoogleUserInfo> => {
   try {
     const response = await axios.get(
       `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`,
@@ -57,10 +61,10 @@ const getGoogleUserInfo = async ({ id_token, access_token }) => {
       }
     );
 
-    return response.data;
+    return response.data as GoogleUserInfo;
   } catch (error) {
     console.log(error.response.data.error);
-    throw Error(error.message);
+    throw new HttpException("BAD_REQUEST", "Something went wrong");
   }
 };
 

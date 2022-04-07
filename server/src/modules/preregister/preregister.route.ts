@@ -18,7 +18,7 @@ router.post(
   preregisterController.getVoterInfo
 );
 
-router.get(
+router.post(
   "/is-registered",
   validate(preregisterValidator.isRegistered),
   preregisterController.isRegistered

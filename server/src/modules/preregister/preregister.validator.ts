@@ -35,13 +35,7 @@ const getVoterInfo = [code];
 
 const isRegistered = [email_address, election_id];
 
-const preRegisterVoter = [
-  firstname,
-  lastname,
-  email_address,
-  google_id,
-  election_id,
-];
+const preRegisterVoter = [code, election_id];
 
 const preregisterValidator = {
   getElection,
