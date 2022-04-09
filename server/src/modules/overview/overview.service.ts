@@ -22,6 +22,7 @@ const getElectionDetails = async (_election_id: number) => {
       "election.status",
       "election.archive",
       "election.final_status",
+      "election.allow_pre_register",
     ])
     .addSelect(finalStatusSubquery(builder.alias))
 
@@ -40,12 +41,21 @@ const getElectionDetails = async (_election_id: number) => {
   if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
 
   const longUrl = platformLinks.voting.replace("$electionSlug", election.slug);
+  const preRegisterUrl = election.allow_pre_register
+    ? platformLinks.preRegister.replace("$electionSlug", election.slug)
+    : null;
   const shortUrl = platformShortLinks.voting.replace(
     "$electionId",
     election.id.toString()
   );
 
-  return { ...election, shortUrl, longUrl } as OverviewDetails;
+  const urls = {
+    longUrl,
+    preRegisterUrl,
+    shortUrl,
+  };
+
+  return { ...election, urls } as OverviewDetails;
 };
 
 const overviewServices = {

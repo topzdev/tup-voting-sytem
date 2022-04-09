@@ -3,6 +3,12 @@ import { Candidate } from "./candidate.service";
 import { Election, ElectionStatus } from "./election.service";
 import { Position } from "./position.service";
 
+export type OverviewUrls = {
+  preRegisterUrl: string;
+  longUrl: string;
+  shortUrl: string;
+};
+
 export type OverviewDetails = Pick<
   Election,
   | "id"
@@ -19,8 +25,7 @@ export type OverviewDetails = Pick<
   partiesCount: number;
   candidatesCount: number;
   positionsCount: number;
-  longUrl: string;
-  shortUrl: string;
+  urls: OverviewUrls;
 };
 
 const url = "/api/v1/overview";

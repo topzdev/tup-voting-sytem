@@ -49,6 +49,19 @@
               inset
             ></v-switch>
           </v-col>
+
+          <v-col cols="12" v-if="show.allow_pre_registration">
+            <label class="body-1 mb-0 text--primary" for="pre_register"
+              >Allow Pre-Registration on preview state of election.
+            </label>
+            <v-switch
+              class="mt-0"
+              id="pre_register"
+              v-model="body.allow_pre_register"
+              @change="allowElectionPreRegistration"
+              inset
+            ></v-switch>
+          </v-col>
         </v-row>
       </v-card-text>
     </v-card>
@@ -61,13 +74,16 @@ import settingsMixin from "@/mixins/settings.mixin";
 import settingsServices from "@/services/settings.service";
 import mixins from "vue-typed-mixins";
 import PublicityIcon from "~/components/icon/PublicityIcon.vue";
+import { Election } from "@/services/election.service";
+import restrictionsMixin from "../../../../mixins/restrictions.mixin";
+import pageStatus from "../../../../configs/page-status.config";
 const defaultAlert = {
   show: false,
   type: "",
   message: "",
 };
 
-export default mixins(settingsMixin).extend({
+export default mixins(settingsMixin, restrictionsMixin).extend({
   components: {
     PublicityIcon,
   },
@@ -81,12 +97,20 @@ export default mixins(settingsMixin).extend({
       body: {
         is_public: false,
         is_tally_public: false,
+        allow_pre_register: false,
       },
       baseURL: configs.baseURL,
     };
   },
 
   computed: {
+    show(): any {
+      return {
+        allow_pre_registration: this.hideByStatus(
+          pageStatus.settings.publicity.preRegistration
+        ),
+      };
+    },
     isPublicIcon(): string {
       if (!this.electionInfo) return "";
       return this.electionInfo.is_public ? "mdi-earth" : "mdi-lock";
@@ -212,6 +236,61 @@ export default mixins(settingsMixin).extend({
       });
     },
 
+    async allowElectionPreRegistration() {
+      const allow_pre_register = this.body.allow_pre_register;
+
+      (this.$refs.form as any).validate();
+
+      this.$accessor.system.showAppDialog({
+        show: true,
+        title: "Allow Pre-registration in this election?",
+        message: `Are you sure to allow pre-registration in this election`,
+        button: {
+          anyEventHide: false,
+          yesFunction: async ({ hideDialog }) => {
+            if (this.valid && this.electionId) {
+              this.loading = true;
+              try {
+                await settingsServices.allowElectionPreRegistration(
+                  this.electionId,
+                  allow_pre_register
+                );
+
+                this.$accessor.snackbar.set({
+                  show: true,
+                  message: "Election Pre-registration Updated",
+                  timeout: 5000,
+                  color: "success",
+                });
+
+                await this.$accessor.manageElection.reFetchElection(
+                  this.electionId
+                );
+              } catch (error: any) {
+                const message =
+                  error.response?.data?.error?.message || error.message;
+
+                if (message) {
+                  this.alert = {
+                    show: true,
+                    type: "error",
+                    message: message,
+                  };
+                }
+              } finally {
+                hideDialog();
+                this.loading = false;
+              }
+            }
+          },
+          noFunction: ({ hideDialog }) => {
+            hideDialog();
+            this.body.allow_pre_register = !allow_pre_register;
+          },
+        },
+      });
+    },
+
     reset() {
       (this.$refs as any).form.reset();
       (this.$refs as any).form.resetValidation();
@@ -229,10 +308,11 @@ export default mixins(settingsMixin).extend({
       deep: true,
       immediate: true,
 
-      handler: function (value) {
+      handler: function (value: Election) {
         console.log("Election Informatio", value);
         this.body.is_public = value.is_public;
         this.body.is_tally_public = value.is_tally_public;
+        this.body.allow_pre_register = value.allow_pre_register;
       },
     },
   },
