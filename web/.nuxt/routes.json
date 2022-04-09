@@ -1,10 +1,9 @@
 [
   {
-    "name": "register",
-    "path": "/register",
-    "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\register.vue",
-    "chunkName": "pages/register",
-    "_name": "_0aa4fbf4"
+    "name": "pre-register",
+    "path": "/pre-register",
+    "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\pre-register\\\\index.vue",
+    "chunkName": "pages/pre-register/index"
   },
   {
     "path": "/election/:slug?",
@@ -15,8 +14,7 @@
         "name": "election-slug",
         "path": "",
         "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\index.vue",
-        "chunkName": "pages/election/_slug/index",
-        "_name": "_2c66a0f2"
+        "chunkName": "pages/election/_slug/index"
       },
       {
         "path": "ballot",
@@ -27,34 +25,28 @@
             "name": "election-slug-ballot",
             "path": "",
             "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\ballot\\\\index.vue",
-            "chunkName": "pages/election/_slug/ballot/index",
-            "_name": "_9495a264"
+            "chunkName": "pages/election/_slug/ballot/index"
           },
           {
             "name": "election-slug-ballot-final",
             "path": "final",
             "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\ballot\\\\final.vue",
-            "chunkName": "pages/election/_slug/ballot/final",
-            "_name": "_09f8551c"
+            "chunkName": "pages/election/_slug/ballot/final"
           },
           {
             "name": "election-slug-ballot-review",
             "path": "review",
             "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\ballot\\\\review.vue",
-            "chunkName": "pages/election/_slug/ballot/review",
-            "_name": "_6603be0c"
+            "chunkName": "pages/election/_slug/ballot/review"
           }
-        ],
-        "_name": "_5eb63998"
+        ]
       }
-    ],
-    "_name": "_1a57d190"
+    ]
   },
   {
     "name": "index",
     "path": "/",
     "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\index.vue",
-    "chunkName": "pages/index",
-    "_name": "_274d10d1"
+    "chunkName": "pages/index"
   }
 ]

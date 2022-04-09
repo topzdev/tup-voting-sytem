@@ -44,18 +44,13 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
   let builder = voterRepository
     .createQueryBuilder("voter")
     .leftJoinAndSelect("voter.voted", "voted")
-    .select([
-      "voted.id",
-      "voter.id",
-      "voter.firstname",
-      "voter.lastname",
-      "voter.username",
-      "voter.email_address",
-      "voter.is_allowed",
-    ])
-    .where("voter.election_id = :electionId", {
-      electionId: _electionId,
-    });
+    .where(
+      "voter.election_id = :electionId AND voter.is_pre_register = :is_pre_register",
+      {
+        electionId: _electionId,
+        is_pre_register: false,
+      }
+    );
 
   if (searchStirng) {
     builder = builder.andWhere(
@@ -101,6 +96,7 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
     "voter.is_allowed",
     "voter.election_id",
     "voter.archive",
+    "voter.is_pre_register",
   ]);
 
   const items = await builder.getMany();
@@ -129,9 +125,13 @@ const getAllPreRegistered = async (
   let builder = voterRepository
     .createQueryBuilder("voter")
     .leftJoinAndSelect("voter.voted", "voted")
-    .where("voter.election_id = :electionId AND voter.is_pre_register", {
-      electionId: _electionId,
-    });
+    .where(
+      "voter.election_id = :electionId AND voter.is_pre_register = :is_pre_register",
+      {
+        electionId: _electionId,
+        is_pre_register: true,
+      }
+    );
 
   if (searchStirng) {
     builder = builder.andWhere(
@@ -177,6 +177,7 @@ const getAllPreRegistered = async (
     "voter.is_allowed",
     "voter.election_id",
     "voter.archive",
+    "voter.is_pre_register",
   ]);
 
   const items = await builder.getMany();

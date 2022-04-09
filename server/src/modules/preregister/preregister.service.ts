@@ -19,13 +19,17 @@ const getElection = async (_slug: string) => {
     .leftJoinAndSelect("election.logo", "logo")
     .leftJoinAndSelect("organization.theme", "organization_theme")
     .where(
-      "election.slug = :_slug AND election.status != '1' AND election.allow_pre_register = :is_preregister",
+      "election.slug = :_slug AND election.allow_pre_register = :is_preregister AND election.status != '1'",
       { _slug, is_preregister: true }
     );
 
   const election = await builder.getOne();
 
-  return election || null;
+  console.log("Election", election);
+
+  const error = preregisterHelpers.generatePreRegisterElectionError(election);
+
+  return { election: election || null, error };
 };
 
 const getVoterInfo = async (code: string) => {
@@ -100,6 +104,7 @@ const preRegisterVoter = async (_voterInfo: PreRegisterVoterInfo) => {
     election_id: _voterInfo.election_id,
     username: voter_id,
     pin,
+    is_pre_register: true,
   });
   await register.save();
   return true;

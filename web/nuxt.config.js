@@ -87,10 +87,8 @@ export default {
         codeChallengeMethod: "",
         responseMode: "",
         acrValues: "",
-        endpoints: {
-          token: "http://localhost:5000/api/v1/auth/voter/google/token", // somm backend url to resolve your auth with google and give you the token back
-          userInfo: "http://localhost:5000/api/v1/auth/voter/me", // the endpoint to get the user info after you recived the token
-        },
+        endpoints: {},
+        grantType: "authorization_code",
       },
       local: {
         token: {

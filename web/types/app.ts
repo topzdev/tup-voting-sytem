@@ -102,6 +102,9 @@ export type Election = {
   organization: Organization;
   logo: ElectionLogo;
   final_status: ElectionStatus;
+  allow_pre_register: boolean;
+  is_public: boolean;
+  is_tally_public: boolean;
 } & DataTimestamp;
 
 type CandidateProfilePhoto = {

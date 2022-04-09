@@ -4,7 +4,7 @@ import { normalizeURL, decode } from 'ufo'
 import { interopDefault } from './utils'
 import scrollBehavior from './router.scrollBehavior.js'
 
-const _0aa4fbf4 = () => interopDefault(import('..\\pages\\register.vue' /* webpackChunkName: "pages/register" */))
+const _74344464 = () => interopDefault(import('..\\pages\\pre-register\\index.vue' /* webpackChunkName: "pages/pre-register/index" */))
 const _1a57d190 = () => interopDefault(import('..\\pages\\election\\_slug.vue' /* webpackChunkName: "pages/election/_slug" */))
 const _2c66a0f2 = () => interopDefault(import('..\\pages\\election\\_slug\\index.vue' /* webpackChunkName: "pages/election/_slug/index" */))
 const _5eb63998 = () => interopDefault(import('..\\pages\\election\\_slug\\ballot.vue' /* webpackChunkName: "pages/election/_slug/ballot" */))
@@ -25,9 +25,9 @@ export const routerOptions = {
   scrollBehavior,
 
   routes: [{
-    path: "/register",
-    component: _0aa4fbf4,
-    name: "register"
+    path: "/pre-register",
+    component: _74344464,
+    name: "pre-register"
   }, {
     path: "/election/:slug?",
     component: _1a57d190,

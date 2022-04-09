@@ -39,7 +39,7 @@ export default function (ctx, inject) {
   // google
   $auth.registerStrategy('google', new Oauth2Scheme($auth, {
   "clientId": "193167905393-lfmi2jajb0e9nec0e5jttd7kodeof50c.apps.googleusercontent.com",
-  "redirectUri": "http://localhost:3000/register/",
+  "redirectUri": "http://localhost:3000/pre-register/",
   "accessType": "offline",
   "responseType": "code",
   "scope": [
@@ -56,9 +56,9 @@ export default function (ctx, inject) {
   "acrValues": "",
   "endpoints": {
     "authorization": "https://accounts.google.com/o/oauth2/auth",
-    "userInfo": "http://localhost:5000/api/v1/auth/voter/me",
-    "token": "http://localhost:5000/api/v1/auth/voter/google/token"
+    "userInfo": "https://www.googleapis.com/oauth2/v3/userinfo"
   },
+  "grantType": "authorization_code",
   "name": "google"
 }))
 

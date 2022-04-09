@@ -3,6 +3,7 @@ import qs from "qs";
 import configs from "../../configs";
 import { HttpException } from "../../helpers/errors/http.exception";
 import { GoogleTokensResult, GoogleUserInfo } from "../auth/auth.inteface";
+import { Election } from "../election/entity/election.entity";
 
 export const PREREGISTER_MESSAGES = {
   is_preregistered: {
@@ -13,9 +14,28 @@ export const PREREGISTER_MESSAGES = {
     title: "You already registered",
     message: "You can now vote to your designated election",
   },
+  electionNotFound: {
+    title: "Election not found",
+    body: "The election is not available for pre-registration or not created yet",
+  },
+  preRegistrationIsClosed: {
+    title: "Pre Registration is closed",
+    body: "The election is already started and pre-registration is automatically closed",
+  },
 };
 
-const generatePreRegisterElectionError = (election) => {};
+const generatePreRegisterElectionError = (election: Election | null) => {
+  if (!election) {
+    return PREREGISTER_MESSAGES.electionNotFound;
+  }
+  if (election.final_status === "running") {
+    return PREREGISTER_MESSAGES.preRegistrationIsClosed;
+  }
+
+  if (election.final_status === "archived") {
+    return PREREGISTER_MESSAGES.electionNotFound;
+  }
+};
 
 const getGoogleTokens = async (code: string): Promise<GoogleTokensResult> => {
   const url = "https://oauth2.googleapis.com/token";
@@ -68,6 +88,10 @@ const getGoogleUserInfo = async ({
   }
 };
 
-const preregisterHelpers = { getGoogleTokens, getGoogleUserInfo };
+const preregisterHelpers = {
+  getGoogleTokens,
+  getGoogleUserInfo,
+  generatePreRegisterElectionError,
+};
 
 export default preregisterHelpers;
