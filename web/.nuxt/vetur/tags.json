@@ -8,11 +8,11 @@
   "ChipsPartyChip": {
     "description": "Auto imported from components/chips/PartyChip.vue"
   },
-  "InputsPasswordField": {
-    "description": "Auto imported from components/inputs/PasswordField.vue"
-  },
   "FormsLoginForm": {
     "description": "Auto imported from components/forms/LoginForm.vue"
+  },
+  "InputsPasswordField": {
+    "description": "Auto imported from components/inputs/PasswordField.vue"
   },
   "UtilsPageCenter": {
     "description": "Auto imported from components/utils/PageCenter.vue"
@@ -25,6 +25,9 @@
   },
   "PagesElectionHeader": {
     "description": "Auto imported from components/pages/election/ElectionHeader.vue"
+  },
+  "PagesPreRegisterHeader": {
+    "description": "Auto imported from components/pages/pre-register/PreRegisterHeader.vue"
   },
   "PagesBallotCard": {
     "description": "Auto imported from components/pages/ballot/cards/BallotCard.vue"

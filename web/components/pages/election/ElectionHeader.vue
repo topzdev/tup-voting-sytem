@@ -10,6 +10,9 @@
         {{ election.title }} <br />
         <span class="font-weight-bold">Election</span>
       </h1>
+      <p class="text-center body-1">
+        {{ election.description }}
+      </p>
     </v-col>
 
     <v-btn

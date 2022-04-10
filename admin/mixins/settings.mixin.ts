@@ -43,7 +43,7 @@ const settingsMixin = mixins(manageElectionMixins).extend({
           icon: "mdi-earth",
           title: "Publicity",
           to: this.publicityRoute(),
-          status: pageStatus.settings.publicity,
+          status: pageStatus.settings.publicity.page,
         },
         ["close-election"]: {
           icon: "mdi-close-box-outline",

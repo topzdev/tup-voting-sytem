@@ -351,6 +351,41 @@ const electionTallyPublicity = async (
   return _is_tally_public;
 };
 
+const electionAllowPreRegister = async (
+  _election_id: number,
+  _allow_pre_register: boolean
+) => {
+  const electionRepository = getRepository(Election);
+
+  if (!_election_id) {
+    throw new HttpException("BAD_REQUEST", "Election id is required");
+  }
+
+  let builder = electionRepository.createQueryBuilder("election");
+
+  builder = builder
+    .select(["election.allow_pre_register"])
+    .where("election.id = :_election_id", {
+      _election_id,
+    });
+
+  const election = await builder.getOne();
+
+  if (!election) {
+    throw new HttpException("NOT_FOUND", "Election not found");
+  }
+
+  const savedElection = await builder
+    .update()
+    .set({
+      allow_pre_register: _allow_pre_register,
+    })
+    .where("election.id = :_election_id", { _election_id })
+    .execute();
+
+  return _allow_pre_register;
+};
+
 const sendCredentialsEmail = async (
   _election_id,
   _voters_ids: number[] | "all"
@@ -384,6 +419,7 @@ const settingsService = {
   sendElectionHasEnded,
   electionPublicity,
   electionTallyPublicity,
+  electionAllowPreRegister,
 };
 
 export default settingsService;

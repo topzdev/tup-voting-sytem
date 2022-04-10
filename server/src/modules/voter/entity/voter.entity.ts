@@ -39,6 +39,16 @@ export class Voter extends Timestamp {
   })
   is_allowed: boolean;
 
+  @Column({
+    default: false,
+  })
+  is_pre_register: boolean;
+
+  @Column({
+    default: "",
+  })
+  google_id: string;
+
   @Column({ nullable: true })
   election_id: number;
 

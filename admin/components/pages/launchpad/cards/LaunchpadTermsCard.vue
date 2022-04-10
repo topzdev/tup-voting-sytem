@@ -38,6 +38,7 @@
             <li>Send Credentials to voters</li>
             <li>Send "Election has launched" email</li>
             <li>Send "Election has ended" email after election ended</li>
+            <li>Allow/Disallow Voters Pre-Registration</li>
           </ul>
         </v-col>
       </v-row>

@@ -82,6 +82,16 @@ const settingsServices = {
       })
     ).data;
   },
+  async allowElectionPreRegistration(
+    election_id: Election["id"],
+    allow_pre_register: Election["allow_pre_register"]
+  ) {
+    return (
+      await apiClient.put(`${url}/allow-pre-register/${election_id}`, {
+        allow_pre_register,
+      })
+    ).data;
+  },
 };
 
 export default settingsServices;

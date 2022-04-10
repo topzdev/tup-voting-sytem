@@ -1,6 +1,17 @@
 import colors from "vuetify/es5/util/colors";
+require("dotenv").config();
 
 export default {
+  env: {
+    GOOGLE_OAUTH_CLIENT_ID: process.env.GOOGLE_OAUTH_CLIENT_ID,
+    BASE_SERVER_URL: process.env.BASE_SERVER_URL,
+    BASE_NUXT_PORT: process.env.BASE_NUXT_PORT,
+  },
+
+  server: {
+    port: process.env.BASE_NUXT_PORT,
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: "%s - TUP Election",
@@ -70,6 +81,21 @@ export default {
     rewriteRedirects: true,
     resetOnError: true,
     strategies: {
+      google: {
+        scheme: "oauth2",
+        clientId: process.env.GOOGLE_OAUTH_CLIENT_ID,
+        redirectUri: process.env.GOOGLE_OAUTH_REDIRECT_URI,
+        accessType: "offline",
+        responseType: "code",
+        scope: ["profile", "email"],
+        prompt: "consent",
+        state: "UNIQUE_AND_NON_GUESSABLE",
+        codeChallengeMethod: "",
+        responseMode: "",
+        acrValues: "",
+        endpoints: {},
+        grantType: "authorization_code",
+      },
       local: {
         token: {
           property: "token",

@@ -2,6 +2,7 @@ import Middleware from './middleware'
 import { Auth, authMiddleware, ExpiredAuthSessionError } from '~auth/runtime'
 
 // Active schemes
+import { Oauth2Scheme } from '~auth/runtime'
 import { LocalScheme } from '~auth/runtime'
 
 Middleware.auth = authMiddleware
@@ -28,13 +29,39 @@ export default function (ctx, inject) {
   "localStorage": {
     "prefix": "auth."
   },
-  "defaultStrategy": "local"
+  "defaultStrategy": "google"
 }
 
   // Create a new Auth instance
   const $auth = new Auth(ctx, options)
 
   // Register strategies
+  // google
+  $auth.registerStrategy('google', new Oauth2Scheme($auth, {
+  "clientId": "193167905393-lfmi2jajb0e9nec0e5jttd7kodeof50c.apps.googleusercontent.com",
+  "redirectUri": "http://localhost:7000/pre-register/",
+  "accessType": "offline",
+  "responseType": "code",
+  "scope": [
+    "openid",
+    "profile",
+    "email",
+    "profile",
+    "email"
+  ],
+  "prompt": "consent",
+  "state": "UNIQUE_AND_NON_GUESSABLE",
+  "codeChallengeMethod": "",
+  "responseMode": "",
+  "acrValues": "",
+  "endpoints": {
+    "authorization": "https://accounts.google.com/o/oauth2/auth",
+    "userInfo": "https://www.googleapis.com/oauth2/v3/userinfo"
+  },
+  "grantType": "authorization_code",
+  "name": "google"
+}))
+
   // local
   $auth.registerStrategy('local', new LocalScheme($auth, {
   "token": {

@@ -10,7 +10,7 @@
               {{ alert.message }}
             </v-alert>
           </v-col>
-          <v-col class="email-section" cols="12" v-if="section.credentials">
+          <v-col class="email-section" cols="12" v-if="show.credentials">
             <h3 class="mb-2 text--primary">Credentials of voters email</h3>
             <p>
               Send credentials thru emails to all voters or specific voters.
@@ -49,7 +49,7 @@
           <v-col
             class="email-section"
             cols="12"
-            v-if="section.electionHasLaunched"
+            v-if="show.electionHasLaunched"
           >
             <h3 class="mb-2 text--primary">Election has launched email</h3>
             <p>Send "Election has launched" to all voters.</p>
@@ -58,11 +58,7 @@
             >
           </v-col>
 
-          <v-col
-            class="email-section"
-            cols="12"
-            v-if="section.electionHasEnded"
-          >
+          <v-col class="email-section" cols="12" v-if="show.electionHasEnded">
             <h3 class="mb-2 text--primary">Election has ended email</h3>
             <p>Send "Election has ended" to all voters.</p>
             <v-btn color="primary" large @click="sendElectionHasEndedToAll"
@@ -120,7 +116,7 @@ export default mixins(settingsMixin, restrictionsMixin).extend({
   },
 
   computed: {
-    section() {
+    show() {
       return {
         credentials: this.hideByStatus(pageStatus.settings.emails.credentials),
 

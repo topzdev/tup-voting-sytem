@@ -37,6 +37,7 @@ export type Election = {
   organization: Organization;
   logo: ElectionLogo;
   final_status: ElectionStatus;
+  allow_pre_register: boolean;
 } & DataTimestamp;
 
 export interface GetElectionDto {
