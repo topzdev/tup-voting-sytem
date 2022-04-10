@@ -200,7 +200,7 @@ export async function setContext (app, context) {
       payload: context.payload,
       error: context.error,
       base: app.router.options.base,
-      env: {"GOOGLE_OAUTH_CLIENT_ID":"193167905393-lfmi2jajb0e9nec0e5jttd7kodeof50c.apps.googleusercontent.com","BASE_SERVER_URL":"http://localhost:5000"}
+      env: {"GOOGLE_OAUTH_CLIENT_ID":"193167905393-lfmi2jajb0e9nec0e5jttd7kodeof50c.apps.googleusercontent.com","BASE_SERVER_URL":"http://localhost:5000","BASE_NUXT_PORT":"7000"}
     }
     // Only set once
 

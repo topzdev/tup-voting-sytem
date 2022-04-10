@@ -230,9 +230,9 @@ export const statusAsTextSubquery = () => {
 /*  
 	BUILDING = 1,
   PREVIEW = 2 but when election is not yet on start date
-	RUNNING = 2,
-	COMPLETED = 3,
-  ARCHIVED = 4,
+	RUNNING = 3,
+	COMPLETED = 4,
+  ARCHIVED = 5,
 */
 
 export const finalStatusSubquery = (alias) => {
@@ -243,7 +243,7 @@ export const finalStatusSubquery = (alias) => {
 			    THEN '${STATUS_MESSAGE[5]}' 
 
       /*THE ELECTION IS IN COMPLETED STATUS*/  
-      WHEN "election"."status" > '3' OR CURRENT_TIMESTAMP >= "election"."close_date"  
+      WHEN "election"."status" >= '3' OR CURRENT_TIMESTAMP >= "election"."close_date"  
           THEN '${STATUS_MESSAGE[4]}'
 
       /*THE ELECTION IS RUNNING STATUS*/ 

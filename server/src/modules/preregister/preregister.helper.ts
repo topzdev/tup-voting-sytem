@@ -22,6 +22,11 @@ export const PREREGISTER_MESSAGES = {
     title: "Pre Registration is closed",
     body: "The election is already started and pre-registration is automatically closed",
   },
+
+  somethingWentWrong: {
+    title: "Something went wrong",
+    body: "Please try again",
+  },
 };
 
 const generatePreRegisterElectionError = (election: Election | null) => {

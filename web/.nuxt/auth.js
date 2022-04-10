@@ -39,7 +39,7 @@ export default function (ctx, inject) {
   // google
   $auth.registerStrategy('google', new Oauth2Scheme($auth, {
   "clientId": "193167905393-lfmi2jajb0e9nec0e5jttd7kodeof50c.apps.googleusercontent.com",
-  "redirectUri": "http://localhost:3000/pre-register/",
+  "redirectUri": "http://localhost:7000/pre-register/",
   "accessType": "offline",
   "responseType": "code",
   "scope": [

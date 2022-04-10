@@ -32,7 +32,7 @@ const manageElectionMixins = Vue.extend({
     manageElectionRoute(): string {
       if (!this.electionId) return "/";
 
-      return `/manage/election/${this.electionId}/`;
+      return `/manage/election/${this.electionId}`;
     },
 
     electionId(): Election["id"] | null {

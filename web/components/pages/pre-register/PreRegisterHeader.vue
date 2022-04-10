@@ -10,6 +10,7 @@
         {{ election.title }} <br />
         <span class="font-weight-bold">Election Pre Registration</span>
       </h1>
+      <p class="body-1 text-center mt-1 mb-0">{{ election.description }}</p>
     </v-col>
   </v-row>
 </template>

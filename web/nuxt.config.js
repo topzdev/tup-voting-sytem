@@ -5,7 +5,13 @@ export default {
   env: {
     GOOGLE_OAUTH_CLIENT_ID: process.env.GOOGLE_OAUTH_CLIENT_ID,
     BASE_SERVER_URL: process.env.BASE_SERVER_URL,
+    BASE_NUXT_PORT: process.env.BASE_NUXT_PORT,
   },
+
+  server: {
+    port: process.env.BASE_NUXT_PORT,
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: "%s - TUP Election",

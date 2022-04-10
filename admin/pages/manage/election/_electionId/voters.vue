@@ -20,10 +20,11 @@
         >Add Voters</v-btn
       >
       <v-btn
+        v-if="hideByStatus(pageStatus.preRegister)"
         color="secondary"
         class="mr-2"
         large
-        :to="`${manageElectionRoute}/pre-registered`"
+        @click="preRegisterRoute"
       >
         View Pre-Registered
       </v-btn>

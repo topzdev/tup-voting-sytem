@@ -42,7 +42,7 @@ const pageStatus = {
     },
   },
 
-  preRegister: {},
+  preRegister: ["preview"],
 
   overview: {
     counts: {

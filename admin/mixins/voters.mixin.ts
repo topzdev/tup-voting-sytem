@@ -10,6 +10,10 @@ const votersMixin = mixins(manageElectionMixins).extend({
   },
 
   methods: {
+    preRegisterRoute() {
+      this.$router.push(`${this.manageElectionRoute}/pre-registered`);
+    },
+
     createVoterRoute() {
       this.$router.push(`${this.pagePath}/create`);
     },
