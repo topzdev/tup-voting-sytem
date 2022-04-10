@@ -15,6 +15,7 @@ You can directly use them in pages and other components without the need to impo
 - `<PagesBallotStepper>` | `<pages-ballot-stepper>` (components/pages/ballot/BallotStepper.vue)
 - `<PagesElectionError>` | `<pages-election-error>` (components/pages/election/ElectionError.vue)
 - `<PagesElectionHeader>` | `<pages-election-header>` (components/pages/election/ElectionHeader.vue)
+- `<PagesPreRegisterHeader>` | `<pages-pre-register-header>` (components/pages/pre-register/PreRegisterHeader.vue)
 - `<PagesBallotCard>` | `<pages-ballot-card>` (components/pages/ballot/cards/BallotCard.vue)
 - `<PagesBallotCardsCandidateCard>` | `<pages-ballot-cards-candidate-card>` (components/pages/ballot/cards/CandidateCard.vue)
 - `<PagesBallotReceiptDialog>` | `<pages-ballot-receipt-dialog>` (components/pages/ballot/dialogs/BallotReceiptDialog.vue)

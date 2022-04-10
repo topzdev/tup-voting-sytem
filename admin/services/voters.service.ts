@@ -21,6 +21,8 @@ export type Voters = {
   updated_at: string;
   deleted_at: null | string;
   election: Election;
+  google_id: string;
+  is_pre_register: boolean;
 } & DataTimestamp;
 
 export interface GetVotersDto {
@@ -88,6 +90,13 @@ const votersServices = {
     return (
       await apiClient.get(
         `${url}/all/${electionId}${transformParamsToUrl(query)}`
+      )
+    ).data;
+  },
+  async getAllPreRegistered(electionId: number, query: GetVotersDto) {
+    return (
+      await apiClient.get(
+        `${url}/all-pre-registered/${electionId}${transformParamsToUrl(query)}`
       )
     ).data;
   },
@@ -182,6 +191,17 @@ const votersServices = {
   },
   async remove(_dto: DisallowVotersDto) {
     return (await apiClient.post(`${url}/remove/`, _dto)).data;
+  },
+  async grantPreRegister(
+    election_id: Election["id"],
+    voter_ids: Voters["id"][]
+  ) {
+    return (
+      await apiClient.post(`${url}/grant-pre-register/`, {
+        election_id,
+        voter_ids,
+      })
+    ).data;
   },
 };
 

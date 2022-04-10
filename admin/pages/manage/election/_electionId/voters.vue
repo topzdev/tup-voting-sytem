@@ -19,6 +19,15 @@
         large
         >Add Voters</v-btn
       >
+      <v-btn
+        v-if="hideByStatus(pageStatus.preRegister)"
+        color="secondary"
+        class="mr-2"
+        large
+        @click="preRegisterRoute"
+      >
+        View Pre-Registered
+      </v-btn>
       <v-menu v-if="hideByStatus(pageStatus.voters.export)" offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn color="primary" dark icon v-bind="attrs" v-on="on">

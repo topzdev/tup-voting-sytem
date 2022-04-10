@@ -9,7 +9,7 @@ import pageStatus from "@/configs/page-status.config";
 
 export default Vue.extend({
   meta: {
-    status: pageStatus.settings.publicity,
+    status: pageStatus.settings.publicity.page,
   },
   components: {
     PublicityCard,

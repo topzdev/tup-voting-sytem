@@ -86,6 +86,12 @@ const configs = {
   },
 
   ballotReceiptPreWord: "TUPELECT",
+
+  oauth2: {
+    client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
+    redirect: process.env.GOOGLE_OAUTH_REDIRECT_URI,
+    client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+  },
 };
 
 export default configs;

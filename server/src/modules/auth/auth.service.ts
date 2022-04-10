@@ -8,6 +8,7 @@ import {
   signJwtVoterPayload,
 } from "../../helpers/jwt.helper";
 import { Voter } from "../voter/entity/voter.entity";
+import authHelpers from "./auth.helpers";
 
 const adminLogin = async (_credentials: AdminLoginCredentials) => {
   const user = await getRepository(User)

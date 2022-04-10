@@ -4,21 +4,30 @@
 
     <v-container>
       <v-row>
-        <v-col cols="12">
-          <overview-counts :counts="details" />
-        </v-col>
+        <template v-if="!$fetchState.pending && !$fetchState.error && details">
+          <v-col cols="12">
+            <overview-counts :counts="details" />
+          </v-col>
 
-        <v-col cols="6" class="mx-auto">
-          <v-row>
-            <v-col cols="12">
-              <overview-dates :overviewDates="details" />
-            </v-col>
+          <v-col cols="6" class="mx-auto">
+            <v-row>
+              <v-col cols="12">
+                <overview-dates :overviewDates="details" />
+              </v-col>
 
-            <v-col cols="12">
-              <overview-links :details="details" />
-            </v-col>
-          </v-row>
-        </v-col>
+              <v-col cols="12">
+                <overview-links :urls="details.urls" />
+              </v-col>
+            </v-row>
+          </v-col>
+        </template>
+        <template v-else-if="$fetchState.pending">
+          <v-col>
+            <page-center>
+              <app-loading></app-loading>
+            </page-center>
+          </v-col>
+        </template>
       </v-row>
     </v-container>
   </span>
@@ -32,8 +41,15 @@ import OverviewCounts from "@/components/pages/overview/OverivewCounts.vue";
 import OverviewDates from "~/components/pages/overview/OverviewDates.vue";
 import overviewServices, { OverviewDetails } from "@/services/overview.service";
 import OverviewLinks from "~/components/pages/overview/OverviewLinks.vue";
+import PageCenter from "@/components/utils/PageCenter.vue";
 export default mixins(manageElectionMixins).extend({
-  components: { PageBars, OverviewCounts, OverviewDates, OverviewLinks },
+  components: {
+    PageBars,
+    OverviewCounts,
+    OverviewDates,
+    OverviewLinks,
+    PageCenter,
+  },
 
   data() {
     return {
@@ -59,6 +75,8 @@ export default mixins(manageElectionMixins).extend({
 
   async fetch() {
     try {
+      if (!this.electionId) return;
+
       this.details = await overviewServices.getDetails(this.electionId);
     } catch (error) {}
   },

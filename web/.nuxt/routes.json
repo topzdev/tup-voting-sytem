@@ -1,5 +1,12 @@
 [
   {
+    "name": "pre-register",
+    "path": "/pre-register",
+    "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\pre-register\\\\index.vue",
+    "chunkName": "pages/pre-register/index",
+    "_name": "_74344464"
+  },
+  {
     "path": "/election/:slug?",
     "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug.vue",
     "chunkName": "pages/election/_slug",

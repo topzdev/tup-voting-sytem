@@ -14,6 +14,7 @@ import overviewRoute from "./modules/overview/overview.route";
 import votingRoute from "./modules/voting/voting.route";
 import mailerRoute from "./modules/mailer/mailer.route";
 import resultsRoute from "./modules/results/results.route";
+import preregisterRouter from "./modules/preregister/preregister.route";
 const router = express.Router();
 
 router.use("/user", userRoute);
@@ -31,5 +32,6 @@ router.use("/overview", overviewRoute);
 router.use("/voting", votingRoute);
 router.use("/mailer", mailerRoute);
 router.use("/results", resultsRoute);
+router.use("/pre-register", preregisterRouter);
 
 export default router;

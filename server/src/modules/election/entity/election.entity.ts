@@ -93,6 +93,11 @@ export class Election extends Timestamp {
   is_public: boolean;
 
   @Column({
+    default: false,
+  })
+  allow_pre_register: boolean;
+
+  @Column({
     select: false,
     type: "enum",
     enum: ElectionStatusEnum,

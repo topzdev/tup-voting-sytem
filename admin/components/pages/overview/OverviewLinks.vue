@@ -14,7 +14,7 @@
           <v-row>
             <v-col cols="12">
               <v-text-field
-                label="Election URL"
+                label="Voting Link"
                 outlined
                 readonly
                 :value="longUrl"
@@ -26,12 +26,24 @@
 
             <v-col cols="12">
               <v-text-field
-                label="Election Short URL"
+                label="Voting Short Link"
                 outlined
                 readonly
                 :value="shortUrl"
                 :append-icon="icons.clipboard"
                 @click:append="copyClipboard(longUrl)"
+                hide-details="auto"
+              ></v-text-field>
+            </v-col>
+
+            <v-col cols="12" v-if="preRegisterUrl">
+              <v-text-field
+                label="Pre-Registration Link"
+                outlined
+                readonly
+                :value="preRegisterUrl"
+                :append-icon="icons.clipboard"
+                @click:append="copyClipboard(preRegisterUrl)"
                 hide-details="auto"
               ></v-text-field>
             </v-col>
@@ -45,13 +57,13 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import configs from "@/configs";
-import { OverviewDetails } from "@/services/overview.service";
+import { OverviewUrls } from "@/services/overview.service";
 import icons from "@/configs/icons";
 export default Vue.extend({
   props: {
-    details: {
+    urls: {
       type: Object,
-    } as PropOptions<OverviewDetails | null>,
+    } as PropOptions<OverviewUrls | null>,
   },
 
   data() {
@@ -61,20 +73,17 @@ export default Vue.extend({
   },
 
   computed: {
-    electionSlug(): string {
-      return this.details ? this.details.slug : "";
-    },
-
-    electionId(): string {
-      return this.details ? this.details.id + "" : "";
-    },
     longUrl(): string {
-      if (!this.details) return "";
-      return this.details.longUrl;
+      if (!this.urls) return "";
+      return this.urls.longUrl;
     },
     shortUrl(): string {
-      if (!this.details) return "";
-      return this.details.shortUrl;
+      if (!this.urls) return "";
+      return this.urls.shortUrl;
+    },
+    preRegisterUrl(): string {
+      if (!this.urls) return "";
+      return this.urls.preRegisterUrl;
     },
   },
 

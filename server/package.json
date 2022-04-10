@@ -20,6 +20,7 @@
   },
   "author": "dev404",
   "dependencies": {
+    "axios": "^0.26.1",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "class-validator": "^0.13.2",

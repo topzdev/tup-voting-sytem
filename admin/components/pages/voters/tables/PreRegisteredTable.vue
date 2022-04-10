@@ -13,20 +13,18 @@
           ></v-text-field>
         </v-col>
 
-        <v-col cols="auto" class="ml-auto">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon large v-bind="attrs" v-on="on" @click="fetchItems">
-                <v-icon> mdi-refresh </v-icon>
-              </v-btn>
-            </template>
-            <span>Refresh Table</span>
-          </v-tooltip>
+        <v-col cols="auto" class="ml-auto" v-if="showGrantButton">
+          <v-btn color="primary" large :loading="loading" @click="grantVoters"
+            >Grant Voters ({{ selectedLength }})</v-btn
+          >
         </v-col>
       </v-row>
     </v-card-title>
 
     <v-data-table
+      v-model="table.selected"
+      :show-select="true"
+      :single-select="false"
       :loading="table.loading"
       :headers="headers"
       :items="table.items"
@@ -37,25 +35,6 @@
         'items-per-page-options': table.pagination.itemsPerPageOptions,
       }"
     >
-      <template v-slot:item.voted="{ item }">
-        <v-icon v-if="item.voted" color="green">mdi-check-all</v-icon>
-        <v-icon v-else>mdi-minus-circle-outline</v-icon>
-      </template>
-      <template v-slot:item.actions="{ item }">
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              icon
-              v-bind="attrs"
-              v-on="on"
-              @click="editVoterRoute(item.id)"
-            >
-              <v-icon> mdi-pencil </v-icon>
-            </v-btn>
-          </template>
-          <span>Edit Voter</span>
-        </v-tooltip>
-      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -64,7 +43,7 @@
 import debounce from "@/helpers/debounce";
 import mixins from "vue-typed-mixins";
 import votersMixin from "~/mixins/voters.mixin";
-import votersServices from "~/services/voters.service";
+import votersServices, { Voters } from "~/services/voters.service";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import restrictionsMixin from "@/mixins/restrictions.mixin";
 
@@ -75,6 +54,8 @@ export default mixins(
 ).extend({
   data() {
     return {
+      loading: false,
+
       table: {
         loading: false,
 
@@ -86,6 +67,7 @@ export default mixins(
         },
         search: "",
         items: [],
+        selected: [] as Voters[],
         multiSort: true,
         sortDesc: [true, true, true, true, true],
         sortBy: ["voted", "username", "email_address", "firstname", "lastname"],
@@ -94,13 +76,15 @@ export default mixins(
   },
 
   computed: {
+    showGrantButton(): boolean {
+      return this.selectedLength > 0;
+    },
+
+    selectedLength(): number {
+      return this.table.selected.length;
+    },
     headers() {
       return this.filterByStatus([
-        {
-          text: "Is Voted",
-          value: "voted",
-          status: this.pageStatus.voters.table.isVoted,
-        },
         {
           text: "Voter ID",
           value: "username",
@@ -117,11 +101,6 @@ export default mixins(
           text: "Lastname",
           value: "lastname",
         },
-        {
-          text: "Action",
-          value: "actions",
-          status: this.pageStatus.voters.table.action,
-        },
       ]);
     },
   },
@@ -137,22 +116,45 @@ export default mixins(
   },
 
   methods: {
+    async grantVoters() {
+      if (!this.electionId) return;
+
+      this.loading = true;
+
+      const voterIds = this.table.selected.map((item) => item.id);
+
+      const result = await votersServices.grantPreRegister(
+        this.electionId,
+        voterIds
+      );
+
+      await this.fetchItems();
+
+      this.loading = false;
+    },
+
     async fetchItems() {
       this.table.loading = true;
 
       if (!this.electionId) return;
 
-      const result = await votersServices.getAll(this.electionId, {
-        page: this.table.pagination.page,
-        take: this.table.pagination.perPage,
-        search: this.table.search,
-      });
+      try {
+        const result = await votersServices.getAllPreRegistered(
+          this.electionId,
+          {
+            page: this.table.pagination.page,
+            take: this.table.pagination.perPage,
+            search: this.table.search,
+          }
+        );
 
-      console.log(result);
+        console.log(result);
 
-      this.table.items = result.items;
-      this.table.pagination.total = result.totalCount;
-      this.table.loading = false;
+        this.table.items = result.items;
+        this.table.pagination.total = result.totalCount;
+        this.table.loading = false;
+        this.table.selected = [];
+      } catch (error) {}
     },
   },
 

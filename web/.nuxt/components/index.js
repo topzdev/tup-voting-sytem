@@ -7,6 +7,7 @@ export { default as UtilsPageCenter } from '../..\\components\\utils\\PageCenter
 export { default as PagesBallotStepper } from '../..\\components\\pages\\ballot\\BallotStepper.vue'
 export { default as PagesElectionError } from '../..\\components\\pages\\election\\ElectionError.vue'
 export { default as PagesElectionHeader } from '../..\\components\\pages\\election\\ElectionHeader.vue'
+export { default as PagesPreRegisterHeader } from '../..\\components\\pages\\pre-register\\PreRegisterHeader.vue'
 export { default as PagesBallotCard } from '../..\\components\\pages\\ballot\\cards\\BallotCard.vue'
 export { default as PagesBallotCardsCandidateCard } from '../..\\components\\pages\\ballot\\cards\\CandidateCard.vue'
 export { default as PagesBallotReceiptDialog } from '../..\\components\\pages\\ballot\\dialogs\\BallotReceiptDialog.vue'
