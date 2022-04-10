@@ -1,8 +1,8 @@
 import configs from ".";
 
 const platformLinks = {
-  voting: configs.platform.url + "/election/$electionSlug/",
-  election: configs.platform.url + "/e/$electionSlug/",
+  voting: configs.platform.url + "/vote/$electionSlug/",
+  election: configs.platform.url + "/election/$electionSlug/",
   preRegister: configs.platform.url + "/pre-register?election=$electionSlug",
 };
 

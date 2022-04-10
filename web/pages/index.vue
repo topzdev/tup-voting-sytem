@@ -1,9 +1,11 @@
 <template>
-  <h1>This page is under construction...</h1>
+  <v-container>
+    <h2>Available Elections</h2>
+  </v-container>
 </template>
 
 <script>
 export default {
-  name: "IndexPage",
+  layout: "public",
 };
 </script>

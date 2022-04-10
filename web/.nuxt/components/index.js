@@ -10,6 +10,7 @@ export { default as PagesElectionHeader } from '../..\\components\\pages\\electi
 export { default as PagesPreRegisterHeader } from '../..\\components\\pages\\pre-register\\PreRegisterHeader.vue'
 export { default as PagesBallotCard } from '../..\\components\\pages\\ballot\\cards\\BallotCard.vue'
 export { default as PagesBallotCardsCandidateCard } from '../..\\components\\pages\\ballot\\cards\\CandidateCard.vue'
+export { default as PagesHomepageCardsElectionCard } from '../..\\components\\pages\\homepage\\cards\\ElectionCard.vue'
 export { default as PagesBallotReceiptDialog } from '../..\\components\\pages\\ballot\\dialogs\\BallotReceiptDialog.vue'
 export { default as PagesBallotDialogsCandidateDialog } from '../..\\components\\pages\\ballot\\dialogs\\CandidateDialog.vue'
 

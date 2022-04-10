@@ -3,58 +3,50 @@
     "name": "pre-register",
     "path": "/pre-register",
     "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\pre-register\\\\index.vue",
-    "chunkName": "pages/pre-register/index",
-    "_name": "_74344464"
+    "chunkName": "pages/pre-register/index"
   },
   {
-    "path": "/election/:slug?",
-    "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug.vue",
-    "chunkName": "pages/election/_slug",
+    "path": "/vote/:slug?",
+    "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\vote\\\\_slug.vue",
+    "chunkName": "pages/vote/_slug",
     "children": [
       {
-        "name": "election-slug",
+        "name": "vote-slug",
         "path": "",
-        "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\index.vue",
-        "chunkName": "pages/election/_slug/index",
-        "_name": "_2c66a0f2"
+        "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\vote\\\\_slug\\\\index.vue",
+        "chunkName": "pages/vote/_slug/index"
       },
       {
         "path": "ballot",
-        "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\ballot.vue",
-        "chunkName": "pages/election/_slug/ballot",
+        "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\vote\\\\_slug\\\\ballot.vue",
+        "chunkName": "pages/vote/_slug/ballot",
         "children": [
           {
-            "name": "election-slug-ballot",
+            "name": "vote-slug-ballot",
             "path": "",
-            "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\ballot\\\\index.vue",
-            "chunkName": "pages/election/_slug/ballot/index",
-            "_name": "_9495a264"
+            "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\vote\\\\_slug\\\\ballot\\\\index.vue",
+            "chunkName": "pages/vote/_slug/ballot/index"
           },
           {
-            "name": "election-slug-ballot-final",
+            "name": "vote-slug-ballot-final",
             "path": "final",
-            "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\ballot\\\\final.vue",
-            "chunkName": "pages/election/_slug/ballot/final",
-            "_name": "_09f8551c"
+            "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\vote\\\\_slug\\\\ballot\\\\final.vue",
+            "chunkName": "pages/vote/_slug/ballot/final"
           },
           {
-            "name": "election-slug-ballot-review",
+            "name": "vote-slug-ballot-review",
             "path": "review",
-            "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\ballot\\\\review.vue",
-            "chunkName": "pages/election/_slug/ballot/review",
-            "_name": "_6603be0c"
+            "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\vote\\\\_slug\\\\ballot\\\\review.vue",
+            "chunkName": "pages/vote/_slug/ballot/review"
           }
-        ],
-        "_name": "_5eb63998"
+        ]
       }
-    ],
-    "_name": "_1a57d190"
+    ]
   },
   {
     "name": "index",
     "path": "/",
     "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\index.vue",
-    "chunkName": "pages/index",
-    "_name": "_274d10d1"
+    "chunkName": "pages/index"
   }
 ]

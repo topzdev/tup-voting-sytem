@@ -18,5 +18,6 @@ You can directly use them in pages and other components without the need to impo
 - `<PagesPreRegisterHeader>` | `<pages-pre-register-header>` (components/pages/pre-register/PreRegisterHeader.vue)
 - `<PagesBallotCard>` | `<pages-ballot-card>` (components/pages/ballot/cards/BallotCard.vue)
 - `<PagesBallotCardsCandidateCard>` | `<pages-ballot-cards-candidate-card>` (components/pages/ballot/cards/CandidateCard.vue)
+- `<PagesHomepageCardsElectionCard>` | `<pages-homepage-cards-election-card>` (components/pages/homepage/cards/ElectionCard.vue)
 - `<PagesBallotReceiptDialog>` | `<pages-ballot-receipt-dialog>` (components/pages/ballot/dialogs/BallotReceiptDialog.vue)
 - `<PagesBallotDialogsCandidateDialog>` | `<pages-ballot-dialogs-candidate-dialog>` (components/pages/ballot/dialogs/CandidateDialog.vue)
