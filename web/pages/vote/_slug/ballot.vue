@@ -28,11 +28,11 @@
 import Vue, { PropOptions } from "vue";
 import mixins from "vue-typed-mixins";
 import ballotMixins from "@/mixins/ballot.mixins";
-import ElectionHeader from "@/components/pages/election/ElectionHeader.vue";
+import ElectionHeader from "~/components/pages/voting/ElectionHeader.vue";
 import BallotCard from "@/components/pages/ballot/cards/BallotCard.vue";
 import CandidateDialog from "@/components/pages/ballot/dialogs/CandidateDialog.vue";
 import PageCenter from "@/components/utils/PageCenter.vue";
-import ElectionError from "@/components/pages/election/ElectionError.vue";
+import ElectionError from "~/components/pages/voting/ElectionError.vue";
 import AppLoading from "@/components/app/AppLoading.vue";
 
 export default mixins(ballotMixins).extend({

@@ -1,9 +1,27 @@
 {
+  "AppAvatar": {
+    "description": "Auto imported from components/app/AppAvatar.vue"
+  },
   "AppImage": {
     "description": "Auto imported from components/app/AppImage.vue"
   },
   "AppLoading": {
     "description": "Auto imported from components/app/AppLoading.vue"
+  },
+  "CardsCandidateCard": {
+    "description": "Auto imported from components/cards/CandidateCard.vue"
+  },
+  "CardsElectionCard": {
+    "description": "Auto imported from components/cards/ElectionCard.vue"
+  },
+  "CardsPartyCard": {
+    "description": "Auto imported from components/cards/PartyCard.vue"
+  },
+  "ChipsElectionChip": {
+    "description": "Auto imported from components/chips/ElectionChip.vue"
+  },
+  "ChipsElectionStatusChip": {
+    "description": "Auto imported from components/chips/ElectionStatusChip.vue"
   },
   "ChipsPartyChip": {
     "description": "Auto imported from components/chips/PartyChip.vue"
@@ -20,23 +38,29 @@
   "PagesBallotStepper": {
     "description": "Auto imported from components/pages/ballot/BallotStepper.vue"
   },
-  "PagesElectionError": {
-    "description": "Auto imported from components/pages/election/ElectionError.vue"
+  "PagesElectionPageHeader": {
+    "description": "Auto imported from components/pages/election/ElectionPageHeader.vue"
   },
-  "PagesElectionHeader": {
-    "description": "Auto imported from components/pages/election/ElectionHeader.vue"
+  "PagesElectionParty": {
+    "description": "Auto imported from components/pages/election/ElectionParty.vue"
+  },
+  "PagesElectionPositionCandidates": {
+    "description": "Auto imported from components/pages/election/ElectionPositionCandidates.vue"
   },
   "PagesPreRegisterHeader": {
     "description": "Auto imported from components/pages/pre-register/PreRegisterHeader.vue"
+  },
+  "PagesVotingElectionError": {
+    "description": "Auto imported from components/pages/voting/ElectionError.vue"
+  },
+  "PagesVotingElectionHeader": {
+    "description": "Auto imported from components/pages/voting/ElectionHeader.vue"
   },
   "PagesBallotCard": {
     "description": "Auto imported from components/pages/ballot/cards/BallotCard.vue"
   },
   "PagesBallotCardsCandidateCard": {
     "description": "Auto imported from components/pages/ballot/cards/CandidateCard.vue"
-  },
-  "PagesHomepageCardsElectionCard": {
-    "description": "Auto imported from components/pages/homepage/cards/ElectionCard.vue"
   },
   "PagesBallotReceiptDialog": {
     "description": "Auto imported from components/pages/ballot/dialogs/BallotReceiptDialog.vue"

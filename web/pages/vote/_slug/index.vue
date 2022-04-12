@@ -29,8 +29,8 @@ import Vue from "vue";
 import ballotMixin from "@/mixins/ballot.mixins";
 
 import mixins from "vue-typed-mixins";
-import ElectionHeader from "@/components/pages/election/ElectionHeader.vue";
-import ElectionError from "@/components/pages/election/ElectionError.vue";
+import ElectionHeader from "~/components/pages/voting/ElectionHeader.vue";
+import ElectionError from "~/components/pages/voting/ElectionError.vue";
 
 export default mixins(ballotMixin).extend({
   auth: "guest",
