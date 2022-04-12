@@ -228,3 +228,9 @@ export type BallotReceipt = Pick<
 > & {
   election_title: Election["title"];
 };
+
+export type SocialLink = {
+  href: string | null;
+  icon: string;
+  title: string;
+};

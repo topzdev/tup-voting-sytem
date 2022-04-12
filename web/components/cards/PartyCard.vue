@@ -48,11 +48,11 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { Election, Party } from "../../types/app";
-import AppImage from "../app/AppImage.vue";
+import { Election, Party } from "@/types/app";
+import AppImage from "@/components/app/AppImage.vue";
 import ElectionChip from "@/components/chips/ElectionChip.vue";
 import pageRoutes from "@/configs/page-routes";
-import AppAvatar from "../app/AppAvatar.vue";
+import AppAvatar from "@/components/app/AppAvatar.vue";
 
 export default Vue.extend({
   components: { AppImage, ElectionChip, AppAvatar },

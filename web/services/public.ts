@@ -1,4 +1,4 @@
-import { Election, Party, Position } from "@/types/app";
+import { Candidate, Election, Party, Position } from "@/types/app";
 import apiClient from ".";
 
 const url = "/api/v1/public";
@@ -12,6 +12,11 @@ type ElectionPageContent = {
   election: Election;
   positions: Position[];
   party: Party[];
+};
+
+type ParyPageContet = {
+  party: Party;
+  positions: Position[];
 };
 
 const publicServices = {
@@ -559,11 +564,530 @@ const publicServices = {
   },
 
   async getParty(election_id: number): Promise<any> {
-    return (await apiClient.get(`${url}/party/${election_id}`)).data;
+    // return (await apiClient.get(`${url}/party/${election_id}`)).data;
+
+    return {
+      party: {
+        created_at: "2022-01-08T23:09:37.742Z",
+        updated_at: "2022-01-08T23:09:37.742Z",
+        deleted_at: null,
+        id: 4,
+        ticker: "KAKAMPI",
+        title: "Kakamipi Daw",
+        description: "Weh Kakampre",
+        election_id: 3,
+        archive: false,
+        logo: {
+          id: 4,
+          public_id: "tup_voting_dev/party_photos/outsa8cneatwh5oytqh6",
+          url: "https://res.cloudinary.com/topzdev/image/upload/v1641683376/tup_voting_dev/party_photos/outsa8cneatwh5oytqh6.png",
+          service: "cld",
+        },
+        cover_photo: {
+          id: 8,
+          public_id: "tup_voting_dev/party_photos/tsgt95t0epxkppfjrvqg",
+          url: "http://res.cloudinary.com/topzdev/image/upload/v1641816899/tup_voting_dev/party_photos/tsgt95t0epxkppfjrvqg.jpg",
+          service: "cld",
+        },
+        election: {
+          created_at: "2021-12-21T09:39:41.439Z",
+          updated_at: "2022-04-09T14:08:42.939Z",
+          deleted_at: null,
+          id: 3,
+          slug: "tup-annual-election-2021-2022",
+          title: "TUP Tite Annual Election ",
+          description: "Election test",
+          start_date: "2022-01-29T12:20:00.000Z",
+          close_date: "2022-05-29T12:20:00.000Z",
+          organization_id: 2,
+          archive: false,
+          is_tally_public: true,
+          is_public: false,
+          allow_pre_register: false,
+          logo: {
+            id: 3,
+            public_id: "tup_voting_dev/election_photos/yeiocjtv1krayub4knyj",
+            url: "https://res.cloudinary.com/topzdev/image/upload/v1640079580/tup_voting_dev/election_photos/yeiocjtv1krayub4knyj.png",
+            service: "cld",
+          },
+        },
+      },
+      positions: [
+        {
+          created_at: "2022-01-07T12:44:58.730Z",
+          updated_at: "2022-01-07T12:44:58.730Z",
+          deleted_at: null,
+          id: 8,
+          title: "Senator",
+          description: "senator description",
+          max_selected: 3,
+          min_selected: 3,
+          display_order: 1,
+          election_id: 3,
+          candidates: [
+            {
+              created_at: "2022-01-23T11:15:55.363Z",
+              updated_at: "2022-01-23T11:15:55.363Z",
+              deleted_at: null,
+              id: 16,
+              firstname: "Mcdo",
+              lastname: "Lays",
+              middlename: "Me",
+              description: "Test",
+              platform: "<p>Test</p>",
+              party_id: null,
+              position_id: 8,
+              election_id: 3,
+              use_party_cover_photo: true,
+              election: {
+                id: 3,
+                slug: "tup-annual-election-2021-2022",
+                title: "TUP Tite Annual Election ",
+              },
+              archive: false,
+              profile_photo: {
+                id: 17,
+                public_id:
+                  "tup_voting_dev/candidates_photos/vkxodqhq3sls7pszzcsn",
+                url: "https://res.cloudinary.com/topzdev/image/upload/v1642936553/tup_voting_dev/candidates_photos/vkxodqhq3sls7pszzcsn.jpg",
+                service: "cld",
+              },
+              cover_photo: {
+                id: 17,
+                public_id:
+                  "tup_voting_dev/candidates_photos/rlpmn6uig9bxlh31mcwx",
+                url: "http://res.cloudinary.com/topzdev/image/upload/v1642936673/tup_voting_dev/candidates_photos/rlpmn6uig9bxlh31mcwx.png",
+                service: "cld",
+              },
+              party: null,
+            },
+            {
+              created_at: "2022-01-15T10:15:46.116Z",
+              updated_at: "2022-01-15T10:15:46.116Z",
+              deleted_at: null,
+              id: 14,
+              firstname: "Errol",
+              lastname: "Capistrano",
+              middlename: "Capistrano",
+              description: "test",
+              platform: "<p>twe</p>",
+              party_id: 7,
+              position_id: 8,
+              election_id: 3,
+              use_party_cover_photo: true,
+              election: {
+                id: 3,
+                slug: "tup-annual-election-2021-2022",
+                title: "TUP Tite Annual Election ",
+              },
+              archive: false,
+              profile_photo: {
+                id: 15,
+                public_id:
+                  "tup_voting_dev/candidates_photos/bkwrlgfblpo4ngbkag5a",
+                url: "https://res.cloudinary.com/topzdev/image/upload/v1642241741/tup_voting_dev/candidates_photos/bkwrlgfblpo4ngbkag5a.svg",
+                service: "cld",
+              },
+              cover_photo: {
+                id: 15,
+                public_id:
+                  "tup_voting_dev/candidates_photos/lkkgbqvnhgzgxzisqb7z",
+                url: "https://res.cloudinary.com/topzdev/image/upload/v1642241744/tup_voting_dev/candidates_photos/lkkgbqvnhgzgxzisqb7z.svg",
+                service: "cld",
+              },
+              party: {
+                created_at: "2022-01-10T12:10:27.461Z",
+                updated_at: "2022-01-10T12:10:27.461Z",
+                deleted_at: null,
+                id: 7,
+                ticker: "testt",
+                title: "Test111",
+                description: "tesstt",
+                election_id: 3,
+                archive: false,
+                logo: {
+                  id: 7,
+                  public_id: "tup_voting_dev/party_photos/nejodokpi5dzlflbx5sv",
+                  url: "http://res.cloudinary.com/topzdev/image/upload/v1641910692/tup_voting_dev/party_photos/nejodokpi5dzlflbx5sv.jpg",
+                  service: "cld",
+                },
+              },
+            },
+            {
+              created_at: "2022-01-23T11:10:44.912Z",
+              updated_at: "2022-01-23T11:10:44.912Z",
+              deleted_at: null,
+              id: 15,
+              firstname: "Christopher",
+              lastname: "Lugod",
+              middlename: "Tampos",
+              description: "Hello im christian!",
+              platform:
+                "<ol><li><p>Tama na ang palakasan, at gobyernong walang isang salita. Gawin nating patas ang merkado. </p></li><li><p>Kung may kumpiyansa sa pamumuno, papasok ang puhunan, lalago ang negosyo, at dadami ang trabaho.<br>I-develop ang maritime industry. Isaayos ang mga regulasyon.</p></li><li><p>Pararamihin at pahusayin pa ang Pilipinong marino, at palalakasin ang shipbuilding sa bansa.</p></li><li><p>Palakasin ang tech industry sa Pilipinas. Sa industriyang ito, tatapatan ng mas malaking sahod ang husay ng Pilipino.<br></p></li></ol>",
+              party_id: 4,
+              position_id: 8,
+              election_id: 3,
+              use_party_cover_photo: false,
+              election: {
+                id: 3,
+                slug: "tup-annual-election-2021-2022",
+                title: "TUP Tite Annual Election ",
+              },
+              archive: false,
+              profile_photo: {
+                id: 16,
+                public_id:
+                  "tup_voting_dev/candidates_photos/ow5jaxnyeutihk1ntruo",
+                url: "https://res.cloudinary.com/topzdev/image/upload/v1642936241/tup_voting_dev/candidates_photos/ow5jaxnyeutihk1ntruo.jpg",
+                service: "cld",
+              },
+              cover_photo: {
+                id: 16,
+                public_id:
+                  "tup_voting_dev/candidates_photos/m3zp2cluu1vgugrj4leu",
+                url: "https://res.cloudinary.com/topzdev/image/upload/v1642936243/tup_voting_dev/candidates_photos/m3zp2cluu1vgugrj4leu.jpg",
+                service: "cld",
+              },
+              party: {
+                created_at: "2022-01-08T23:09:37.742Z",
+                updated_at: "2022-01-08T23:09:37.742Z",
+                deleted_at: null,
+                id: 4,
+                ticker: "KAKAMPI",
+                title: "Kakamipi Daw",
+                description: "Weh Kakampre",
+                election_id: 3,
+                archive: false,
+                logo: {
+                  id: 4,
+                  public_id: "tup_voting_dev/party_photos/outsa8cneatwh5oytqh6",
+                  url: "https://res.cloudinary.com/topzdev/image/upload/v1641683376/tup_voting_dev/party_photos/outsa8cneatwh5oytqh6.png",
+                  service: "cld",
+                },
+              },
+            },
+          ],
+        },
+        {
+          created_at: "2022-01-07T12:44:58.730Z",
+          updated_at: "2022-01-07T12:44:58.730Z",
+          deleted_at: null,
+          id: 6,
+          title: "President",
+          description: "test description",
+          max_selected: 1,
+          min_selected: 1,
+          display_order: 2,
+          election_id: 3,
+          candidates: [
+            {
+              created_at: "2022-01-08T13:14:31.506Z",
+              updated_at: "2022-01-08T13:14:31.506Z",
+              deleted_at: null,
+              id: 13,
+              firstname: "Harold",
+              lastname: "Tungala",
+              middlename: "Tungala",
+              description: "Hi i'm Chiristian Lugod...",
+              platform: "<p>Testtt!!!!</p>",
+              party_id: 5,
+              position_id: 6,
+              election_id: 3,
+              use_party_cover_photo: true,
+              election: {
+                id: 3,
+                slug: "tup-annual-election-2021-2022",
+                title: "TUP Tite Annual Election ",
+              },
+              archive: false,
+              profile_photo: {
+                id: 14,
+                public_id:
+                  "tup_voting_dev/candidates_photos/dfr2urplxyz9ax4piqw3",
+                url: "http://res.cloudinary.com/topzdev/image/upload/v1641650307/tup_voting_dev/candidates_photos/dfr2urplxyz9ax4piqw3.jpg",
+                service: "cld",
+              },
+              cover_photo: {
+                id: 14,
+                public_id:
+                  "tup_voting_dev/candidates_photos/xcouuolbr3bwk794zzu1",
+                url: "https://res.cloudinary.com/topzdev/image/upload/v1641647670/tup_voting_dev/candidates_photos/xcouuolbr3bwk794zzu1.jpg",
+                service: "cld",
+              },
+              party: {
+                created_at: "2022-01-08T23:10:54.863Z",
+                updated_at: "2022-01-08T23:10:54.863Z",
+                deleted_at: null,
+                id: 5,
+                ticker: "PUSO",
+                title: "PUSOddddd",
+                description: "PUSO dddd",
+                election_id: 3,
+                archive: false,
+                logo: {
+                  id: 5,
+                  public_id: "tup_voting_dev/party_photos/ipobvknydzmi9ycslo4x",
+                  url: "https://res.cloudinary.com/topzdev/image/upload/v1641683452/tup_voting_dev/party_photos/ipobvknydzmi9ycslo4x.png",
+                  service: "cld",
+                },
+              },
+            },
+            {
+              created_at: "2022-01-08T12:59:06.454Z",
+              updated_at: "2022-01-08T12:59:06.454Z",
+              deleted_at: null,
+              id: 12,
+              firstname: "Christian",
+              lastname: "Lugod",
+              middlename: "Tampos",
+              description: "Hi i'm Chiristian Lugod...",
+              platform: "I'am running as president please vote me",
+              party_id: 6,
+              position_id: 6,
+              election_id: 3,
+              use_party_cover_photo: true,
+              election: {
+                id: 3,
+                slug: "tup-annual-election-2021-2022",
+                title: "TUP Tite Annual Election ",
+              },
+              archive: false,
+              profile_photo: {
+                id: 13,
+                public_id:
+                  "tup_voting_dev/candidates_photos/ld5yzwmndkzub7dmizhd",
+                url: "https://res.cloudinary.com/topzdev/image/upload/v1641646743/tup_voting_dev/candidates_photos/ld5yzwmndkzub7dmizhd.jpg",
+                service: "cld",
+              },
+              cover_photo: {
+                id: 13,
+                public_id:
+                  "tup_voting_dev/candidates_photos/jntohifoshbzatzwrqbt",
+                url: "https://res.cloudinary.com/topzdev/image/upload/v1641646745/tup_voting_dev/candidates_photos/jntohifoshbzatzwrqbt.jpg",
+                service: "cld",
+              },
+              party: {
+                created_at: "2022-01-10T11:09:44.974Z",
+                updated_at: "2022-01-10T11:09:44.974Z",
+                deleted_at: null,
+                id: 6,
+                ticker: "KAKAMPEPE",
+                title: "Kakamipi Daw",
+                description: "Weh Kakamprepepe",
+                election_id: 3,
+                archive: false,
+                logo: {
+                  id: 6,
+                  public_id: "tup_voting_dev/party_photos/mnvkzd8ni5cdr4u4hsdk",
+                  url: "http://res.cloudinary.com/topzdev/image/upload/v1641816496/tup_voting_dev/party_photos/mnvkzd8ni5cdr4u4hsdk.jpg",
+                  service: "cld",
+                },
+              },
+            },
+            {
+              created_at: "2022-01-08T12:42:09.338Z",
+              updated_at: "2022-01-08T12:42:09.338Z",
+              deleted_at: null,
+              id: 8,
+              firstname: "Test",
+              lastname: "Lugod",
+              middlename: "Tampos",
+              description: "Hi i'm Chiristian Lugod...",
+              platform: "I'am running as president please vote me",
+              party_id: null,
+              position_id: 6,
+              election_id: 3,
+              use_party_cover_photo: true,
+              election: {
+                id: 3,
+                slug: "tup-annual-election-2021-2022",
+                title: "TUP Tite Annual Election ",
+              },
+              archive: false,
+              profile_photo: {
+                id: 9,
+                public_id:
+                  "tup_voting_dev/candidates_photos/gcqwtp4jnb3q8duuabts",
+                url: "https://res.cloudinary.com/topzdev/image/upload/v1641645726/tup_voting_dev/candidates_photos/gcqwtp4jnb3q8duuabts.jpg",
+                service: "cld",
+              },
+              cover_photo: {
+                id: 9,
+                public_id:
+                  "tup_voting_dev/candidates_photos/y6qiykyleg4huhhzlt8c",
+                url: "https://res.cloudinary.com/topzdev/image/upload/v1641645728/tup_voting_dev/candidates_photos/y6qiykyleg4huhhzlt8c.jpg",
+                service: "cld",
+              },
+              party: null,
+            },
+          ],
+        },
+        {
+          created_at: "2022-01-07T12:44:58.730Z",
+          updated_at: "2022-01-07T12:44:58.730Z",
+          deleted_at: null,
+          id: 7,
+          title: "Vice President",
+          description: "test description",
+          max_selected: 1,
+          min_selected: 1,
+          display_order: 3,
+          election_id: 3,
+          candidates: [
+            {
+              created_at: "2021-12-27T14:42:24.729Z",
+              updated_at: "2021-12-27T14:42:24.729Z",
+              deleted_at: null,
+              id: 3,
+              firstname: "Christian!!!",
+              lastname: "Lugod!",
+              middlename: "Tampos!",
+              description: "Hi i'm Chiristian Lugod...!!!",
+              platform: "<p>I'am running as president please vote me!!!</p>",
+              party_id: 6,
+              position_id: 7,
+              election_id: 3,
+              use_party_cover_photo: true,
+              election: {
+                id: 3,
+                slug: "tup-annual-election-2021-2022",
+                title: "TUP Tite Annual Election ",
+              },
+              archive: false,
+              profile_photo: {
+                id: 4,
+                public_id:
+                  "tup_voting_dev/candidates_photos/mh0h2nrbq6onzj31qgrn",
+                url: "http://res.cloudinary.com/topzdev/image/upload/v1641650552/tup_voting_dev/candidates_photos/mh0h2nrbq6onzj31qgrn.jpg",
+                service: "cld",
+              },
+              cover_photo: {
+                id: 4,
+                public_id:
+                  "tup_voting_dev/candidates_photos/ehgno5gyzmwz9dbmj7oi",
+                url: "http://res.cloudinary.com/topzdev/image/upload/v1641650555/tup_voting_dev/candidates_photos/ehgno5gyzmwz9dbmj7oi.jpg",
+                service: "cld",
+              },
+              party: {
+                created_at: "2022-01-10T11:09:44.974Z",
+                updated_at: "2022-01-10T11:09:44.974Z",
+                deleted_at: null,
+                id: 6,
+                ticker: "KAKAMPEPE",
+                title: "Kakamipi Daw",
+                description: "Weh Kakamprepepe",
+                election_id: 3,
+                archive: false,
+                logo: {
+                  id: 6,
+                  public_id: "tup_voting_dev/party_photos/mnvkzd8ni5cdr4u4hsdk",
+                  url: "http://res.cloudinary.com/topzdev/image/upload/v1641816496/tup_voting_dev/party_photos/mnvkzd8ni5cdr4u4hsdk.jpg",
+                  service: "cld",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    };
   },
 
-  async getCandidates(candidate_id: number): Promise<any> {
-    return (await apiClient.get(`${url}/candidate/${candidate_id}`)).data;
+  async getCandidates(candidate_id: number): Promise<Candidate> {
+    // return (await apiClient.get(`${url}/candidate/${candidate_id}`)).data;
+
+    return {
+      created_at: "2021-12-27T14:42:24.729Z",
+      updated_at: "2021-12-27T14:42:24.729Z",
+      deleted_at: null,
+      id: 3,
+      firstname: "Christian!!!",
+      lastname: "Lugod!",
+      middlename: "Tampos!",
+      description: "Hi i'm Chiristian Lugod...!!!",
+      platform: "<p>I'am running as president please vote me!!!</p>",
+      party_id: 6,
+      position_id: 7,
+      election_id: 3,
+      use_party_cover_photo: true,
+      archive: false,
+      profile_photo: {
+        id: 4,
+        public_id: "tup_voting_dev/candidates_photos/mh0h2nrbq6onzj31qgrn",
+        url: "http://res.cloudinary.com/topzdev/image/upload/v1641650552/tup_voting_dev/candidates_photos/mh0h2nrbq6onzj31qgrn.jpg",
+        service: "cld",
+      },
+      cover_photo: {
+        id: 4,
+        public_id: "tup_voting_dev/candidates_photos/ehgno5gyzmwz9dbmj7oi",
+        url: "http://res.cloudinary.com/topzdev/image/upload/v1641650555/tup_voting_dev/candidates_photos/ehgno5gyzmwz9dbmj7oi.jpg",
+        service: "cld",
+      },
+      election: {
+        created_at: "2021-12-21T09:39:41.439Z",
+        updated_at: "2022-04-09T14:08:42.939Z",
+        deleted_at: null,
+        id: 3,
+        slug: "tup-annual-election-2021-2022",
+        title: "TUP Tite Annual Election ",
+        description: "Election test",
+        start_date: "2022-01-29T12:20:00.000Z",
+        close_date: "2022-05-29T12:20:00.000Z",
+        organization_id: 2,
+        archive: false,
+        is_tally_public: true,
+        is_public: false,
+        allow_pre_register: false,
+
+        logo: {
+          id: 4,
+          public_id: "tup_voting_dev/election_photos/linm3jjnqlteaq4scats",
+          url: "https://res.cloudinary.com/topzdev/image/upload/v1640091387/tup_voting_dev/election_photos/linm3jjnqlteaq4scats.png",
+          service: "cld",
+        },
+      },
+      party: {
+        created_at: "2022-01-10T11:09:44.974Z",
+        updated_at: "2022-01-10T11:09:44.974Z",
+        deleted_at: null,
+        id: 6,
+        ticker: "KAKAMPEPE",
+        title: "Kakamipi Daw",
+        description: "Weh Kakamprepepe",
+        election_id: 3,
+        archive: false,
+        election: {
+          id: 3,
+          slug: "tup-annual-election-2021-2022",
+          title: "TUP Tite Annual Election ",
+        },
+        logo: {
+          id: 1,
+          public_id: "tup_voting_dev/party_photos/plvctqhw7whferpdlcqi",
+          url: "https://res.cloudinary.com/topzdev/image/upload/v1641378448/tup_voting_dev/party_photos/plvctqhw7whferpdlcqi.jpg",
+          service: "cld",
+        },
+      },
+      position: {
+        created_at: "2022-01-07T12:44:58.730Z",
+        updated_at: "2022-01-07T12:44:58.730Z",
+        deleted_at: null,
+        id: 7,
+        title: "Vice President",
+        description: "test description",
+        max_selected: 1,
+        min_selected: 1,
+        display_order: 3,
+        election_id: 3,
+      },
+      socials: {
+        id: 4,
+        facebook_url: "https://www.facebook.com/Christoplugod/s",
+        linkedin_url: "ssss",
+        twitter_url: "https://twitter.com/_christop_s",
+        website_url: "https://topzdev.netlify.app/s",
+        insta_url: "ssss",
+      },
+    };
   },
 
   async getHomepageContent(): Promise<HomepageContent> {

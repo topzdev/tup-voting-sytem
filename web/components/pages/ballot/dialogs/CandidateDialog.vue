@@ -93,12 +93,7 @@
 import Vue, { PropOptions } from "vue";
 import AppImage from "@/components/app/AppImage.vue";
 import PartyChip from "@/components/chips/PartyChip.vue";
-
-type SocialLink = {
-  href: string | null;
-  icon: string;
-  title: string;
-};
+import { SocialLink } from "@/types/app";
 
 export default Vue.extend({
   components: { AppImage, PartyChip },

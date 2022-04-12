@@ -1,5 +1,6 @@
 <template>
   <v-chip
+    :to="partyRoute"
     :small="small"
     :large="large"
     v-if="data"
@@ -19,6 +20,7 @@
 import Vue, { PropOptions } from "vue";
 import AppImage from "@/components/app/AppImage.vue";
 import { Party } from "../../types/app";
+import pageRoutes from "../../configs/page-routes";
 export default Vue.extend({
   props: {
     data: Object as PropOptions<Party>,
@@ -29,6 +31,13 @@ export default Vue.extend({
 
   components: {
     AppImage,
+  },
+
+  computed: {
+    partyRoute(): string {
+      if (!this.data.election) return "";
+      return pageRoutes.party(this.data.election?.slug, this.data.id);
+    },
   },
 });
 </script>

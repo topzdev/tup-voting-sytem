@@ -1,8 +1,8 @@
 <template>
   <v-card elevation="1" :to="candidateRoute" :title="fullname">
     <v-list-item>
-      <v-list-item-avatar size="60">
-        <app-image :size="75" :alt="fullname" :src="candidate.profile_photo" />
+      <v-list-item-avatar size="50">
+        <app-image :size="50" :alt="fullname" :src="candidate.profile_photo" />
       </v-list-item-avatar>
       <v-list-item-content>
         <v-list-item-title
@@ -26,7 +26,7 @@
 import Vue, { PropOptions } from "vue";
 import { Candidate } from "@/types/app";
 import PartyChip from "@/components/chips/PartyChip.vue";
-import pageRoutes from "../../configs/page-routes";
+import pageRoutes from "@/configs/page-routes";
 
 export default Vue.extend({
   components: {

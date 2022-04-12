@@ -5,7 +5,7 @@
     :large="large"
     v-if="election"
     :title="election.title"
-    outlined
+    :outlined="outlined"
     style="user-select: none"
   >
     <v-avatar v-if="election.logo" left size="20">
