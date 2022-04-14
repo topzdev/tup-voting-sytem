@@ -45,10 +45,10 @@ export default Vue.extend({
     },
 
     contain: Boolean,
-    height: String,
-    width: String,
-    maxHeight: String,
-    maxWidth: String,
+    height: [Number, String],
+    width: [Number, String],
+    maxHeight: [Number, String],
+    maxWidth: [Number, String],
   },
 
   computed: {

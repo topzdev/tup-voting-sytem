@@ -1,11 +1,11 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12">
+      <v-col lg="12" class="mx-auto">
         <h2 class="mb-2">Available Elections</h2>
 
         <v-row>
-          <v-col v-for="item in elections" :key="item.id" cols="4">
+          <v-col v-for="item in elections" :key="item.id" sm="12" md="6" lg="4">
             <election-card :election="item" />
           </v-col>
         </v-row>
