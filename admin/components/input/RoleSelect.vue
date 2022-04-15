@@ -41,14 +41,6 @@ export default {
           id: "admin",
           text: "Admin",
         },
-        {
-          id: "watcher",
-          text: "Watcher",
-        },
-        {
-          id: "dev",
-          text: "Developer",
-        },
       ];
     },
   },

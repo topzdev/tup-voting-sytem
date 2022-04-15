@@ -1,15 +1,15 @@
 <template>
   <span>
-    <user-edit-dialog :isOpen="true" />
+    <general-edit-card />
   </span>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import UserEditDialog from "~/components/pages/users/dialogs/UserEditDialog.vue";
+import GeneralEditCard from "~/components/pages/users/cards/GeneralEditCard.vue";
 
 export default Vue.extend({
-  components: { UserEditDialog },
+  components: { GeneralEditCard },
 });
 </script>
 

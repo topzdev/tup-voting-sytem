@@ -22,7 +22,7 @@ router.get("/admin/me", adminAuth, authController.adminMe);
 router.get(
   "/admin/protected-route",
   adminAuth,
-  rolesAllowed(["DEV", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   authController.adminProtectedRoute
 );
 

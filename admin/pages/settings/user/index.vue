@@ -17,8 +17,6 @@
         </v-card>
       </v-col>
     </v-row>
-
-    <nuxt-child />
   </v-container>
 </template>
 

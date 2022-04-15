@@ -1,6 +1,9 @@
-import { FindManyOptions, getRepository, ILike } from "typeorm";
+import { Brackets, FindManyOptions, getRepository, ILike, Not } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
 import { genPassword, validatePassword } from "../../helpers/password.helper";
+import electionController from "../election/election.controller";
+import { Election } from "../election/entity/election.entity";
+import { Voter } from "../voter/entity/voter.entity";
 import { User } from "./entity/user.entity";
 import userHelper from "./user.helper";
 import {
@@ -55,17 +58,27 @@ const getById = async (_id: string) => {
 
 const create = async (_user: CreateUser) => {
   const isExist = await User.findOne({
-    where: {
-      username: _user.username,
-    },
+    where: [
+      {
+        username: _user.username,
+      },
+      { email_address: _user.email_address },
+    ],
   });
 
-  if (isExist) throw new HttpException("BAD_REQUEST", "username has been used");
+  if (isExist) {
+    if (isExist.username === _user.username)
+      throw new HttpException("BAD_REQUEST", "Username has been used");
+
+    if (isExist.email_address === _user.email_address)
+      throw new HttpException("BAD_REQUEST", "Email Address has been used");
+  }
 
   let user = User.create({
     username: _user.username,
     firstname: _user.firstname,
     lastname: _user.lastname,
+    email_address: _user.email_address,
     role: _user.role,
     password: await genPassword(
       userHelper.generatePassword(_user.username, _user.lastname)
@@ -82,17 +95,60 @@ const create = async (_user: CreateUser) => {
 };
 
 const update = async (_user: UpdateUser) => {
+  const userRepository = getRepository(User);
   console.log(_user);
 
   if (!_user.id) throw new HttpException("BAD_REQUEST", `user id is required`);
 
-  const user = await User.findOne(_user.id);
+  let builder = userRepository.createQueryBuilder("user");
+
+  const user = await builder
+    .where("user.id = :userId", {
+      userId: _user.id,
+    })
+    .getOne();
 
   if (!user) throw new HttpException("NOT_FOUND", "user not found");
+
+  let toUpdateEmailAddress = user.email_address;
+
+  if (user.email_address !== _user.email_address) {
+    const emailExist = await User.findOne({
+      where: {
+        id: Not(_user.id),
+        email_address: _user.email_address,
+      },
+    });
+
+    if (emailExist) {
+      throw new HttpException("BAD_REQUEST", "Email address has been used");
+    }
+
+    toUpdateEmailAddress = _user.email_address;
+  }
+
+  let toUpdateUsername = _user.username;
+
+  if (user.username !== _user.username) {
+    const usernameExist = await User.findOne({
+      where: {
+        id: Not(_user.id),
+        username: _user.username,
+      },
+    });
+
+    if (usernameExist) {
+      throw new HttpException("BAD_REQUEST", "Username has been used");
+    }
+
+    toUpdateUsername = _user.username;
+  }
 
   const toUpdateUser = User.merge(user, {
     firstname: _user.firstname,
     lastname: _user.lastname,
+    username: toUpdateUsername,
+    email_address: toUpdateEmailAddress,
     role: _user.role,
   });
 
@@ -117,19 +173,21 @@ const resetPassword = async (_id: string) => {
   return true;
 };
 
-const changePassword = async (_passwords: ChangePasswordDto) => {
+const changePassword = async (
+  _id: User["id"],
+  _passwords: ChangePasswordDto
+) => {
   console.log(_passwords);
 
-  if (!_passwords.userId)
-    throw new HttpException("BAD_REQUEST", `user id is required`);
+  if (!_id) throw new HttpException("BAD_REQUEST", `user id is required`);
 
   const user = await getRepository(User)
     .createQueryBuilder("user")
     .select(["user.id", "user.password"])
-    .where("user.id = :userId", { userId: _passwords.userId })
+    .where("user.id = :userId", { userId: _id })
     .getOne();
 
-  if (!user) throw new HttpException("NOT_FOUND", "user not found");
+  if (!user) throw new HttpException("NOT_FOUND", "User not found");
 
   if (!(await validatePassword(_passwords.currentPassword, user.password)))
     throw new HttpException("BAD_REQUEST", "password doesn't match");
@@ -147,6 +205,36 @@ const changePassword = async (_passwords: ChangePasswordDto) => {
   await user.save();
 
   return true;
+};
+
+const disableUser = async (_id: User["id"], disabled: boolean) => {
+  if (!_id) throw new HttpException("BAD_REQUEST", `user id is required`);
+
+  const user = await User.findOne({
+    where: {
+      id: _id,
+    },
+  });
+
+  if (!user) throw new HttpException("NOT_FOUND", "User not found");
+
+  user.disabled = disabled;
+
+  await user.save();
+
+  return disabled;
+};
+
+const myAccount = async (_id: User["id"]) => {
+  if (!_id) throw new HttpException("BAD_REQUEST", `user id is required`);
+
+  const user = await User.findOne({
+    where: {
+      id: _id,
+    },
+  });
+
+  return user;
 };
 
 const remove = async (_id: string) => {
@@ -182,6 +270,8 @@ const userServices = {
   restore,
   changePassword,
   resetPassword,
+  disableUser,
+  myAccount,
 };
 
 export default userServices;

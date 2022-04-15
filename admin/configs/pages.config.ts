@@ -1,17 +1,17 @@
 const pageConfig = {
-  org: {
-    title: "Organization",
-    to: {
-      path: "/org",
-    },
-    icon: "mdi-account-group",
+  settings: () => {
+    return "/settings";
   },
-  election: {
-    title: "Election",
-    to: {
-      path: "/election",
-    },
-    icon: "mdi-account-group",
+  users: () => {
+    const parentUrl = pageConfig.settings() + "/user";
+
+    return {
+      this: () => `${parentUrl}/`,
+      create: () => `${parentUrl}/create`,
+      general: (id: number) => `${parentUrl}/${id}/general`,
+      resetPassword: (id: number) => `${parentUrl}/${id}/reset-password`,
+      disableAccount: (id: number) => `${parentUrl}/${id}/disable-account`,
+    };
   },
 };
 

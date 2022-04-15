@@ -42,13 +42,29 @@
       </v-col>
 
       <v-col cols="12">
+        <v-text-field
+          label="Email Address"
+          outlined
+          v-model="form.email_address"
+          :rules="rules.email_address"
+          hide-details="auto"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="12">
         <role-select v-model="form.role" :rules="rules.role" />
       </v-col>
 
       <v-col cols="12" class="d-flex">
-        <v-btn color="blue darken-1" text @click="cancel"> Close </v-btn>
-        <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="submit"> Save </v-btn>
+        <v-btn
+          color="primary"
+          :disabled="loading"
+          :loading="loading"
+          block
+          large
+          @click="submit"
+        >
+          Save
+        </v-btn>
       </v-col>
     </v-row>
   </v-form>
@@ -66,6 +82,7 @@ const defaultForm = {
   firstname: "",
   lastname: "",
   username: "",
+  email_address: "",
   role: "",
 };
 
@@ -98,7 +115,11 @@ export default Vue.extend({
       return {
         firstname: [(v: any) => !!v || "Firstname is required"],
         lastname: [(v: any) => !!v || "Lastname is required"],
-        username: [(v: any) => !!v || "Username Primary is required"],
+        username: [(v: any) => !!v || "Username is required"],
+        email_address: [
+          (v: any) => !!v || "Email Address is required",
+          (v: any) => /.+@.+\..+/.test(v) || "Email Address must be valid",
+        ],
         role: [(v: any) => !!v || "Role is required"],
       };
     },

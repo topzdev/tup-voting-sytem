@@ -8,6 +8,7 @@ export interface GetUsersDto {
   order?: any;
   page?: number;
   take?: number;
+  perPage?: number;
 }
 
 export enum UserRole {
@@ -22,6 +23,7 @@ export type CreateUserDto = {
   lastname: string;
   username: string;
   password: string;
+  email_address: string;
   role: UserRole;
 };
 
@@ -29,7 +31,9 @@ export type UpdateUserDto = {
   id: string;
   firstname: string;
   lastname: string;
-  role: UserRole;
+  username: string;
+  email_address: string;
+  role: string;
 };
 
 export type ChangePasswordDto = {
@@ -39,12 +43,18 @@ export type ChangePasswordDto = {
   confirmPassword: string;
 };
 
+export type DisableUserDto = {
+  id: number;
+  disable: boolean;
+};
+
 const userServices = {
   async getAll(query: GetUsersDto) {
-    return (await apiClient.get(`${url}/${transformParamsToUrl(query)}`)).data;
+    return (await apiClient.get(`${url}/all/${transformParamsToUrl(query)}`))
+      .data;
   },
   async getById(id: string) {
-    return (await apiClient.get(`${url}/${id}`)).data;
+    return (await apiClient.get(`${url}/one/${id}`)).data;
   },
 
   async create(body: CreateUserDto) {
@@ -77,6 +87,10 @@ const userServices = {
 
   async delete(id: string) {
     return (await apiClient.delete(`${url}/${id}`)).data;
+  },
+
+  async disableUser(dto: DisableUserDto) {
+    return await apiClient.put(`${url}/disable-user`, dto);
   },
 };
 
