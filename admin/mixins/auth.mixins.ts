@@ -1,10 +1,50 @@
 import Vue from "vue";
+import {
+  AuthenticationDialogConfig,
+  AuthenticationDialogType,
+} from "../store/system";
 
 const authMixin = Vue.extend({
   methods: {
     async logout() {
       await this.$auth.logout();
       this.$nuxt.$router.push("/login");
+    },
+
+    async systemAuthentication(
+      _config: Omit<
+        AuthenticationDialogConfig,
+        "type" | "allowedRole" | "show"
+      >,
+      type: AuthenticationDialogType = "default",
+      allowedRole: "super-admin" | "admin" | "all" = "all"
+    ) {
+      await this.$auth.fetchUser();
+
+      let message = "";
+      let callname = "";
+      let username = this.$auth.user?.username as string;
+
+      if (this.$auth.user?.role === "sadmin") {
+        callname = "Super Admin";
+      } else {
+        callname = "Admin";
+      }
+
+      if (type === "current-only-password") {
+        message = `Hi ${callname} <b>${username}</b>, Please enter your password to continue.`;
+      }
+
+      this.$accessor.system.showAuthenticationDialog({
+        ..._config,
+        type,
+        default: {
+          usernameOrEmail: username,
+        },
+        message,
+        allowedRole,
+        show: true,
+      });
     },
   },
 

@@ -1,6 +1,12 @@
 export interface AdminLoginCredentials {
-  username: string;
+  usernameOrEmail: string;
   password: string;
+}
+
+export interface SystemLoginCredentials {
+  usernameOrEmail: string;
+  password: string;
+  allowedRole?: "sadmin" | "admin";
 }
 
 export interface VoterLoginCredentials {

@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" lazy-validation>
+  <v-form ref="form" v-model="valid" lazy-validation>
     <v-card width="450" flat>
       <v-card-title>
         <v-row>
@@ -39,9 +39,9 @@
           <v-col cols="12">
             <v-text-field
               outlined
-              v-model="form.username"
-              :rules="rules.username"
-              label="Username"
+              v-model="form.usernameOrEmail"
+              :rules="rules.usernameOrEmail"
+              label="Username or Email Address"
               required
               hide-details="auto"
             ></v-text-field>
@@ -58,6 +58,7 @@
           </v-col>
           <v-col>
             <v-btn
+              type="submit"
               color="primary"
               :loading="loading"
               :disabled="loading"
@@ -80,8 +81,8 @@ import PasswordField from "@/components/input/PasswordField.vue";
 import AppImage from "@/components/app/AppImage.vue";
 
 const defaultForm = {
-  username: "topzdev",
-  password: "topzdev-lugod",
+  usernameOrEmail: "",
+  password: "",
 };
 
 const defaultAlert = {
@@ -104,6 +105,7 @@ export default Vue.extend({
         type: "",
         message: "",
       },
+      valid: false,
 
       form: Object.assign({}, defaultForm),
     };
@@ -112,7 +114,9 @@ export default Vue.extend({
   computed: {
     rules() {
       return {
-        username: [(v: string) => !!v || "Username is required"],
+        usernameOrEmail: [
+          (v: string) => !!v || "Username or Email Address is required",
+        ],
         password: [(v: string) => !!v || "Password is required"],
       };
     },
@@ -120,27 +124,40 @@ export default Vue.extend({
 
   methods: {
     async submit() {
-      this.loading = true;
-      try {
-        const result = await this.$auth.loginWith("local", {
-          data: this.form,
-        });
+      (this.$refs as any).form.validate();
 
-        console.log(result);
+      if (this.valid)
+        try {
+          this.loading = true;
+          const result = await this.$auth.loginWith("local", {
+            data: this.form,
+          });
 
-        if (result && result.data.error) {
-          this.alert = {
-            message: result.data.message,
-            type: "error",
-            show: true,
-          };
+          console.log(result);
 
-          return;
+          if (result && result.data.error) {
+            this.alert = {
+              message: result.data.message,
+              type: "error",
+              show: true,
+            };
+          }
+        } catch (error: any) {
+          if (error && error.response.data.error) {
+            const message =
+              error.response?.data?.error?.message || error.message;
+
+            if (message) {
+              this.alert = {
+                show: true,
+                type: "error",
+                message: message,
+              };
+            }
+          }
+        } finally {
+          this.loading = false;
         }
-      } catch (error: any) {
-      } finally {
-        this.loading = false;
-      }
     },
 
     reset() {

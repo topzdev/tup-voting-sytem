@@ -8,7 +8,8 @@ import manageElectionMixins from "./manage-election.mixins";
 export type SettingLink = {
   icon: string;
   title: string;
-  to: RouteConfig | string;
+  to?: RouteConfig | string;
+  route?: RouteConfig | string;
   status?: any[];
 };
 

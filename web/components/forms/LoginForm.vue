@@ -110,17 +110,16 @@ export default Vue.extend({
 
         console.log(result);
       } catch (error: any) {
-        console.log(error.response);
         if (error && error.response.data.error) {
-          const message = error.response.data.error.message;
+          const message = error.response?.data?.error?.message || error.message;
 
-          this.alert = {
-            message: message,
-            type: "error",
-            show: true,
-          };
-
-          return;
+          if (message) {
+            this.alert = {
+              show: true,
+              type: "error",
+              message: message,
+            };
+          }
         }
       } finally {
         this.loading = false;

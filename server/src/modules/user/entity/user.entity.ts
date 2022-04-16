@@ -28,6 +28,16 @@ export class User extends Timestamp {
   password: string;
 
   @Column({
+    default: "",
+  })
+  email_address: string;
+
+  @Column({
+    default: false,
+  })
+  disabled: boolean;
+
+  @Column({
     type: "enum",
     enum: UserRole,
     default: UserRole.ADMIN,

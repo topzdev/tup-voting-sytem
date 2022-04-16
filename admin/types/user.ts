@@ -1,9 +1,9 @@
-import { UserRole } from "./roles";
-
 export type AdminUser = {
   id: number;
   username: string;
+  email_address: string;
   firstname: string;
   lastname: string;
-  role: UserRole;
+  disabled: boolean;
+  role: string;
 };

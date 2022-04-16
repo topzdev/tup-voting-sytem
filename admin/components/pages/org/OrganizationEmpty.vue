@@ -13,11 +13,11 @@
 </template>
 vue <script lang="ts">
 import Vue from "vue";
-import pageConfig from "@/configs/pages.config";
+import pageConfig from "~/configs/pages.config";
 export default Vue.extend({
   computed: {
     thisPageConfig() {
-      return pageConfig.org;
+      return pageConfig.organization();
     },
   },
 });

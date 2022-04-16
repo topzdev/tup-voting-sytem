@@ -1,15 +1,15 @@
 <template>
   <span>
-    <user-edit-dialog :isOpen="true" />
+    <remove-account-card />
   </span>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import UserEditDialog from "~/components/pages/users/dialogs/UserEditDialog.vue";
+import RemoveAccountCard from "~/components/pages/users/cards/RemoveAccountCard.vue";
 
 export default Vue.extend({
-  components: { UserEditDialog },
+  components: { RemoveAccountCard },
 });
 </script>
 

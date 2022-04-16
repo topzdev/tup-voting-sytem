@@ -9,55 +9,84 @@ const router = express.Router();
 console.log("module: User Module Loaded");
 
 router.get(
-  "/",
+  "/all/",
   adminAuth,
   rolesAllowed("SUPER_ADMIN"),
   userController.getUsers
 );
 
-router.get("/:id", adminAuth, userController.getUserById);
+router.get(
+  "/one/:id",
+  adminAuth,
+  rolesAllowed(["SUPER_ADMIN"]),
+  userController.getUserById
+);
+
+router.put(
+  "/disable-user",
+  adminAuth,
+  rolesAllowed("SUPER_ADMIN"),
+  userController.disableUser
+);
+
+router.put(
+  "/change-role",
+  adminAuth,
+  rolesAllowed("SUPER_ADMIN"),
+  validate(userValidator.changeRole),
+  userController.changeRole
+);
 
 router.post(
-  "/",
-  // adminAuth,
-  // rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  "/create",
+  adminAuth,
+  rolesAllowed(["SUPER_ADMIN"]),
   validate(userValidator.create),
   userController.create
 );
 
 router.put(
-  "/",
+  "/update",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["SUPER_ADMIN"]),
   validate(userValidator.update),
   userController.update
-);
-router.put(
-  "/change-password",
-  adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
-  userController.changePassword
 );
 
 router.put(
   "/reset-password/:id",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["SUPER_ADMIN"]),
   userController.resetPassword
 );
 
-router.delete(
-  "/:id",
+router.put(
+  "/change-password",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  validate(userValidator.changePassword),
+  userController.changePassword
+);
+
+router.delete(
+  "/remove/:id",
+  adminAuth,
+  rolesAllowed(["SUPER_ADMIN"]),
   userController.remove
 );
 
 router.put(
-  "/:id",
+  "/restore/:id",
+  adminAuth,
+  rolesAllowed(["SUPER_ADMIN"]),
+  userController.restore
+);
+
+router.get(
+  "/my-account",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
-  userController.restore
+  userController.myAccount
 );
 
 const userRoute = router;

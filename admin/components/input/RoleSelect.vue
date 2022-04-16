@@ -10,6 +10,7 @@
     :value="value"
     :loading="loading"
     :rules="rules"
+    :readonly="readonly"
     @input="$emit('input', $event)"
   ></v-select>
 </template>
@@ -29,6 +30,9 @@ export default {
     rules: {
       type: Array,
     },
+    readonly: {
+      type: Boolean,
+    },
   },
   computed: {
     items() {
@@ -40,14 +44,6 @@ export default {
         {
           id: "admin",
           text: "Admin",
-        },
-        {
-          id: "watcher",
-          text: "Watcher",
-        },
-        {
-          id: "dev",
-          text: "Developer",
         },
       ];
     },
