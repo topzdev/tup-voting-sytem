@@ -12,6 +12,15 @@ const adminLogin = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const systemLogin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const credentials = req.body;
+    res.status(200).json(await authServices.systemLogin(credentials));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const adminLogout = async (req: Request, res: Response, next: NextFunction) => {
   try {
     req.admin = null;
@@ -128,6 +137,8 @@ const authController = {
   voterLogin,
   voterLogout,
   voterMe,
+
+  systemLogin,
 };
 
 export default authController;

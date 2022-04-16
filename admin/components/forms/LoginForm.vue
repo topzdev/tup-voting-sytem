@@ -80,8 +80,8 @@ import PasswordField from "@/components/input/PasswordField.vue";
 import AppImage from "@/components/app/AppImage.vue";
 
 const defaultForm = {
-  username: "topzdev",
-  password: "topzdev-lugod",
+  username: "",
+  password: "",
 };
 
 const defaultAlert = {
@@ -134,10 +134,19 @@ export default Vue.extend({
             type: "error",
             show: true,
           };
-
-          return;
         }
       } catch (error: any) {
+        if (error && error.response.data.error) {
+          const message = error.response?.data?.error?.message || error.message;
+
+          if (message) {
+            this.alert = {
+              show: true,
+              type: "error",
+              message: message,
+            };
+          }
+        }
       } finally {
         this.loading = false;
       }

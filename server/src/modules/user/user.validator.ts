@@ -7,7 +7,9 @@ const validations = {
   firstname: body("firstname").notEmpty().withMessage("Firstname is required"),
   lastname: body("lastname").notEmpty().withMessage("Lastname is required"),
   username: body("username").notEmpty().withMessage("Username is required"),
+
   password: body("password").notEmpty().withMessage("Password is required"),
+
   email_address: body("email_address")
     .notEmpty()
     .withMessage("Email Address is required"),
@@ -37,12 +39,14 @@ const {
 } = validations;
 
 const create = [firstname, lastname, username, email_address, role];
-const update = [id, firstname, lastname, email_address, role];
+const update = [id, firstname, lastname, email_address];
 const changePassword = [newPassword, currentPassword, confirmPassword];
+const changeRole = [id, role];
 
 const userValidator = {
   create,
   update,
+  changeRole,
   changePassword,
 };
 

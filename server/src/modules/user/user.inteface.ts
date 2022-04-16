@@ -12,6 +12,8 @@ export interface GetUserQuery {
   take: number;
 }
 
+export type ChangeRoleDto = Pick<User, "role" | "id">;
+
 export type CreateUser = Pick<
   User,
   "firstname" | "lastname" | "username" | "password" | "email_address"
@@ -22,9 +24,7 @@ export type CreateUser = Pick<
 export type UpdateUser = Pick<
   User,
   "id" | "firstname" | "lastname" | "email_address" | "username"
-> & {
-  role: UserRole;
-};
+>;
 
 export type ChangePasswordDto = {
   currentPassword: string;

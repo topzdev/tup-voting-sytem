@@ -3,6 +3,12 @@ export interface AdminLoginCredentials {
   password: string;
 }
 
+export interface SystemLoginCredentials {
+  usernameOrEmail: string;
+  password: string;
+  allowedRole?: "sadmin" | "admin";
+}
+
 export interface VoterLoginCredentials {
   election_id: string;
   voter_id: string;

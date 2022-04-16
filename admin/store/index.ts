@@ -4,6 +4,7 @@ import { getAccessorType } from "typed-vuex";
 import * as snackbar from "~/store/snackbar";
 import * as manageElection from "~/store/manageElection";
 import * as system from "~/store/system";
+import * as user from "~/store/user";
 
 export const accessorType = getAccessorType({
   modules: {
@@ -11,5 +12,6 @@ export const accessorType = getAccessorType({
     manageElection,
     snackbar,
     system,
+    user,
   },
 });

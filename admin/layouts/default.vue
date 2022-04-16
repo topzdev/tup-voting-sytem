@@ -9,20 +9,55 @@
     >
       <div class="d-flex flex-column" style="height: 100%">
         <v-list>
-          <v-list-item
-            v-for="(item, i) in topItems"
-            :key="i"
-            :to="item.to"
-            router
-            color="primary"
-          >
-            <v-list-item-action>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title v-text="item.title" />
-            </v-list-item-content>
-          </v-list-item>
+          <template v-for="(item, i) in topItems">
+            <v-list-item
+              v-if="!item.sub"
+              :key="i"
+              :to="item.route || item.to"
+              router
+              color="primary"
+            >
+              <v-list-item-action>
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title v-text="item.title" />
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-group
+              v-else-if="item.sub && item.sub.length"
+              :value="true"
+              no-action
+              :key="i"
+            >
+              <template v-slot:activator>
+                <v-list-item-action>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.title"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+
+              <v-list shaped class="py-0">
+                <v-list-item
+                  color="primary"
+                  v-for="(subitem, e) in item.sub"
+                  :key="e"
+                  link
+                  :to="subitem.to || subitem.route"
+                >
+                  <v-list-item-title
+                    class="pl-10"
+                    v-text="subitem.title"
+                  ></v-list-item-title>
+                  <v-list-item-icon>
+                    <v-icon>{{ subitem.icon }}</v-icon>
+                  </v-list-item-icon>
+                </v-list-item>
+              </v-list>
+            </v-list-group>
+          </template>
         </v-list>
       </div>
     </v-navigation-drawer>
@@ -62,36 +97,36 @@
     </v-main>
 
     <app-snackbar />
+
+    <app-dialog />
+
+    <authentication-dialog />
   </v-app>
 </template>
 
-<script>
-import pageConfig from "@/configs/pages.config";
+<script lang="ts">
+import pageConfig from "~/configs/pages.config";
 import AppSnackbar from "~/components/app/AppSnackbar.vue";
+import AuthenticationDialog from "~/components/dialogs/AuthenticationDialog.vue";
 import authMixin from "~/mixins/auth.mixins";
-export default {
-  components: { AppSnackbar },
-  mixins: [authMixin],
+import mixins from "vue-typed-mixins";
+
+export default mixins(authMixin).extend({
+  components: { AppSnackbar, AuthenticationDialog },
   data() {
     return {
       clipped: true,
       drawer: false,
       topItems: [
-        {
-          icon: "mdi-apps",
-          title: "Dashboard",
-          to: "/",
-        },
-        {
-          icon: "mdi-users",
-          title: "Users",
-          to: "/settings/user",
-        },
-      ],
+        pageConfig.dashboard().this(),
+
+        { ...pageConfig.admin().this(), sub: [pageConfig.users().this()] },
+        pageConfig.settings().this(),
+      ] as any[],
 
       miniVariant: false,
       title: "TUP Voting System",
     };
   },
-};
+});
 </script>

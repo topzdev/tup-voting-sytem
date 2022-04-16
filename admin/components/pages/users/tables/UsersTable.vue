@@ -22,6 +22,9 @@
           'items-per-page-options': table.pagination.itemsPerPageOptions,
         }"
       >
+        <template v-slot:item.role="{ item }">
+          <span>{{ roleText(item.role) }}</span>
+        </template>
         <template v-slot:item.actions="{ item }">
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
@@ -40,8 +43,9 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import debounce from "@/helpers/debounce";
-import userServices from "~/services/user.service";
+import userServices, { UserRole } from "~/services/user.service";
 import pageConfig from "~/configs/pages.config";
+import { UserRoles } from "../../../../services/auth.service";
 
 export default Vue.extend({
   data() {
@@ -60,6 +64,14 @@ export default Vue.extend({
           {
             text: "Username",
             value: "username",
+          },
+          {
+            text: "Email Address",
+            value: "email_address",
+          },
+          {
+            text: "Disabled?",
+            value: "disabled",
           },
           {
             text: "Role",
@@ -109,7 +121,11 @@ export default Vue.extend({
     },
 
     gotoEditPage(id: number) {
-      return pageConfig.users().general(id);
+      return pageConfig.users().general(id).route;
+    },
+
+    roleText(role: UserRole) {
+      return role === "admin" ? "ADMIN" : "SUPER ADMIN";
     },
   },
 

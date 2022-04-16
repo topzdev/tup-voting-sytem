@@ -5,7 +5,7 @@
         <v-list-item
           v-for="(item, i) in links"
           :key="i"
-          :to="item.to"
+          :to="item.to || item.route"
           link
           replace
         >

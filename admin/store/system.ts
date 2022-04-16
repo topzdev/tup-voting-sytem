@@ -1,20 +1,30 @@
 import { actionTree, mutationTree } from "typed-vuex";
+import { SystemLoginCredentials } from "../services/auth.service";
 
 type DialogButtonsFunction = ({ hideDialog: Function }) => void;
 
-const defaultAppDialog = {
-  show: false,
-  title: "",
-  message: "",
-  button: {
-    yesLabel: "",
-    noLabel: "",
-    okayLabel: "",
-    anyEventHide: true,
-    spaceBetween: false,
-    yesFunction: undefined as DialogButtonsFunction | undefined,
-    noFunction: undefined as DialogButtonsFunction | undefined,
-  },
+export type AuthenticationDialogType =
+  | "default"
+  | "current"
+  | "current-only-password";
+
+export type AuthenticationDialogConfig = {
+  show: boolean;
+  title?: string;
+  message?: string;
+  type?: AuthenticationDialogType;
+  allowedRole?: "super-admin" | "admin" | "all";
+  default?: {
+    usernameOrEmail?: string;
+    password?: string;
+  };
+  button?: {
+    yesLabel?: string;
+    noLabel?: string;
+    spaceBetween?: boolean;
+    yesFunction?: () => void;
+    noFunction?: DialogButtonsFunction;
+  };
 };
 
 export type AppDialogConfig = {
@@ -32,15 +42,51 @@ export type AppDialogConfig = {
   };
 };
 
+const defaultAppDialog: AppDialogConfig = {
+  show: false,
+  title: "",
+  message: "",
+  button: {
+    yesLabel: "",
+    noLabel: "",
+    anyEventHide: true,
+    spaceBetween: false,
+    yesFunction: undefined,
+    noFunction: undefined,
+  },
+};
+
+const defaultAuthenticationDialog: AuthenticationDialogConfig = {
+  show: false,
+  title: "",
+  message: "",
+  allowedRole: "all",
+  default: {
+    usernameOrEmail: "",
+    password: "",
+  },
+  button: {
+    yesLabel: "",
+    noLabel: "",
+    spaceBetween: false,
+    yesFunction: undefined,
+    noFunction: undefined,
+  },
+};
+
 export const state = () => ({
   dialogs: {
     app: Object.assign({}, defaultAppDialog),
+    authentication: Object.assign({}, defaultAuthenticationDialog),
   },
 });
 
 export const mutations = mutationTree(state, {
   setAppDialog(state, payload) {
     state.dialogs.app = payload;
+  },
+  setAuthenticationDialog(state, payload) {
+    state.dialogs.authentication = payload;
   },
 });
 
@@ -53,6 +99,17 @@ export const actions = actionTree(
 
     async resetAppDialog({ commit }) {
       commit("setAppDialog", defaultAppDialog);
+    },
+
+    async showAuthenticationDialog(
+      { commit },
+      _config: AuthenticationDialogConfig
+    ) {
+      commit("setAuthenticationDialog", _config);
+    },
+
+    async resetAutheticationDialog({ commit }) {
+      commit("setAuthenticationDialog", defaultAuthenticationDialog);
     },
   }
 );

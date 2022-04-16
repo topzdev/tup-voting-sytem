@@ -105,6 +105,15 @@ const disableUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const changeRole = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const body = req.body;
+    res.status(200).json(await userServices.changeRole(body));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const myAccount = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.admin.id;
@@ -137,6 +146,7 @@ const userController = {
   resetPassword,
   disableUser,
   myAccount,
+  changeRole,
 };
 
 export default userController;

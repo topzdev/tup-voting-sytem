@@ -29,6 +29,14 @@ router.put(
   userController.disableUser
 );
 
+router.put(
+  "/change-role",
+  adminAuth,
+  rolesAllowed("SUPER_ADMIN"),
+  validate(userValidator.changeRole),
+  userController.changeRole
+);
+
 router.post(
   "/",
   adminAuth,

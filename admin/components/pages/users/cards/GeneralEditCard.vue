@@ -1,8 +1,8 @@
 <template>
-  <v-card outlined :loading="$fetchState.pending">
+  <v-card outlined>
     <v-card-title> User Information </v-card-title>
     <v-divider></v-divider>
-    <v-card-text v-if="!$fetchState.pending && !$fetchState.error">
+    <v-card-text>
       <v-form ref="form" v-model="valid">
         <v-row>
           <v-col v-if="alert.show" cols="12">
@@ -55,10 +55,6 @@
             ></v-text-field>
           </v-col>
 
-          <v-col cols="12">
-            <role-select v-model="form.role" :rules="rules.role" />
-          </v-col>
-
           <v-col cols="12" class="d-flex">
             <v-spacer></v-spacer>
             <v-btn
@@ -79,17 +75,19 @@
 
 <script lang="ts">
 import Vue from "vue";
-import userServices from "@/services/user.service";
+import userServices, { User } from "@/services/user.service";
 import UserEditForm from "../forms/UserEditForm.vue";
 import configs from "@/configs";
+import mixins from "vue-typed-mixins";
+import editUserMixin from "@/mixins/edit-user";
+import pageConfig from "~/configs/pages.config";
 
 const defaultForm = {
   firstname: "",
   lastname: "",
-  id: "",
+  id: 0,
   username: "",
   email_address: "",
-  role: "",
 };
 
 const defaultAlert = {
@@ -98,12 +96,7 @@ const defaultAlert = {
   message: "",
 };
 
-export default Vue.extend({
-  props: {
-    isOpen: Boolean,
-    fetchFunc: Function,
-  },
-
+export default mixins(editUserMixin).extend({
   components: {
     UserEditForm,
   },
@@ -117,34 +110,18 @@ export default Vue.extend({
     };
   },
 
-  fetchOnServer: false,
-  async fetch() {
-    try {
-      const id = this.$nuxt.$route.params.userId;
-      this.form = await userServices.getById(id);
-      console.log(this.form);
-    } catch (error) {
-      console.log(error);
-    }
-  },
-
   computed: {
     rules(): any {
       return {
         firstname: [(v: any) => !!v || "Firstname is required"],
         lastname: [(v: any) => !!v || "Lastname is required"],
         username: [(v: any) => !!v || "Username Primary is required"],
-
         role: [(v: any) => !!v || "Role is required"],
       };
     },
   },
 
   methods: {
-    cancelFunc() {
-      this.$nuxt.$router.push("/settings/user");
-    },
-
     async submit() {
       this.loading = true;
 
@@ -153,13 +130,16 @@ export default Vue.extend({
       if (this.valid) {
         try {
           const result = await userServices.update(this.form);
+
           this.$accessor.snackbar.set({
             show: true,
             message: "User Successfully Updated!",
             timeout: 5000,
             color: "success",
           });
-          this.$nuxt.$router.push("/settings/user");
+
+          this.$accessor.user.refetchUser();
+          this.reset();
         } catch (error: any) {
           const message = error.response?.data?.error?.message || error.message;
 
@@ -175,16 +155,24 @@ export default Vue.extend({
       this.loading = false;
     },
 
-    async submitFunc(body: any) {
-      try {
-      } catch (error: any) {
-        throw error.response.data.error;
-      }
-    },
     reset() {
-      (this.$refs as any).form.reset();
       (this.$refs as any).form.resetValidation();
       this.alert = Object.assign({}, defaultAlert);
+    },
+  },
+
+  watch: {
+    user: {
+      immediate: true,
+      handler(user: User) {
+        this.form = {
+          id: user.id,
+          username: user.username,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email_address: user.email_address,
+        };
+      },
     },
   },
 });

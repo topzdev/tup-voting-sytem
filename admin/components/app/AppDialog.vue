@@ -36,14 +36,14 @@ export default Vue.extend({
     },
 
     yesLabel(): string {
-      return this.dialog.button.yesLabel || "Confirm";
+      return this.dialog.button?.yesLabel || "Confirm";
     },
     noLabel(): string {
-      return this.dialog.button.noLabel || "Cancel";
+      return this.dialog.button?.noLabel || "Cancel";
     },
 
     buttonSpaceBetweenClass(): string {
-      return this.dialog.button.spaceBetween
+      return this.dialog.button?.spaceBetween
         ? "justify-space-between"
         : "justify-end";
     },
@@ -59,20 +59,20 @@ export default Vue.extend({
     },
 
     async noFunc() {
-      if (this.dialog.button.noFunction) {
+      if (this.dialog.button?.noFunction) {
         await this.dialog.button.noFunction({ hideDialog: this.hideDialog });
       }
 
-      if (this.dialog.button.anyEventHide) {
+      if (this.dialog.button?.anyEventHide) {
         this.hideDialog();
       }
     },
     async yesFunc() {
-      if (this.dialog.button.yesFunction) {
+      if (this.dialog.button?.yesFunction) {
         await this.dialog.button.yesFunction({ hideDialog: this.hideDialog });
       }
 
-      if (this.dialog.button.anyEventHide) {
+      if (this.dialog.button?.anyEventHide) {
         this.hideDialog();
       }
     },

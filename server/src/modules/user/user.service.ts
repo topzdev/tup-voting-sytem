@@ -1,13 +1,11 @@
-import { Brackets, FindManyOptions, getRepository, ILike, Not } from "typeorm";
+import { FindManyOptions, getRepository, ILike, Not } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
 import { genPassword, validatePassword } from "../../helpers/password.helper";
-import electionController from "../election/election.controller";
-import { Election } from "../election/entity/election.entity";
-import { Voter } from "../voter/entity/voter.entity";
 import { User } from "./entity/user.entity";
 import userHelper from "./user.helper";
 import {
   ChangePasswordDto,
+  ChangeRoleDto,
   CreateUser,
   GetUserQuery,
   UpdateUser,
@@ -20,10 +18,10 @@ const getAll = async (_query: GetUserQuery) => {
 
   if (_query.search) {
     options.where = [
-      { firstname: ILike(`${_query.search}`) },
-      { lastname: ILike(`${_query.search}`) },
-      { lastname: ILike(`${_query.search}`) },
-      { id: ILike(`${_query.search}`) },
+      { firstname: ILike(`%${_query.search}%`) },
+      { lastname: ILike(`%${_query.search}%`) },
+      { username: ILike(`%${_query.search}%`) },
+      { email_address: ILike(`%${_query.search}%`) },
     ];
   }
 
@@ -149,10 +147,32 @@ const update = async (_user: UpdateUser) => {
     lastname: _user.lastname,
     username: toUpdateUsername,
     email_address: toUpdateEmailAddress,
-    role: _user.role,
   });
 
   await toUpdateUser.save();
+
+  return true;
+};
+
+const changeRole = async (_user: ChangeRoleDto) => {
+  const userRepository = getRepository(User);
+  console.log(_user);
+
+  if (!_user.id) throw new HttpException("BAD_REQUEST", `user id is required`);
+
+  let builder = userRepository.createQueryBuilder("user");
+
+  const user = await builder
+    .where("user.id = :userId", {
+      userId: _user.id,
+    })
+    .getOne();
+
+  if (!user) throw new HttpException("NOT_FOUND", "user not found");
+
+  user.role = _user.role;
+
+  await user.save();
 
   return true;
 };
@@ -218,6 +238,8 @@ const disableUser = async (_id: User["id"], disabled: boolean) => {
 
   if (!user) throw new HttpException("NOT_FOUND", "User not found");
 
+  console.log("Disabled ?", disabled);
+
   user.disabled = disabled;
 
   await user.save();
@@ -272,6 +294,7 @@ const userServices = {
   resetPassword,
   disableUser,
   myAccount,
+  changeRole,
 };
 
 export default userServices;
