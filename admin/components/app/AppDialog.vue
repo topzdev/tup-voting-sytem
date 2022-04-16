@@ -4,8 +4,12 @@
       <v-card-title class="text-h5" v-html="title"> </v-card-title>
       <v-card-text v-html="message"></v-card-text>
       <v-card-actions :class="[buttonSpaceBetweenClass]">
-        <v-btn color="primary" text @click="noFunc"> {{ noLabel }} </v-btn>
-        <v-btn color="primary" text @click="yesFunc"> {{ yesLabel }} </v-btn>
+        <v-btn v-if="showNo" color="primary" text @click="noFunc">
+          {{ noLabel }}
+        </v-btn>
+        <v-btn v-if="showYes" color="primary" text @click="yesFunc">
+          {{ yesLabel }}
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -24,10 +28,15 @@ export default Vue.extend({
   },
 
   computed: {
-    dialog() {
+    dialog(): AppDialogConfig {
       return this.$accessor.system.dialogs.app;
     },
-
+    showNo(): boolean {
+      return this.dialog.button?.showNo === false ? false : true;
+    },
+    showYes(): boolean {
+      return this.dialog.button?.showYes === false ? false : true;
+    },
     title(): string {
       return this.dialog.title || "Message Dialog";
     },

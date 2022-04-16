@@ -74,13 +74,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import userServices, { User } from "@/services/user.service";
-import UserEditForm from "../forms/UserEditForm.vue";
-import configs from "@/configs";
-import mixins from "vue-typed-mixins";
 import editUserMixin from "@/mixins/edit-user";
-import pageConfig from "~/configs/pages.config";
+import userServices, { User } from "@/services/user.service";
+import mixins from "vue-typed-mixins";
 
 const defaultForm = {
   firstname: "",
@@ -97,10 +93,6 @@ const defaultAlert = {
 };
 
 export default mixins(editUserMixin).extend({
-  components: {
-    UserEditForm,
-  },
-
   data() {
     return {
       valid: false,

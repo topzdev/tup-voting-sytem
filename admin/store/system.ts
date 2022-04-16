@@ -34,7 +34,8 @@ export type AppDialogConfig = {
   button?: {
     yesLabel?: string;
     noLabel?: string;
-    showClose?: boolean;
+    showNo?: boolean;
+    showYes?: boolean;
     anyEventHide?: boolean;
     spaceBetween?: boolean;
     yesFunction?: DialogButtonsFunction;
@@ -49,6 +50,8 @@ const defaultAppDialog: AppDialogConfig = {
   button: {
     yesLabel: "",
     noLabel: "",
+    showNo: true,
+    showYes: true,
     anyEventHide: true,
     spaceBetween: false,
     yesFunction: undefined,

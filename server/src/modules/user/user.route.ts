@@ -38,7 +38,7 @@ router.put(
 );
 
 router.post(
-  "/",
+  "/create",
   adminAuth,
   rolesAllowed(["SUPER_ADMIN"]),
   validate(userValidator.create),
@@ -46,7 +46,7 @@ router.post(
 );
 
 router.put(
-  "/",
+  "/update",
   adminAuth,
   rolesAllowed(["SUPER_ADMIN"]),
   validate(userValidator.update),
@@ -60,26 +60,26 @@ router.put(
   userController.resetPassword
 );
 
-router.delete(
-  "/:id",
-  adminAuth,
-  rolesAllowed(["SUPER_ADMIN"]),
-  userController.remove
-);
-
-router.put(
-  "/:id",
-  adminAuth,
-  rolesAllowed(["SUPER_ADMIN"]),
-  userController.restore
-);
-
 router.put(
   "/change-password",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   validate(userValidator.changePassword),
   userController.changePassword
+);
+
+router.delete(
+  "/remove/:id",
+  adminAuth,
+  rolesAllowed(["SUPER_ADMIN"]),
+  userController.remove
+);
+
+router.put(
+  "/restore/:id",
+  adminAuth,
+  rolesAllowed(["SUPER_ADMIN"]),
+  userController.restore
 );
 
 router.get(

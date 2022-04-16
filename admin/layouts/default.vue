@@ -110,6 +110,8 @@ import AppSnackbar from "~/components/app/AppSnackbar.vue";
 import AuthenticationDialog from "~/components/dialogs/AuthenticationDialog.vue";
 import authMixin from "~/mixins/auth.mixins";
 import mixins from "vue-typed-mixins";
+import { rolesOnlyAllowed } from "../helpers/roles-allowed.helper";
+import { UserRolesValue } from "../types/roles";
 
 export default mixins(authMixin).extend({
   components: { AppSnackbar, AuthenticationDialog },
@@ -117,16 +119,31 @@ export default mixins(authMixin).extend({
     return {
       clipped: true,
       drawer: false,
-      topItems: [
-        pageConfig.dashboard().this(),
-
-        { ...pageConfig.admin().this(), sub: [pageConfig.users().this()] },
-        pageConfig.settings().this(),
-      ] as any[],
 
       miniVariant: false,
       title: "TUP Voting System",
     };
+  },
+
+  computed: {
+    topItems() {
+      const user = this.$auth.user;
+
+      return [
+        pageConfig.dashboard().this(),
+
+        { ...pageConfig.admin().this(), sub: [pageConfig.users().this()] },
+        {
+          ...pageConfig.settings().this(),
+          sub: [pageConfig.myaccount().this()],
+        },
+      ].filter((item) => {
+        if (!user || !item.allowedRoles) return item;
+        console.log(user);
+        if (rolesOnlyAllowed(user.role as UserRolesValue, item.allowedRoles))
+          return item;
+      });
+    },
   },
 });
 </script>

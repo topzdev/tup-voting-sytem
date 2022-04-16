@@ -27,7 +27,10 @@ const adminLogin = async (_credentials: AdminLoginCredentials) => {
       "user.disabled",
       "user.role",
     ])
-    .where("user.username = :userText", { userText: _credentials.username })
+    .where(
+      "user.username = :usernameOrEmail OR user.email_address = :usernameOrEmail",
+      { usernameOrEmail: _credentials.usernameOrEmail }
+    )
     .getOne();
 
   if (!user) throw new HttpException("BAD_REQUEST", "User is not exist");

@@ -199,7 +199,7 @@ const changePassword = async (
 ) => {
   console.log(_passwords);
 
-  if (!_id) throw new HttpException("BAD_REQUEST", `user id is required`);
+  if (!_id) throw new HttpException("BAD_REQUEST", `User id is required`);
 
   const user = await getRepository(User)
     .createQueryBuilder("user")
@@ -210,12 +210,15 @@ const changePassword = async (
   if (!user) throw new HttpException("NOT_FOUND", "User not found");
 
   if (!(await validatePassword(_passwords.currentPassword, user.password)))
-    throw new HttpException("BAD_REQUEST", "password doesn't match");
+    throw new HttpException(
+      "BAD_REQUEST",
+      "Current password doesn't match with the old password"
+    );
 
   if (_passwords.confirmPassword !== _passwords.newPassword)
     throw new HttpException(
       "BAD_REQUEST",
-      "current password doesnt match with new password"
+      "Confirm password doesnt match with new password"
     );
 
   user.password = await genPassword(_passwords.newPassword);

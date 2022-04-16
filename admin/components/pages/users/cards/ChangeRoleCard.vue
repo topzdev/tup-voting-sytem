@@ -103,6 +103,7 @@ export default mixins(editUserMixin).extend({
                   timeout: 5000,
                   color: "success",
                 });
+                this.$accessor.user.refetchUser();
               } catch (error: any) {
                 const message =
                   error.response?.data?.error?.message || error.message;

@@ -1,5 +1,5 @@
 export interface AdminLoginCredentials {
-  username: string;
+  usernameOrEmail: string;
   password: string;
 }
 

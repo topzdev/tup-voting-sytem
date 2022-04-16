@@ -18,7 +18,7 @@ const validations = {
 const { username, password, election_id, voter_id, pin, usernameOrEmail } =
   validations;
 
-const adminLogin = [username, password];
+const adminLogin = [usernameOrEmail, password];
 const voterLogin = [election_id, voter_id, pin];
 const systemLogin = [usernameOrEmail, password];
 

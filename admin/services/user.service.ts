@@ -44,7 +44,6 @@ export type UpdateUserDto = {
 };
 
 export type ChangePasswordDto = {
-  userId: string;
   currentPassword: string;
   newPassword: string;
   confirmPassword: string;
@@ -67,11 +66,11 @@ const userServices = {
   },
 
   async create(body: CreateUserDto) {
-    return (await apiClient.post(`${url}`, body)).data;
+    return (await apiClient.post(`${url}/create`, body)).data;
   },
 
   async update(body: UpdateUserDto) {
-    return (await apiClient.put(`${url}`, body)).data;
+    return (await apiClient.put(`${url}/update`, body)).data;
   },
 
   async changePassword(body: ChangePasswordDto) {
@@ -95,14 +94,18 @@ const userServices = {
   },
 
   async delete(id: User["id"]) {
-    return (await apiClient.delete(`${url}/${id}`)).data;
+    return (await apiClient.delete(`${url}/remove/${id}`)).data;
   },
 
   async disableUser(dto: DisableUserDto) {
-    return await apiClient.put(`${url}/disable-user`, dto);
+    return (await apiClient.put(`${url}/disable-user`, dto)).data;
   },
   async changeRole(dto: ChangeRoleDto) {
-    return await apiClient.put(`${url}/disable-user`, dto);
+    return (await apiClient.put(`${url}/change-role`, dto)).data;
+  },
+
+  async myAccount() {
+    return (await apiClient.get(`${url}/my-account`)).data;
   },
 };
 
