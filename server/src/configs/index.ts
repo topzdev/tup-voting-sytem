@@ -92,6 +92,10 @@ const configs = {
     redirect: process.env.GOOGLE_OAUTH_REDIRECT_URI,
     client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
   },
+
+  security: {
+    login_max_attempts: 5,
+  },
 };
 
 export default configs;

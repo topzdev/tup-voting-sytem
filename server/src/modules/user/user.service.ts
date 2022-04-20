@@ -1,6 +1,7 @@
 import { FindManyOptions, getRepository, ILike, Not } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
 import { genPassword, validatePassword } from "../../helpers/password.helper";
+import securityServices from "../security/security.service";
 import { User } from "./entity/user.entity";
 import userHelper from "./user.helper";
 import {
@@ -286,6 +287,14 @@ const restore = async (_id: string) => {
   return true;
 };
 
+const reactivateAccount = async (_id: User["id"]) => {
+  if (!_id) throw new HttpException("BAD_REQUEST", `User id is required`);
+
+  await securityServices.reactivateUserAccount(_id);
+
+  return true;
+};
+
 const userServices = {
   getAll,
   getById,
@@ -298,6 +307,7 @@ const userServices = {
   disableUser,
   myAccount,
   changeRole,
+  reactivateAccount,
 };
 
 export default userServices;

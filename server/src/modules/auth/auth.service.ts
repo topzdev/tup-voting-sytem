@@ -1,5 +1,6 @@
 import {
   AdminLoginCredentials,
+  DisabledError,
   SystemLoginCredentials,
   VoterLoginCredentials,
 } from "./auth.inteface";
@@ -13,6 +14,8 @@ import {
 } from "../../helpers/jwt.helper";
 import { Voter } from "../voter/entity/voter.entity";
 import authHelpers from "./auth.helpers";
+import configs from "../../configs";
+import securityServices from "../security/security.service";
 
 const adminLogin = async (_credentials: AdminLoginCredentials) => {
   const user = await getRepository(User)
@@ -26,6 +29,9 @@ const adminLogin = async (_credentials: AdminLoginCredentials) => {
       "user.email_address",
       "user.disabled",
       "user.role",
+      "user.failed_login_attempts",
+      "user.failed_login_time",
+      "user.last_loggedin_time",
     ])
     .where(
       "user.username = :usernameOrEmail OR user.email_address = :usernameOrEmail",
@@ -35,19 +41,32 @@ const adminLogin = async (_credentials: AdminLoginCredentials) => {
 
   if (!user) throw new HttpException("BAD_REQUEST", "User is not exist");
 
-  if (user.disabled)
-    throw new HttpException(
-      "BAD_REQUEST",
-      "Account currently disabled, For more information contact your admintrator"
-    );
+  if (user.disabled) {
+    const disabledError: DisabledError = {
+      disabled: user.disabled,
+    };
 
-  if (!(await validatePassword(_credentials.password, user.password))) {
-    throw new HttpException("BAD_REQUEST", "Incorrect password");
+    throw new HttpException("BAD_REQUEST", {
+      disabledError,
+      message:
+        "Account currently disabled, For more information contact your admintrator",
+    });
   }
+
+  await securityServices.loginAttemptGuard(user);
+
+  const userPassword = user.password;
 
   delete user.password;
 
+  if (!(await validatePassword(_credentials.password, userPassword))) {
+    await securityServices.loginAttemptsRecorder(user);
+    throw new HttpException("BAD_REQUEST", "Incorrect password");
+  }
+
   const { token, expiresIn } = signJwtAdminPayload(user);
+
+  await securityServices.loginSuccessGuard(user);
 
   return {
     token,

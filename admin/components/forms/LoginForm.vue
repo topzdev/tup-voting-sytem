@@ -1,6 +1,6 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation>
-    <v-card width="450" flat>
+  <v-card v-if="show.loginForm" width="450" flat>
+    <v-form ref="form" v-model="valid" lazy-validation>
       <v-card-title>
         <v-row>
           <v-col class="d-flex justify-center" md="12">
@@ -71,13 +71,16 @@
           </v-col>
         </v-row>
       </v-card-text>
-    </v-card>
-  </v-form>
+    </v-form>
+  </v-card>
+
+  <disabled-account v-else-if="show.disabledAccount" />
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import PasswordField from "@/components/input/PasswordField.vue";
+import DisabledAccount from "@/components/pages/login/DisabledAccount.vue";
 import AppImage from "@/components/app/AppImage.vue";
 
 const defaultForm = {
@@ -93,6 +96,7 @@ const defaultAlert = {
 
 export default Vue.extend({
   components: {
+    DisabledAccount,
     PasswordField,
     AppImage,
   },
@@ -106,6 +110,12 @@ export default Vue.extend({
         message: "",
       },
       valid: false,
+
+      show: {
+        loginForm: true,
+        disabledAccount: false,
+        attempError: false,
+      },
 
       form: Object.assign({}, defaultForm),
     };
@@ -148,11 +158,19 @@ export default Vue.extend({
               error.response?.data?.error?.message || error.message;
 
             if (message) {
-              this.alert = {
-                show: true,
-                type: "error",
-                message: message,
-              };
+              if (typeof message === "string") {
+                this.alert = {
+                  show: true,
+                  type: "error",
+                  message: message,
+                };
+              } else if (typeof message === "object") {
+                if (message.disabledError) {
+                  console.log(message.disabledError);
+                } else if (message.attemptError) {
+                  console.log(message.attemptError);
+                }
+              }
             }
           }
         } finally {

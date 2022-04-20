@@ -33,3 +33,7 @@ export interface GoogleUserInfo {
   picture: string;
   locale: string;
 }
+
+export type DisabledError = {
+  disabled: boolean;
+};
