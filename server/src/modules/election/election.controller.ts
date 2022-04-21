@@ -28,6 +28,41 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const getPublic = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const orgId = req.params.org_id;
+
+    const { page, take, order, search, withArchive } = req.query as any;
+
+    res.status(200).json(
+      await electionService.getPublic(orgId, {
+        page: page ? parseInt(page) : undefined,
+        take: take ? parseInt(take) : undefined,
+        order,
+        search,
+        withArchive: withArchive ? Boolean(withArchive) : undefined,
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getElectionWinners = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const election_id = req.params.election_id;
+    res
+      .status(200)
+      .json(await electionService.getElectionWinners(parseInt(election_id)));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getOneById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
@@ -147,6 +182,8 @@ const electionController = {
   unarchive,
   getOneBySlug,
   isExistBySlug,
+  getPublic,
+  getElectionWinners,
 };
 
 export default electionController;

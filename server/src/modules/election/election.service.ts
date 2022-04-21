@@ -11,8 +11,17 @@ import {
 } from "./election.interface";
 import { ElectionLogo } from "./entity/election-logo.entity";
 import { Organization } from "../organization/entity/organization.entity";
+import { Candidate } from "../candidate/entity/candidate.entity";
 import parseDate from "../../helpers/parse-date.helper";
 import { finalStatusSubquery } from "../launchpad/launchpad.helper";
+import {
+  ElectionWithStatusFinal,
+  LaunchpadValidation,
+  LaunchpadValidationData,
+  LaunchpadValidations,
+} from "../launchpad/launchpad.interface";
+import { Position } from "../position/entity/position.entity";
+import { ElectionResults } from "../results/results.interface";
 
 const getAll = async (_orgId: string, _query: GetElectionBody) => {
   const electionRepository = getRepository(Election);
@@ -66,6 +75,81 @@ const getAll = async (_orgId: string, _query: GetElectionBody) => {
     itemsCount: items.length,
   };
 };
+
+const getPublic = async (_orgId: string, _query: GetElectionBody) => {
+  const electionRepository = getRepository(Election);
+  const searchStirng = _query.search ? _query.search : "";
+
+  if (!_orgId) {
+    throw new HttpException("BAD_REQUEST", "Organization Id is required");
+  }
+
+  let builder = electionRepository.createQueryBuilder("election");
+  const election = (await builder.getOne()) as LaunchpadValidationData;
+  builder = builder
+    .addSelect(finalStatusSubquery(builder.alias))
+    .andWhere("election.organization_id = :orgId", {
+      orgId: _orgId,
+    })
+    // .where("election.final_status = 'preview'")
+    .where("election.is_public = false")
+    .leftJoinAndSelect("election.logo", "logo");
+    
+  if (searchStirng) {
+    builder = builder.andWhere(
+      new Brackets((sqb) => {
+        sqb.orWhere("election.title ILIKE :title", {
+          title: `%${searchStirng}%`,
+        });
+      })
+    );
+  }
+
+  builder = builder.orderBy({
+    "election.created_at": "DESC",
+  });
+
+  if (_query.order) {
+    builder = builder.addOrderBy("election.title", _query.order);
+  }
+
+  if (_query.page && _query.take) {
+    const offset = _query.page * _query.take - _query.take;
+    builder = builder.offset(offset).limit(_query.take);
+  }
+
+  const items = await builder.getMany();
+
+  const totalCount = await electionRepository.count({
+    where: { organization_id: _orgId },
+  });
+  console.log("test");
+  return {
+    items,
+    totalCount,
+    itemsCount: items.length,
+  };
+};
+
+const getElectionWinners = async (_election_id: number) => {
+  const candidateRepository = getRepository(Candidate);
+
+  let builder = await candidateRepository.createQueryBuilder("candidates");
+
+  builder = builder
+    .leftJoinAndSelect("candidates.profile_photo", "profile_photo")
+    .leftJoinAndSelect("candidates.party", "party")
+    .leftJoinAndSelect("party.logo", "party_logo")
+    .leftJoinAndSelect("candidates.votes", "votes")
+    .loadRelationCountAndMap("candidates.votesCount", "candidates.votes")
+    .leftJoinAndSelect("candidates.election", "election")
+    //.where("election.final_status = 'completed'")
+    .andWhere("election.is_tally_public = true")
+    .andWhere("candidates.election_id = :_election_id", { _election_id });
+
+  return await builder.getMany();
+};
+
 
 const getBySlug = async (_slug: string) => {
   if (!_slug)
@@ -347,6 +431,8 @@ const electionServices = {
   unarchive,
   isExistBySlug,
   getBySlug,
+  getPublic,
+  getElectionWinners,
 };
 
 export default electionServices;
