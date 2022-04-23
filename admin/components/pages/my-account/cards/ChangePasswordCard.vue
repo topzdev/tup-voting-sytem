@@ -96,7 +96,14 @@ export default mixins(myAccountMixin).extend({
     rules(): any {
       return {
         currentPassword: [(v: any) => !!v || "Current Password is required"],
-        newPassword: [(v: any) => !!v || "Password is required"],
+        newPassword: [
+          (v: any) => !!v || "New Password is required",
+          (v: any) =>
+            !!(v.length >= 8) || "Password must be minimum 8 characters length",
+          (v: any) =>
+            !!(v.length <= 144) ||
+            "Password must be maximum 144 characters length",
+        ],
         confirmPassword: [
           (v: any) => !!v || "Confirm Password is required",
           (v: any) =>

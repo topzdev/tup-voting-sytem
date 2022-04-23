@@ -1,4 +1,5 @@
 import colors from "vuetify/es5/util/colors";
+require("dotenv").config();
 
 export default {
   ssr: false,
@@ -49,6 +50,8 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    "@nuxtjs/recaptcha",
+
     // https://go.nuxtjs.dev/axios
     "@nuxtjs/axios",
     // https://go.nuxtjs.dev/pwa
@@ -58,8 +61,15 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   publicRuntimeConfig: {
+    recaptcha: {
+      /* reCAPTCHA options */
+      siteKey: process.env.RECAPTCHA_ADMIN_SITE_KEY, // for example,
+      size: "invisible",
+      hideBadge: false,
+      version: 2,
+    },
     axios: {
-      baseURL: process.env.BASE_SERVER_URL || "http://localhost:5000",
+      baseURL: process.env.BASE_SERVER_URL,
       progress: true,
     },
   },
