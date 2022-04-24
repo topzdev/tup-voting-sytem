@@ -49,6 +49,7 @@ const loginSuccessGuard = async (user: User) => {
   user.failed_login_attempts = 0;
   user.failed_login_time = null;
   user.last_loggedin_time = new Date();
+  user.login_otp = null;
 
   user.save();
   return true;

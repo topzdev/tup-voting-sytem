@@ -12,6 +12,19 @@ const adminLogin = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const adminVerifyLoginOTP = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const credentials = req.body;
+    res.status(200).json(await authServices.veriyAdminLoginOTP(credentials));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const systemLogin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const credentials = req.body;
@@ -139,6 +152,7 @@ const authController = {
   voterMe,
 
   systemLogin,
+  adminVerifyLoginOTP,
 };
 
 export default authController;

@@ -66,4 +66,9 @@ export class User extends Timestamp {
     nullable: true,
   })
   last_loggedin_time: Date;
+
+  @Column({
+    nullable: true,
+  })
+  login_otp: string;
 }

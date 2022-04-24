@@ -2,6 +2,7 @@ import {
   AdminLoginCredentials,
   DisabledError,
   SystemLoginCredentials,
+  VerfiyAdminLoginOTP,
   VoterLoginCredentials,
 } from "./auth.inteface";
 import { getRepository } from "typeorm";
@@ -13,7 +14,7 @@ import {
   signJwtVoterPayload,
 } from "../../helpers/jwt.helper";
 import { Voter } from "../voter/entity/voter.entity";
-import authHelpers from "./auth.helpers";
+import authHelpers, { generateOTP } from "./auth.helpers";
 import configs from "../../configs";
 import securityServices from "../security/security.service";
 
@@ -42,6 +43,7 @@ const adminLogin = async (_credentials: AdminLoginCredentials) => {
       "user.failed_login_attempts",
       "user.failed_login_time",
       "user.last_loggedin_time",
+      "user.login_otp",
     ])
     .where(
       "user.username = :usernameOrEmail OR user.email_address = :usernameOrEmail",
@@ -70,7 +72,60 @@ const adminLogin = async (_credentials: AdminLoginCredentials) => {
     throw new HttpException("BAD_REQUEST", "Incorrect password");
   }
 
+  user.login_otp = generateOTP();
+
+  await user.save();
+
+  delete user.login_otp;
+
+  return {
+    user,
+  };
+};
+
+const veriyAdminLoginOTP = async (dto: VerfiyAdminLoginOTP) => {
+  if (!dto.user_id)
+    throw new HttpException(
+      "BAD_REQUEST",
+      "Please login first, before verifying OTP"
+    );
+
+  if (!dto.otp) throw new HttpException("BAD_REQUEST", "OTP is required");
+
+  const user = await getRepository(User)
+    .createQueryBuilder("user")
+    .select([
+      "user.id",
+      "user.firstname",
+      "user.lastname",
+      "user.password",
+      "user.username",
+      "user.email_address",
+      "user.disabled",
+      "user.role",
+      "user.failed_login_attempts",
+      "user.failed_login_time",
+      "user.last_loggedin_time",
+      "user.login_otp",
+    ])
+    .where("user.id = :user_id", { user_id: dto.user_id })
+    .getOne();
+
+  if (!user) throw new HttpException("BAD_REQUEST", "User is not exist");
+
+  if (!user.login_otp)
+    throw new HttpException(
+      "BAD_REQUEST",
+      "Please login first, before verifying OTP"
+    );
+
+  if (!(dto.otp === user.login_otp)) {
+    throw new HttpException("BAD_REQUEST", "OTP is invalid");
+  }
+
   const { token, expiresIn } = signJwtAdminPayload(user);
+
+  delete user.password;
 
   await securityServices.loginSuccessGuard(user);
 
@@ -185,6 +240,7 @@ const authServices = {
   adminLogin,
   voterLogin,
   systemLogin,
+  veriyAdminLoginOTP,
 };
 
 export default authServices;

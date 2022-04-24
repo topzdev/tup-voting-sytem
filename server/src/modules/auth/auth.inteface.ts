@@ -1,3 +1,5 @@
+import { User } from "../user/entity/user.entity";
+
 export interface AdminLoginCredentials {
   token: string;
   usernameOrEmail: string;
@@ -38,4 +40,9 @@ export interface GoogleUserInfo {
 
 export type DisabledError = {
   disabled: boolean;
+};
+
+export type VerfiyAdminLoginOTP = {
+  user_id: User["id"];
+  otp: string;
 };

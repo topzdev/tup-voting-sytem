@@ -276,6 +276,8 @@ const sendElectionHasEnded = async (_election_ids: number[]) => {
   return true;
 };
 
+const sendAdminLoginOTP = async () => {};
+
 const mailerServices = {
   sendVotersCredentialsEmail,
   sendThankYouForVotingEmail,
