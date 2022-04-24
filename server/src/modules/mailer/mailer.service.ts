@@ -6,9 +6,11 @@ import {
   sendBulkMail,
   sendSingleMail,
 } from "../../helpers/nodemailer";
+import { decryptPin } from "../../helpers/password.helper";
 import { Election } from "../election/entity/election.entity";
 import { finalStatusSubquery } from "../launchpad/launchpad.helper";
 import { Voter } from "../voter/entity/voter.entity";
+import { voterPinParser } from "../voter/voter.helper";
 import { emailTemplates } from "./mailer.helper";
 import {
   ElectionHasEndedTemplate,
@@ -98,7 +100,7 @@ const sendVotersCredentialsEmail = async (
           item.election.slug
         ),
         voterId: item.username,
-        pin: item.pin,
+        pin: voterPinParser(item.pin),
         title: emailTemplates.voterCredentails.title.replace(
           "$electionTitle",
           item.election.title

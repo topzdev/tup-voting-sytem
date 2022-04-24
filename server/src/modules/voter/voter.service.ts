@@ -24,6 +24,7 @@ import {
   RemoveVotersDto,
   UpdateVoterBody,
 } from "./voter.interface";
+import { genHashedPassword } from "../../helpers/password.helper";
 
 /*  
 !IMPORTANT
@@ -306,7 +307,7 @@ const create = async (_voter: CreateVoterBody) => {
     lastname: _voter.lastname,
     email_address: _voter.email_address,
     username: voter_id,
-    pin: pin,
+    pin,
     election_id: _voter.election_id,
   });
   const savedVoter = await voter.save();
@@ -459,7 +460,7 @@ const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
   console.log("Default Column", columns, "Columns", dataColumns);
 
   // adding organization_id to voters info
-  const parsedVoter = csvData.map((item) => {
+  const parsedVoter: any = csvData.map((item) => {
     const { pin, voter_id } = generateCredentials();
 
     return {
@@ -469,6 +470,8 @@ const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
       election_id: _dto.election_id,
     };
   });
+
+  console.log("Parsed Voter", parsedVoter);
 
   const voterRepository = getRepository(Voter);
 

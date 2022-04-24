@@ -1,4 +1,5 @@
 export interface AdminLoginCredentials {
+  token: string;
   usernameOrEmail: string;
   password: string;
 }
@@ -13,6 +14,7 @@ export interface VoterLoginCredentials {
   election_id: string;
   voter_id: string;
   pin: string;
+  token: string;
 }
 
 export interface GoogleTokensResult {

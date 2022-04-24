@@ -22,6 +22,13 @@ router.get(
   userController.getUserById
 );
 
+router.get(
+  "/my-account",
+  adminAuth,
+  rolesAllowed(["SUPER_ADMIN", "ADMIN"]),
+  userController.myAccount
+);
+
 router.put(
   "/disable-user",
   adminAuth,

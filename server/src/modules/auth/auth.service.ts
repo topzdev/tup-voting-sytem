@@ -6,7 +6,7 @@ import {
 } from "./auth.inteface";
 import { getRepository } from "typeorm";
 import { User } from "../user/entity/user.entity";
-import { validatePassword } from "../../helpers/password.helper";
+import { validatePassword, validatePin } from "../../helpers/password.helper";
 import { HttpException } from "../../helpers/errors/http.exception";
 import {
   signJwtAdminPayload,
@@ -18,6 +18,16 @@ import configs from "../../configs";
 import securityServices from "../security/security.service";
 
 const adminLogin = async (_credentials: AdminLoginCredentials) => {
+  const recaptachaToken = _credentials.token;
+
+  if (!recaptachaToken) {
+    throw new HttpException("BAD_REQUEST", "Recaptcha token is required");
+  }
+
+  if (!(await securityServices.adminValidateRecaptcha(recaptachaToken))) {
+    throw new HttpException("BAD_REQUEST", "Invalid recaptcha token");
+  }
+
   const user = await getRepository(User)
     .createQueryBuilder("user")
     .select([
@@ -42,12 +52,8 @@ const adminLogin = async (_credentials: AdminLoginCredentials) => {
   if (!user) throw new HttpException("BAD_REQUEST", "User is not exist");
 
   if (user.disabled) {
-    const disabledError: DisabledError = {
-      disabled: user.disabled,
-    };
-
     throw new HttpException("BAD_REQUEST", {
-      disabledError,
+      disabledError: true,
       message:
         "Account currently disabled, For more information contact your admintrator",
     });
@@ -125,6 +131,16 @@ const systemLogin = async (_credentials: SystemLoginCredentials) => {
 };
 
 const voterLogin = async (_credentials: VoterLoginCredentials) => {
+  const recaptachaToken = _credentials.token;
+
+  if (!recaptachaToken) {
+    throw new HttpException("BAD_REQUEST", "Recaptcha token is required");
+  }
+
+  if (!(await securityServices.plaformValidateRecaptcha(recaptachaToken))) {
+    throw new HttpException("BAD_REQUEST", "Invalid recaptcha token");
+  }
+
   const voter = await getRepository(Voter)
     .createQueryBuilder("voter")
     .select([
@@ -148,8 +164,10 @@ const voterLogin = async (_credentials: VoterLoginCredentials) => {
     throw new HttpException("NOT_FOUND", "Voter is not exist");
   }
 
-  if (voter.pin !== _credentials.pin) {
-    throw new HttpException("NOT_FOUND", "Incorrect Pin");
+  if (!validatePin(voter.pin, _credentials.pin)) {
+    if (_credentials.pin !== voter.pin) {
+      throw new HttpException("NOT_FOUND", "Incorrect Pin");
+    }
   }
 
   delete voter.pin;

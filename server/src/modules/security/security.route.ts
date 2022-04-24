@@ -7,12 +7,9 @@ const router = express.Router();
 
 console.log("module: Security Module Loaded");
 
-router.get(
-  "/final-security/:election_id",
-  // voterAuth,
-  // // validate(securityValidator.getElectionBySlug),
-  securityController.getElectionSecurity
-);
+router.get("/test-encrypt/", securityController.TEST_pin_encrypt);
+
+router.get("/test-decrypt/", securityController.TEST_pin_decrypt);
 
 const securityRoute = router;
 
