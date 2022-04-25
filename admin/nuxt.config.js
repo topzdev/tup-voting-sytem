@@ -103,7 +103,7 @@ export default {
           // autoFetch: true
         },
         endpoints: {
-          login: { url: "/api/v1/auth/admin/login", method: "post" },
+          login: { url: "/api/v1/auth/admin/verify", method: "post" },
           logout: { url: "/api/v1/auth/admin/logout", method: "post" },
           user: { url: "/api/v1/auth/admin/me", method: "get" },
         },

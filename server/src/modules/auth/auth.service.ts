@@ -1,6 +1,7 @@
 import {
   AdminLoginCredentials,
   DisabledError,
+  ResendAdminLoginOTP,
   SystemLoginCredentials,
   VerfiyAdminLoginOTP,
   VoterLoginCredentials,
@@ -17,6 +18,10 @@ import { Voter } from "../voter/entity/voter.entity";
 import authHelpers, { generateOTP } from "./auth.helpers";
 import configs from "../../configs";
 import securityServices from "../security/security.service";
+import mailerServices from "../mailer/mailer.service";
+import dayjs from "dayjs";
+
+const otp_resend_interval = configs.security.otp_resend_interval;
 
 const adminLogin = async (_credentials: AdminLoginCredentials) => {
   const recaptachaToken = _credentials.token;
@@ -44,6 +49,7 @@ const adminLogin = async (_credentials: AdminLoginCredentials) => {
       "user.failed_login_time",
       "user.last_loggedin_time",
       "user.login_otp",
+      "user.last_resend_otp_time",
     ])
     .where(
       "user.username = :usernameOrEmail OR user.email_address = :usernameOrEmail",
@@ -76,14 +82,32 @@ const adminLogin = async (_credentials: AdminLoginCredentials) => {
 
   await user.save();
 
+  mailerServices.sendAdminLoginOTP({
+    email_address: user.email_address,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    login_otp: user.login_otp,
+  });
+
   delete user.login_otp;
 
+  if (!user.last_resend_otp_time) {
+    await securityServices.loginSuccessGuard(user);
+  }
+
   return {
-    user,
+    user: {
+      id: user.id,
+      email_address: user.email_address,
+      firstname: user.firstname,
+      lastname: user.lastname,
+    },
+    last_resend_otp_time: user.last_resend_otp_time,
+    otp_resend_interval,
   };
 };
 
-const veriyAdminLoginOTP = async (dto: VerfiyAdminLoginOTP) => {
+const verifyAdminLoginOTP = async (dto: VerfiyAdminLoginOTP) => {
   if (!dto.user_id)
     throw new HttpException(
       "BAD_REQUEST",
@@ -111,6 +135,8 @@ const veriyAdminLoginOTP = async (dto: VerfiyAdminLoginOTP) => {
     .where("user.id = :user_id", { user_id: dto.user_id })
     .getOne();
 
+  await securityServices.loginAttemptGuard(user);
+
   if (!user) throw new HttpException("BAD_REQUEST", "User is not exist");
 
   if (!user.login_otp)
@@ -119,20 +145,71 @@ const veriyAdminLoginOTP = async (dto: VerfiyAdminLoginOTP) => {
       "Please login first, before verifying OTP"
     );
 
-  if (!(dto.otp === user.login_otp)) {
-    throw new HttpException("BAD_REQUEST", "OTP is invalid");
+  if (dto.otp !== user.login_otp) {
+    await securityServices.loginAttemptsRecorder(user);
+    throw new HttpException("BAD_REQUEST", "OTP is incorrect");
   }
 
   const { token, expiresIn } = signJwtAdminPayload(user);
 
   delete user.password;
 
-  await securityServices.loginSuccessGuard(user);
+  await securityServices.verifyOtpSuccessGuard(user);
 
   return {
     token,
     user,
     expiresIn,
+  };
+};
+
+const resendAdminLoginOTP = async (dto: ResendAdminLoginOTP) => {
+  if (!dto.user_id)
+    throw new HttpException("BAD_REQUEST", "User ID is required");
+
+  const user = await getRepository(User)
+    .createQueryBuilder("user")
+    .select([
+      "user.id",
+      "user.firstname",
+      "user.lastname",
+      "user.password",
+      "user.username",
+      "user.email_address",
+      "user.disabled",
+      "user.login_otp",
+      "user.last_resend_otp_time",
+    ])
+    .where("user.id = :user_id", { user_id: dto.user_id })
+    .getOne();
+
+  if (user.last_resend_otp_time) {
+    const last_resend = dayjs(user.last_resend_otp_time);
+    const current_datetime = dayjs();
+    const second_diff = current_datetime.diff(last_resend, "second");
+
+    if (second_diff <= 500) {
+      throw new HttpException(
+        "BAD_REQUEST",
+        "Please wait more seconds before requesting again."
+      );
+    }
+  }
+
+  user.login_otp = generateOTP();
+  user.last_resend_otp_time = new Date();
+
+  await user.save();
+
+  return {
+    user: {
+      id: user.id,
+      email_address: user.email_address,
+      firstname: user.firstname,
+      lastname: user.lastname,
+    },
+    last_resend_otp_time: user.last_resend_otp_time,
+    otp_resend_interval,
   };
 };
 
@@ -240,7 +317,8 @@ const authServices = {
   adminLogin,
   voterLogin,
   systemLogin,
-  veriyAdminLoginOTP,
+  verifyAdminLoginOTP,
+  resendAdminLoginOTP,
 };
 
 export default authServices;

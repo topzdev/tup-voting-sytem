@@ -15,7 +15,9 @@ router.post(
   authController.adminLogin
 );
 
-router.post("/admin/verify-otp", authController.adminVerifyLoginOTP);
+router.post("/admin/verify", authController.adminVerifyLoginOTP);
+
+router.post("/admin/resend-otp", authController.adminResendLoginOTP);
 
 router.post("/admin/logout", adminAuth, authController.adminLogout);
 

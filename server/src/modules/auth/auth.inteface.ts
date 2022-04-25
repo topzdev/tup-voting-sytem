@@ -46,3 +46,7 @@ export type VerfiyAdminLoginOTP = {
   user_id: User["id"];
   otp: string;
 };
+
+export type ResendAdminLoginOTP = {
+  user_id: User["id"];
+};

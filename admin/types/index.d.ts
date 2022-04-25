@@ -1,7 +1,7 @@
 import { accessorType } from "~/store";
 
 type Recaptcha = {
-  getResponse: () => void;
+  getResponse: () => string;
   reset: () => void;
 };
 

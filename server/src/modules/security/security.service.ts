@@ -48,10 +48,18 @@ const loginAttemptGuard = async (user: User) => {
 const loginSuccessGuard = async (user: User) => {
   user.failed_login_attempts = 0;
   user.failed_login_time = null;
+
+  await user.save();
+  return true;
+};
+
+const verifyOtpSuccessGuard = async (user: User) => {
   user.last_loggedin_time = new Date();
   user.login_otp = null;
+  user.last_resend_otp_time = null;
 
-  user.save();
+  await user.save();
+
   return true;
 };
 
@@ -155,6 +163,7 @@ const securityServices = {
   reactivateUserAccount,
   adminValidateRecaptcha,
   plaformValidateRecaptcha,
+  verifyOtpSuccessGuard,
   TEST_pin_encrypt,
   TEST_pin_decrypt,
 };

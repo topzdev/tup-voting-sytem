@@ -98,6 +98,7 @@ const configs = {
 
   security: {
     login_max_attempts: 5,
+    otp_resend_interval: 500,
   },
 
   recaptcha: {

@@ -43,6 +43,7 @@ export const sendBulkMail = (messages: NewSendMailOptions[]) => {
 export const sendSingleMail = (message: NewSendMailOptions) => {
   try {
     transporter.sendMail(message);
+    console.log("Email Sent");
   } catch (error) {
     console.log(error);
   }
