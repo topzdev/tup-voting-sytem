@@ -18,8 +18,11 @@ console.log("is development? ", !__prod__);
 const configs = {
   port: process.env.PORT,
   auth: {
-    saltRounds: parseInt(process.env.SALT_ROUNDS),
+    adminSaltRounds: parseInt(process.env.ADMIN_SALT_ROUNDS),
+    voterSaltRounds: parseInt(process.env.VOTER_SALT_ROUNDS),
+    voterCryptoSecretKey: process.env.VOTER_CRYPTO_SECRET_KEY,
   },
+  voter: {},
   database: {
     type: process.env.DATABASE_TYPE,
     host: process.env.DATABASE_HOST,
@@ -91,6 +94,16 @@ const configs = {
     client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
     redirect: process.env.GOOGLE_OAUTH_REDIRECT_URI,
     client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+  },
+
+  security: {
+    login_max_attempts: parseInt(process.env.LOGIN_MAX_ATTEMPTS),
+    otp_resend_interval: parseInt(process.env.OTP_RESEND_INTERVAL),
+  },
+
+  recaptcha: {
+    admin_secret_key: process.env.RECAPTCHA_ADMIN_SECRET_KEY,
+    platform_secret_key: process.env.RECAPTCHA_PLATFORM_SECRET_KEY,
   },
 };
 

@@ -45,6 +45,7 @@
         </v-btn>
       </v-col>
     </v-row>
+    <recaptcha />
   </v-form>
 </template>
 
@@ -102,8 +103,10 @@ export default Vue.extend({
       try {
         const slug = this.$route.params.slug;
 
+        const token = await this.$recaptcha.getResponse();
+
         const result = await this.$auth.loginWith("local", {
-          data: { ...this.form, election_id: this.election_id },
+          data: { ...this.form, election_id: this.election_id, token },
         });
 
         this.$router.push(`/election/${slug}/ballot`);
@@ -122,6 +125,7 @@ export default Vue.extend({
           }
         }
       } finally {
+        await this.$recaptcha.reset();
         this.loading = false;
       }
     },

@@ -43,4 +43,38 @@ export class User extends Timestamp {
     default: UserRole.ADMIN,
   })
   role: UserRole;
+
+  @Column({
+    type: "timestamptz",
+    nullable: true,
+  })
+  failed_login_time: Date;
+
+  @Column({
+    type: "timestamptz",
+    nullable: true,
+  })
+  reactivate_time: Date;
+
+  @Column({
+    default: 0,
+  })
+  failed_login_attempts: number;
+
+  @Column({
+    type: "timestamptz",
+    nullable: true,
+  })
+  last_loggedin_time: Date;
+
+  @Column({
+    nullable: true,
+  })
+  login_otp: string;
+
+  @Column({
+    type: "timestamptz",
+    nullable: true,
+  })
+  last_resend_otp_time: Date;
 }

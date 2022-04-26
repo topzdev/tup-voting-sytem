@@ -12,6 +12,32 @@ const adminLogin = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const adminVerifyLoginOTP = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const dto = req.body;
+    res.status(200).json(await authServices.verifyAdminLoginOTP(dto));
+  } catch (error) {
+    next(error);
+  }
+};
+
+const adminResendLoginOTP = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const dto = req.body;
+    res.status(200).json(await authServices.resendAdminLoginOTP(dto));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const systemLogin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const credentials = req.body;
@@ -139,6 +165,8 @@ const authController = {
   voterMe,
 
   systemLogin,
+  adminVerifyLoginOTP,
+  adminResendLoginOTP,
 };
 
 export default authController;

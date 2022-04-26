@@ -135,6 +135,20 @@ const restore = async (
     next(error);
   }
 };
+
+const reactivateAccount = async (
+  req: Request<{ id: string }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id = req.body.id;
+    res.status(200).json(await userServices.reactivateAccount(parseInt(id)));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const userController = {
   getUsers,
   getUserById,
@@ -147,6 +161,7 @@ const userController = {
   disableUser,
   myAccount,
   changeRole,
+  reactivateAccount,
 };
 
 export default userController;
