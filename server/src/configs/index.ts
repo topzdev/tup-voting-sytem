@@ -97,8 +97,8 @@ const configs = {
   },
 
   security: {
-    login_max_attempts: 5,
-    otp_resend_interval: 500,
+    login_max_attempts: parseInt(process.env.LOGIN_MAX_ATTEMPTS),
+    otp_resend_interval: parseInt(process.env.OTP_RESEND_INTERVAL),
   },
 
   recaptcha: {

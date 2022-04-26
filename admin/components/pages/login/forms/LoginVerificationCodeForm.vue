@@ -1,5 +1,5 @@
 <template>
-  <v-card outlined flat class="px-2 py-4">
+  <v-card v-if="defaultData" outlined flat class="px-2 py-4">
     <v-form ref="form" v-model="valid" @submit.prevent="submit">
       <v-card-text class="text-center">
         <v-icon
@@ -13,7 +13,7 @@
         </h2>
         <p class="body-1">
           An email with a verification code was sent to
-          <b>{{ data.user.email_address }} </b>
+          <b>{{ defaultData.user.email_address }} </b>
         </p>
         <v-row no-gutters>
           <v-col v-if="alert.show" class="mb-2" cols="12">
@@ -32,6 +32,7 @@
           <v-col cols="12">
             <v-otp-input
               v-model="form.otp"
+              @finish="onFinish"
               :length="length"
               type="number"
             ></v-otp-input>
@@ -39,18 +40,31 @@
           <v-col>
             <p class="mb-0">
               Didn't get the OTP?
-              <v-btn v-if="showResendCoundDown" text small color="secondary"
+              <v-btn
+                type="button"
+                v-if="showResendCoundDown"
+                text
+                small
+                color="secondary"
+                @click="resendOTP"
                 >Resend OTP</v-btn
               >
               <template v-else
-                >({{ otpResendIntervalToSecond }}seconds left)</template
+                >Please wait for {{ resend_timer }}s to request again.</template
               >
             </p>
           </v-col>
         </v-row>
       </v-card-text>
       <v-card-actions class="pt-0">
-        <v-btn :loading="loading" type="button" color="primary" block large>
+        <v-btn
+          :loading="loading"
+          :disabled="loading"
+          type="submit"
+          color="primary"
+          block
+          large
+        >
           Verify
         </v-btn>
       </v-card-actions>
@@ -61,8 +75,9 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import icons from "@/configs/icons";
-import { AdminLoginReturn } from "@/services/auth.service";
+import authServices, { AdminLoginReturn } from "@/services/auth.service";
 import dayjs from "dayjs";
+import { ErrorTypes } from "@/pages/login.vue";
 
 const defaultForm = {
   otp: "",
@@ -76,18 +91,25 @@ const defaultAlert = {
 
 export default Vue.extend({
   props: {
+    setSuccess: {
+      type: Function,
+    } as PropOptions<(data: AdminLoginReturn) => void>,
+
+    setError: {
+      type: Function,
+    } as PropOptions<(type: ErrorTypes) => void>,
     data: {
       type: Object,
-      default: {
-        otp_resend_interval: 500,
-        last_resend_otp_time: new Date(),
-        user: {
-          email_address: "christianlugod05@gmail.com",
-          id: 3,
-          firstname: "Christian",
-          lastname: "Lugod",
-        },
-      },
+      // default: {
+      //   otp_resend_interval: 500,
+      //   last_resend_otp_time: new Date(),
+      //   user: {
+      //     email_address: "christianlugod05@gmail.com",
+      //     id: 3,
+      //     firstname: "Christian",
+      //     lastname: "Lugod",
+      //   },
+      // },
     } as PropOptions<AdminLoginReturn>,
   },
   data() {
@@ -99,6 +121,7 @@ export default Vue.extend({
       form: Object.assign({}, defaultForm),
       length: 6,
       defaultData: null as AdminLoginReturn | null,
+      resend_timer: 0,
     };
   },
   computed: {
@@ -111,9 +134,7 @@ export default Vue.extend({
     },
 
     showResendCoundDown(): boolean {
-      if (!this.data.last_resend_otp_time) return false;
-
-      return this.otpResendIntervalToSecond < this.data.otp_resend_interval;
+      return this.resend_timer <= 0;
     },
 
     isActive(): boolean {
@@ -123,17 +144,63 @@ export default Vue.extend({
   watch: {
     data: {
       handler(value) {
-        this.defaultData = JSON.parse(JSON.stringify(value));
+        if (value) {
+          this.defaultData = JSON.parse(JSON.stringify(value));
+        }
+      },
+      immediate: true,
+    },
+
+    resend_timer: {
+      handler(value) {
+        if (value > 0) {
+          setTimeout(() => {
+            this.resend_timer--;
+          }, 1000);
+        }
       },
       immediate: true,
     },
   },
 
   methods: {
-    async resendOTP() {},
+    onFinish(otp: string) {
+      this.form.otp = otp;
+    },
+    async resendOTP() {
+      if (!this.defaultData) return;
+
+      if (!this.showResendCoundDown) return;
+
+      try {
+        const result = await authServices.resendAdminLoginOTP({
+          user_id: this.defaultData.user.id,
+        });
+
+        this.resend_timer = result.otp_resend_interval;
+
+        this.defaultData = result;
+
+        this.alert = {
+          show: true,
+          type: "success",
+          message: "OTP sent to your email",
+        };
+      } catch (error: any) {
+        const message = error.response?.data?.error?.message || error.message;
+
+        if (message) {
+          this.alert = {
+            show: true,
+            type: "error",
+            message: message,
+          };
+        }
+      }
+    },
 
     async submit() {
-      if (false) return;
+      if (!this.defaultData) return;
 
       (this.$refs as any).form.validate();
 
@@ -141,17 +208,30 @@ export default Vue.extend({
         try {
           this.loading = true;
           const result = await this.$auth.loginWith("local", {
-            data: { ...this.form },
+            data: { otp: this.form.otp, user_id: this.defaultData.user.id },
           });
         } catch (error: any) {
-          const message = error.response?.data?.error?.message || error.message;
+          if (error || error.response.data.error) {
+            const message =
+              error.response?.data?.error?.message || error.message;
 
-          if (message) {
-            this.alert = {
-              show: true,
-              type: "error",
-              message: message,
-            };
+            console.log(message);
+
+            if (message) {
+              if (typeof message === "string") {
+                this.alert = {
+                  show: true,
+                  type: "error",
+                  message: message,
+                };
+              } else if (typeof message === "object") {
+                if (message.disabledError) {
+                  this.setError("disabled-account");
+                } else if (message.attemptsError) {
+                  this.setError("attempt-error");
+                }
+              }
+            }
           }
         } finally {
           this.loading = false;

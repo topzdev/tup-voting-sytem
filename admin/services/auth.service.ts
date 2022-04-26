@@ -49,7 +49,7 @@ const authServices = {
   async resendAdminLoginOTP(
     dto: ResendAdminLoginOTP
   ): Promise<AdminLoginReturn> {
-    return (await apiClient.post(`${url}/admin/login`, dto)).data;
+    return (await apiClient.post(`${url}/admin/resend-otp`, dto)).data;
   },
 };
 

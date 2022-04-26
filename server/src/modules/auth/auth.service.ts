@@ -188,7 +188,7 @@ const resendAdminLoginOTP = async (dto: ResendAdminLoginOTP) => {
     const current_datetime = dayjs();
     const second_diff = current_datetime.diff(last_resend, "second");
 
-    if (second_diff <= 500) {
+    if (second_diff <= otp_resend_interval) {
       throw new HttpException(
         "BAD_REQUEST",
         "Please wait more seconds before requesting again."
@@ -200,6 +200,13 @@ const resendAdminLoginOTP = async (dto: ResendAdminLoginOTP) => {
   user.last_resend_otp_time = new Date();
 
   await user.save();
+
+  mailerServices.sendAdminLoginOTP({
+    email_address: user.email_address,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    login_otp: user.login_otp,
+  });
 
   return {
     user: {

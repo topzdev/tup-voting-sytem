@@ -23,18 +23,43 @@
           </v-col>
         </v-row>
       </v-card-title>
-      <login-form v-if="success"></login-form>
-      <login-verification-code-form v-else />
+      <template v-if="showLogin">
+        <login-form
+          v-if="!success"
+          :setSuccess="setSuccess"
+          :setError="setError"
+        ></login-form>
+        <login-verification-code-form
+          v-else
+          :data="success"
+          :setSuccess="setSuccess"
+          :setError="setError"
+        />
+      </template>
+      <template v-else>
+        <disabled-account v-if="errors.disabledError" :reset="reset" />
+        <attempts-error v-else-if="errors.attemptsError" :reset="reset" />
+      </template>
     </v-card>
+    <recaptcha />
   </page-center>
 </template>
 
 <script lang="ts">
-import LoginForm from "~/components/pages/login/forms/LoginForm.vue";
+import LoginForm from "~/components/pages/login/forms/AdminLoginForm.vue";
 import LoginVerificationCodeForm from "~/components/pages/login/forms/LoginVerificationCodeForm.vue";
 import PageCenter from "@/components/utils/PageCenter.vue";
 import Vue from "vue";
 import { AdminLoginReturn } from "../services/auth.service";
+import DisabledAccount from "@/components/pages/login/DisabledAccount.vue";
+import AttemptsError from "@/components/pages/login/AttemptsError.vue";
+
+export type ErrorTypes = "attempt-error" | "disabled-account";
+
+const defaultErrors = {
+  disabledError: false,
+  attemptsError: false,
+};
 
 export default Vue.extend({
   auth: "guest",
@@ -44,6 +69,8 @@ export default Vue.extend({
     LoginForm,
     LoginVerificationCodeForm,
     PageCenter,
+    DisabledAccount,
+    AttemptsError,
   },
   head: {
     title: "Admin Login",
@@ -51,12 +78,43 @@ export default Vue.extend({
   data() {
     return {
       success: null as AdminLoginReturn | null,
+      errors: Object.assign({}, defaultErrors),
     };
+  },
+
+  computed: {
+    showLogin(): boolean {
+      return !this.errors.disabledError && !this.errors.attemptsError;
+    },
   },
 
   methods: {
     setSuccess(data: AdminLoginReturn) {
       this.success = data;
+    },
+    setError(type: ErrorTypes) {
+      switch (type) {
+        case "attempt-error":
+          this.errors.attemptsError = true;
+          break;
+
+        case "disabled-account":
+          this.errors.disabledError = true;
+          break;
+      }
+    },
+    reset() {
+      this.success = null;
+      this.errors = Object.assign({}, defaultErrors);
+    },
+    onError(error) {
+      console.log("Error happened:", error);
+    },
+    onSuccess(token) {
+      console.log("Succeeded:", token);
+    },
+    onExpired() {
+      console.log("Expired");
     },
   },
 });

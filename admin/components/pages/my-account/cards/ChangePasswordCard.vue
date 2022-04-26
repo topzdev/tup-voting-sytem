@@ -100,6 +100,10 @@ export default mixins(myAccountMixin).extend({
           (v: any) => !!v || "New Password is required",
           (v: any) =>
             !!(v.length >= 8) || "Password must be minimum 8 characters length",
+
+          (v: any) =>
+            /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/.test(v) ||
+            "Password must contain alphanumeric characters",
           (v: any) =>
             !!(v.length <= 144) ||
             "Password must be maximum 144 characters length",

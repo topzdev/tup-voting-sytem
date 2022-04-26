@@ -23,7 +23,7 @@ const loginAttemptsRecorder = async (user: User) => {
   if (currentAttemps >= warningAttempts && currentAttemps < maxAttempts) {
     throw new HttpException(
       "BAD_REQUEST",
-      SECURITY_MESSAGE.youHaveOnlyAttemps(maxAttempts - warningAttempts)
+      SECURITY_MESSAGE.youHaveOnlyAttemps(maxAttempts - currentAttemps)
     );
   } else if (currentAttemps >= maxAttempts) {
     throw new HttpException("BAD_REQUEST", {

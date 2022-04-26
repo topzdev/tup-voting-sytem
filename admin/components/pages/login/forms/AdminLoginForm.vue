@@ -1,6 +1,6 @@
 <template>
   <v-card outlined flat class="px-2 py-6">
-    <template v-if="showLogin">
+    <template>
       <v-card-text class="d-flex align-center">
         <v-form ref="form" v-model="valid" @submit.prevent="submit">
           <v-row>
@@ -51,24 +51,18 @@
         </v-form>
       </v-card-text>
     </template>
-    <template v-else>
-      <disabled-account v-if="errors.disabledError" :reset="reset" />
-      <attempts-error v-else-if="errors.attemptsError" :reset="reset" />
-    </template>
-    <recaptcha />
   </v-card>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import PasswordField from "@/components/input/PasswordField.vue";
-import DisabledAccount from "@/components/pages/login/DisabledAccount.vue";
-import AttemptsError from "@/components/pages/login/AttemptsError.vue";
 import AppImage from "@/components/app/AppImage.vue";
 import authServices, { AdminLoginReturn } from "@/services/auth.service";
+import { ErrorTypes } from "@/pages/login.vue";
 
 const defaultForm = {
-  usernameOrEmail: "christian.lugod@tup.email.ph",
+  usernameOrEmail: "christianlugod05@gmail.com",
   password: "",
 };
 
@@ -78,22 +72,19 @@ const defaultAlert = {
   message: "",
 };
 
-const defaultErrors = {
-  disabledError: false,
-  attemptsError: false,
-};
-
 export default Vue.extend({
   props: {
     setSuccess: {
       type: Function,
     } as PropOptions<(data: AdminLoginReturn) => void>,
+
+    setError: {
+      type: Function,
+    } as PropOptions<(type: ErrorTypes) => void>,
   },
 
   components: {
-    DisabledAccount,
     PasswordField,
-    AttemptsError,
     AppImage,
   },
   data() {
@@ -102,14 +93,10 @@ export default Vue.extend({
       valid: false,
       alert: Object.assign({}, defaultAlert),
       form: Object.assign({}, defaultForm),
-      errors: Object.assign({}, defaultErrors),
     };
   },
 
   computed: {
-    showLogin(): boolean {
-      return !this.errors.disabledError && !this.errors.attemptsError;
-    },
     showVerificationPage(): boolean {
       return true;
     },
@@ -142,9 +129,12 @@ export default Vue.extend({
             token,
           });
 
+          console.log(result);
+
           this.setSuccess(result);
         } catch (error: any) {
-          if (error && error.response.data.error) {
+          console.log(error);
+          if (error || error.response.data.error) {
             const message =
               error.response?.data?.error?.message || error.message;
 
@@ -159,12 +149,10 @@ export default Vue.extend({
                 };
               } else if (typeof message === "object") {
                 if (message.disabledError) {
-                  this.errors.disabledError = true;
+                  this.setError("disabled-account");
                 } else if (message.attemptsError) {
-                  this.errors.attemptsError = true;
+                  this.setError("attempt-error");
                 }
-
-                console.log(this.showLogin);
               }
             }
           }
@@ -172,15 +160,6 @@ export default Vue.extend({
           await this.$recaptcha.reset();
           this.loading = false;
         }
-    },
-    onError(error) {
-      console.log("Error happened:", error);
-    },
-    onSuccess(token) {
-      console.log("Succeeded:", token);
-    },
-    onExpired() {
-      console.log("Expired");
     },
 
     reset() {
@@ -190,7 +169,6 @@ export default Vue.extend({
       }
       this.form = Object.assign({}, defaultForm);
       this.alert = Object.assign({}, defaultAlert);
-      this.errors = Object.assign({}, defaultErrors);
     },
   },
 });
