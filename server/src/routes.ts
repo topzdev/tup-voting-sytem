@@ -15,6 +15,9 @@ import votingRoute from "./modules/voting/voting.route";
 import mailerRoute from "./modules/mailer/mailer.route";
 import resultsRoute from "./modules/results/results.route";
 import preregisterRouter from "./modules/preregister/preregister.route";
+import candidatePublicRoute from "./modules/public/candidate/candidate.route";
+import partyPublicRoute from "./modules/public/party/party.route";
+import homepageRoute from "./modules/public/homepage/election.route";
 const router = express.Router();
 
 router.use("/user", userRoute);
@@ -33,5 +36,8 @@ router.use("/voting", votingRoute);
 router.use("/mailer", mailerRoute);
 router.use("/results", resultsRoute);
 router.use("/pre-register", preregisterRouter);
+router.use("/candidate-public", candidatePublicRoute);
+router.use("/party-public", partyPublicRoute);
+router.use("/homepage", homepageRoute);
 
 export default router;
