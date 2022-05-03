@@ -1,5 +1,10 @@
 import { QueryFailedError } from "typeorm";
 import { customAlphabet } from "nanoid";
+import {
+  decryptPin,
+  encryptPin,
+  genHashedPassword,
+} from "../../helpers/password.helper";
 
 export const isEmptyStringReturnNull = (str: string) => {
   return str === "" ? null : str;
@@ -25,8 +30,19 @@ const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const nanoid = customAlphabet(alphabet, 10);
 
 export const generateCredentials = () => {
+  const pin = encryptPin(nanoid());
   return {
-    pin: nanoid(),
+    pin,
     voter_id: nanoid(),
   };
+};
+
+export const voterPinParser = (possbileHashedPin: string) => {
+  const decryptedPin = decryptPin(possbileHashedPin);
+
+  if (decryptedPin) {
+    return decryptedPin;
+  } else {
+    return possbileHashedPin;
+  }
 };

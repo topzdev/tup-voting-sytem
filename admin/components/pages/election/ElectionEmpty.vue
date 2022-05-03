@@ -18,14 +18,13 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import pageConfig from "@/configs/pages.config";
+import pageConfig from "~/configs/pages.config";
 import orgMixins from "@/mixins/org.mixins";
-export default Vue.extend({
-  mixins: [orgMixins],
-
+import mixins from "vue-typed-mixins";
+export default mixins(orgMixins).extend({
   computed: {
     thisPageConfig() {
-      return pageConfig.election;
+      return pageConfig.election();
     },
   },
 });

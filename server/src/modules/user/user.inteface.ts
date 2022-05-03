@@ -3,8 +3,6 @@ import { User } from "./entity/user.entity";
 export enum UserRole {
   SUPER_ADMIN = "sadmin",
   ADMIN = "admin",
-  WATCHER = "watcher",
-  DEV = "dev",
 }
 
 export interface GetUserQuery {
@@ -14,19 +12,21 @@ export interface GetUserQuery {
   take: number;
 }
 
+export type ChangeRoleDto = Pick<User, "role" | "id">;
+
 export type CreateUser = Pick<
   User,
-  "firstname" | "lastname" | "username" | "password"
+  "firstname" | "lastname" | "username" | "password" | "email_address"
 > & {
   role: UserRole;
 };
 
-export type UpdateUser = Pick<User, "id" | "firstname" | "lastname"> & {
-  role: UserRole;
-};
+export type UpdateUser = Pick<
+  User,
+  "id" | "firstname" | "lastname" | "email_address" | "username"
+>;
 
 export type ChangePasswordDto = {
-  userId: string;
   currentPassword: string;
   newPassword: string;
   confirmPassword: string;

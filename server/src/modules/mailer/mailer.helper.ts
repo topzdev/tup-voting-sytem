@@ -2,7 +2,8 @@ export type EmailTemplates =
   | "voter-credentials"
   | "election-has-ended"
   | "election-has-launched"
-  | "thank-you-for-voting";
+  | "thank-you-for-voting"
+  | "login-otp-verifcation";
 
 const from = "TUP Voting admin@tupvoting.com";
 
@@ -30,5 +31,11 @@ export const emailTemplates = {
     subject: "Election has ended",
     template: "election-has-ended" as EmailTemplates,
     title: "$electionTitle has ended",
+  },
+  sendAdminLoginOTP: {
+    from,
+    subject: "OTP Verification sent",
+    template: "login-otp-verifcation" as EmailTemplates,
+    title: "Login Security Verifcation",
   },
 };

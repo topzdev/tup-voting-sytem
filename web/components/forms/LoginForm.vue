@@ -45,6 +45,7 @@
         </v-btn>
       </v-col>
     </v-row>
+    <recaptcha />
   </v-form>
 </template>
 
@@ -102,27 +103,29 @@ export default Vue.extend({
       try {
         const slug = this.$route.params.slug;
 
+        const token = await this.$recaptcha.getResponse();
+
         const result = await this.$auth.loginWith("local", {
-          data: { ...this.form, election_id: this.election_id },
+          data: { ...this.form, election_id: this.election_id, token },
         });
 
         this.$router.push(`/election/${slug}/ballot`);
 
         console.log(result);
       } catch (error: any) {
-        console.log(error.response);
         if (error && error.response.data.error) {
-          const message = error.response.data.error.message;
+          const message = error.response?.data?.error?.message || error.message;
 
-          this.alert = {
-            message: message,
-            type: "error",
-            show: true,
-          };
-
-          return;
+          if (message) {
+            this.alert = {
+              show: true,
+              type: "error",
+              message: message,
+            };
+          }
         }
       } finally {
+        await this.$recaptcha.reset();
         this.loading = false;
       }
     },

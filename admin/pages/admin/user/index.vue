@@ -4,9 +4,7 @@
       <v-col cols="12" class="d-flex flex-row align-center">
         <h1 class="headline-6 font-weight-medium mr-auto">Manage Users</h1>
 
-        <v-btn large color="primary" to="/settings/user/create">
-          Add User
-        </v-btn>
+        <v-btn large color="primary" :to="gotoCreateRoute"> Add User </v-btn>
       </v-col>
 
       <v-col>
@@ -17,13 +15,12 @@
         </v-card>
       </v-col>
     </v-row>
-
-    <nuxt-child />
   </v-container>
 </template>
 
 <script>
 import UsersTable from "~/components/pages/users/tables/UsersTable.vue";
+import pageConfig from "@/configs/pages.config";
 import Vue from "vue";
 import UserCreateDialog from "~/components/pages/users/dialogs/UserCreateDialog.vue";
 export default Vue.extend({
@@ -33,6 +30,12 @@ export default Vue.extend({
     return {
       loading: false,
     };
+  },
+
+  computed: {
+    gotoCreateRoute() {
+      return pageConfig.users().create().route;
+    },
   },
 });
 </script>

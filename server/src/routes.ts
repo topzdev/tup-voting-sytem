@@ -18,6 +18,7 @@ import preregisterRouter from "./modules/preregister/preregister.route";
 import candidatePublicRoute from "./modules/public/candidate/candidate.route";
 import partyPublicRoute from "./modules/public/party/party.route";
 import homepageRoute from "./modules/public/homepage/election.route";
+import securityRoute from "./modules/security/security.route";
 const router = express.Router();
 
 router.use("/user", userRoute);
@@ -39,5 +40,6 @@ router.use("/pre-register", preregisterRouter);
 router.use("/candidate-public", candidatePublicRoute);
 router.use("/party-public", partyPublicRoute);
 router.use("/homepage", homepageRoute);
+router.use("/security", securityRoute);
 
 export default router;

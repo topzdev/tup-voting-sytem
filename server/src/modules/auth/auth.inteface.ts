@@ -1,12 +1,22 @@
+import { User } from "../user/entity/user.entity";
+
 export interface AdminLoginCredentials {
-  username: string;
+  token: string;
+  usernameOrEmail: string;
   password: string;
+}
+
+export interface SystemLoginCredentials {
+  usernameOrEmail: string;
+  password: string;
+  allowedRole?: "sadmin" | "admin";
 }
 
 export interface VoterLoginCredentials {
   election_id: string;
   voter_id: string;
   pin: string;
+  token: string;
 }
 
 export interface GoogleTokensResult {
@@ -27,3 +37,16 @@ export interface GoogleUserInfo {
   picture: string;
   locale: string;
 }
+
+export type DisabledError = {
+  disabled: boolean;
+};
+
+export type VerfiyAdminLoginOTP = {
+  user_id: User["id"];
+  otp: string;
+};
+
+export type ResendAdminLoginOTP = {
+  user_id: User["id"];
+};

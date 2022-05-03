@@ -1,4 +1,4 @@
-import { getRepository, In } from "typeorm";
+import { getRepository } from "typeorm";
 import platformLinks from "../../configs/platform-links.config";
 import { HttpException } from "../../helpers/errors/http.exception";
 import {
@@ -9,8 +9,10 @@ import {
 import { Election } from "../election/entity/election.entity";
 import { finalStatusSubquery } from "../launchpad/launchpad.helper";
 import { Voter } from "../voter/entity/voter.entity";
+import { voterPinParser } from "../voter/voter.helper";
 import { emailTemplates } from "./mailer.helper";
 import {
+  AdminLoginOTPTemplate,
   ElectionHasEndedTemplate,
   ElectionHasLaunchedTemplate,
   ThankYouForVotingContextTemplate,
@@ -98,7 +100,7 @@ const sendVotersCredentialsEmail = async (
           item.election.slug
         ),
         voterId: item.username,
-        pin: item.pin,
+        pin: voterPinParser(item.pin),
         title: emailTemplates.voterCredentails.title.replace(
           "$electionTitle",
           item.election.title
@@ -274,11 +276,30 @@ const sendElectionHasEnded = async (_election_ids: number[]) => {
   return true;
 };
 
+const sendAdminLoginOTP = async (data: AdminLoginOTPTemplate) => {
+  const message: NewSendMailOptions<AdminLoginOTPTemplate> = {
+    ...emailTemplates.sendAdminLoginOTP,
+    to: data.email_address,
+    context: {
+      firstname: data.firstname,
+      lastname: data.lastname,
+      login_otp: data.login_otp,
+      email_address: data.email_address,
+    },
+  };
+  console.log(message);
+
+  sendSingleMail(message);
+
+  return message;
+};
+
 const mailerServices = {
   sendVotersCredentialsEmail,
   sendThankYouForVotingEmail,
   sendElectionHasLaunched,
   sendElectionHasEnded,
+  sendAdminLoginOTP,
 };
 
 export default mailerServices;

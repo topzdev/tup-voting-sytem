@@ -61,8 +61,9 @@ const changePassword = async (
   next: NextFunction
 ) => {
   try {
+    const id = req.admin.id;
     const passwords = req.body;
-    res.status(200).json(await userServices.changePassword(passwords));
+    res.status(200).json(await userServices.changePassword(id, passwords));
   } catch (error) {
     next(error);
   }
@@ -94,6 +95,34 @@ const remove = async (
   }
 };
 
+const disableUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.body.id;
+    const disabled = req.body.disabled;
+    res.status(200).json(await userServices.disableUser(id, disabled));
+  } catch (error) {
+    next(error);
+  }
+};
+
+const changeRole = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const body = req.body;
+    res.status(200).json(await userServices.changeRole(body));
+  } catch (error) {
+    next(error);
+  }
+};
+
+const myAccount = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.admin.id;
+    res.status(200).json(await userServices.myAccount(id));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const restore = async (
   req: Request<{ id: string }>,
   res: Response,
@@ -106,6 +135,20 @@ const restore = async (
     next(error);
   }
 };
+
+const reactivateAccount = async (
+  req: Request<{ id: string }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id = req.body.id;
+    res.status(200).json(await userServices.reactivateAccount(parseInt(id)));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const userController = {
   getUsers,
   getUserById,
@@ -115,6 +158,10 @@ const userController = {
   restore,
   changePassword,
   resetPassword,
+  disableUser,
+  myAccount,
+  changeRole,
+  reactivateAccount,
 };
 
 export default userController;

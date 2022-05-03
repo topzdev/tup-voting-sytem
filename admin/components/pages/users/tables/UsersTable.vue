@@ -22,32 +22,17 @@
           'items-per-page-options': table.pagination.itemsPerPageOptions,
         }"
       >
+        <template v-slot:item.role="{ item }">
+          <span>{{ roleText(item.role) }}</span>
+        </template>
         <template v-slot:item.actions="{ item }">
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                icon
-                v-bind="attrs"
-                v-on="on"
-                :to="`/settings/user/${item.id}/edit`"
-              >
+              <v-btn icon v-bind="attrs" v-on="on" :to="gotoEditPage(item.id)">
                 <v-icon> mdi-pencil </v-icon>
               </v-btn>
             </template>
             <span>Edit User</span>
-          </v-tooltip>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                icon
-                v-bind="attrs"
-                v-on="on"
-                :to="`/settings/user/${item.id}/reset-password`"
-              >
-                <v-icon> mdi-lock-reset </v-icon>
-              </v-btn>
-            </template>
-            <span>Reset Password</span>
           </v-tooltip>
         </template>
       </v-data-table>
@@ -55,10 +40,12 @@
   </v-row>
 </template>
 
-<script>
+<script lang="ts">
 import Vue, { PropOptions } from "vue";
 import debounce from "@/helpers/debounce";
-import userServices from "~/services/user.service";
+import userServices, { UserRole } from "~/services/user.service";
+import pageConfig from "~/configs/pages.config";
+import { UserRoles } from "../../../../services/auth.service";
 
 export default Vue.extend({
   data() {
@@ -77,6 +64,14 @@ export default Vue.extend({
           {
             text: "Username",
             value: "username",
+          },
+          {
+            text: "Email Address",
+            value: "email_address",
+          },
+          {
+            text: "Disabled?",
+            value: "disabled",
           },
           {
             text: "Role",
@@ -111,7 +106,7 @@ export default Vue.extend({
 
   methods: {
     async fetchItems() {
-      this.loading = true;
+      this.table.loading = true;
       const result = await userServices.getAll({
         page: this.table.pagination.page,
         perPage: this.table.pagination.perPage,
@@ -122,7 +117,15 @@ export default Vue.extend({
 
       this.table.items = result.items;
       this.table.pagination.total = result.total;
-      this.loading = false;
+      this.table.loading = false;
+    },
+
+    gotoEditPage(id: number) {
+      return pageConfig.users().general(id).route;
+    },
+
+    roleText(role: UserRole) {
+      return role === "admin" ? "ADMIN" : "SUPER ADMIN";
     },
   },
 

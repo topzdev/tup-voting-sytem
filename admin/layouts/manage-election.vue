@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts">
-import pageConfig from "@/configs/pages.config";
+import pageConfig from "~/configs/pages.config";
 import AppSnackbar from "~/components/app/AppSnackbar.vue";
 import AppDialog from "@/components/app/AppDialog.vue";
 import manageElectionMixins from "@/mixins/manage-election.mixins";

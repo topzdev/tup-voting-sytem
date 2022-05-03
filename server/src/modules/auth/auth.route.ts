@@ -15,14 +15,24 @@ router.post(
   authController.adminLogin
 );
 
+router.post("/admin/verify", authController.adminVerifyLoginOTP);
+
+router.post("/admin/resend-otp", authController.adminResendLoginOTP);
+
 router.post("/admin/logout", adminAuth, authController.adminLogout);
 
 router.get("/admin/me", adminAuth, authController.adminMe);
 
+router.post(
+  "/system/login",
+  validate(authValidator.systemLogin),
+  authController.systemLogin
+);
+
 router.get(
   "/admin/protected-route",
   adminAuth,
-  rolesAllowed(["DEV", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   authController.adminProtectedRoute
 );
 
