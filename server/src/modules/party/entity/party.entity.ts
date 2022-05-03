@@ -12,6 +12,7 @@ import { IsAlpha, IsLowercase, NotContains } from "class-validator";
 import { Election } from "../../election/entity/election.entity";
 import { PartyLogo } from "./party-logo.entity";
 import { PartyCoverPhoto } from "./party-cover-photo.entity";
+import { Candidate } from "../../candidate/entity/candidate.entity";
 
 @Entity("party")
 export class Party extends Timestamp {
@@ -42,6 +43,9 @@ export class Party extends Timestamp {
 
   @ManyToOne(() => Election, (election) => election.party)
   election: Election;
+
+  @OneToMany(() => Candidate, (candidates) => candidates.party)
+  candidates: Candidate[];
 
   @Column({
     default: false,

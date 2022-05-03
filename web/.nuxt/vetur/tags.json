@@ -26,17 +26,20 @@
   "ChipsPartyChip": {
     "description": "Auto imported from components/chips/PartyChip.vue"
   },
-  "FormsLoginForm": {
-    "description": "Auto imported from components/forms/LoginForm.vue"
-  },
   "InputsPasswordField": {
     "description": "Auto imported from components/inputs/PasswordField.vue"
+  },
+  "FormsLoginForm": {
+    "description": "Auto imported from components/forms/LoginForm.vue"
   },
   "UtilsPageCenter": {
     "description": "Auto imported from components/utils/PageCenter.vue"
   },
   "PagesBallotStepper": {
     "description": "Auto imported from components/pages/ballot/BallotStepper.vue"
+  },
+  "PagesCandidatePageHeader": {
+    "description": "Auto imported from components/pages/candidate/CandidatePageHeader.vue"
   },
   "PagesElectionPageHeader": {
     "description": "Auto imported from components/pages/election/ElectionPageHeader.vue"
@@ -46,9 +49,6 @@
   },
   "PagesElectionPositionCandidates": {
     "description": "Auto imported from components/pages/election/ElectionPositionCandidates.vue"
-  },
-  "PagesCandidatePageHeader": {
-    "description": "Auto imported from components/pages/candidate/CandidatePageHeader.vue"
   },
   "PagesPartyPageHeader": {
     "description": "Auto imported from components/pages/party/PartyPageHeader.vue"
