@@ -41,7 +41,7 @@ import PageCenter from "@/components/utils/PageCenter.vue";
 import preRegisterServices from "../../services/pre-register.services";
 import PreRegisterHeader from "@/components/pages/pre-register/PreRegisterHeader.vue";
 import { Election } from "../../types/app";
-import ElectionError from "@/components/pages/election/ElectionError.vue";
+import ElectionError from "~/components/pages/voting/ElectionError.vue";
 export default Vue.extend({
   components: { PageCenter, PreRegisterHeader, ElectionError },
 

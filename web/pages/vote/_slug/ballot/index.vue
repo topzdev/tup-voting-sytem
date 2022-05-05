@@ -68,7 +68,7 @@
 import Vue, { PropOptions } from "vue";
 import mixins from "vue-typed-mixins";
 import ballotMixins from "@/mixins/ballot.mixins";
-import ElectionHeader from "@/components/pages/election/ElectionHeader.vue";
+import ElectionHeader from "~/components/pages/voting/ElectionHeader.vue";
 import BallotCard from "@/components/pages/ballot/cards/BallotCard.vue";
 import CandidateDialog from "@/components/pages/ballot/dialogs/CandidateDialog.vue";
 import BallotStepper from "@/components/pages/ballot/BallotStepper.vue";

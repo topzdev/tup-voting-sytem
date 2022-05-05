@@ -26,6 +26,8 @@ const otp_resend_interval = configs.security.otp_resend_interval;
 const adminLogin = async (_credentials: AdminLoginCredentials) => {
   const recaptachaToken = _credentials.token;
 
+  console.log(_credentials);
+
   if (!recaptachaToken) {
     throw new HttpException("BAD_REQUEST", "Recaptcha token is required");
   }

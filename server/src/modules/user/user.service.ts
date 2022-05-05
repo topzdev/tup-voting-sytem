@@ -188,9 +188,11 @@ const resetPassword = async (_id: string) => {
 
   if (!user) throw new HttpException("NOT_FOUND", "user not found");
 
-  user.password = await genHashedPassword(
-    userHelper.generatePassword(user.username, user.lastname)
-  );
+  const newPassword = userHelper.generatePassword(user.username, user.lastname);
+
+  user.password = await genHashedPassword(newPassword);
+
+  console.log(newPassword);
 
   await user.save();
 

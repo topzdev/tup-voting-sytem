@@ -1,44 +1,109 @@
 <template>
-  <page-center style="min-height: 90vh">
-    <v-card width="450" flat>
-      <v-row>
-        <v-col cols="12">
-          <v-row>
-            <v-col v-if="election" cols="12">
-              <election-header :show-logout="false" />
-            </v-col>
+  <v-row>
+    <v-col cols="8" class="mx-auto">
+      <v-container v-if="election" class="py-0">
+        <v-row>
+          <v-col cols="12">
+            <election-page-header :election="election" />
+          </v-col>
 
-            <v-col v-if="electionError" cols="12">
-              <election-error :electionError="electionError"></election-error>
-            </v-col>
-
-            <v-col v-if="!electionError && election" cols="12">
-              <login-form :election_id="electionId" />
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
-    </v-card>
-  </page-center>
+          <v-col v-if="positions" cols="12">
+            <v-row>
+              <v-col cols="8">
+                <election-position-candidates :positions="positions" />
+              </v-col>
+              <v-col cols="4" class="px-10">
+                <election-party :party="party"></election-party>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
-import LoginForm from "@/components/forms/LoginForm.vue";
-import PageCenter from "@/components/utils/PageCenter.vue";
-import Vue from "vue";
-import ballotMixin from "@/mixins/ballot.mixins";
-
-import mixins from "vue-typed-mixins";
-import ElectionHeader from "@/components/pages/election/ElectionHeader.vue";
-import ElectionError from "@/components/pages/election/ElectionError.vue";
-
-export default mixins(ballotMixin).extend({
-  auth: "guest",
+import Vue, { PropOptions } from "vue";
+import publicServices from "@/services/public";
+import ElectionPageHeader from "@/components/pages/election/ElectionPageHeader.vue";
+import ElectionPositionCandidates from "@/components/pages/election/ElectionPositionCandidates.vue";
+import { Election, Party, Position } from "@/types/app";
+import { MetaInfo } from "vue-meta";
+import ElectionParty from "@/components/pages/election/ElectionParty.vue";
+export default Vue.extend({
   components: {
-    LoginForm,
-    PageCenter,
-    ElectionHeader,
-    ElectionError,
+    ElectionPageHeader,
+    ElectionPositionCandidates,
+    ElectionParty,
+  },
+
+  data() {
+    return {
+      election: null as Election | null,
+      positions: [] as Position[],
+      party: [] as Party[],
+    };
+  },
+
+  head(): MetaInfo {
+    if (!this.election) return {};
+
+    return {
+      title: this.election.title,
+
+      meta: [
+        {
+          name: "description",
+          hid: "description",
+          content: this.election.description,
+        },
+      ],
+    };
+  },
+
+  async fetch() {
+    await this.fetchElection();
+  },
+
+  computed: {
+    slug(): string {
+      return this.$route.params.slug;
+    },
+  },
+
+  methods: {
+    async fetchElection() {
+      if (!this.slug) return;
+
+      const response = await publicServices.getElection(this.slug);
+
+      const partialElection = {
+        id: response.id,
+        title: response.title,
+        slug: response.slug,
+      };
+
+      const positions = response.positions.map((item) => ({
+        ...item,
+        candidates: item.candidates?.map((sub) => ({
+          ...sub,
+          election: partialElection,
+        })),
+      }));
+
+      const party = response.party.map((item) => ({
+        ...item,
+        election: partialElection,
+      }));
+
+      this.election = response;
+      this.positions = positions as Position[];
+      this.party = party as Party[];
+    },
   },
 });
 </script>
+
+<style>
+</style>
