@@ -40,14 +40,11 @@ const getElectionDetails = async (_election_id: number) => {
 
   if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
 
-  const longUrl = platformLinks.voting.replace("$electionSlug", election.slug);
+  const longUrl = platformLinks.voting(election.slug);
   const preRegisterUrl = election.allow_pre_register
-    ? platformLinks.preRegister.replace("$electionSlug", election.slug)
+    ? platformLinks.preRegister(election.slug)
     : null;
-  const shortUrl = platformShortLinks.voting.replace(
-    "$electionId",
-    election.id.toString()
-  );
+  const shortUrl = platformShortLinks.voting(election.id);
 
   const urls = {
     longUrl,

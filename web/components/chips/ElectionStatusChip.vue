@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { ElectionStatus } from "../../services/election.service";
+import { ElectionStatus } from "../../types/app";
 
 type StatusStyles = Record<
   ElectionStatus,

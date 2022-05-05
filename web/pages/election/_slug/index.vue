@@ -66,13 +66,40 @@ export default Vue.extend({
     await this.fetchElection();
   },
 
+  computed: {
+    slug(): string {
+      return this.$route.params.slug;
+    },
+  },
+
   methods: {
     async fetchElection() {
-      const resposne = await publicServices.getElection("");
+      if (!this.slug) return;
 
-      this.election = resposne.election;
-      this.positions = resposne.positions;
-      this.party = resposne.party;
+      const response = await publicServices.getElection(this.slug);
+
+      const partialElection = {
+        id: response.id,
+        title: response.title,
+        slug: response.slug,
+      };
+
+      const positions = response.positions.map((item) => ({
+        ...item,
+        candidates: item.candidates?.map((sub) => ({
+          ...sub,
+          election: partialElection,
+        })),
+      }));
+
+      const party = response.party.map((item) => ({
+        ...item,
+        election: partialElection,
+      }));
+
+      this.election = response;
+      this.positions = positions as Position[];
+      this.party = party as Party[];
     },
   },
 });

@@ -46,8 +46,27 @@ export default Vue.extend({
   methods: {
     async fetchParty(id: number) {
       const response = await publicServices.getParty(id);
-      this.party = response.party;
-      this.positions = response.positions;
+      const party = response;
+      const election = party.election;
+
+      if (!election) return;
+
+      const partialElection = {
+        id: election.id,
+        title: election.title,
+        slug: election.slug,
+      };
+
+      const positions = party.positions.map((item) => ({
+        ...item,
+        candidates: item.candidates?.map((sub) => ({
+          ...sub,
+          election: partialElection,
+        })),
+      }));
+
+      this.party = party;
+      this.positions = positions as Position[];
     },
   },
 

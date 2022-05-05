@@ -7,7 +7,7 @@ const router = express.Router();
 
 console.log("module: Candidates Public Module Loaded");
 
-router.get("/candidate/:candidate_id", candidateController.getCandidate);
+router.get("/:candidate_id", candidateController.getCandidate);
 
 const candidatePublicRoute = router;
 

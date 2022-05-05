@@ -8,7 +8,7 @@ const router = express.Router();
 
 console.log("module: Party Public Module Loaded");
 
-router.get("/party/:party_id", partyController.getPartyContent);
+router.get("/:party_id", partyController.getPartyContent);
 
 const partyPublicRoute = router;
 

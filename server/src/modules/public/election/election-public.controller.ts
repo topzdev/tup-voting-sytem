@@ -14,8 +14,22 @@ const getElectionContent = async (
   }
 };
 
+const getElectionLongUrl = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id = req.body.id;
+    res.status(200).json(await electionService.getElectionLongUrl(id));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const electionPublicController = {
   getElectionContent,
+  getElectionLongUrl,
 };
 
 export default electionPublicController;

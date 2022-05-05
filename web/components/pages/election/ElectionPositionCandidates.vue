@@ -3,19 +3,37 @@
     <v-col cols="12">
       <h2>Positions and Candidates</h2>
     </v-col>
-    <v-col v-for="item in positions" :key="item.id" cols="12">
-      <h3>{{ item.title }}</h3>
-      <p>{{ item.description }}</p>
-      <v-row v-if="item.candidates && item.candidates.length">
-        <v-col
-          v-for="candidate in item.candidates"
-          :key="candidate.id"
-          cols="4"
-        >
-          <candidate-card :candidate="candidate"></candidate-card>
-        </v-col>
-      </v-row>
-    </v-col>
+    <template v-if="positions && positions.length">
+      <v-col v-for="item in positions" :key="item.id" cols="12" class="pt-0">
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.description }}</p>
+        <v-row>
+          <template v-if="item.candidates && item.candidates.length">
+            <v-col
+              v-for="candidate in item.candidates"
+              :key="candidate.id"
+              cols="4"
+            >
+              <candidate-card :candidate="candidate"></candidate-card>
+            </v-col>
+          </template>
+          <template v-else>
+            <v-col class="py-0">
+              <p class="text--secondary">
+                No candidate available in this position
+              </p></v-col
+            >
+          </template>
+        </v-row>
+      </v-col>
+    </template>
+    <template v-else>
+      <v-col class="py-0">
+        <p class="text--secondary">
+          No candidate available in this position
+        </p></v-col
+      >
+    </template>
   </v-row>
 </template>
 

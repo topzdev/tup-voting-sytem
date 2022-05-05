@@ -12,7 +12,7 @@ const pageRoutes = {
     return `${pageRoutes.election(electionSlug)}/candidate/${id}`;
   },
   preRegister: (slug: string) => {
-    return `/pre-register/${slug}`;
+    return `/pre-register?election=${slug}`;
   },
 };
 

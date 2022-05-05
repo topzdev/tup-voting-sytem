@@ -1,7 +1,12 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-sheet rounded style="margin-top: -10px; overflow: hidden" height="300">
+      <v-sheet
+        rounded
+        style="margin-top: -10px; overflow: hidden"
+        height="300"
+        outlined
+      >
         <app-image
           :alt="fullname"
           :src="coverPhoto"
@@ -25,9 +30,14 @@
               ></app-avatar>
             </v-col>
 
-            <v-col style="height: auto">
+            <v-col class="pt-0" style="height: auto">
+              <v-breadcrumbs
+                class="py-0 px-0"
+                divider="/"
+                :items="breadcrumb"
+              ></v-breadcrumbs>
               <h1 class="headline-1">{{ fullname }}</h1>
-              <p class="mt-2 subtitle-1" v-text="positionTitle"></p>
+              <p class="text--secondary body-1" v-html="positionTitle"></p>
             </v-col>
           </v-row>
         </v-col>
@@ -94,8 +104,10 @@ import { Candidate, SocialLink } from "@/types/app";
 import Vue, { PropOptions } from "vue";
 import ElectionChip from "@/components/chips/ElectionChip.vue";
 import PartyChip from "@/components/chips/PartyChip.vue";
+import mixins from "vue-typed-mixins";
+import breadcrumbMixins from "@/mixins/breadcrumb.mixins";
 
-export default Vue.extend({
+export default mixins(breadcrumbMixins).extend({
   components: { AppImage, AppAvatar, ElectionChip, PartyChip },
   props: {
     candidate: {
@@ -104,6 +116,12 @@ export default Vue.extend({
   },
 
   computed: {
+    breadcrumb(): any {
+      const candidate = this.candidate;
+      if (!candidate.election) return;
+      return this.candidateBreadcrumb(candidate.election, candidate);
+    },
+
     coverPhoto(): any {
       return this.candidate.cover_photo;
     },
@@ -114,7 +132,7 @@ export default Vue.extend({
 
     positionTitle(): string {
       return this.candidate.position
-        ? `for ${this.candidate.position.title}`
+        ? `for <b class="text--primary">${this.candidate.position.title}</b>`
         : "";
     },
 

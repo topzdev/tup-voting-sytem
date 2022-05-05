@@ -11,6 +11,7 @@ const getElectionsContent = async () => {
   electionBuilder = electionBuilder
     .addSelect(finalStatusSubquery(electionBuilder.alias))
     .leftJoinAndSelect("election.logo", "logo")
+    .leftJoinAndSelect("election.organization", "organization")
     .where(publicElectionWhereQuery("election"));
 
   electionBuilder = electionBuilder.orderBy({
@@ -19,7 +20,11 @@ const getElectionsContent = async () => {
 
   const elections = await electionBuilder.getMany();
 
-  return elections;
+  return {
+    preview: elections.filter((item) => item.final_status === "preview"),
+    running: elections.filter((item) => item.final_status === "running"),
+    completed: elections.filter((item) => item.final_status === "completed"),
+  };
 };
 
 const getPartiesContent = async () => {

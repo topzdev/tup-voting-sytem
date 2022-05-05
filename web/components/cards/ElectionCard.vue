@@ -46,6 +46,7 @@ import Vue, { PropOptions } from "vue";
 import { Election } from "@/types/app";
 import dayjs from "dayjs";
 import ElectionStatusChip from "@/components/chips/ElectionStatusChip.vue";
+import pageRoutes from "../../configs/page-routes";
 
 export default Vue.extend({
   components: {
@@ -65,7 +66,7 @@ export default Vue.extend({
       return dayjs(this.election.close_date).format("MMMM DD, YYYY - hh:mm a");
     },
     toElectionRoute(): string {
-      return `/election/${this.election.slug}`;
+      return pageRoutes.election(this.election.slug);
     },
   },
 });

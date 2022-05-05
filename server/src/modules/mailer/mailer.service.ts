@@ -95,10 +95,7 @@ const sendVotersCredentialsEmail = async (
         firstname: item.firstname,
         lastname: item.lastname,
         election_date: new Date(item.election.start_date).toString(),
-        election_link: platformLinks.voting.replace(
-          "$electionSlug",
-          item.election.slug
-        ),
+        election_link: platformLinks.voting(item.election.slug),
         voterId: item.username,
         pin: voterPinParser(item.pin),
         title: emailTemplates.voterCredentails.title.replace(
@@ -143,10 +140,7 @@ const sendThankYouForVotingEmail = async (_voter_id: number) => {
       ),
       election_title: voter.election.title,
       election_end_date: new Date(voter.election.close_date).toString(),
-      election_result_link: platformLinks.election.replace(
-        "$electionSlug",
-        voter.election.slug
-      ),
+      election_result_link: platformLinks.election(voter.election.slug),
     },
   };
 
@@ -263,10 +257,7 @@ const sendElectionHasEnded = async (_election_ids: number[]) => {
           "$electionTitle",
           item.election.title
         ),
-        election_result_link: platformLinks.election.replace(
-          "$electionSlug",
-          item.election.slug
-        ),
+        election_result_link: platformLinks.election(item.election.slug),
       },
     })
   );

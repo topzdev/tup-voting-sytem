@@ -1,7 +1,12 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-sheet rounded style="margin-top: -10px; overflow: hidden" height="300">
+      <v-sheet
+        rounded
+        style="margin-top: -10px; overflow: hidden"
+        height="300"
+        outlined
+      >
         <app-image
           :alt="party.title"
           :src="party.cover_photo"
@@ -25,7 +30,12 @@
               ></app-avatar>
             </v-col>
 
-            <v-col style="height: auto">
+            <v-col class="pt-0" style="height: auto">
+              <v-breadcrumbs
+                class="py-0 px-0"
+                divider="/"
+                :items="breadcrumb"
+              ></v-breadcrumbs>
               <h1 class="headline-1">
                 {{ party.title }}
 
@@ -72,13 +82,23 @@ import ElectionChip from "@/components/chips/ElectionChip.vue";
 import PartyChip from "@/components/chips/PartyChip.vue";
 import { Party } from "@/types/app";
 import Vue, { PropOptions } from "vue";
+import mixins from "vue-typed-mixins";
+import breadcrumbMixins from "@/mixins/breadcrumb.mixins";
 
-export default Vue.extend({
+export default mixins(breadcrumbMixins).extend({
   components: { AppImage, AppAvatar, ElectionChip, PartyChip },
   props: {
     party: {
       type: Object,
     } as PropOptions<Party>,
+  },
+
+  computed: {
+    breadcrumb(): any {
+      const party = this.party;
+      if (!party.election) return;
+      return this.partyBreadcrumb(party.election, party);
+    },
   },
 });
 </script>

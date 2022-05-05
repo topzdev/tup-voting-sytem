@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { Candidate } from "@/types/app";
+import { Candidate, Election } from "@/types/app";
 import publicServices from "@/services/public";
 import CandidatePageHeader from "@/components/pages/candidate/CandidatePageHeader.vue";
 
@@ -45,6 +45,23 @@ export default Vue.extend({
   methods: {
     async fetchCandidate(id: number) {
       const response = await publicServices.getCandidates(id);
+
+      const election = response.election;
+
+      if (!election) return;
+
+      const partialElection = {
+        id: election.id,
+        title: election.title,
+        slug: election.slug,
+      };
+
+      const candidate = response;
+
+      if (candidate && candidate.party) {
+        candidate.party.election = partialElection as Election;
+      }
+
       this.candidate = response;
     },
   },

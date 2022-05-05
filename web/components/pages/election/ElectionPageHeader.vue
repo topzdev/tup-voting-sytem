@@ -13,7 +13,7 @@
       class="pl-10 py-3 d-flex flex-column justify-end align-start"
     >
       <v-row style="width: 100%">
-        <v-col cols="8">
+        <v-col cols="8" class="pt-0">
           <v-row>
             <v-col cols="auto" style="margin-top: -80px">
               <app-avatar
@@ -24,6 +24,11 @@
             </v-col>
 
             <v-col style="height: auto">
+              <v-breadcrumbs
+                class="py-0 px-0"
+                divider="/"
+                :items="breadcrumb"
+              ></v-breadcrumbs>
               <h1>{{ election.title }}</h1>
               <election-status-chip
                 class="font-weight-bold"
@@ -96,8 +101,10 @@ import AppAvatar from "@/components/app/AppAvatar.vue";
 import ElectionStatusChip from "@/components/chips/ElectionStatusChip.vue";
 import dayjs from "dayjs";
 import pageRoutes from "@/configs/page-routes";
+import mixins from "vue-typed-mixins";
+import breadcrumbMixins from "@/mixins/breadcrumb.mixins";
 
-export default Vue.extend({
+export default mixins(breadcrumbMixins).extend({
   components: { AppImage, AppAvatar, ElectionStatusChip },
   props: {
     election: {
@@ -106,6 +113,10 @@ export default Vue.extend({
   },
 
   computed: {
+    breadcrumb(): any {
+      return this.electionBreadcrumb(this.election);
+    },
+
     colors(): { primary: string; secondary: string } {
       const organization = this.election.organization;
       if (!organization)
@@ -139,6 +150,8 @@ export default Vue.extend({
         show:
           this.election.final_status === "preview" &&
           this.election.allow_pre_register,
+
+        url: pageRoutes.preRegister(this.election.slug),
       };
     },
   },

@@ -4,7 +4,8 @@ const router = express.Router();
 
 console.log("module: Election Public Module Loaded");
 
-router.get("/election/:slug", electionController.getElectionContent);
+router.get("/content/:slug", electionController.getElectionContent);
+router.get("/long-url/", electionController.getElectionLongUrl);
 
 const electionPublicRoute = router;
 
