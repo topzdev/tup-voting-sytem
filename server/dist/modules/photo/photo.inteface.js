@@ -1,1 +1,0 @@
-//# sourceMappingURL=photo.inteface.js.map
