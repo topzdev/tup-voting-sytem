@@ -1,13 +1,17 @@
 import configs from ".";
 
 const platformLinks = {
-  voting: configs.platform.url + "/election/$electionSlug/",
-  election: configs.platform.url + "/e/$electionSlug/",
-  preRegister: configs.platform.url + "/pre-register?election=$electionSlug",
+  voting: (election_slug: string) =>
+    configs.platform.url + `/vote/${election_slug}`,
+  election: (election_slug: string) =>
+    configs.platform.url + `/election/${election_slug}/`,
+  preRegister: (election_slug: string) =>
+    configs.platform.url + `/pre-register?election=${election_slug}`,
 };
 
 export const platformShortLinks = {
-  voting: configs.platform.shortUrl + "/$electionId/",
+  voting: (election_id: number) =>
+    configs.platform.shortUrl + `/${election_id}/`,
 };
 
 export default platformLinks;

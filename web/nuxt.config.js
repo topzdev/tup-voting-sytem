@@ -58,10 +58,19 @@ export default {
     // https://go.nuxtjs.dev/pwa
     "@nuxtjs/pwa",
     "@nuxtjs/auth-next",
+    "@nuxtjs/recaptcha",
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   publicRuntimeConfig: {
+    recaptcha: {
+      /* reCAPTCHA options */
+      siteKey: process.env.RECAPTCHA_PLATFORM_SITE_KEY, // for example,
+      size: "invisible",
+      hideBadge: false,
+      version: 2,
+    },
+
     axios: {
       // baseURL: "https://tup-voting-server-dev.herokuapp.com/",
       baseURL: process.env.BASE_SERVER_URL || "http://localhost:5000",
@@ -123,7 +132,7 @@ export default {
       dark: false,
       themes: {
         dark: {
-          primary: colors.blue.darken2,
+          primary: "#c51f3b",
           accent: colors.grey.darken3,
           secondary: colors.amber.darken3,
           info: colors.teal.lighten1,

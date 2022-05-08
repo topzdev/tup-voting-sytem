@@ -52,9 +52,11 @@ export default Vue.extend({
 
   fetchOnServer: false,
   async fetch() {
+    const id = this.$nuxt.$route.params.id;
+
+    if (!id) return;
     try {
-      const id = this.$nuxt.$route.params.id;
-      this.defaultData = await userServices.getById(id);
+      this.defaultData = await userServices.getById(parseInt(id));
       console.log(this.defaultData);
     } catch (error) {
       console.log(error);

@@ -22,6 +22,13 @@ router.get(
   userController.getUserById
 );
 
+router.get(
+  "/my-account",
+  adminAuth,
+  rolesAllowed(["SUPER_ADMIN", "ADMIN"]),
+  userController.myAccount
+);
+
 router.put(
   "/disable-user",
   adminAuth,
@@ -82,11 +89,11 @@ router.put(
   userController.restore
 );
 
-router.get(
-  "/my-account",
+router.post(
+  "/reactivate",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
-  userController.myAccount
+  rolesAllowed(["SUPER_ADMIN"]),
+  userController.reactivateAccount
 );
 
 const userRoute = router;

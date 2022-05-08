@@ -4,6 +4,12 @@ export type GetPositionReturn = {
   totalCount: number;
 };
 
+export type DataTimestamp = {
+  created_at: string;
+  updated_at: string;
+  deleted_at: null | string;
+};
+
 export type Position = {
   election_id: number;
   id: number;
@@ -12,19 +18,20 @@ export type Position = {
   max_selected: number;
   min_selected: number;
   election: Election;
+  candidates?: Candidate[];
   display_order: number | null;
 } & DataTimestamp;
 
 type PartyLogo = {
   id: number;
-  public_id: number;
+  public_id: string;
   url: string;
   service: string;
 };
 
 type PartyCoverPhoto = {
   id: number;
-  public_id: number;
+  public_id: string;
   url: string;
   service: string;
 };
@@ -35,17 +42,11 @@ export type Party = {
   ticker: string;
   title: string;
   election_id: number;
-  election: Election;
+  election?: Election;
   logo: PartyLogo | null;
   cover_photo: PartyCoverPhoto;
   archive: boolean;
 } & DataTimestamp;
-
-export type DataTimestamp = {
-  created_at: string;
-  updated_at: string;
-  deleted_at: null | string;
-};
 
 type OrganizationLogo = {
   id: number;
@@ -55,7 +56,7 @@ type OrganizationLogo = {
 };
 
 type OrganizationTheme = {
-  id: string;
+  id: number;
   primary: string;
   secondary: string;
 };
@@ -76,7 +77,12 @@ export type Organization = {
   logo: OrganizationLogo;
 } & DataTimestamp;
 
-export type ElectionStatus = "building" | "running" | "completed" | "archived";
+export type ElectionStatus =
+  | "building"
+  | "preview"
+  | "running"
+  | "completed"
+  | "archived";
 
 type ElectionLogo = {
   id: number;
@@ -99,23 +105,24 @@ export type Election = {
   start_date: string;
   close_date: string;
   organization_id: number;
-  organization: Organization;
+  organization?: Organization;
   logo: ElectionLogo;
   final_status: ElectionStatus;
   allow_pre_register: boolean;
   is_public: boolean;
   is_tally_public: boolean;
+  archive: boolean;
 } & DataTimestamp;
 
 type CandidateProfilePhoto = {
   id: number;
-  public_id: number;
+  public_id: string;
   url: string;
   service: string;
 };
 type CandidateCoverPhoto = {
   id: number;
-  public_id: number;
+  public_id: string;
   url: string;
   service: string;
 };
@@ -220,4 +227,10 @@ export type BallotReceipt = Pick<
   "created_at" | "id" | "receipt_id" | "ip" | "ua"
 > & {
   election_title: Election["title"];
+};
+
+export type SocialLink = {
+  href: string | null;
+  icon: string;
+  title: string;
 };

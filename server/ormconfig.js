@@ -26,12 +26,9 @@ module.exports = {
   database: process.env.DATABASE_NAME,
   synchronize: !__prod__,
   logging: !__prod__,
-  entities: [
-    join(__dirname, ormPath, "modules", "**", "entity", "*.{js,ts}"),
-    join(__dirname, ormPath, "entity", "*.entity.{js,ts}"),
-  ],
-  migrations: [join(__dirname, ormPath, "migration", "**", "*.{js,ts}")],
-  subscribers: [join(__dirname, ormPath, "subscriber", "**", "*.{js,ts}")],
+  entities: ["src/modules/**/entity/*.ts", "src/entity/*.ts"],
+  migrations: ["src/migration"],
+  subscribers: ["src/subcriber"],
   ssl: !__prod__
     ? false
     : {
@@ -39,9 +36,9 @@ module.exports = {
         rejectUnauthorized: false,
       },
   cli: {
-    entitiesDir: join(__dirname, ormPath, "entity"),
-    migrationsDir: join(__dirname, ormPath, "migration"),
-    subscribersDir: join(__dirname, ormPath, "subscriber"),
+    entitiesDir: ["src/modules/**/entity/*.ts", "src/entity/*.ts"],
+    migrationsDir: "src/migration",
+    subscribersDir: "src/subcriber",
   },
   namingStrategy: new SnakeNamingStrategy(),
 };

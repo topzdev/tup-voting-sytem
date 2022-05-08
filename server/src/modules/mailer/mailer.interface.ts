@@ -30,3 +30,10 @@ export type ElectionHasEndedTemplate = {
   election_end_date: string;
   election_result_link: string;
 };
+
+export type AdminLoginOTPTemplate = {
+  login_otp: string;
+  firstname: string;
+  lastname: string;
+  email_address: string;
+};

@@ -35,7 +35,8 @@ export const sendBulkMail = (messages: NewSendMailOptions[]) => {
     try {
       transporter.sendMail(messages[i]);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      throw Error("Bulk mailer error");
     }
   }
 };
@@ -43,7 +44,9 @@ export const sendBulkMail = (messages: NewSendMailOptions[]) => {
 export const sendSingleMail = (message: NewSendMailOptions) => {
   try {
     transporter.sendMail(message);
+    console.log("Email Sent");
   } catch (error) {
     console.log(error);
+    throw Error("Single mailer error");
   }
 };

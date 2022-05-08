@@ -10,6 +10,8 @@ const icons = {
   launchpad: "mdi-rocket",
   development: "mdi-developer-board",
   clipboard: "mdi-clipboard-multiple-outline",
+  accountLocked: "mdi-account-lock",
+  accountDisabled: "mdi-account-off",
 };
 
 export default icons;

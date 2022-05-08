@@ -17,6 +17,20 @@ router.get(
   electionController.getAll
 );
 
+router.get(
+  "/public/:org_id",
+  adminAuth,
+  rolesAllowed("SUPER_ADMIN"),
+  electionController.getPublic
+);
+
+router.get(
+  "/final-tally/:election_id",
+  // voterAuth,
+  // // validate(resultsValidator.getElectionBySlug),
+  electionController.getElectionWinners
+);
+
 router.get("/slug/:slug", adminAuth, electionController.getOneBySlug);
 
 router.get("/exist/:slug", adminAuth, electionController.isExistBySlug);
