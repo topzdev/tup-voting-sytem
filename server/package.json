@@ -12,7 +12,7 @@
     "dev": "set NODE_ENV=development&set DEBUG=express-session& nodemon src/index.ts",
     "prod": "set NODE_ENV=production&& node build/index",
     "start:dev": "set NODE_ENV=development&& BUILD_DB=1&& nodemon src/index.ts",
-    "start:prod": "set NODE_ENV=production&& tsc && node dist/index.js",
+    "start:prod": "set NODE_ENV=production&& tsc && nodemon dist/index.js",
     "start:prod-w-db": "set NODE_ENV=production&& BUILD_DB=1&& tsc && node dist/index.js",
     "deploy:dev": "npm run start:dev",
     "deploy:prod": "npm run start:prod",

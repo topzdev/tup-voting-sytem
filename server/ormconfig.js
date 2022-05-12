@@ -11,8 +11,6 @@ require("dotenv").config(
     : undefined
 );
 
-console.log(process.env.NODE_ENV);
-
 var ormPath = !__prod__ ? "src" : "dist";
 console.log(join(__dirname, ormPath, "entity", "*.entity.{js,ts}"));
 
@@ -27,24 +25,20 @@ module.exports = {
   synchronize: !__prod__,
   logging: !__prod__,
   entities: [
-    ormPath + "/modules/**/entity/*.{js,ts}",
-    ormPath + "/entity/*.{js,ts}",
+    join(__dirname, ormPath, "modules", "**", "entity", "*.{js,ts}"),
+    join(__dirname, ormPath, "entity", "*.entity.{js,ts}"),
   ],
-  migrations: [ormPath + "/migration"],
-  subscribers: [ormPath + "/subcriber"],
-  ssl: __prod__
-    ? false
-    : {
-        require: true,
-        rejectUnauthorized: false,
-      },
+  migrations: [join(__dirname, ormPath, "migration", "**", "*.{js,ts}")],
+  subscribers: [join(__dirname, ormPath, "subscriber", "**", "*.{js,ts}")],
+  // ssl: false,
+  ssl: {
+    require: true,
+    rejectUnauthorized: false,
+  },
   cli: {
-    entitiesDir: [
-      ormPath + "/modules/**/entity/*.{js,ts}",
-      ormPath + "/entity/*.{js,ts}",
-    ],
-    migrationsDir: ormPath + "/migration",
-    subscribersDir: ormPath + "/subcriber",
+    entitiesDir: join(__dirname, ormPath, "entity"),
+    migrationsDir: join(__dirname, ormPath, "migration"),
+    subscribersDir: join(__dirname, ormPath, "subscriber"),
   },
   namingStrategy: new SnakeNamingStrategy(),
 };
