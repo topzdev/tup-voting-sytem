@@ -14,3 +14,12 @@ type ElectionResult = Omit<Position, "candidates"> & {
 };
 
 export type ElectionResults = ElectionResult[];
+
+export type CandidatesWithSameVotes = {
+  votesCount: number;
+  candidates: ResultCandidate[];
+};
+
+export type TempVotesCount = {
+  [votesCount: string]: CandidatesWithSameVotes;
+};
