@@ -84,6 +84,11 @@ export class Candidate extends Timestamp {
   votes: ElectionVotes[];
 
   @Column({
+    nullable: true,
+  })
+  pos: number;
+
+  @Column({
     default: false,
   })
   archive: boolean;

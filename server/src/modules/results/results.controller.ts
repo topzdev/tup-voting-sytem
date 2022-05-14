@@ -31,6 +31,24 @@ const getElectionWinners = async (
   }
 };
 
+const resolveTie = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const dto = req.body;
+    res.status(200).json(await resultsServices.resolveTie(dto));
+  } catch (error) {
+    next(error);
+  }
+};
+
+const resetTie = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const position_id = req.body.position_id;
+    res.status(200).json(await resultsServices.resetTie(parseInt(position_id)));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const downloadElectionResults = async (
   req: Request,
   res: Response,
@@ -78,6 +96,8 @@ const resultsController = {
   getElectionWinners,
   downloadElectionResults,
   downloadVoteAudit,
+  resetTie,
+  resolveTie,
 };
 
 export default resultsController;

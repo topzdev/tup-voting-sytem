@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+import { getManager, getRepository } from "typeorm";
 import {
   parseCustomJsonToCsv,
   parseJsontoCsv,
@@ -9,13 +9,10 @@ import { Election } from "../election/entity/election.entity";
 import { finalStatusSubquery } from "../launchpad/launchpad.helper";
 import { Position } from "../position/entity/position.entity";
 import { ElectionVoted } from "../voting/entity/voted.entity";
-import {
-  getElectionResultWithWinners,
-  getSimpleElectionResult,
-} from "./results.helper";
-import { ElectionResults } from "./results.interface";
+import resultHelpers from "./results.helper";
+import { ElectionResults, ResolveTieDTO } from "./results.interface";
 
-const getElectionResults = async (_election_id: number) => {
+const getElectionResults = async (_election_id: Election["id"]) => {
   const positionRepository = getRepository(Position);
   const electionRepository = getRepository(Election);
 
@@ -56,15 +53,15 @@ const getElectionResults = async (_election_id: number) => {
     election.final_status === "completed" ||
     election.final_status === "archived"
   ) {
-    result = getElectionResultWithWinners(result);
+    result = resultHelpers.getElectionResultWithWinners(result);
   } else {
-    result = getSimpleElectionResult(result);
+    result = resultHelpers.getElectionResult(result);
   }
 
   return result;
 };
 
-const getElectionWinners = async (_election_id: number) => {
+const getElectionWinners = async (_election_id: Election["id"]) => {
   const candidateRepository = getRepository(Candidate);
 
   let builder = await candidateRepository.createQueryBuilder("candidates");
@@ -81,8 +78,8 @@ const getElectionWinners = async (_election_id: number) => {
   return await builder.getMany();
 };
 
-const downloadElectionResults = async (_election_id: number) => {
-  const results = getSimpleElectionResult(
+const downloadElectionResults = async (_election_id: Election["id"]) => {
+  const results = resultHelpers.getElectionResult(
     await getElectionResults(_election_id)
   ) as ElectionResults;
 
@@ -115,7 +112,72 @@ const downloadElectionResults = async (_election_id: number) => {
   };
 };
 
-const downloadVoteAudit = async (_election_id: number) => {
+const resolveTie = async (dto: ResolveTieDTO) => {
+  if (!dto.election_id || !dto.position_id)
+    throw new HttpException(
+      "BAD_REQUEST",
+      "Election and Position ID is required"
+    );
+
+  if (!dto.candidatesWithPos.length) {
+    throw new HttpException(
+      "BAD_REQUEST",
+      "Candidates with Position is required"
+    );
+  }
+
+  const entityManager = getManager();
+
+  let dataValues = [];
+  dto.candidatesWithPos.forEach((item) => {
+    dataValues.push(`(${item.candidate_id}, ${item.pos})`);
+  });
+
+  console.log("Datavalues", dataValues);
+
+  const rawQuery = await entityManager.query(`
+    UPDATE 
+      candidate AS candidate
+    SET
+      pos = data.col_pos
+    FROM 
+      (values ${dataValues.join(",")}) 
+    AS 
+      data(col_candidate_id, col_pos) 
+    WHERE 
+      candidate.id = data.col_candidate_id 
+    AND 
+      candidate.position_id = ${dto.position_id}
+    AND
+      election_id = ${dto.election_id}; 
+  `);
+
+  console.log("Raw Query Result", rawQuery);
+
+  return true;
+};
+
+const resetTie = async (position_id: Position["id"]) => {
+  const candidateRepository = getRepository(Candidate);
+
+  const candidateBuilder = await candidateRepository.createQueryBuilder(
+    "position"
+  );
+
+  const candidate = candidateBuilder
+    .update()
+    .set({
+      pos: null,
+    })
+    .where("position_id")
+    .execute();
+
+  console.log(candidate);
+
+  return true;
+};
+
+const downloadVoteAudit = async (_election_id: Election["id"]) => {
   const votedRepository = getRepository(ElectionVoted);
 
   let builder = await votedRepository.createQueryBuilder("voted");
@@ -161,6 +223,8 @@ const resultsServices = {
   getElectionWinners,
   downloadElectionResults,
   downloadVoteAudit,
+  resolveTie,
+  resetTie,
 };
 
 export default resultsServices;

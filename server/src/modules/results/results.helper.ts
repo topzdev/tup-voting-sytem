@@ -15,7 +15,7 @@ const sortAndSplice = (candidates: ResultCandidate[], max_selected: number) => {
   return spliced;
 };
 
-export const properCandidates = (curCandidates: ResultCandidate[]) => {
+const properCandidates = (curCandidates: ResultCandidate[]) => {
   const totalVotes = curCandidates.reduce(
     (partial, a) => partial + a.votesCount,
     0
@@ -39,7 +39,7 @@ export const properCandidates = (curCandidates: ResultCandidate[]) => {
   return { totalVotes, candidates };
 };
 
-export const getSimpleElectionResult = (result: ElectionResults) => {
+const getElectionResult = (result: ElectionResults) => {
   const simpleResult = [];
 
   for (let i = 0; i < result.length; i++) {
@@ -59,7 +59,7 @@ export const getSimpleElectionResult = (result: ElectionResults) => {
   return simpleResult;
 };
 
-export const getElectionResultWithWinners = (result: ElectionResults) => {
+const getElectionResultWithWinners = (result: ElectionResults) => {
   const resultWithWinners = [];
 
   for (let i = 0; i < result.length; i++) {
@@ -67,20 +67,28 @@ export const getElectionResultWithWinners = (result: ElectionResults) => {
     const max_selected = currentPosition.max_selected;
     const min_selected = currentPosition.min_selected;
 
-    const { candidates, totalVotes } = properCandidates(
-      currentPosition.candidates
+    const initialResult = properCandidates(currentPosition.candidates);
+
+    const mergeSameVote = mergeCandidatesWithSameVotes(
+      initialResult.candidates
     );
 
+    const finalResults = getResultsWithPossibleTie(mergeSameVote, max_selected);
+
     // const winners = sortAndSplice(candidates, max_selected);
-    const winners = getWinnersWithPossibleTie(
-      mergeCandidatesWithSameVotes(candidates),
-      max_selected
+    const winnerResult = getResultWinners(
+      initialResult.candidates,
+      max_selected,
+      finalResults.istieOccured
     );
+
     resultWithWinners.push({
       ...currentPosition,
-      totalVotes,
-      candidates,
-      winners,
+      totalVotes: initialResult.totalVotes,
+      candidates: finalResults.candidates,
+      isTieOccured: finalResults.istieOccured,
+      isTieResoloved: winnerResult.isTieResolved,
+      winners: winnerResult.winners,
     });
   }
 
@@ -88,9 +96,7 @@ export const getElectionResultWithWinners = (result: ElectionResults) => {
 };
 
 // merge all candidates with same votes and sort it to highest vote to lowest
-export const mergeCandidatesWithSameVotes = (
-  _candidates: ResultCandidate[]
-) => {
+const mergeCandidatesWithSameVotes = (_candidates: ResultCandidate[]) => {
   let temp: TempVotesCount = {};
 
   //merging candidates with same votes
@@ -139,46 +145,96 @@ export const mergeCandidatesWithSameVotes = (
   */
 };
 
-// Get the winners and tied candidates
-export const getWinnersWithPossibleTie = (
-  _mergeCandidatesByVotes: CandidatesWithSameVotes[],
-  _maxWinners: number
+const getResultWinners = (
+  _candidates: ResultCandidate[],
+  _maxWinners: number,
+  _istieOccured: boolean
+) => {
+  let winners;
+  let isTieResolved;
+
+  if (_candidates.length) {
+    if (_istieOccured) {
+      const hasPosition = _candidates[0].pos;
+
+      if (hasPosition) {
+        winners = _candidates
+          .sort((a, b) => a.pos - b.pos)
+          .splice(0, _maxWinners);
+        isTieResolved = true;
+      } else {
+        isTieResolved = false;
+      }
+    } else {
+      winners = _candidates
+        .sort((a, b) => b.votesCount - a.votesCount)
+        .splice(0, _maxWinners);
+    }
+  }
+  return {
+    winners,
+    isTieResolved,
+  };
+};
+
+// Get the candidates and tied candidates
+const getResultsWithPossibleTie = (
+  _mergeCandidatesByVotes,
+  _maxWinners,
+  _winnersOnly = false
 ) => {
   // storing max winners
-  let spotLeftCounter = _maxWinners;
 
   // declaring winners array where the candidates will be appended
-  let partialWinners = [];
+  let candidates = [];
+  let istieOccured = false;
+  let spotLeftCounter = _maxWinners;
 
   // iterate on candidates with same votes
   _mergeCandidatesByVotes.forEach((item) => {
     let tempItem = item;
 
     // check if spot counter is greater than 0
-    if (spotLeftCounter > 0) {
-      // subtract the last value of spot counter to candidates
-      let candidatesLength = tempItem.candidates.length;
+    // subtract the last value of spot counter to candidates
+    let candidatesLength = tempItem.candidates.length;
 
-      // check if there is a spot left  and candidates length is greater than the spot left also we add a tie and spotLeft properties to determined if its a tie and how many spot left so that we can determined whose candidate can be included on final winners.
+    // check if there is a spot left  and candidates length is greater than the spot left also we add a tie and spotLeft properties to determined if its a tie and how many spot left so that we can determined whose candidate can be included on final winners.
+    if (spotLeftCounter > 0) {
       if (
+        spotLeftCounter &&
         spotLeftCounter <= candidatesLength &&
         candidatesLength > spotLeftCounter
       ) {
-        partialWinners.push({
+        candidates.push({
           candidates: tempItem.candidates,
           tie: true,
           spotLeft: spotLeftCounter,
         });
 
+        istieOccured = true;
         // if there is a spot then they are the finals winners
       } else {
-        partialWinners = [...partialWinners, ...tempItem.candidates];
+        candidates = [...candidates, ...tempItem.candidates];
       }
-
-      // subtract the last value of spot counter to candidates
-      spotLeftCounter = spotLeftCounter - candidatesLength;
+    } else {
+      if (!_winnersOnly) {
+        candidates = [...candidates, ...tempItem.candidates];
+      }
     }
+
+    // subtract the last value of spot counter to candidates
+    spotLeftCounter = spotLeftCounter - candidatesLength;
   });
 
-  return partialWinners;
+  return {
+    candidates,
+    istieOccured,
+  };
 };
+
+const resultHelpers = {
+  getElectionResult,
+  getElectionResultWithWinners,
+};
+
+export default resultHelpers;
