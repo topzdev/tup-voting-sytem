@@ -45,17 +45,19 @@ const getElectionResults = async (_election_id: Election["id"]) => {
       "position.created_at": "DESC",
     });
 
-  let result = (await positionBuilder.getMany()) as ElectionResults;
+  let positions = (await positionBuilder.getMany()) as ElectionResults;
 
   console.log(election);
+
+  let result;
 
   if (
     election.final_status === "completed" ||
     election.final_status === "archived"
   ) {
-    result = resultHelpers.getElectionResultWithWinners(result);
+    result = resultHelpers.getElectionResultWithWinners(positions) as any;
   } else {
-    result = resultHelpers.getElectionResult(result);
+    result = resultHelpers.getElectionResult(positions);
   }
 
   return result;

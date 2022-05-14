@@ -3,7 +3,10 @@ import { Result } from "express-validator";
 import { Candidate } from "../candidate/entity/candidate.entity";
 import {
   CandidatesWithSameVotes,
+  CandidateTieResult,
+  ElectionResult,
   ElectionResults,
+  ElectionResultWithWinner,
   ResultCandidate,
   TempVotesCount,
 } from "./results.interface";
@@ -60,7 +63,7 @@ const getElectionResult = (result: ElectionResults) => {
 };
 
 const getElectionResultWithWinners = (result: ElectionResults) => {
-  const resultWithWinners = [];
+  const resultWithWinners: ElectionResultWithWinner[] = [];
 
   for (let i = 0; i < result.length; i++) {
     const currentPosition = result[i];
@@ -87,7 +90,7 @@ const getElectionResultWithWinners = (result: ElectionResults) => {
       totalVotes: initialResult.totalVotes,
       candidates: finalResults.candidates,
       isTieOccured: finalResults.istieOccured,
-      isTieResoloved: winnerResult.isTieResolved,
+      isTieResolved: winnerResult.isTieResolved,
       winners: winnerResult.winners,
     });
   }
@@ -179,14 +182,14 @@ const getResultWinners = (
 
 // Get the candidates and tied candidates
 const getResultsWithPossibleTie = (
-  _mergeCandidatesByVotes,
-  _maxWinners,
+  _mergeCandidatesByVotes: CandidatesWithSameVotes[],
+  _maxWinners: number,
   _winnersOnly = false
 ) => {
   // storing max winners
 
   // declaring winners array where the candidates will be appended
-  let candidates = [];
+  let candidates: (ResultCandidate | CandidateTieResult)[] = [];
   let istieOccured = false;
   let spotLeftCounter = _maxWinners;
 
