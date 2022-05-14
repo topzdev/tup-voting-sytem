@@ -43,7 +43,10 @@ import BallotResultSection from "@/components/pages/results/sections/BallotResul
 import WinnerSection from "~/components/pages/results/sections/ResultWinnerSection.vue";
 import icons from "@/configs/icons";
 import pageStatus from "@/configs/page-status.config";
-import resultServices, { ElectionResults } from "@/services/results.service";
+import resultServices, {
+  ElectionResults,
+  ElectionResultWithWinner,
+} from "@/services/results.service";
 import mixins from "vue-typed-mixins";
 import PageBars from "~/components/bars/PageBars.vue";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
@@ -63,7 +66,7 @@ export default mixins(manageElectionMixins).extend({
     return {
       icons,
       winners: [{}],
-      results: [] as ElectionResults,
+      results: [] as ElectionResultWithWinner[],
     };
   },
 

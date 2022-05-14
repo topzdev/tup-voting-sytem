@@ -55,6 +55,7 @@ export type Candidate = {
   cover_photo: CandidateCoverPhoto;
   profile_photo: CandidateProfilePhoto;
   socials?: CandidateSocials;
+  pos?: number | null;
 } & DataTimestamp;
 
 export interface GetCandidateDto {
