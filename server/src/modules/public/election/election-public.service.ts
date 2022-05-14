@@ -24,6 +24,8 @@ const getElectionLongUrl = async (id: Election["id"]) => {
     })
     .getOne();
 
+  if (!election) throw new HttpException("NOT_FOUND", "Election not found");
+
   const long_url = platformLinks.voting(election.slug);
 
   return {
