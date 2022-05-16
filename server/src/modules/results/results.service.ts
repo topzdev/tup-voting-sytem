@@ -163,7 +163,7 @@ const resetTie = async (position_id: Position["id"]) => {
   const candidateRepository = getRepository(Candidate);
 
   const candidateBuilder = await candidateRepository.createQueryBuilder(
-    "position"
+    "candidate"
   );
 
   const candidate = candidateBuilder
@@ -171,7 +171,7 @@ const resetTie = async (position_id: Position["id"]) => {
     .set({
       pos: null,
     })
-    .where("position_id")
+    .where("position_id = :position_id", { position_id })
     .execute();
 
   console.log(candidate);

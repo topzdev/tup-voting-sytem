@@ -65,13 +65,17 @@ export default mixins(manageElectionMixins).extend({
   data() {
     return {
       icons,
-      winners: [{}],
-      results: [] as ElectionResultWithWinner[],
     };
   },
 
   async fetch() {
     await this.fetchResults();
+  },
+
+  computed: {
+    results() {
+      return this.$accessor.electionResult.results;
+    },
   },
 
   methods: {
@@ -80,30 +84,15 @@ export default mixins(manageElectionMixins).extend({
     },
 
     async downloadElectionResults() {
-      if (!this.electionId) return;
-      const data = await resultServices.exportResults(this.electionId);
-
-      blobDownloader(
-        data,
-        `${this.electionInfo?.title}-results-${Date.now()}`.toLowerCase(),
-        "text/csv"
-      );
-    },
-
-    async downloadVoteAudit() {
-      if (!this.electionId) return;
-      const data = await resultServices.exportVoteAudit(this.electionId);
-
-      blobDownloader(
-        data,
-        `${this.electionInfo?.title}-vote-audit-${Date.now()}`.toLowerCase(),
-        "text/csv"
-      );
+      await this.$accessor.electionResult.downloadElectionResults();
     },
 
     async fetchResults() {
-      if (!this.electionId) return;
-      this.results = await resultServices.getResults(this.electionId);
+      await this.$accessor.electionResult.fetchResults();
+    },
+
+    async downloadVoteAudit() {
+      await this.$accessor.electionResult.downloadVoteAudit();
     },
   },
 });

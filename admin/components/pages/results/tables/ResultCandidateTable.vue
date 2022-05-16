@@ -1,55 +1,65 @@
 <template>
-  <v-data-table :items="candidates" :headers="headers" hide-default-footer>
-    <!-- <template v-slot:item.legend="{}">
-      <span
-        style="
-          display: flex;
-          height: 15px;
-          width: 15px;
-          border-radius: 3px;
-          background: green;
-        "
-      ></span>
-    </template> -->
-
-    <template v-slot:item.candidateName="{ item }">
-      <div class="d-flex align-center">
-        <v-avatar size="30">
-          <app-image size="30" :src="item.profile_photo"></app-image>
-        </v-avatar>
-
-        <span class="ml-2"> {{ item.candidateName }}</span>
-      </div>
-    </template>
-
-    <template v-slot:item.votePercentage="{ item }">
-      {{ item.votePercentage }}%
-    </template>
-
-    <template v-slot:item.party="{ item }">
-      <party-chip :data="item.party"></party-chip>
-    </template>
-  </v-data-table>
+  <v-row>
+    <v-col cols="12">
+      <v-simple-table>
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th
+                v-for="(item, idx) in headers"
+                :key="idx"
+                class="text-left"
+                v-text="item.text"
+              ></th>
+            </tr>
+          </thead>
+          <tbody>
+            <result-candidate-row
+              v-for="(item, idx) in candidates"
+              :item="item"
+              :key="idx"
+              :idx="idx"
+              :tie="item.tie"
+              :in="idx < maxWinner"
+              :with-tie-column="position.isTieOccured"
+            />
+          </tbody>
+        </template>
+      </v-simple-table>
+    </v-col>
+    <v-col cols="12">
+      <result-candidate-legends :with-tie="position.isTieOccured" />
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { ElectionResult } from "@/services/results.service";
-import PartyChip from "@/components/chips/PartyChip.vue";
+import {
+  ElectionResult,
+  ElectionResultWithWinner,
+  ResultCandidate,
+} from "@/services/results.service";
+import ResultCandidateRow from "./row/ResultCandidateRow.vue";
+import ResultCandidateLegends from "./ResultCandidateLegends.vue";
 
 export default Vue.extend({
   props: {
+    position: {
+      type: Object,
+    } as PropOptions<ElectionResultWithWinner>,
     candidates: {
       type: Array,
-    } as PropOptions<ElectionResult["candidates"]>,
+    } as PropOptions<(ResultCandidate & { tie: boolean })[]>,
   },
   components: {
-    PartyChip,
+    ResultCandidateRow,
+    ResultCandidateLegends,
   },
 
-  data() {
-    return {
-      headers: [
+  computed: {
+    headers() {
+      let intialHeaders = [
         // {
         //   text: "Legend",
         //   sortable: false,
@@ -61,7 +71,6 @@ export default Vue.extend({
         },
         {
           text: "Party",
-          sortable: false,
           value: "party",
         },
         {
@@ -72,8 +81,24 @@ export default Vue.extend({
           text: "Vote (%)",
           value: "votePercentage",
         },
-      ],
-    };
+      ];
+
+      if (this.position.isTieOccured) {
+        intialHeaders = [
+          {
+            text: "Tie",
+            value: "tie",
+          },
+
+          ...intialHeaders,
+        ];
+      }
+
+      return intialHeaders;
+    },
+    maxWinner(): number {
+      return this.position.max_selected;
+    },
   },
 });
 </script>

@@ -38,9 +38,6 @@
   "PagesBallotStepper": {
     "description": "Auto imported from components/pages/ballot/BallotStepper.vue"
   },
-  "PagesCandidatePageHeader": {
-    "description": "Auto imported from components/pages/candidate/CandidatePageHeader.vue"
-  },
   "PagesElectionPageHeader": {
     "description": "Auto imported from components/pages/election/ElectionPageHeader.vue"
   },
@@ -49,6 +46,9 @@
   },
   "PagesElectionPositionCandidates": {
     "description": "Auto imported from components/pages/election/ElectionPositionCandidates.vue"
+  },
+  "PagesCandidatePageHeader": {
+    "description": "Auto imported from components/pages/candidate/CandidatePageHeader.vue"
   },
   "PagesHomepageCarousel": {
     "description": "Auto imported from components/pages/homepage/HomepageCarousel.vue"

@@ -80,6 +80,8 @@
     <app-dialog />
 
     <election-information-dialog />
+
+    <authentication-dialog />
   </v-app>
 </template>
 
@@ -94,6 +96,7 @@ import ElectionClock from "@/components/utils/ElectionClock.vue";
 import ElectionDates from "@/components/utils/ElectionDates.vue";
 import ElectionInformationDialog from "@/components/utils/ElectionInformationDialog.vue";
 import PublicityIcon from "~/components/icon/PublicityIcon.vue";
+import AuthenticationDialog from "~/components/dialogs/AuthenticationDialog.vue";
 
 import mixins from "vue-typed-mixins";
 
@@ -107,6 +110,7 @@ export default mixins(manageElectionMixins).extend({
     ElectionDates,
     ElectionInformationDialog,
     PublicityIcon,
+    AuthenticationDialog,
   },
   data() {
     return {

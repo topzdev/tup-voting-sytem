@@ -1,6 +1,6 @@
 <template>
   <tr :class="background">
-    <td class="text-center">
+    <td v-if="withTieColumn" class="text-center">
       <div
         v-if="tie"
         style="
@@ -28,16 +28,6 @@
     <td>{{ item.votesCount }}</td>
 
     <td>{{ item.votePercentage }}%</td>
-    <td>
-      <div v-if="tie" class="d-flex align-center">
-        <v-btn icon :disabled="!moveUp" color="success" @click="moveUp(idx)">
-          <v-icon>mdi-arrow-up</v-icon>
-        </v-btn>
-        <v-btn icon :disabled="!moveDown" color="error" @click="moveDown(idx)">
-          <v-icon>mdi-arrow-down</v-icon>
-        </v-btn>
-      </div>
-    </td>
   </tr>
 </template>
 
@@ -61,11 +51,8 @@ export default Vue.extend({
     in: {
       type: Boolean,
     },
-    moveUp: {
-      type: Function,
-    },
-    moveDown: {
-      type: Function,
+    withTieColumn: {
+      type: Boolean,
     },
   },
 
@@ -92,18 +79,6 @@ export default Vue.extend({
         this.background = this.setBackground();
       },
     },
-
-    // idx: {
-    //   immediate: false,
-
-    //   handler() {
-    //     const self = this;
-    //     this.background = "red ligthen-5";
-    //     setTimeout(function () {
-    //       self.background = self.setBackground();
-    //     }, 1000);
-    //   },
-    // },
   },
 });
 </script>

@@ -1,5 +1,10 @@
 <template>
   <v-row>
+    <v-col cols="12" class="pb-0">
+      <v-alert type="warning" outlined dense icon="mdi-alert" class="mb-0">
+        Resolution of Tie Votes
+      </v-alert>
+    </v-col>
     <v-col cols="12">
       <v-simple-table>
         <template v-slot:default>
@@ -14,46 +19,62 @@
             </tr>
           </thead>
           <tbody>
-            <template v-for="(item, idx) in items">
-              <result-tie-candidate-row
-                :item="item"
-                :key="idx"
-                :tie="item.tie"
-                :in="idx < maxWinner"
-              />
-            </template>
+            <result-tie-candidate-row
+              v-for="(item, idx) in items"
+              :item="item"
+              :key="idx"
+              :idx="idx"
+              :tie="item.tie"
+              :in="idx < maxWinner"
+              :moveUp="checkIfMoveValid(idx, 'up') ? moveUp : undefined"
+              :moveDown="checkIfMoveValid(idx, 'down') ? moveDown : undefined"
+            />
           </tbody>
         </template>
       </v-simple-table>
     </v-col>
     <v-col cols="12">
-      <result-tied-legends />
+      <v-row>
+        <v-col cols="auto">
+          <result-candidate-legends />
+        </v-col>
+        <v-col cols="auto" class="ml-auto pt-0 d-flex align-center">
+          <v-btn text class="mr-1" :disabled="!changesOccured" @click="reset"
+            >Reset</v-btn
+          >
+          <v-btn :disabled="!changesOccured" color="success" @click="save"
+            >Save</v-btn
+          >
+        </v-col>
+      </v-row>
     </v-col>
   </v-row>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import {
+import resultsServices, {
   ResultCandidate,
   ElectionResultWithWinner,
 } from "@/services/results.service";
 import ResultTieCandidateRow from "./row/ResultTieCandidateRow.vue";
-import ResultTiedLegends from "./ResultTiedLegends.vue";
-import { Position } from "../../../../services/position.service";
+import ResultCandidateLegends from "./ResultCandidateLegends.vue";
+import { Position } from "@/services/position.service";
+import mixins from "vue-typed-mixins";
+import authMixin from "@/mixins/auth.mixins";
 
-export default Vue.extend({
+export default mixins(authMixin).extend({
   props: {
     position: {
       type: Object,
-    } as PropOptions<Position>,
+    } as PropOptions<ElectionResultWithWinner>,
     candidates: {
       type: Array,
     } as PropOptions<(ResultCandidate & { tie: boolean })[]>,
   },
   components: {
     ResultTieCandidateRow,
-    ResultTiedLegends,
+    ResultCandidateLegends,
   },
 
   computed: {
@@ -64,6 +85,7 @@ export default Vue.extend({
 
   data() {
     return {
+      changesOccured: false,
       items: [] as (ResultCandidate & { tie: boolean })[],
       headers: [
         // {
@@ -71,6 +93,10 @@ export default Vue.extend({
         //   sortable: false,
         //   value: "legend",
         // },
+        {
+          text: "Tie",
+          value: "tied",
+        },
         {
           text: "Candidate",
           value: "candidateName",
@@ -96,11 +122,104 @@ export default Vue.extend({
     };
   },
 
+  methods: {
+    save() {
+      this.$accessor.system.showAuthenticationDialog({
+        button: {
+          yesFunction: async () => {
+            const candidatesWithPos = this.items.map((item, idx) => ({
+              candidate_id: item.id,
+              pos: idx + 1,
+            }));
+
+            console.log(candidatesWithPos);
+
+            const data = {
+              election_id: this.position.election_id,
+              position_id: this.position.id,
+              candidatesWithPos,
+            };
+
+            await resultsServices.resolveTie(data);
+
+            await this.$accessor.electionResult.fetchResults();
+
+            this.$accessor.snackbar.set({
+              show: true,
+              message: `${this.position.title} Tie Issue Resolved`,
+              timeout: 5000,
+              color: "success",
+            });
+          },
+        },
+        type: "default",
+        message:
+          "For Super Admins, enter your credential to approved this action.",
+        allowedRole: "super-admin",
+        show: true,
+      });
+    },
+
+    reset() {
+      this.$accessor.system.showAppDialog({
+        show: true,
+        title: "Reset changes",
+        message: "Are you sure to reset the changes you made?",
+        button: {
+          anyEventHide: false,
+          yesFunction: async ({ hideDialog }) => {
+            this.items = JSON.parse(JSON.stringify(this.candidates));
+            this.changesOccured = false;
+            hideDialog();
+          },
+          noFunction: ({ hideDialog }) => {
+            hideDialog();
+          },
+        },
+      });
+    },
+
+    moveUp(index: number) {
+      console.log("Move up");
+      let old_index = index;
+      let new_index = index - 1;
+      this.items = this.array_move(this.items, old_index, new_index);
+      this.changesOccured = true;
+    },
+
+    moveDown(index: number) {
+      let old_index = index;
+      let new_index = index + 1;
+      this.items = this.array_move(this.items, old_index, new_index);
+      this.changesOccured = true;
+    },
+
+    checkIfMoveValid(index: number, move: string) {
+      let check_index = move === "up" ? index - 1 : index + 1;
+
+      if (check_index < 0 || check_index >= this.items.length) return false;
+      console.log(check_index, this.items[check_index].tie);
+
+      return !!this.items[check_index].tie;
+    },
+
+    array_move(arr: any[], old_index: number, new_index: number) {
+      if (new_index >= arr.length) {
+        var k = new_index - arr.length + 1;
+        while (k--) {
+          arr.push(undefined);
+        }
+      }
+      arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+      return arr; // for testing
+    },
+  },
+
   watch: {
     candidates: {
       immediate: true,
       handler: function (value) {
-        this.items = value;
+        this.items = JSON.parse(JSON.stringify(value));
       },
     },
   },

@@ -6,6 +6,7 @@ import * as manageElection from "~/store/manageElection";
 import * as system from "~/store/system";
 import * as user from "~/store/user";
 import * as myAccount from "~/store/myAccount";
+import * as electionResult from "~/store/electionResult";
 
 export const accessorType = getAccessorType({
   modules: {
@@ -15,5 +16,6 @@ export const accessorType = getAccessorType({
     system,
     user,
     myAccount,
+    electionResult,
   },
 });

@@ -11,14 +11,17 @@
         </v-col>
 
         <v-col cols="6">
-          <template v-if="result.isTieOccured">
+          <template v-if="result.isTieOccured && !result.isTieResolved">
             <result-tied-candidate-table
               :position="result"
               :candidates="parsedCandidates"
             />
           </template>
           <template v-else>
-            <result-candidate-table :candidates="parsedCandidates" />
+            <result-candidate-table
+              :position="result"
+              :candidates="parsedCandidates"
+            />
           </template>
         </v-col>
 
