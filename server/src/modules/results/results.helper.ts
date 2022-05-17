@@ -1,13 +1,17 @@
 import exp from "constants";
 import { Result } from "express-validator";
 import { Candidate } from "../candidate/entity/candidate.entity";
+import { Position } from "../position/entity/position.entity";
 import {
   CandidatesWithSameVotes,
   CandidateTieResult,
-  ElectionResult,
-  ElectionResults,
-  ElectionResultWithWinner,
+  InitialCandidate,
+  InitialPosition,
   ResultCandidate,
+  ResultIssue,
+  ResultIssueMessage,
+  ResultPosition,
+  ResultPositionsWithWinner,
   TempVotesCount,
 } from "./results.interface";
 
@@ -18,7 +22,7 @@ const sortAndSplice = (candidates: ResultCandidate[], max_selected: number) => {
   return spliced;
 };
 
-const properCandidates = (curCandidates: ResultCandidate[]) => {
+const properCandidates = (curCandidates: InitialCandidate[]) => {
   const totalVotes = curCandidates.reduce(
     (partial, a) => partial + a.votesCount,
     0
@@ -42,8 +46,8 @@ const properCandidates = (curCandidates: ResultCandidate[]) => {
   return { totalVotes, candidates };
 };
 
-const getElectionResult = (result: ElectionResults) => {
-  const simpleResult = [];
+const getResultPosition = (result: InitialPosition[]) => {
+  const simpleResult: ResultPosition[] = [];
 
   for (let i = 0; i < result.length; i++) {
     const currentPosition = result[i];
@@ -62,8 +66,8 @@ const getElectionResult = (result: ElectionResults) => {
   return simpleResult;
 };
 
-const getElectionResultWithWinners = (result: ElectionResults) => {
-  const resultWithWinners: ElectionResultWithWinner[] = [];
+const getResultPositionsWithWinners = (result: InitialPosition[]) => {
+  const resultWithWinners: ResultPositionsWithWinner[] = [];
 
   for (let i = 0; i < result.length; i++) {
     const currentPosition = result[i];
@@ -235,9 +239,39 @@ const getResultsWithPossibleTie = (
   };
 };
 
+const commonIssues = {
+  positiontieVote: (positionTitle: string) => {
+    return `${positionTitle} has tied candidates`;
+  },
+};
+
+const generateIssues = (
+  finalResults: ResultPositionsWithWinner[]
+): ResultIssue => {
+  const issues: ResultIssueMessage[] = [];
+
+  finalResults.forEach((item) => {
+    if (item.isTieOccured) {
+      issues.push({
+        type: "position",
+        id: item.id,
+        resolved: item.isTieResolved,
+        message: commonIssues.positiontieVote(item.title),
+      });
+    }
+  });
+
+  return {
+    totalIssues: issues.length,
+    totalResolved: issues.filter((item) => item.resolved).length,
+    messages: issues,
+  };
+};
+
 const resultHelpers = {
-  getElectionResult,
-  getElectionResultWithWinners,
+  getResultPosition,
+  getResultPositionsWithWinners,
+  generateIssues,
 };
 
 export default resultHelpers;

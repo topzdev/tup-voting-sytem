@@ -109,7 +109,7 @@ export default Vue.extend({
           data: { ...this.form, election_id: this.election_id, token },
         });
 
-        this.$router.push(`/election/${slug}/ballot`);
+        this.$router.push(`/vote/${slug}/ballot`);
 
         console.log(result);
       } catch (error: any) {

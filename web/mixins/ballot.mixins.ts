@@ -4,7 +4,7 @@ import { Election, Organization } from "../types/app";
 const ballotMixins = Vue.extend({
   computed: {
     pagePath() {
-      return `/election/${this.$route.params.slug}/`;
+      return `/vote/${this.$route.params.slug}/`;
     },
 
     electionId(): Election["id"] | null {

@@ -1,17 +1,26 @@
-import { actionTree, mutationTree } from "typed-vuex";
 import resultServices, {
-  ElectionResults,
-  ElectionResultWithWinner,
+  ResultIssue,
+  ResultOtherInfo,
+  ResultPositionsWithWinner,
 } from "@/services/results.service";
+import { actionTree, mutationTree } from "typed-vuex";
 import blobDownloader from "~/helpers/blob-downloader.helper";
 
 export const state = () => ({
-  results: [] as ElectionResultWithWinner[],
+  positions: [] as ResultPositionsWithWinner[],
+  issues: undefined as ResultIssue | undefined,
+  other_info: undefined as ResultOtherInfo | undefined,
 });
 
 export const mutations = mutationTree(state, {
-  setResult(state, payload) {
-    state.results = payload;
+  setIssues(state, payload) {
+    state.issues = payload;
+  },
+  setPositions(state, payload) {
+    state.positions = payload;
+  },
+  setOtherInfo(state, payload) {
+    state.other_info = payload;
   },
 });
 
@@ -25,7 +34,15 @@ export const actions = actionTree(
 
       const response = await resultServices.getResults(electionId);
 
-      commit("setResult", response);
+      if (response.issues) {
+        commit("setIssues", response.issues);
+      }
+      if (response.positions) {
+        commit("setPositions", response.positions);
+      }
+      if (response.other_info) {
+        commit("setOtherInfo", response.other_info);
+      }
     },
     async downloadVoteAudit() {
       const election = this.app.$accessor.manageElection.election;

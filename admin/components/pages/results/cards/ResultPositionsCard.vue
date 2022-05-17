@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title> {{ result.title }} </v-card-title>
+    <v-card-title> {{ position.title }} </v-card-title>
 
     <v-card-text>
       <v-row>
@@ -11,15 +11,15 @@
         </v-col>
 
         <v-col cols="6">
-          <template v-if="result.isTieOccured && !result.isTieResolved">
+          <template v-if="position.isTieOccured && !position.isTieResolved">
             <result-tied-candidate-table
-              :position="result"
+              :position="position"
               :candidates="parsedCandidates"
             />
           </template>
           <template v-else>
             <result-candidate-table
-              :position="result"
+              :position="position"
               :candidates="parsedCandidates"
             />
           </template>
@@ -34,22 +34,21 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
-import {
-  ElectionResult,
-  ResultCandidate,
-  CandidateTieResult,
-  ElectionResultWithWinner,
-} from "@/services/results.service";
-import ResultCandidateTable from "@/components/pages/results/tables/ResultCandidateTable.vue";
-import ResultTiedCandidateTable from "@/components/pages/results/tables/ResultTiedCandidateTable.vue";
 import ResultCandidateChart from "@/components/pages/results/charts/ResultCandidateCharts.vue";
 import ResultWinnerSection from "@/components/pages/results/sections/ResultWinnerSection.vue";
+import ResultCandidateTable from "@/components/pages/results/tables/ResultCandidateTable.vue";
+import ResultTiedCandidateTable from "@/components/pages/results/tables/ResultTiedCandidateTable.vue";
+import {
+  CandidateTieResult,
+  ResultCandidate,
+  ResultPositionsWithWinner,
+} from "@/services/results.service";
+import Vue, { PropOptions } from "vue";
 export default Vue.extend({
   props: {
-    result: {
+    position: {
       type: Object,
-    } as PropOptions<ElectionResultWithWinner>,
+    } as PropOptions<ResultPositionsWithWinner>,
   },
   components: {
     ResultCandidateTable,
@@ -59,14 +58,14 @@ export default Vue.extend({
   },
 
   computed: {
-    candidates(): ElectionResultWithWinner["candidates"] {
-      return this.result.candidates;
+    candidates(): ResultPositionsWithWinner["candidates"] {
+      return this.position.candidates;
     },
 
-    parsedCandidates(): ElectionResultWithWinner["candidates"] {
+    parsedCandidates(): ResultPositionsWithWinner["candidates"] {
       let candidates: ResultCandidate[] = [];
 
-      this.result.candidates.forEach(function (item) {
+      this.position.candidates.forEach(function (item) {
         let tieItem = item as CandidateTieResult;
         if (tieItem.tie) {
           candidates = [
@@ -81,8 +80,8 @@ export default Vue.extend({
       return candidates;
     },
 
-    winners(): ElectionResultWithWinner["winners"] {
-      return this.result.winners;
+    winners(): ResultPositionsWithWinner["winners"] {
+      return this.position.winners;
     },
   },
 });

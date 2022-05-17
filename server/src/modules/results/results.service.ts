@@ -8,16 +8,21 @@ import { Candidate } from "../candidate/entity/candidate.entity";
 import { Election } from "../election/entity/election.entity";
 import { finalStatusSubquery } from "../launchpad/launchpad.helper";
 import { Position } from "../position/entity/position.entity";
+import { Voter } from "../voter/entity/voter.entity";
 import { ElectionVoted } from "../voting/entity/voted.entity";
 import resultHelpers from "./results.helper";
-import { ElectionResults, ResolveTieDTO } from "./results.interface";
+import {
+  ElectionResult,
+  InitialPosition,
+  ResolveTieDTO,
+  ResultPosition,
+} from "./results.interface";
 
 const getElectionResults = async (_election_id: Election["id"]) => {
-  const positionRepository = getRepository(Position);
-  const electionRepository = getRepository(Election);
-
   if (!_election_id)
     throw new HttpException("BAD_REQUEST", "Election ID is required");
+  const positionRepository = getRepository(Position);
+  const electionRepository = getRepository(Election);
 
   let electionBuilder = electionRepository.createQueryBuilder("election");
 
@@ -25,6 +30,8 @@ const getElectionResults = async (_election_id: Election["id"]) => {
 
   electionBuilder = electionBuilder
     .addSelect(finalStatusSubquery(electionBuilder.alias))
+    .loadRelationCountAndMap("election.votersCount", "election.voters")
+    .loadRelationCountAndMap("election.votedCount", "election.voted")
     .where("election.id = :_election_id", { _election_id });
 
   const election = await electionBuilder.getOne();
@@ -45,19 +52,38 @@ const getElectionResults = async (_election_id: Election["id"]) => {
       "position.created_at": "DESC",
     });
 
-  let positions = (await positionBuilder.getMany()) as ElectionResults;
+  let initPositions = (await positionBuilder.getMany()) as InitialPosition[];
 
   console.log(election);
 
-  let result;
+  let result: ElectionResult;
+
+  const other_info = {
+    votersCount: (election as any).votersCount,
+    votedCount: (election as any).votedCount,
+  };
 
   if (
     election.final_status === "completed" ||
     election.final_status === "archived"
   ) {
-    result = resultHelpers.getElectionResultWithWinners(positions) as any;
+    const finalPositions = resultHelpers.getResultPositionsWithWinners(
+      initPositions
+    ) as any;
+    const issues = resultHelpers.generateIssues(finalPositions);
+
+    result = {
+      positions: finalPositions,
+      issues,
+      other_info,
+    };
   } else {
-    result = resultHelpers.getElectionResult(positions);
+    const finalPositions = resultHelpers.getResultPosition(initPositions);
+
+    result = {
+      positions: finalPositions,
+      other_info,
+    };
   }
 
   return result;
@@ -81,13 +107,11 @@ const getElectionWinners = async (_election_id: Election["id"]) => {
 };
 
 const downloadElectionResults = async (_election_id: Election["id"]) => {
-  const results = resultHelpers.getElectionResult(
-    await getElectionResults(_election_id)
-  ) as ElectionResults;
+  const results = await getElectionResults(_election_id);
 
   const data = [];
 
-  results.forEach((position) => {
+  results.positions.forEach((position) => {
     // add position title
     data.push([position.title]);
 

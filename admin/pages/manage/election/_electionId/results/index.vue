@@ -31,7 +31,10 @@
     <v-container>
       <v-row>
         <v-col cols="12">
-          <ballot-result-section :results="results" />
+          <result-summary-section />
+        </v-col>
+        <v-col cols="12">
+          <result-ballot-section :positions="positions" />
         </v-col>
       </v-row>
     </v-container>
@@ -39,24 +42,21 @@
 </template>
 
 <script lang="ts">
-import BallotResultSection from "@/components/pages/results/sections/BallotResultSection.vue";
-import WinnerSection from "~/components/pages/results/sections/ResultWinnerSection.vue";
+import ResultBallotSection from "~/components/pages/results/sections/ResultBallotSection.vue";
+import ResultSummarySection from "@/components/pages/results/sections/ResultSummarySection.vue";
 import icons from "@/configs/icons";
 import pageStatus from "@/configs/page-status.config";
-import resultServices, {
-  ElectionResults,
-  ElectionResultWithWinner,
-} from "@/services/results.service";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
 import mixins from "vue-typed-mixins";
 import PageBars from "~/components/bars/PageBars.vue";
-import manageElectionMixins from "@/mixins/manage-election.mixins";
-import blobDownloader from "~/helpers/blob-downloader.helper";
+import WinnerSection from "~/components/pages/results/sections/ResultWinnerSection.vue";
 
 export default mixins(manageElectionMixins).extend({
   components: {
     WinnerSection,
-    BallotResultSection,
+    ResultBallotSection,
     PageBars,
+    ResultSummarySection,
   },
   meta: {
     status: pageStatus.results,
@@ -73,8 +73,8 @@ export default mixins(manageElectionMixins).extend({
   },
 
   computed: {
-    results() {
-      return this.$accessor.electionResult.results;
+    positions() {
+      return this.$accessor.electionResult.positions;
     },
   },
 

@@ -5,13 +5,19 @@ import { Position } from "./position.service";
 
 const url = "/api/v1/results";
 
+export type InitialCandidate = Candidate & {
+  votesCount: number;
+};
+
+export type InitialPosition = Omit<Position, "candidates"> & {
+  candidates: InitialCandidate[];
+};
+
 export type ResultCandidate = Candidate & {
   votesCount: number;
   candidateName: string;
   votePercentage: number;
 };
-
-export type ElectionResults = ElectionResult[];
 
 export type CandidateTieResult = {
   tie: boolean;
@@ -34,20 +40,44 @@ export type ResolveTieDTO = {
   candidatesWithPos: { candidate_id: Candidate["id"]; pos: number }[];
 };
 
-export type ElectionResult = Omit<Position, "candidates"> & {
+export type ResultPosition = Omit<Position, "candidates"> & {
   candidates: ResultCandidate[];
   totalVotes: number;
 };
 
-export type ElectionResultWithWinner = Omit<ElectionResult, "candidates"> & {
+export type ResultPositionsWithWinner = Omit<ResultPosition, "candidates"> & {
   winners?: ResultCandidate[];
   candidates: (ResultCandidate | CandidateTieResult)[];
   isTieOccured: boolean;
   isTieResolved?: boolean;
 };
 
+export type ResultIssueMessage = {
+  type: "position";
+  id: string | number;
+  resolved: boolean;
+  message: string;
+};
+
+export type ResultIssue = {
+  totalIssues: number;
+  totalResolved: number;
+  messages: ResultIssueMessage[];
+};
+
+export type ResultOtherInfo = {
+  votersCount: number;
+  votedCount: number;
+};
+
+export type ElectionResult = {
+  positions: (ResultPositionsWithWinner | ResultPosition)[];
+  other_info: ResultOtherInfo;
+  issues?: ResultIssue;
+};
+
 const resultsServices = {
-  async getResults(election_id: number): Promise<ElectionResultWithWinner[]> {
+  async getResults(election_id: number): Promise<ElectionResult> {
     return (await apiClient.get(`${url}/final-results/${election_id}`)).data;
   },
   async getWinner(election_id: number) {
