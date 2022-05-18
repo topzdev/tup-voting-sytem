@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card :id="cardId">
     <v-card-title> {{ position.title }} </v-card-title>
 
     <v-card-text>
@@ -58,6 +58,9 @@ export default Vue.extend({
   },
 
   computed: {
+    cardId(): string {
+      return `position-${this.position.id}`;
+    },
     candidates(): ResultPositionsWithWinner["candidates"] {
       return this.position.candidates;
     },

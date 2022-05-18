@@ -71,5 +71,25 @@ export const actions = actionTree(
         "text/csv"
       );
     },
+
+    async publishResult({}) {
+      const election_id = this.app.$accessor.manageElection.election?.id;
+
+      if (!election_id) return;
+
+      const result = await resultServices.publishResult(election_id);
+
+      await this.app.$accessor.manageElection.refreshElection();
+    },
+
+    async unPublishResult({}) {
+      const election_id = this.app.$accessor.manageElection.election?.id;
+
+      if (!election_id) return;
+
+      const result = await resultServices.unPublishResult(election_id);
+
+      await this.app.$accessor.manageElection.refreshElection();
+    },
   }
 );

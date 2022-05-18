@@ -2,7 +2,8 @@
   <client-only>
     <div>
       <VueApexCharts
-        width="500"
+        :width="width"
+        :height="height"
         :options="chartOptions"
         :series="series"
       ></VueApexCharts>
@@ -12,7 +13,7 @@
 
 <script>
 export default {
-  props: ["chartOptions", "series"],
+  props: ["chartOptions", "series", "height", "width"],
   components: {
     VueApexCharts: () => import("vue-apexcharts"),
   },

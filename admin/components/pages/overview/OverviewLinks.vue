@@ -57,13 +57,13 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import configs from "@/configs";
-import { OverviewUrls } from "@/services/overview.service";
+import { ElectionUrls } from "@/services/overview.service";
 import icons from "@/configs/icons";
 export default Vue.extend({
   props: {
     urls: {
       type: Object,
-    } as PropOptions<OverviewUrls | null>,
+    } as PropOptions<ElectionUrls | null>,
   },
 
   data() {
@@ -75,11 +75,11 @@ export default Vue.extend({
   computed: {
     longUrl(): string {
       if (!this.urls) return "";
-      return this.urls.longUrl;
+      return this.urls.votingLongUrl;
     },
     shortUrl(): string {
       if (!this.urls) return "";
-      return this.urls.shortUrl;
+      return this.urls.votingShortUrl;
     },
     preRegisterUrl(): string {
       if (!this.urls) return "";

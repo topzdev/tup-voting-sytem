@@ -55,7 +55,7 @@
 import Vue, { PropOptions } from "vue";
 import resultsServices, {
   ResultCandidate,
-  ElectionResultWithWinner,
+  ResultPositionsWithWinner,
 } from "@/services/results.service";
 import ResultTieCandidateRow from "./row/ResultTieCandidateRow.vue";
 import ResultCandidateLegends from "./ResultCandidateLegends.vue";
@@ -67,7 +67,7 @@ export default mixins(authMixin).extend({
   props: {
     position: {
       type: Object,
-    } as PropOptions<ElectionResultWithWinner>,
+    } as PropOptions<ResultPositionsWithWinner>,
     candidates: {
       type: Array,
     } as PropOptions<(ResultCandidate & { tie: boolean })[]>,

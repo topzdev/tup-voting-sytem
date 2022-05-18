@@ -2,6 +2,7 @@ import apiClient from ".";
 import transformParamsToUrl from "@/helpers/paramsToUrl.helpers";
 import { DataTimestamp } from "./voters.service";
 import { Organization } from "./organization.service";
+import { ElectionUrls } from "./overview.service";
 
 export type ElectionStatus =
   | "building"
@@ -39,6 +40,8 @@ export type Election = {
   final_status: ElectionStatus;
   allow_pre_register: boolean;
 } & DataTimestamp;
+
+export type ElectionWithUrl = Election & { urls: ElectionUrls };
 
 export interface GetElectionDto {
   search?: string;
@@ -80,11 +83,11 @@ const electionServices = {
       await apiClient.get(`${url}/all/${orgId}${transformParamsToUrl(query)}`)
     ).data;
   },
-  async getById(id: number): Promise<Election> {
+  async getById(id: number): Promise<ElectionWithUrl> {
     return (await apiClient.get(`${url}/${id}`)).data;
   },
 
-  async getBySlug(slug: string): Promise<Election> {
+  async getBySlug(slug: string): Promise<ElectionWithUrl> {
     return (await apiClient.get(`${url}/slug/${slug}`)).data;
   },
 

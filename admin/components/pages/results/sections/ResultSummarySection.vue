@@ -7,17 +7,21 @@
       <summary-issue-card :issues="issues" />
     </v-col>
     <v-col v-if="issues" cols="3">
-      <summary-publish-card :issues="issues" />
+      <summary-publish-card :issues="issues" :election="electionInfo" />
     </v-col>
   </v-row>
 </template>
 
-<script>
+<script lang="ts">
 import SummaryVoteInCard from "@/components/pages/results/cards/SummaryVoteInCard.vue";
 import SummaryIssueCard from "@/components/pages/results/cards/SummaryIssueCard.vue";
 import SummaryPublishCard from "@/components/pages/results/cards/SummaryPublishCard.vue";
 
-export default {
+import Vue, { PropOptions } from "vue";
+import mixins from "vue-typed-mixins";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
+
+export default mixins(manageElectionMixins).extend({
   components: { SummaryVoteInCard, SummaryIssueCard, SummaryPublishCard },
 
   computed: {
@@ -28,7 +32,7 @@ export default {
       return this.$accessor.electionResult.other_info;
     },
   },
-};
+});
 </script>
 
 <style>

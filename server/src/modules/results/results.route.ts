@@ -35,6 +35,10 @@ router.post("/resolve-tie", adminAuth, resultsController.resolveTie);
 
 router.post("/reset-tie", adminAuth, resultsController.resetTie);
 
+router.post("/publish", adminAuth, resultsController.publishResult);
+
+router.post("/un-publish", adminAuth, resultsController.unPublishResult);
+
 const resultsRoute = router;
 
 export default resultsRoute;

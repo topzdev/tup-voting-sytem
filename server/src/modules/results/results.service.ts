@@ -220,21 +220,21 @@ const downloadVoteAudit = async (_election_id: Election["id"]) => {
 
   voted.forEach((item) => {
     data.push({
-      name: `${item.voter.lastname}, ${item.voter.firstname}`,
-      voter_id: item.voter.username,
+      // name: `${item.voter.lastname}, ${item.voter.firstname}`,
+      // voter_id: item.voter.username,
       receipt_id: item.receipt_id,
-      ip: item.ip,
-      ua: item.ua,
+      // ip: item.ip,
+      // ua: item.ua,
       voted_date: item.created_at,
     });
   });
 
   const fields = [
-    { label: "Name", value: "name" },
-    { label: "Voter Identified", value: "voter_id" },
+    // { label: "Name", value: "name" },
+    // { label: "Voter Identified", value: "voter_id" },
     { label: "Ballot Receipt", value: "receipt_id" },
-    { label: "IP Address", value: "ip" },
-    { label: "User Agent", value: "ua" },
+    // { label: "IP Address", value: "ip" },
+    // { label: "User Agent", value: "ua" },
     { label: "Vote Date/Time", value: "voted_date" },
   ];
 
@@ -244,6 +244,68 @@ const downloadVoteAudit = async (_election_id: Election["id"]) => {
   };
 };
 
+const publishResult = async (_election_id: Election["id"]) => {
+  if (!_election_id) {
+    throw new HttpException("BAD_REQUEST", "Election id is required");
+  }
+  const electionRepository = getRepository(Election);
+
+  let builder = electionRepository.createQueryBuilder("election");
+
+  builder = builder
+    .select(["election.is_tally_public"])
+    .where("election.id = :_election_id", {
+      _election_id,
+    });
+
+  const election = await builder.getOne();
+
+  if (!election) {
+    throw new HttpException("NOT_FOUND", "Election not found");
+  }
+
+  const savedElection = await builder
+    .update()
+    .set({
+      is_tally_public: true,
+    })
+    .where("election.id = :_election_id", { _election_id })
+    .execute();
+
+  return true;
+};
+
+const unPublishResult = async (_election_id: Election["id"]) => {
+  if (!_election_id) {
+    throw new HttpException("BAD_REQUEST", "Election id is required");
+  }
+  const electionRepository = getRepository(Election);
+
+  let builder = electionRepository.createQueryBuilder("election");
+
+  builder = builder
+    .select(["election.is_tally_public"])
+    .where("election.id = :_election_id", {
+      _election_id,
+    });
+
+  const election = await builder.getOne();
+
+  if (!election) {
+    throw new HttpException("NOT_FOUND", "Election not found");
+  }
+
+  const savedElection = await builder
+    .update()
+    .set({
+      is_tally_public: false,
+    })
+    .where("election.id = :_election_id", { _election_id })
+    .execute();
+
+  return true;
+};
+
 const resultsServices = {
   getElectionResults,
   getElectionWinners,
@@ -251,6 +313,8 @@ const resultsServices = {
   downloadVoteAudit,
   resolveTie,
   resetTie,
+  publishResult,
+  unPublishResult,
 };
 
 export default resultsServices;

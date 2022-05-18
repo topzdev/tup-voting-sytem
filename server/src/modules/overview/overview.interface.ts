@@ -6,10 +6,11 @@ import {
 import { ElectionWithStatusFinal } from "../launchpad/launchpad.interface";
 import { Position } from "../position/entity/position.entity";
 
-export type OverviewUrls = {
+export type ElectionUrls = {
   preRegisterUrl: string;
-  longUrl: string;
-  shortUrl: string;
+  votingLongUrl: string;
+  votingShortUrl: string;
+  electionUrl?: string;
 };
 
 export type OverviewDetails = Election & {
@@ -19,5 +20,5 @@ export type OverviewDetails = Election & {
   partiesCount: number;
   candidatesCount: number;
   positionsCount: number;
-  urls: OverviewUrls;
+  urls: ElectionUrls;
 } & Timestamp;

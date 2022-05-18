@@ -5,6 +5,7 @@ import photoUploader from "../../helpers/photo-uploader.helper";
 import { Candidate } from "../candidate/entity/candidate.entity";
 import { finalStatusSubquery } from "../launchpad/launchpad.helper";
 import { LaunchpadValidationData } from "../launchpad/launchpad.interface";
+import overviewHelpers from "../overview/overview.helpers";
 import { Photo } from "../photo/photo.service";
 import {
   CreateElectionBody,
@@ -171,7 +172,9 @@ const getBySlug = async (_slug: string) => {
   //   ],
   // });
 
-  return election || null;
+  const urls = overviewHelpers.generateElectionUrls(election);
+
+  return { ...election, urls } || null;
 };
 
 const isExistBySlug = async (_slug: string) => {
@@ -210,7 +213,9 @@ const getById = async (_election_id: string) => {
 
   // console.log(election);
 
-  return election || null;
+  const urls = overviewHelpers.generateElectionUrls(election);
+
+  return { ...election, urls } || null;
 };
 
 const create = async (_logo: Photo, _election: CreateElectionBody) => {

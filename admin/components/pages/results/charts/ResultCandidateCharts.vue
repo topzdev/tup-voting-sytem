@@ -1,20 +1,20 @@
 <template>
-  <pie-chart :chartOptions="chartOptions" :series="series" />
+  <apex-chart :chartOptions="chartOptions" :series="series" :width="500" />
 </template>
 
 <script lang="ts">
+import { ResultPosition } from "@/services/results.service";
 import Vue, { PropOptions } from "vue";
-import { ElectionResult } from "@/services/results.service";
-import PieChart from "@/components/charts/PieChart.vue";
+import ApexChart from "~/components/charts/ApexChart.vue";
 
 export default Vue.extend({
   props: {
     results: {
       type: Array,
-    } as PropOptions<ElectionResult["candidates"]>,
+    } as PropOptions<ResultPosition["candidates"]>,
   },
   components: {
-    PieChart,
+    ApexChart,
   },
 
   computed: {

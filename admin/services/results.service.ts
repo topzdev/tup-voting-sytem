@@ -96,6 +96,12 @@ const resultsServices = {
   async resetTie(position_id: Position["id"]): Promise<boolean> {
     return (await apiClient.post(`${url}/reset-tie/`, { position_id })).data;
   },
+  async publishResult(election_id: Election["id"]): Promise<boolean> {
+    return (await apiClient.post(`${url}/publish/`, { election_id })).data;
+  },
+  async unPublishResult(election_id: Election["id"]): Promise<boolean> {
+    return (await apiClient.post(`${url}/un-publish/`, { election_id })).data;
+  },
 };
 
 export default resultsServices;
