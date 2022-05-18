@@ -5,6 +5,7 @@ import resultServices, {
 } from "@/services/results.service";
 import { actionTree, mutationTree } from "typed-vuex";
 import blobDownloader from "~/helpers/blob-downloader.helper";
+import { Position } from "../services/position.service";
 
 export const state = () => ({
   positions: [] as ResultPositionsWithWinner[],
@@ -90,6 +91,14 @@ export const actions = actionTree(
       const result = await resultServices.unPublishResult(election_id);
 
       await this.app.$accessor.manageElection.refreshElection();
+    },
+
+    async resetTieBreaker({}, positions_id: Position["id"]) {
+      if (!positions_id) return;
+
+      const result = await resultServices.resetTie(positions_id);
+
+      await this.app.$accessor.electionResult.fetchResults();
     },
   }
 );

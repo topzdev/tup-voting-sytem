@@ -1,21 +1,6 @@
 {
-  "AppAvatar": {
-    "description": "Auto imported from components/app/AppAvatar.vue"
-  },
-  "AppImage": {
-    "description": "Auto imported from components/app/AppImage.vue"
-  },
-  "AppLoading": {
-    "description": "Auto imported from components/app/AppLoading.vue"
-  },
-  "CardsCandidateCard": {
-    "description": "Auto imported from components/cards/CandidateCard.vue"
-  },
-  "CardsElectionCard": {
-    "description": "Auto imported from components/cards/ElectionCard.vue"
-  },
-  "CardsPartyCard": {
-    "description": "Auto imported from components/cards/PartyCard.vue"
+  "FormsLoginForm": {
+    "description": "Auto imported from components/forms/LoginForm.vue"
   },
   "ChipsElectionChip": {
     "description": "Auto imported from components/chips/ElectionChip.vue"
@@ -26,8 +11,23 @@
   "ChipsPartyChip": {
     "description": "Auto imported from components/chips/PartyChip.vue"
   },
-  "FormsLoginForm": {
-    "description": "Auto imported from components/forms/LoginForm.vue"
+  "CardsCandidateCard": {
+    "description": "Auto imported from components/cards/CandidateCard.vue"
+  },
+  "CardsElectionCard": {
+    "description": "Auto imported from components/cards/ElectionCard.vue"
+  },
+  "CardsPartyCard": {
+    "description": "Auto imported from components/cards/PartyCard.vue"
+  },
+  "AppAvatar": {
+    "description": "Auto imported from components/app/AppAvatar.vue"
+  },
+  "AppImage": {
+    "description": "Auto imported from components/app/AppImage.vue"
+  },
+  "AppLoading": {
+    "description": "Auto imported from components/app/AppLoading.vue"
   },
   "InputsPasswordField": {
     "description": "Auto imported from components/inputs/PasswordField.vue"
@@ -44,12 +44,6 @@
   "PagesHomepageCarousel": {
     "description": "Auto imported from components/pages/homepage/HomepageCarousel.vue"
   },
-  "PagesPartyPageHeader": {
-    "description": "Auto imported from components/pages/party/PartyPageHeader.vue"
-  },
-  "PagesPartyPositionCandidates": {
-    "description": "Auto imported from components/pages/party/PartyPositionCandidates.vue"
-  },
   "PagesElectionPageHeader": {
     "description": "Auto imported from components/pages/election/ElectionPageHeader.vue"
   },
@@ -58,6 +52,12 @@
   },
   "PagesElectionPositionCandidates": {
     "description": "Auto imported from components/pages/election/ElectionPositionCandidates.vue"
+  },
+  "PagesPartyPageHeader": {
+    "description": "Auto imported from components/pages/party/PartyPageHeader.vue"
+  },
+  "PagesPartyPositionCandidates": {
+    "description": "Auto imported from components/pages/party/PartyPositionCandidates.vue"
   },
   "PagesPreRegisterHeader": {
     "description": "Auto imported from components/pages/pre-register/PreRegisterHeader.vue"

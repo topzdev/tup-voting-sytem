@@ -12,10 +12,13 @@ import { Voter } from "../voter/entity/voter.entity";
 import { ElectionVoted } from "../voting/entity/voted.entity";
 import resultHelpers from "./results.helper";
 import {
+  CandidateTieResult,
   ElectionResult,
   InitialPosition,
   ResolveTieDTO,
+  ResultCandidate,
   ResultPosition,
+  ResultPositionsWithWinner,
 } from "./results.interface";
 
 const getElectionResults = async (_election_id: Election["id"]) => {
@@ -109,18 +112,55 @@ const getElectionWinners = async (_election_id: Election["id"]) => {
 const downloadElectionResults = async (_election_id: Election["id"]) => {
   const results = await getElectionResults(_election_id);
 
+  const divider = "#########";
+
   const data = [];
 
   results.positions.forEach((position) => {
     // add position title
     data.push([position.title]);
 
+    const winners = (position as ResultPositionsWithWinner).winners;
+
+    if (winners && winners.length) {
+      data.push(["Winner(s)"]);
+
+      data.push(["#", "name", "votes", "vote %"]);
+
+      winners.forEach(function (item, idx) {
+        data.push([
+          idx + 1,
+          item.candidateName,
+          item.votesCount,
+          item.votePercentage,
+        ]);
+      });
+    }
+
+    data.push([""]);
+    data.push(["Candiddate(s)"]);
+
     // add candadidats header
-    data.push(["name", "votes"]);
+    data.push(["#", "name", "votes", "votes %"]);
 
     // add candidates name and vote
-    position.candidates.forEach((candidate) => {
+    let candidates: ResultCandidate[] = [];
+
+    position.candidates.forEach(function (item) {
+      let tieItem = item as any;
+      if (tieItem.tie) {
+        candidates = [
+          ...candidates,
+          ...tieItem.candidates.map((item) => ({ ...item, tie: true })),
+        ];
+      } else {
+        candidates = [...candidates, item as ResultCandidate];
+      }
+    });
+
+    candidates.forEach((candidate, idx) => {
       data.push([
+        idx + 1,
         candidate.candidateName,
         candidate.votesCount,
         candidate.votePercentage + "%",
@@ -221,7 +261,7 @@ const downloadVoteAudit = async (_election_id: Election["id"]) => {
   voted.forEach((item) => {
     data.push({
       // name: `${item.voter.lastname}, ${item.voter.firstname}`,
-      // voter_id: item.voter.username,
+      voter_id: item.voter.username,
       receipt_id: item.receipt_id,
       // ip: item.ip,
       // ua: item.ua,
@@ -231,7 +271,7 @@ const downloadVoteAudit = async (_election_id: Election["id"]) => {
 
   const fields = [
     // { label: "Name", value: "name" },
-    // { label: "Voter Identified", value: "voter_id" },
+    { label: "Voter Id", value: "voter_id" },
     { label: "Ballot Receipt", value: "receipt_id" },
     // { label: "IP Address", value: "ip" },
     // { label: "User Agent", value: "ua" },

@@ -10,7 +10,7 @@
       </div>
       <div
         class="d-flex flex-column align-end ml-auto mt-n10"
-        v-if="!hasIssueLeft"
+        v-if="hasIssueLeft"
       >
         <v-dialog v-model="dialog" width="500px">
           <template v-slot:activator="{ on, attrs }">
@@ -89,7 +89,7 @@ export default Vue.extend({
       if (this.hasIssueLeft) {
         return `out of ${this.issues.totalIssues} Issue(s) Resolved`;
       }
-      return `${this.issues.totalIssues} Issue(s) have been resoloved`;
+      return `${this.issues.totalIssues} Issue(s) have been resolved`;
     },
   },
   methods: {

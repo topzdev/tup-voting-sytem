@@ -37,8 +37,8 @@
 import Vue, { PropOptions } from "vue";
 import {
   ElectionResult,
-  ElectionResultWithWinner,
   ResultCandidate,
+  ResultPositionsWithWinner,
 } from "@/services/results.service";
 import ResultCandidateRow from "./row/ResultCandidateRow.vue";
 import ResultCandidateLegends from "./ResultCandidateLegends.vue";
@@ -47,7 +47,7 @@ export default Vue.extend({
   props: {
     position: {
       type: Object,
-    } as PropOptions<ElectionResultWithWinner>,
+    } as PropOptions<ResultPositionsWithWinner>,
     candidates: {
       type: Array,
     } as PropOptions<(ResultCandidate & { tie: boolean })[]>,

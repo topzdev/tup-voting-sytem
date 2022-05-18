@@ -2,7 +2,7 @@ import { ElectionStatus } from "../services/election.service";
 
 const pageStatus = {
   launchpad: ["building"],
-  results: ["running", "completed", "archived"],
+  results: ["completed", "archived"],
   party: {
     create: ["building"],
     edit: ["building"],
