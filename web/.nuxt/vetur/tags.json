@@ -1,15 +1,12 @@
 {
-  "FormsLoginForm": {
-    "description": "Auto imported from components/forms/LoginForm.vue"
+  "AppAvatar": {
+    "description": "Auto imported from components/app/AppAvatar.vue"
   },
-  "ChipsElectionChip": {
-    "description": "Auto imported from components/chips/ElectionChip.vue"
+  "AppImage": {
+    "description": "Auto imported from components/app/AppImage.vue"
   },
-  "ChipsElectionStatusChip": {
-    "description": "Auto imported from components/chips/ElectionStatusChip.vue"
-  },
-  "ChipsPartyChip": {
-    "description": "Auto imported from components/chips/PartyChip.vue"
+  "AppLoading": {
+    "description": "Auto imported from components/app/AppLoading.vue"
   },
   "CardsCandidateCard": {
     "description": "Auto imported from components/cards/CandidateCard.vue"
@@ -20,14 +17,17 @@
   "CardsPartyCard": {
     "description": "Auto imported from components/cards/PartyCard.vue"
   },
-  "AppAvatar": {
-    "description": "Auto imported from components/app/AppAvatar.vue"
+  "ChipsElectionChip": {
+    "description": "Auto imported from components/chips/ElectionChip.vue"
   },
-  "AppImage": {
-    "description": "Auto imported from components/app/AppImage.vue"
+  "ChipsElectionStatusChip": {
+    "description": "Auto imported from components/chips/ElectionStatusChip.vue"
   },
-  "AppLoading": {
-    "description": "Auto imported from components/app/AppLoading.vue"
+  "ChipsPartyChip": {
+    "description": "Auto imported from components/chips/PartyChip.vue"
+  },
+  "FormsLoginForm": {
+    "description": "Auto imported from components/forms/LoginForm.vue"
   },
   "InputsPasswordField": {
     "description": "Auto imported from components/inputs/PasswordField.vue"
@@ -41,8 +41,8 @@
   "PagesCandidatePageHeader": {
     "description": "Auto imported from components/pages/candidate/CandidatePageHeader.vue"
   },
-  "PagesHomepageCarousel": {
-    "description": "Auto imported from components/pages/homepage/HomepageCarousel.vue"
+  "PagesElectionFinalTally": {
+    "description": "Auto imported from components/pages/election/ElectionFinalTally.vue"
   },
   "PagesElectionPageHeader": {
     "description": "Auto imported from components/pages/election/ElectionPageHeader.vue"
@@ -52,6 +52,9 @@
   },
   "PagesElectionPositionCandidates": {
     "description": "Auto imported from components/pages/election/ElectionPositionCandidates.vue"
+  },
+  "PagesHomepageCarousel": {
+    "description": "Auto imported from components/pages/homepage/HomepageCarousel.vue"
   },
   "PagesPartyPageHeader": {
     "description": "Auto imported from components/pages/party/PartyPageHeader.vue"
@@ -79,5 +82,8 @@
   },
   "PagesBallotDialogsCandidateDialog": {
     "description": "Auto imported from components/pages/ballot/dialogs/CandidateDialog.vue"
+  },
+  "PagesElectionListsTallyCandidateListItem": {
+    "description": "Auto imported from components/pages/election/lists/TallyCandidateListItem.vue"
   }
 }

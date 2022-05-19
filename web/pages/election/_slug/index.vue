@@ -7,7 +7,24 @@
             <election-page-header :election="election" />
           </v-col>
 
-          <v-col v-if="positions" cols="12">
+          <v-col cols="12" v-if="tally && tally.length">
+            <v-card
+              :color="
+                election.organization && election.organization.theme.primary
+              "
+              flat
+            >
+              <v-card-title>
+                <v-icon class="mr-1" color="white">mdi-ballot</v-icon>
+                <h3 class="white--text">Election Result</h3></v-card-title
+              >
+              <v-card-text>
+                <election-final-tally :tally="tally" />
+              </v-card-text>
+            </v-card>
+          </v-col>
+
+          <v-col cols="12">
             <v-row>
               <v-col cols="8">
                 <election-position-candidates :positions="positions" />
@@ -25,9 +42,10 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import publicServices from "@/services/public";
+import publicServices, { FinalTallyPositions } from "@/services/public";
 import ElectionPageHeader from "@/components/pages/election/ElectionPageHeader.vue";
 import ElectionPositionCandidates from "@/components/pages/election/ElectionPositionCandidates.vue";
+import ElectionFinalTally from "@/components/pages/election/ElectionFinalTally.vue";
 import { Election, Party, Position } from "@/types/app";
 import { MetaInfo } from "vue-meta";
 import ElectionParty from "@/components/pages/election/ElectionParty.vue";
@@ -36,6 +54,7 @@ export default Vue.extend({
     ElectionPageHeader,
     ElectionPositionCandidates,
     ElectionParty,
+    ElectionFinalTally,
   },
 
   data() {
@@ -43,6 +62,7 @@ export default Vue.extend({
       election: null as Election | null,
       positions: [] as Position[],
       party: [] as Party[],
+      tally: [] as FinalTallyPositions[] | undefined,
     };
   },
 
@@ -78,13 +98,15 @@ export default Vue.extend({
 
       const response = await publicServices.getElection(this.slug);
 
+      const election = response.election;
+      const tally = response.tally;
       const partialElection = {
-        id: response.id,
-        title: response.title,
-        slug: response.slug,
+        id: election.id,
+        title: election.title,
+        slug: election.slug,
       };
 
-      const positions = response.positions.map((item) => ({
+      const positions = election.positions.map((item) => ({
         ...item,
         candidates: item.candidates?.map((sub) => ({
           ...sub,
@@ -92,14 +114,15 @@ export default Vue.extend({
         })),
       }));
 
-      const party = response.party.map((item) => ({
+      const party = election.party.map((item) => ({
         ...item,
         election: partialElection,
       }));
 
-      this.election = response;
+      this.election = election;
       this.positions = positions as Position[];
       this.party = party as Party[];
+      this.tally = tally;
     },
   },
 });

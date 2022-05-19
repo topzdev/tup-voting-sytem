@@ -22,6 +22,24 @@ export type CandidateTieResult = {
   spotLeft: number;
 };
 
+export type FinalTallyCandidate = Pick<
+  Candidate,
+  "id" | "party" | "profile_photo" | "firstname" | "lastname" | "middlename"
+> & {
+  winner: boolean;
+  votesCount: number;
+  candidateName: string;
+  votePercentage: number;
+};
+
+export type FinalTallyPositions = Pick<
+  Omit<Position, "candidates">,
+  "id" | "title" | "max_selected" | "min_selected"
+> & {
+  candidates: FinalTallyCandidate[];
+  totalVotes: number;
+};
+
 export type CandidatesWithSameVotes = {
   votesCount: number;
   candidates: ResultCandidate[];

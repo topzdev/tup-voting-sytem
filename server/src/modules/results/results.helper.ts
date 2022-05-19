@@ -5,6 +5,8 @@ import { Position } from "../position/entity/position.entity";
 import {
   CandidatesWithSameVotes,
   CandidateTieResult,
+  FinalTallyCandidate,
+  FinalTallyPositions,
   InitialCandidate,
   InitialPosition,
   ResultCandidate,
@@ -72,7 +74,6 @@ const getResultPositionsWithWinners = (result: InitialPosition[]) => {
   for (let i = 0; i < result.length; i++) {
     const currentPosition = result[i];
     const max_selected = currentPosition.max_selected;
-    const min_selected = currentPosition.min_selected;
 
     const initialResult = properCandidates(currentPosition.candidates);
 
@@ -100,6 +101,74 @@ const getResultPositionsWithWinners = (result: InitialPosition[]) => {
   }
 
   return resultWithWinners;
+};
+
+const getElectionFinalTally = (result: InitialPosition[]) => {
+  const Positions: FinalTallyPositions[] = [];
+
+  for (let i = 0; i < result.length; i++) {
+    const currentPosition = result[i];
+    const max_selected = currentPosition.max_selected;
+
+    const initialResult = properCandidates(currentPosition.candidates);
+
+    // const winners = sortAndSplice(candidates, max_selected);
+    const candidates = getFinalTallyCandidates(
+      initialResult.candidates,
+      max_selected
+    );
+
+    Positions.push({
+      id: currentPosition.id,
+      max_selected: currentPosition.max_selected,
+      min_selected: currentPosition.min_selected,
+      title: currentPosition.title,
+      totalVotes: initialResult.totalVotes,
+      candidates,
+    });
+  }
+
+  return Positions;
+};
+
+const getFinalTallyCandidates = (
+  _candidates: ResultCandidate[],
+  _maxWinners: number
+): FinalTallyCandidate[] => {
+  let tally = [];
+
+  if (_candidates.length) {
+    tally = _candidates
+      .sort((a, b) => a.pos - b.pos)
+      .map((item, index) => {
+        const {
+          firstname,
+          lastname,
+          middlename,
+          profile_photo,
+          party,
+          id,
+          votePercentage,
+          votesCount,
+          candidateName,
+        } = item;
+
+        return {
+          firstname,
+          lastname,
+          middlename,
+          profile_photo,
+          party,
+          id,
+          votePercentage,
+          votesCount,
+          candidateName,
+          winner: index + 1 <= _maxWinners,
+        };
+      });
+  }
+
+  return tally;
 };
 
 // merge all candidates with same votes and sort it to highest vote to lowest
@@ -272,6 +341,7 @@ const resultHelpers = {
   getResultPosition,
   getResultPositionsWithWinners,
   generateIssues,
+  getElectionFinalTally,
 };
 
 export default resultHelpers;
