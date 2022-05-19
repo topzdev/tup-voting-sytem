@@ -29,7 +29,7 @@
     </page-bars>
 
     <v-container>
-      <v-row>
+      <v-row v-if="!$fetchState.pending && !$fetchState.error">
         <v-col cols="12">
           <result-summary-section />
         </v-col>
@@ -37,6 +37,16 @@
           <result-ballot-section :positions="positions" />
         </v-col>
       </v-row>
+
+      <template v-else-if="$fetchState.pending">
+        <v-col>
+          <page-center>
+            <app-loading></app-loading>
+          </page-center>
+        </v-col>
+      </template>
+
+      <div v-else-if="$fetchState.error">Something went wrong</div>
     </v-container>
   </span>
 </template>
@@ -49,13 +59,16 @@ import pageStatus from "@/configs/page-status.config";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import mixins from "vue-typed-mixins";
 import PageBars from "~/components/bars/PageBars.vue";
+import PageCenter from "@/components/utils/PageCenter.vue";
 import WinnerSection from "~/components/pages/results/sections/ResultWinnerSection.vue";
+import { ResultPositionsWithWinner } from "@/services/results.service";
 
 export default mixins(manageElectionMixins).extend({
   components: {
     WinnerSection,
     ResultBallotSection,
     PageBars,
+    PageCenter,
     ResultSummarySection,
   },
   meta: {
@@ -73,22 +86,21 @@ export default mixins(manageElectionMixins).extend({
   },
 
   computed: {
-    positions() {
+    positions(): ResultPositionsWithWinner[] {
       return this.$accessor.electionResult.positions;
     },
   },
 
   methods: {
+    async fetchResults() {
+      await this.$accessor.electionResult.fetchResults();
+    },
     refresh() {
       this.fetchResults();
     },
 
     async downloadElectionResults() {
       await this.$accessor.electionResult.downloadElectionResults();
-    },
-
-    async fetchResults() {
-      await this.$accessor.electionResult.fetchResults();
     },
 
     async downloadVoteAudit() {

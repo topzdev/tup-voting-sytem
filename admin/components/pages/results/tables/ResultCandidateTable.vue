@@ -27,6 +27,12 @@
         </template>
       </v-simple-table>
     </v-col>
+    <v-col v-if="position.is_tie_resolved" cols="12" class="pt-0">
+      <p class="caption mb-0">
+        Tie Breaker procedure/Message:
+        {{ position.tie_resolved_message || "No Message Provided" }}
+      </p>
+    </v-col>
     <v-col cols="12">
       <result-candidate-legends :with-tie="position.isTieOccured" />
     </v-col>

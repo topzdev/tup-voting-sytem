@@ -95,7 +95,6 @@ const getResultPositionsWithWinners = (result: InitialPosition[]) => {
       totalVotes: initialResult.totalVotes,
       candidates: finalResults.candidates,
       isTieOccured: finalResults.istieOccured,
-      isTieResolved: winnerResult.isTieResolved,
       winners: winnerResult.winners,
     });
   }
@@ -115,7 +114,8 @@ const getElectionFinalTally = (result: InitialPosition[]) => {
     // const winners = sortAndSplice(candidates, max_selected);
     const candidates = getFinalTallyCandidates(
       initialResult.candidates,
-      max_selected
+      max_selected,
+      currentPosition.is_tie_resolved
     );
 
     Positions.push({
@@ -124,6 +124,8 @@ const getElectionFinalTally = (result: InitialPosition[]) => {
       min_selected: currentPosition.min_selected,
       title: currentPosition.title,
       totalVotes: initialResult.totalVotes,
+      tie_resolved_message: currentPosition.tie_resolved_message,
+      is_tie_resolved: currentPosition.is_tie_resolved,
       candidates,
     });
   }
@@ -133,13 +135,16 @@ const getElectionFinalTally = (result: InitialPosition[]) => {
 
 const getFinalTallyCandidates = (
   _candidates: ResultCandidate[],
-  _maxWinners: number
+  _maxWinners: number,
+  _is_tie_resolove: boolean | null
 ): FinalTallyCandidate[] => {
   let tally = [];
 
   if (_candidates.length) {
     tally = _candidates
-      .sort((a, b) => a.pos - b.pos)
+      .sort((a, b) =>
+        _is_tie_resolove ? a.pos - b.pos : b.votesCount - a.votesCount
+      )
       .map((item, index) => {
         const {
           firstname,
@@ -324,7 +329,7 @@ const generateIssues = (
       issues.push({
         type: "position",
         id: item.id,
-        resolved: item.isTieResolved,
+        resolved: item.is_tie_resolved,
         message: commonIssues.positiontieVote(item.title),
       });
     }

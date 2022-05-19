@@ -1,6 +1,10 @@
 <template>
   <v-row>
-    <v-col cols="8" class="mx-auto">
+    <v-col
+      v-if="!$fetchState.pending && !$fetchState.error"
+      cols="8"
+      class="mx-auto"
+    >
       <v-container v-if="election" class="py-0">
         <v-row>
           <v-col cols="12">
@@ -37,6 +41,18 @@
         </v-row>
       </v-container>
     </v-col>
+
+    <v-col v-else-if="$fetchState.pending">
+      <page-center>
+        <app-loading></app-loading>
+      </page-center>
+    </v-col>
+
+    <v-col v-else-if="$fetchState.error">
+      <page-center>
+        <h2>Election not found</h2>
+      </page-center>
+    </v-col>
   </v-row>
 </template>
 
@@ -49,8 +65,10 @@ import ElectionFinalTally from "@/components/pages/election/ElectionFinalTally.v
 import { Election, Party, Position } from "@/types/app";
 import { MetaInfo } from "vue-meta";
 import ElectionParty from "@/components/pages/election/ElectionParty.vue";
+import PageCenter from "@/components/utils/PageCenter.vue";
 export default Vue.extend({
   components: {
+    PageCenter,
     ElectionPageHeader,
     ElectionPositionCandidates,
     ElectionParty,

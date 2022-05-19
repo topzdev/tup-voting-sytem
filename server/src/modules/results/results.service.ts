@@ -202,21 +202,33 @@ const resolveTie = async (dto: ResolveTieDTO) => {
   console.log("Datavalues", dataValues);
 
   const rawQuery = await entityManager.query(`
-    UPDATE 
-      candidate AS candidate
-    SET
-      pos = data.col_pos
-    FROM 
-      (values ${dataValues.join(",")}) 
-    AS 
-      data(col_candidate_id, col_pos) 
-    WHERE 
-      candidate.id = data.col_candidate_id 
-    AND 
-      candidate.position_id = ${dto.position_id}
-    AND
-      election_id = ${dto.election_id}; 
+  UPDATE 
+  candidate AS candidate
+  SET
+  pos = data.col_pos
+  FROM 
+  (values ${dataValues.join(",")}) 
+  AS 
+  data(col_candidate_id, col_pos) 
+  WHERE 
+  candidate.id = data.col_candidate_id 
+  AND 
+  candidate.position_id = ${dto.position_id}
+  AND
+  election_id = ${dto.election_id}; 
   `);
+
+  const positionRepository = getRepository(Position);
+  const positionBuilder = positionRepository.createQueryBuilder("position");
+
+  const position = await positionBuilder
+    .update()
+    .set({
+      is_tie_resolved: true,
+      tie_resolved_message: dto.tie_resolved_message,
+    })
+    .where("position.id = :position_id", { position_id: dto.position_id })
+    .execute();
 
   console.log("Raw Query Result", rawQuery);
 
@@ -226,11 +238,9 @@ const resolveTie = async (dto: ResolveTieDTO) => {
 const resetTie = async (position_id: Position["id"]) => {
   const candidateRepository = getRepository(Candidate);
 
-  const candidateBuilder = await candidateRepository.createQueryBuilder(
-    "candidate"
-  );
+  const candidateBuilder = candidateRepository.createQueryBuilder("candidate");
 
-  const candidate = candidateBuilder
+  const candidate = await candidateBuilder
     .update()
     .set({
       pos: null,
@@ -239,6 +249,18 @@ const resetTie = async (position_id: Position["id"]) => {
     .execute();
 
   console.log(candidate);
+
+  const positionRepository = getRepository(Position);
+  const positionBuilder = positionRepository.createQueryBuilder("position");
+
+  const position = await positionBuilder
+    .update()
+    .set({
+      is_tie_resolved: null,
+      tie_resolved_message: null,
+    })
+    .where("position.id = :position_id", { position_id: position_id })
+    .execute();
 
   return true;
 };

@@ -37,6 +37,7 @@ export type TempVotesCount = {
 export type ResolveTieDTO = {
   election_id: Election["id"];
   position_id: Position["id"];
+  tie_resolved_message?: string;
   candidatesWithPos: { candidate_id: Candidate["id"]; pos: number }[];
 };
 
@@ -49,7 +50,6 @@ export type ResultPositionsWithWinner = Omit<ResultPosition, "candidates"> & {
   winners?: ResultCandidate[];
   candidates: (ResultCandidate | CandidateTieResult)[];
   isTieOccured: boolean;
-  isTieResolved?: boolean;
 };
 
 export type ResultIssueMessage = {

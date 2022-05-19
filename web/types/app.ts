@@ -20,6 +20,8 @@ export type Position = {
   election: Election;
   candidates?: Candidate[];
   display_order: number | null;
+  tie_resolved_message?: boolean;
+  is_tie_resolved?: boolean;
 } & DataTimestamp;
 
 type PartyLogo = {

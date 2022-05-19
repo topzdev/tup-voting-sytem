@@ -15,6 +15,14 @@
             :position="position"
           />
         </v-list>
+
+        <v-card-subtitle
+          class="pt-0 caption"
+          v-if="position.is_tie_resolved && position.tie_resolved_message"
+        >
+          Tie Breaker Procedure/Message:
+          <b> "{{ position.tie_resolved_message || "No Message" }}" </b>
+        </v-card-subtitle>
       </v-card>
     </v-col>
   </v-row>

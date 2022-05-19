@@ -34,7 +34,12 @@ export type FinalTallyCandidate = Pick<
 
 export type FinalTallyPositions = Pick<
   Omit<Position, "candidates">,
-  "id" | "title" | "max_selected" | "min_selected"
+  | "id"
+  | "title"
+  | "max_selected"
+  | "min_selected"
+  | "is_tie_resolved"
+  | "tie_resolved_message"
 > & {
   candidates: FinalTallyCandidate[];
   totalVotes: number;
@@ -52,6 +57,7 @@ export type TempVotesCount = {
 export type ResolveTieDTO = {
   election_id: Election["id"];
   position_id: Position["id"];
+  tie_resolved_message?: string;
   candidatesWithPos: { candidate_id: Candidate["id"]; pos: number }[];
 };
 
@@ -64,7 +70,6 @@ export type ResultPositionsWithWinner = Omit<ResultPosition, "candidates"> & {
   winners?: ResultCandidate[];
   candidates: (ResultCandidate | CandidateTieResult)[];
   isTieOccured: boolean;
-  isTieResolved?: boolean;
 };
 
 export type ResultIssueMessage = {

@@ -36,15 +36,36 @@
     <v-col cols="12">
       <v-row>
         <v-col cols="auto">
-          <result-candidate-legends />
+          <result-candidate-legends :withTie="true" />
         </v-col>
-        <v-col cols="auto" class="ml-auto pt-0 d-flex align-center">
-          <v-btn text class="mr-1" :disabled="!changesOccured" @click="reset"
-            >Reset</v-btn
-          >
-          <v-btn :disabled="!changesOccured" color="success" @click="save"
-            >Save</v-btn
-          >
+        <v-col cols="6" class="d-flex align-end ml-auto pt-0">
+          <v-row no-gutters>
+            <v-col v-if="changesOccured" cols="12">
+              <v-text-field
+                dense
+                class="mb-2"
+                rows="3"
+                full-width
+                hide-details
+                outlined
+                placeholder="Tie breaker procedure/message"
+                v-model="tie_resolved_message"
+              >
+              </v-text-field>
+            </v-col>
+            <v-col class="d-flex align-end" cols="12">
+              <v-btn
+                text
+                class="ml-auto mr-1"
+                :disabled="!changesOccured"
+                @click="reset"
+                >Reset</v-btn
+              >
+              <v-btn :disabled="!changesOccured" color="success" @click="save"
+                >Save</v-btn
+              >
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </v-col>
@@ -85,6 +106,7 @@ export default mixins(authMixin).extend({
 
   data() {
     return {
+      tie_resolved_message: "",
       changesOccured: false,
       items: [] as (ResultCandidate & { tie: boolean })[],
       headers: [
@@ -138,6 +160,7 @@ export default mixins(authMixin).extend({
               election_id: this.position.election_id,
               position_id: this.position.id,
               candidatesWithPos,
+              tie_resolved_message: this.tie_resolved_message,
             };
 
             await resultsServices.resolveTie(data);

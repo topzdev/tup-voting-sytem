@@ -41,6 +41,16 @@ export class Position extends Timestamp {
   })
   election_id: number;
 
+  @Column({
+    nullable: true,
+  })
+  is_tie_resolved: boolean;
+
+  @Column({
+    nullable: true,
+  })
+  tie_resolved_message: string;
+
   @OneToMany(() => Candidate, (candidate) => candidate.position)
   candidates: Candidate[];
 

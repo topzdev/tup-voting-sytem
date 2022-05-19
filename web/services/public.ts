@@ -23,7 +23,12 @@ export type FinalTallyCandidate = Pick<
 
 export type FinalTallyPositions = Pick<
   Omit<Position, "candidates">,
-  "id" | "title" | "max_selected" | "min_selected"
+  | "id"
+  | "title"
+  | "max_selected"
+  | "min_selected"
+  | "is_tie_resolved"
+  | "tie_resolved_message"
 > & {
   candidates: FinalTallyCandidate[];
   totalVotes: number;

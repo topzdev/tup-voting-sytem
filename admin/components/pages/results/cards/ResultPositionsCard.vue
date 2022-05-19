@@ -31,7 +31,7 @@
         </v-col>
 
         <v-col cols="6">
-          <template v-if="position.isTieOccured && !position.isTieResolved">
+          <template v-if="position.isTieOccured && !position.is_tie_resolved">
             <result-tied-candidate-table
               :position="position"
               :candidates="parsedCandidates"
@@ -70,7 +70,9 @@ type Menu = {
 };
 
 import Vue, { PropOptions } from "vue";
-export default Vue.extend({
+import mixins from "vue-typed-mixins";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
+export default mixins(manageElectionMixins).extend({
   props: {
     position: {
       type: Object,
@@ -113,14 +115,14 @@ export default Vue.extend({
       return this.position.winners;
     },
 
-    menu() {
+    menu(): Menu[] {
       let list: Menu[] = [];
 
-      if (this.position.isTieOccured && this.position.isTieResolved) {
+      if (this.position.isTieOccured && this.position.is_tie_resolved) {
         list.push({
           title: "Reset Tie",
-          action: () => {
-            this.resetTieBreaker();
+          action: async () => {
+            await this.resetTieBreaker();
           },
         });
       }
@@ -131,61 +133,83 @@ export default Vue.extend({
     summary(): string {
       const candidateCount = this.parsedCandidates.length;
       const maxWinners = this.position.max_selected;
+      const paragraphs = [
+        `There are ${candidateCount} candidate(s) running in this position and only ${maxWinners} of them can
+      be elected.`,
+      ];
 
-      return `There are ${candidateCount} candidate(s) running in this position and only ${maxWinners} of them can
-      be elected.`;
+      return paragraphs.join(",");
     },
   },
 
   methods: {
     async resetTieBreaker() {
-      this.$accessor.system.showAppDialog({
-        show: true,
-        title: "Reset Tie Breaker",
-        message: "Are you sure to reset the tie breaker?",
-        button: {
-          anyEventHide: false,
-          yesFunction: async ({ hideDialog }) => {
-            hideDialog();
+      if (!this.electionInfo?.is_tally_public) {
+        this.$accessor.system.showAppDialog({
+          show: true,
+          title: "Reset Tie Breaker",
+          message: "Are you sure to reset the tie breaker?",
+          button: {
+            anyEventHide: false,
+            yesFunction: async ({ hideDialog }) => {
+              hideDialog();
 
-            this.$accessor.system.showAuthenticationDialog({
-              button: {
-                yesFunction: async () => {
-                  try {
-                    await this.$accessor.electionResult.resetTieBreaker(
-                      this.position.id
-                    );
+              this.$accessor.system.showAuthenticationDialog({
+                button: {
+                  yesFunction: async () => {
+                    try {
+                      await this.$accessor.electionResult.resetTieBreaker(
+                        this.position.id
+                      );
 
-                    this.$accessor.snackbar.set({
-                      show: true,
-                      message: `Position ${this.position.title} tie breaker reset`,
-                      timeout: 5000,
-                      color: "success",
-                    });
-                  } catch (error) {
-                    console.error(error);
+                      this.$accessor.snackbar.set({
+                        show: true,
+                        message: `Position ${this.position.title} tie breaker reset`,
+                        timeout: 5000,
+                        color: "success",
+                      });
+                    } catch (error) {
+                      console.error(error);
 
-                    this.$accessor.snackbar.set({
-                      show: true,
-                      message: `Can't reset position right now, Try again later.`,
-                      timeout: 5000,
-                      color: "error",
-                    });
-                  }
+                      this.$accessor.snackbar.set({
+                        show: true,
+                        message: `Can't reset position right now, Try again later.`,
+                        timeout: 5000,
+                        color: "error",
+                      });
+                    }
+                  },
                 },
-              },
-              type: "default",
-              message:
-                "The election officer must authenticate first before approving this action.",
-              allowedRole: "super-admin",
-              show: true,
-            });
+                type: "default",
+                message:
+                  "The election officer must authenticate first before approving this action.",
+                allowedRole: "super-admin",
+                show: true,
+              });
+            },
+            noFunction: ({ hideDialog }) => {
+              hideDialog();
+            },
           },
-          noFunction: ({ hideDialog }) => {
-            hideDialog();
+        });
+      } else {
+        this.$accessor.system.showAppDialog({
+          show: true,
+          title: "Set the election result to private",
+          message:
+            "To reset the tie breaker you must unpublish the result first.",
+          button: {
+            anyEventHide: false,
+            yesLabel: "Okay",
+            yesFunction: async ({ hideDialog }) => {
+              hideDialog();
+            },
+            noFunction: ({ hideDialog }) => {
+              hideDialog();
+            },
           },
-        },
-      });
+        });
+      }
     },
   },
 });
