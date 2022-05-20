@@ -30,11 +30,11 @@ module.exports = {
   ],
   migrations: [join(__dirname, ormPath, "migration", "**", "*.{js,ts}")],
   subscribers: [join(__dirname, ormPath, "subscriber", "**", "*.{js,ts}")],
-  // ssl: false,
-  ssl: {
-    require: true,
-    rejectUnauthorized: false,
-  },
+  ssl: false,
+  // ssl: {
+  //   require: true,
+  //   rejectUnauthorized: false,
+  // },
   cli: {
     entitiesDir: join(__dirname, ormPath, "entity"),
     migrationsDir: join(__dirname, ormPath, "migration"),

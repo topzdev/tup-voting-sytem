@@ -1,5 +1,5 @@
 import express from "express";
-import { voterAuth } from "../../middlewares/auth.middleware";
+import { adminAuth } from "../../middlewares/auth.middleware";
 import validate from "../../middlewares/validate.middleware";
 import resultsController from "./results.controller";
 import resultsValidator from "./results.validator";
@@ -9,31 +9,35 @@ console.log("module: Results Module Loaded");
 
 router.get(
   "/final-results/:election_id",
-  // voterAuth,
-  // // validate(resultsValidator.getElectionBySlug),
+  adminAuth,
   resultsController.getElectionResults
 );
 
 router.get(
   "/winners/:election_id",
-  // voterAuth,
-  // // validate(resultsValidator.getElectionBySlug),
+  adminAuth,
   resultsController.getElectionWinners
 );
 
 router.get(
   "/export-results/:election_id",
-  // voterAuth,
-  // // validate(resultsValidator.getElectionBySlug),
+  adminAuth,
   resultsController.downloadElectionResults
 );
 
 router.get(
   "/export-vote-audit/:election_id",
-  // voterAuth,
-  // // validate(resultsValidator.getElectionBySlug),
+  adminAuth,
   resultsController.downloadVoteAudit
 );
+
+router.post("/resolve-tie", adminAuth, resultsController.resolveTie);
+
+router.post("/reset-tie", adminAuth, resultsController.resetTie);
+
+router.post("/publish", adminAuth, resultsController.publishResult);
+
+router.post("/un-publish", adminAuth, resultsController.unPublishResult);
 
 const resultsRoute = router;
 

@@ -1,17 +1,20 @@
 <template>
   <client-only>
-    <vue-countdown
-      v-if="countdown"
-      :time="countdown.time"
-      :transform="transformSlotProps"
-      v-slot="{ days, hours, minutes, seconds }"
-    >
-      {{ countdown.text }} <b>{{ days }}</b
-      >d, <b>{{ hours }}</b
-      >h, <b> {{ minutes }}</b
-      >m, <b>{{ seconds }}</b
-      >s.
-    </vue-countdown>
+    <span>
+      <vue-countdown
+        v-if="countdown"
+        :time="countdown.time"
+        :transform="transformSlotProps"
+        v-slot="{ days, hours, minutes, seconds }"
+      >
+        {{ countdown.text }}
+        <b>{{ days }}</b
+        >d, <b>{{ hours }}</b
+        >h, <b> {{ minutes }}</b
+        >m, <b>{{ seconds }}</b
+        >s.
+      </vue-countdown>
+    </span>
   </client-only>
 </template>
 

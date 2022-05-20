@@ -41,15 +41,6 @@
   "PagesCandidatePageHeader": {
     "description": "Auto imported from components/pages/candidate/CandidatePageHeader.vue"
   },
-  "PagesElectionPageHeader": {
-    "description": "Auto imported from components/pages/election/ElectionPageHeader.vue"
-  },
-  "PagesElectionParty": {
-    "description": "Auto imported from components/pages/election/ElectionParty.vue"
-  },
-  "PagesElectionPositionCandidates": {
-    "description": "Auto imported from components/pages/election/ElectionPositionCandidates.vue"
-  },
   "PagesHomepageCarousel": {
     "description": "Auto imported from components/pages/homepage/HomepageCarousel.vue"
   },
@@ -58,6 +49,18 @@
   },
   "PagesPartyPositionCandidates": {
     "description": "Auto imported from components/pages/party/PartyPositionCandidates.vue"
+  },
+  "PagesElectionFinalTally": {
+    "description": "Auto imported from components/pages/election/ElectionFinalTally.vue"
+  },
+  "PagesElectionPageHeader": {
+    "description": "Auto imported from components/pages/election/ElectionPageHeader.vue"
+  },
+  "PagesElectionParty": {
+    "description": "Auto imported from components/pages/election/ElectionParty.vue"
+  },
+  "PagesElectionPositionCandidates": {
+    "description": "Auto imported from components/pages/election/ElectionPositionCandidates.vue"
   },
   "PagesPreRegisterHeader": {
     "description": "Auto imported from components/pages/pre-register/PreRegisterHeader.vue"
@@ -79,5 +82,8 @@
   },
   "PagesBallotDialogsCandidateDialog": {
     "description": "Auto imported from components/pages/ballot/dialogs/CandidateDialog.vue"
+  },
+  "PagesElectionListsTallyCandidateListItem": {
+    "description": "Auto imported from components/pages/election/lists/TallyCandidateListItem.vue"
   }
 }

@@ -4,7 +4,7 @@ import { Election, Organization } from "../types/app";
 const ballotMixins = Vue.extend({
   computed: {
     pagePath() {
-      return `/election/${this.$route.params.slug}/`;
+      return `/vote/${this.$route.params.slug}/`;
     },
 
     electionId(): Election["id"] | null {
@@ -67,14 +67,16 @@ const ballotMixins = Vue.extend({
       let rules: string[] = [];
 
       if (min_selected <= 0) {
-        rules.push("Voters <b>are not</b>required to select an option.");
+        rules.push("You are not required to select any canddiate(s)");
       } else {
         rules.push(
-          `Voters are required to select a <b>minimum of ${min_selected}</b> candidate option(s)`
+          `You are required to vote atleast <b>${min_selected}</b> candidate(s)`
         );
       }
 
-      rules.push(`Voter can select  <b>only ${max_selected}</b> option`);
+      rules.push(
+        `You are allowed to select up to ${max_selected} candidate(s)`
+      );
 
       return rules;
     },

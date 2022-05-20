@@ -5,6 +5,7 @@ import platformLinks, {
 import { HttpException } from "../../helpers/errors/http.exception";
 import { Election } from "../election/entity/election.entity";
 import { finalStatusSubquery } from "../launchpad/launchpad.helper";
+import overviewHelpers from "./overview.helpers";
 import { OverviewDetails } from "./overview.interface";
 
 const getElectionDetails = async (_election_id: number) => {
@@ -40,17 +41,7 @@ const getElectionDetails = async (_election_id: number) => {
 
   if (!election) throw new HttpException("BAD_REQUEST", "Election not exist");
 
-  const longUrl = platformLinks.voting(election.slug);
-  const preRegisterUrl = election.allow_pre_register
-    ? platformLinks.preRegister(election.slug)
-    : null;
-  const shortUrl = platformShortLinks.voting(election.id);
-
-  const urls = {
-    longUrl,
-    preRegisterUrl,
-    shortUrl,
-  };
+  const urls = overviewHelpers.generateElectionUrls(election);
 
   return { ...election, urls } as OverviewDetails;
 };

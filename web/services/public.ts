@@ -11,9 +11,36 @@ export type HomepageElections = {
 
 export type HomepageParties = Party[];
 
-type ElectionPageContent = Election & {
-  positions: Position[];
-  party: Party[];
+export type FinalTallyCandidate = Pick<
+  Candidate,
+  "id" | "party" | "profile_photo" | "firstname" | "lastname" | "middlename"
+> & {
+  winner: boolean;
+  votesCount: number;
+  candidateName: string;
+  votePercentage: number;
+};
+
+export type FinalTallyPositions = Pick<
+  Omit<Position, "candidates">,
+  | "id"
+  | "title"
+  | "max_selected"
+  | "min_selected"
+  | "is_tie_resolved"
+  | "tie_resolved_message"
+> & {
+  candidates: FinalTallyCandidate[];
+  totalVotes: number;
+};
+
+type ElectionPageContent = {
+  election: Election & {
+    positions: Position[];
+    party: Party[];
+  };
+
+  tally: FinalTallyPositions[];
 };
 
 type PartyPageContent = Party & {

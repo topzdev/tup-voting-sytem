@@ -24,7 +24,10 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { ElectionResult } from "@/services/results.service";
+import {
+  ElectionResult,
+  ResultPositionsWithWinner,
+} from "@/services/results.service";
 import WinnerCard from "@/components/pages/results/cards/WinnerCard.vue";
 export default Vue.extend({
   components: {
@@ -33,7 +36,7 @@ export default Vue.extend({
   props: {
     winners: {
       type: Array,
-    } as PropOptions<ElectionResult["winners"]>,
+    } as PropOptions<ResultPositionsWithWinner["winners"]>,
   },
 });
 </script>

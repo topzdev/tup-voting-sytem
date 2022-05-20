@@ -28,7 +28,7 @@
               inset
             ></v-switch>
           </v-col>
-
+          <!-- 
           <v-col cols="12">
             <label class="body-1 mb-0 text--primary" for="is_tally_public"
               >Show to the election final tally to public after election is
@@ -48,7 +48,7 @@
               @change="electionTallyPublicity"
               inset
             ></v-switch>
-          </v-col>
+          </v-col> -->
 
           <v-col cols="12" v-if="show.allow_pre_registration">
             <label class="body-1 mb-0 text--primary" for="pre_register"
@@ -75,8 +75,8 @@ import settingsServices from "@/services/settings.service";
 import mixins from "vue-typed-mixins";
 import PublicityIcon from "~/components/icon/PublicityIcon.vue";
 import { Election } from "@/services/election.service";
-import restrictionsMixin from "../../../../mixins/restrictions.mixin";
-import pageStatus from "../../../../configs/page-status.config";
+import restrictionsMixin from "@/mixins/restrictions.mixin";
+import pageStatus from "@/configs/page-status.config";
 const defaultAlert = {
   show: false,
   type: "",

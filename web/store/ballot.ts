@@ -26,8 +26,11 @@ export const state = () => ({
     id: 3,
   } as BallotReceipt | null,
   ballotErrors: [] as BallotError[],
+
+  // election: {} as any,
   election: null as Election | null,
   organization: null as Organization | null,
+  // items: [] as any[],
   items: [] as BallotItem[],
   candidate: null as Candidate | null,
   dialog: {
@@ -89,8 +92,6 @@ export const actions = actionTree(
     async fetchElection({ commit }, slug: string) {
       const result = await votingServices.getElectionBySlug(slug);
 
-      console.log(result);
-
       if (result.election) {
         commit("setElection", result.election);
         commit("setOrganization", result.election.organization);
@@ -103,6 +104,7 @@ export const actions = actionTree(
 
       try {
         const result = await votingServices.getBallot(state.election.id);
+
         commit("setBallotItems", result);
       } catch (err: any) {
         const error = err.response.data.error.message;
@@ -126,8 +128,6 @@ export const actions = actionTree(
           votes: ballotVote,
         });
 
-        console.log("Result", result);
-
         commit("setBallotReceipt", result);
       } catch (err: any) {
         const error = err.response.data.error.message;
@@ -147,26 +147,14 @@ export const actions = actionTree(
 
     async vote({ commit, state }, candidate: Candidate) {
       let current = state.votes;
-      console.log("-------");
-      console.log("Candidaite", candidate);
 
       if (
         !state.votes.filter((item) => {
-          console.log(
-            "Item",
-            item,
-            "ITEM ID: ",
-            item.id,
-            "CANDIDATE ID:",
-            candidate.id
-          );
           return item.id === candidate.id;
         }).length
       ) {
-        console.log("If");
         commit("setVote", [...state.votes, candidate]);
       } else {
-        console.log("Else");
         commit(
           "setVote",
           state.votes.filter((item) => item.id !== candidate.id)
@@ -179,36 +167,25 @@ export const actions = actionTree(
     async ballotErrorChecker({ commit, state }) {
       let ballotErrors: BallotError[] = [];
 
-      console.log("Error Checking..");
-
       state.items.forEach((_position) => {
         let errors: string[] = [];
 
         // get the count of current votes casted on specific position
 
-        console.log("Current Vote:", state.votes);
-
         let totalVotesOfPosition = state.votes.filter(
           (_vote) => _vote.position_id === _position.id
         ).length;
 
-        console.log(
-          "Total Votes: ",
-          totalVotesOfPosition,
-          "Min Selected: ",
-          _position.min_selected,
-
-          totalVotesOfPosition < _position.min_selected
-        );
-
         if (totalVotesOfPosition < _position.min_selected) {
           errors.push(
-            `Must select atleast ${_position.min_selected} candidates`
+            `You must select atleast ${_position.min_selected} candidates`
           );
         }
 
         if (totalVotesOfPosition > _position.max_selected) {
-          errors.push(`The max select is ${_position.max_selected} `);
+          errors.push(
+            `You can select up to ${_position.max_selected} candidates`
+          );
         }
 
         if (errors.length) {

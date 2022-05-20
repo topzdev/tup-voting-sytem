@@ -79,7 +79,12 @@ export default Vue.extend({
 
   computed: {
     ballotRuleText(): string {
-      return `You can select a <b>maximum of ${this.data.max_selected}</b> and a <b>minimum of ${this.data.min_selected}</b> candidate(s)`;
+      if (this.data.min_selected === 0) {
+        return `Vote for ${this.data.max_selected}`;
+      } else if (this.data.min_selected === this.data.max_selected) {
+        return `You are required to select ${this.data.min_selected} candidate(s)`;
+      }
+      return `You must select atleast ${this.data.min_selected} up to ${this.data.max_selected} candidates`;
     },
 
     selectedCounter(): string {
@@ -90,7 +95,7 @@ export default Vue.extend({
     },
 
     isMultiple(): any {
-      return this.data.min_selected > 1;
+      return this.data.max_selected > 1;
     },
 
     errorClass(): string {
@@ -114,8 +119,17 @@ export default Vue.extend({
     },
 
     vote(candidate: Candidate) {
+      console.log(
+        "IS MULTIPLE: ",
+        this.isMultiple,
+        "MAX SELECT: ",
+        this.data.max_selected,
+        "MIN SELECT",
+        this.data.min_selected
+      );
+
       if (this.isMultiple) {
-        if (this.selected.length >= this.data.min_selected) {
+        if (this.selected.length >= this.data.max_selected) {
           if (this.selected.find((item) => item.id === candidate.id)) {
             this.$accessor.ballot.vote(candidate);
           }

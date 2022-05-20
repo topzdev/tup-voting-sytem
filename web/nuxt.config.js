@@ -73,7 +73,7 @@ export default {
 
     axios: {
       // baseURL: "https://tup-voting-server-dev.herokuapp.com/",
-      baseURL: process.env.BASE_SERVER_URL || "http://localhost:5000",
+      baseURL: process.env.BASE_SERVER_URL,
       progress: true,
     },
   },

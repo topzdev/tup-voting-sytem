@@ -18,6 +18,8 @@ export type Position = {
   max_selected: number;
   min_selected: number;
   election: Election;
+  is_tie_resolved?: boolean;
+  tie_resolved_message?: string;
   display_order: number | null;
 } & DataTimestamp;
 

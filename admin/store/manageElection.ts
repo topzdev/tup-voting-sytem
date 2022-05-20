@@ -1,5 +1,8 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import electionServices, { Election } from "@/services/election.service";
+import electionServices, {
+  Election,
+  ElectionWithUrl,
+} from "@/services/election.service";
 import { Organization } from "../services/organization.service";
 const defaultSnackbar = {
   show: false,
@@ -9,7 +12,7 @@ const defaultSnackbar = {
 };
 
 export const state = () => ({
-  election: null as Election | null,
+  election: null as ElectionWithUrl | null,
   organization: null as Organization | null,
 });
 
@@ -22,7 +25,7 @@ export const mutations = mutationTree(state, {
   },
 });
 
-const _fetchElection = async (commit: any, id: any) => {
+const _fetchElection = async (commit: any, id: number) => {
   const result = await electionServices.getById(id);
 
   commit("setElection", result);
@@ -44,6 +47,10 @@ export const actions = actionTree(
 
     async reFetchElection({ commit }, id: number) {
       await _fetchElection(commit, id);
+    },
+
+    async refreshElection({ commit, state }) {
+      if (state.election) await _fetchElection(commit, state.election.id);
     },
   }
 );

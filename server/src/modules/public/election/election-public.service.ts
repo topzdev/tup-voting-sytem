@@ -4,6 +4,8 @@ import { HttpException } from "../../../helpers/errors/http.exception";
 import { Election } from "../../election/entity/election.entity";
 import { finalStatusSubquery } from "../../launchpad/launchpad.helper";
 import { Party } from "../../party/entity/party.entity";
+import resultHelpers from "../../results/results.helper";
+import { InitialPosition } from "../../results/results.interface";
 import { publicElectionWhereQuery } from "../homepage/homepage.helpers";
 
 const getElectionLongUrl = async (id: Election["id"]) => {
@@ -50,9 +52,9 @@ const getElectionContent = async (slug: string) => {
     .leftJoinAndSelect("election.positions", "positions")
     .leftJoinAndSelect("positions.candidates", "candidates")
     .leftJoinAndSelect("candidates.profile_photo", "candidates_profile_photo")
-    .leftJoinAndSelect("candidates.cover_photo", "candidates_cover_photo")
     .leftJoinAndSelect("candidates.party", "candidates_party")
     .leftJoinAndSelect("candidates_party.logo", "candidates_party_logo")
+    .loadRelationCountAndMap("candidates.votesCount", "candidates.votes")
     .leftJoinAndSelect("election.party", "party")
     .leftJoinAndSelect("party.logo", "party_logo")
     .leftJoinAndSelect("party.cover_photo", "party_cover_photo")
@@ -69,8 +71,24 @@ const getElectionContent = async (slug: string) => {
   const election = await electionBuilder.getOne();
 
   if (!election) throw new HttpException("NOT_FOUND", "Election not found");
+  const positions = election.positions as InitialPosition[];
 
-  return election;
+  if (
+    (election.final_status === "completed" ||
+      election.final_status === "archive") &&
+    election.is_tally_public
+  ) {
+    const tally = resultHelpers.getElectionFinalTally(positions);
+
+    return {
+      tally,
+      election,
+    };
+  } else {
+    return {
+      election,
+    };
+  }
 };
 
 const electionPublicServices = {

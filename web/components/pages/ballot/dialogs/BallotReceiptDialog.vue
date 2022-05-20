@@ -45,15 +45,6 @@
           </template>
         </v-simple-table>
       </v-card-text>
-      <v-card-actions class="text-center">
-        <v-btn
-          color="primary"
-          class="mx-auto"
-          @click="download"
-          :loading="loading"
-          >Download Ballot Receipt</v-btn
-        >
-      </v-card-actions>
 
       <v-divider></v-divider>
 

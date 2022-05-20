@@ -1,28 +1,19 @@
-import { validate } from "class-validator";
 import { Brackets, getRepository, Not } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
+import parseDate from "../../helpers/parse-date.helper";
 import photoUploader from "../../helpers/photo-uploader.helper";
+import { Candidate } from "../candidate/entity/candidate.entity";
+import { finalStatusSubquery } from "../launchpad/launchpad.helper";
+import { LaunchpadValidationData } from "../launchpad/launchpad.interface";
+import overviewHelpers from "../overview/overview.helpers";
 import { Photo } from "../photo/photo.service";
-import { Election } from "./entity/election.entity";
 import {
   CreateElectionBody,
   GetElectionBody,
   UpdateElectionBody,
 } from "./election.interface";
 import { ElectionLogo } from "./entity/election-logo.entity";
-import { Organization } from "../organization/entity/organization.entity";
-import { Candidate } from "../candidate/entity/candidate.entity";
-import parseDate from "../../helpers/parse-date.helper";
-import { finalStatusSubquery } from "../launchpad/launchpad.helper";
-import {
-  ElectionWithStatusFinal,
-  LaunchpadValidation,
-  LaunchpadValidationData,
-  LaunchpadValidations,
-} from "../launchpad/launchpad.interface";
-import { Position } from "../position/entity/position.entity";
-import { ElectionResults } from "../results/results.interface";
-
+import { Election } from "./entity/election.entity";
 const getAll = async (_orgId: string, _query: GetElectionBody) => {
   const electionRepository = getRepository(Election);
   const searchStirng = _query.search ? _query.search : "";
@@ -94,7 +85,7 @@ const getPublic = async (_orgId: string, _query: GetElectionBody) => {
     // .where("election.final_status = 'preview'")
     .where("election.is_public = false")
     .leftJoinAndSelect("election.logo", "logo");
-    
+
   if (searchStirng) {
     builder = builder.andWhere(
       new Brackets((sqb) => {
@@ -150,7 +141,6 @@ const getElectionWinners = async (_election_id: number) => {
   return await builder.getMany();
 };
 
-
 const getBySlug = async (_slug: string) => {
   if (!_slug)
     throw new HttpException("BAD_REQUEST", "Election slug is required");
@@ -182,7 +172,9 @@ const getBySlug = async (_slug: string) => {
   //   ],
   // });
 
-  return election || null;
+  const urls = overviewHelpers.generateElectionUrls(election);
+
+  return { ...election, urls } || null;
 };
 
 const isExistBySlug = async (_slug: string) => {
@@ -221,7 +213,9 @@ const getById = async (_election_id: string) => {
 
   // console.log(election);
 
-  return election || null;
+  const urls = overviewHelpers.generateElectionUrls(election);
+
+  return { ...election, urls } || null;
 };
 
 const create = async (_logo: Photo, _election: CreateElectionBody) => {
