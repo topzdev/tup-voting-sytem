@@ -153,7 +153,7 @@ const create = async (
   if (_coverPhoto) {
     uploadedCoverPhoto = await photoUploader.upload(
       "candidate_photos",
-      _profilePhoto.tempFilePath
+      _coverPhoto.tempFilePath
     );
 
     candidateCoverPhoto = CandidateCoverPhoto.create({

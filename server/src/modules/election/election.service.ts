@@ -220,20 +220,6 @@ const getById = async (_election_id: string) => {
 };
 
 const create = async (_logo: Photo, _election: CreateElectionBody) => {
-  if (!_election.slug) {
-    throw new HttpException("BAD_REQUEST", "Election slug is required");
-  }
-
-  const exist = await Election.findOne({
-    where: {
-      slug: _election.slug,
-    },
-  });
-
-  if (exist) {
-    throw new HttpException("BAD_REQUEST", "Slug is already taken");
-  }
-
   if (!_election.organization_id)
     throw new HttpException("BAD_REQUEST", "Organization is required");
 

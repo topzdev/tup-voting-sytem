@@ -8,20 +8,13 @@
       </v-col>
 
       <v-col align="center" cols="12">
-        <logo-uploader v-model="photoData" :url="form.logo.url" />
+        <logo-uploader
+          v-if="form.logo"
+          v-model="photoData"
+          :url="form.logo.url"
+        />
       </v-col>
 
-      <v-col cols="12">
-        <v-text-field
-          label="Slug *"
-          outlined
-          placeholder="ex. tup-org-2021-2022"
-          :prefix="baseURL"
-          v-model="form.slug"
-          :rules="rules.slug"
-          hide-details="auto"
-        ></v-text-field>
-      </v-col>
       <v-col cols="12">
         <v-text-field
           label="Title *"
@@ -96,7 +89,7 @@ const defaultForm = {
   ticker: "",
   themePrimary: "blue",
   themeSecondary: "red",
-  logo: null,
+  logo: null as any,
 };
 
 const defaultAlert = {
@@ -128,13 +121,8 @@ export default Vue.extend({
       const url = this.defaultData.logo.public_url || this.form.logo;
       return url;
     },
-    rules: function (): object {
+    rules: function (): any {
       return {
-        slug: [
-          (v: any) => !!v || "Slug is required",
-          (v: any) =>
-            /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.test(v) || "Slug must be valid",
-        ],
         title: [(v: any) => !!v || "Title is required"],
         ticker: [(v: any) => !!v || "Ticker is required"],
         themePrimary: [(v: any) => !!v || "Theme Primary is required"],

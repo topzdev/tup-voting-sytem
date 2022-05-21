@@ -4,6 +4,7 @@ import electionServices, {
   ElectionWithUrl,
 } from "@/services/election.service";
 import { Organization } from "../services/organization.service";
+import pageConfig from "../configs/pages.config";
 const defaultSnackbar = {
   show: false,
   message: "",
@@ -51,6 +52,16 @@ export const actions = actionTree(
 
     async refreshElection({ commit, state }) {
       if (state.election) await _fetchElection(commit, state.election.id);
+    },
+
+    async deleteElection({ commit, state }) {
+      const election = state.election;
+      const organization = state.organization;
+
+      if (!election || !organization) return;
+
+      const result = await electionServices.delete(election.id);
+      this.$router.push(pageConfig.organization().this(organization.id).route);
     },
   }
 );

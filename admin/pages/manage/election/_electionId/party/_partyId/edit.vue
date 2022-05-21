@@ -68,15 +68,31 @@ export default mixins(partyMixin).extend({
   methods: {
     async remove() {
       if (!this.partyId) return;
-      const result = await partyServices.delete(parseInt(this.partyId));
 
-      this.$accessor.snackbar.set({
+      this.$accessor.system.showAppDialog({
         show: true,
-        message: "Party Deleted",
-        timeout: 5000,
-        color: "success",
+        title: "Delete Party",
+        message: "Are you sure to delete this party?",
+        button: {
+          anyEventHide: false,
+          yesFunction: async ({ hideDialog }) => {
+            const result = await partyServices.delete(parseInt(this.partyId));
+
+            this.$accessor.snackbar.set({
+              show: true,
+              message: "Party Deleted",
+              timeout: 5000,
+              color: "success",
+            });
+            this.$router.back();
+
+            hideDialog();
+          },
+          noFunction: ({ hideDialog }) => {
+            hideDialog();
+          },
+        },
       });
-      this.$router.back();
     },
 
     async update(data: any) {

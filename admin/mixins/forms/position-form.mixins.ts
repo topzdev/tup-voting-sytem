@@ -4,7 +4,7 @@ const defaultForm = {
   title: "",
   description: "",
   max_selected: 1,
-  min_selected: 1,
+  min_selected: 0,
 };
 
 const defaultAlert = {
@@ -31,13 +31,13 @@ const positionFormMixin = Vue.extend({
         title: [(v: any) => !!v || "Title is required"],
         description: [(v: any) => !!v || "Description is required"],
         max_selected: [
-          (v: number) => !!v || "this is required",
-          (v: number) => v >= 1 || "Positive value only",
+          (v: string) => v !== "" || "This field is required",
+          (v: number) => v >= 0 || "Positive value only",
           (v: number) => this.form.max_selected <= 255 || "Maximum is 255",
         ],
         min_selected: [
-          (v: number) => !!v || "this is required",
-          (v: number) => v >= 1 || "Positive value only",
+          (v: string) => v !== "" || "This field is required",
+          (v: number) => v >= 0 || "Positive value only",
           (v: number) =>
             this.form.min_selected <= this.form.max_selected ||
             `You can select maximum of ${this.form.max_selected} `,

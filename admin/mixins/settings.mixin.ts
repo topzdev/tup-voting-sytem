@@ -9,6 +9,7 @@ export type SettingLink = {
   icon: string;
   title: string;
   to?: RouteConfig | string;
+  color?: string;
   route?: RouteConfig | string;
   status?: any[];
 };
@@ -58,6 +59,12 @@ const settingsMixin = mixins(manageElectionMixins).extend({
           to: this.archiveElectionRoute(),
           status: pageStatus.settings.archiveElection,
         },
+        ["delete-election"]: {
+          icon: "mdi-delete",
+          title: "Delete Election",
+          color: "red",
+          to: this.deleteElectionRoute(),
+        },
       };
     },
   },
@@ -84,6 +91,9 @@ const settingsMixin = mixins(manageElectionMixins).extend({
 
     publicityRoute() {
       return `${this.pagePath}publicity`;
+    },
+    deleteElectionRoute() {
+      return `${this.pagePath}delete-election`;
     },
   },
 });

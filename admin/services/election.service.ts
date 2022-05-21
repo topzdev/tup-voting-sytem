@@ -138,19 +138,19 @@ const electionServices = {
     ).data;
   },
 
-  async archive(id: string): Promise<boolean> {
+  async archive(id: Election["id"]): Promise<boolean> {
     return (await apiClient.put(`${url}/archive/${id}`)).data;
   },
 
-  async unarchive(id: string): Promise<boolean> {
+  async unarchive(id: Election["id"]): Promise<boolean> {
     return (await apiClient.put(`${url}/${id}`)).data;
   },
 
-  async restore(id: string): Promise<boolean> {
+  async restore(id: Election["id"]): Promise<boolean> {
     return (await apiClient.put(`${url}/restore/${id}`)).data;
   },
 
-  async delete(id: string): Promise<boolean> {
+  async delete(id: Election["id"]): Promise<boolean> {
     return (await apiClient.delete(`${url}/${id}`)).data;
   },
 };

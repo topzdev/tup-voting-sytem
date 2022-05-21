@@ -1,5 +1,5 @@
 <template>
-  <v-form disabled ref="form" v-model="valid">
+  <v-form ref="form" v-model="valid">
     <v-card outlined>
       <v-card-title> Archive Election </v-card-title>
       <v-divider></v-divider>

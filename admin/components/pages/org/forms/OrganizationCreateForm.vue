@@ -13,17 +13,6 @@
 
       <v-col cols="12">
         <v-text-field
-          label="Slug *"
-          outlined
-          placeholder="ex. tup-org-2021-2022"
-          :prefix="baseURL"
-          v-model="form.slug"
-          :rules="rules.slug"
-          hide-details="auto"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12">
-        <v-text-field
           label="Title *"
           outlined
           v-model="form.title"
@@ -87,7 +76,6 @@ import Vue from "vue";
 import ThemePicker from "@/components/pickers/ThemePicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
 import configs from "@/configs";
-import organizationApi from "@/services/organization.service";
 const defaultForm = {
   slug: "",
   title: "",
@@ -124,11 +112,6 @@ export default Vue.extend({
   computed: {
     rules() {
       return {
-        slug: [
-          (v: any) => !!v || "Slug is required",
-          (v: any) =>
-            /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.test(v) || "Slug must be valid",
-        ],
         title: [(v: any) => !!v || "Title is required"],
         ticker: [(v: any) => !!v || "Ticker is required"],
         themePrimary: [(v: any) => !!v || "Theme Primary is required"],

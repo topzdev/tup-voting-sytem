@@ -1,3 +1,4 @@
+import { Organization } from "../services/organization.service";
 import { RolesString } from "../types/roles";
 
 type PageConfigItem = {
@@ -52,9 +53,21 @@ const pageConfig = {
   },
   organization: () => {
     return {
-      this: () =>
+      this: (organization_id: Organization["id"]) =>
         ({
-          route: "/organization",
+          route: `/organization/${organization_id}`,
+          icon: "",
+        } as PageConfigItem),
+
+      edit: (organization_id: Organization["id"]) =>
+        ({
+          route: `/manage/organization/${organization_id}`,
+          icon: "",
+        } as PageConfigItem),
+
+      create: () =>
+        ({
+          route: `/manage/organization/create`,
           icon: "",
         } as PageConfigItem),
     };
