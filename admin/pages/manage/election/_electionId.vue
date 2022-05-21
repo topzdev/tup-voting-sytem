@@ -4,36 +4,55 @@
   <nuxt-child v-else />
 </template>
 
-<script>
+
+<script lang="ts">
+import Vue, { PropOptions } from "vue";
+import mixins from "vue-typed-mixins";
 import themeMixin from "~/mixins/theme.mixin";
-export default {
+import { Organization } from "@/services/organization.service";
+export default mixins(themeMixin).extend({
   auth: true,
   layout: "manage-election",
-  mixins: [themeMixin],
   middleware: ["status"],
-
   watch: {
-    ["$accessor.manageElection.organization"]: {
+    organization: {
       immediate: true,
-      deep: true,
       handler: function (value) {
-        console.log(value.theme);
-        this.changeTheme(value.theme);
+        this.updateTheme();
       },
     },
   },
   fetchOnServer: false,
 
+  methods: {
+    updateTheme() {
+      if (!this.organization) return;
+      this.changeTheme(this.organization.theme);
+    },
+  },
+
+  computed: {
+    organization(): Organization | null {
+      return this.$accessor.manageElection.organization;
+    },
+  },
+
   async fetch() {
     const id = this.$route.params.electionId;
     await this.$accessor.manageElection.fetchElection(parseInt(id));
+    this.updateTheme();
+  },
+
+  mounted() {
+    this.updateTheme();
   },
 
   destroyed() {
     this.changeTheme();
   },
-};
+});
 </script>
+
 
 <style>
 </style>

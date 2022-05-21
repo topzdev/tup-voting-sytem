@@ -16,12 +16,12 @@
           withBtn
         >
         </cover-photo-uploader>
-
+        <!-- 
         <v-checkbox
           style="position: absolute; bottom: 10; left: 10"
           v-model="form.use_party_cover_photo"
           label="Use Party Cover Photo"
-        ></v-checkbox>
+        ></v-checkbox> -->
       </v-col>
 
       <v-col class="d-flex" cols="12" style="margin-top: -150px">
@@ -179,7 +179,7 @@ import CoverPhotoUploader from "@/components/utils/CoverPhotoUploader.vue";
 import EditorField from "@/components/input/EditorField.vue";
 import candidateFormMixin from "@/mixins/forms/candidate-form.mixin";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
-import { Candidate } from "../../../../services/candidate.service";
+import { Candidate } from "@/services/candidate.service";
 
 export default mixins(candidateFormMixin, manageElectionMixins).extend({
   props: {

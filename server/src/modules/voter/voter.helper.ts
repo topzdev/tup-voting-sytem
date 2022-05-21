@@ -45,3 +45,23 @@ export const voterPinParser = (possbileHashedPin: string) => {
     return possbileHashedPin;
   }
 };
+
+export const findDuplicate = (array: any[]) => {
+  const duplicateEmailAddress = [];
+
+  const tempArray = array.sort((a, b) => a.localeCompare(b));
+
+  for (let i = 0; i < tempArray.length; i++) {
+    if (tempArray[i + 1] === tempArray[i]) {
+      duplicateEmailAddress.push(tempArray[i]);
+    }
+  }
+
+  return duplicateEmailAddress;
+};
+
+const voterHelpers = {
+  findDuplicate,
+};
+
+export default voterHelpers;

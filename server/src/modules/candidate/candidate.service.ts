@@ -322,7 +322,9 @@ const update = async (
     toUpdateProfilePhoto.id,
     toUpdateProfilePhoto
   );
-  await CandidateCoverPhoto.update(toUpdateCoverPhoto.id, toUpdateCoverPhoto);
+  if (toUpdateCoverPhoto) {
+    await CandidateCoverPhoto.update(toUpdateCoverPhoto.id, toUpdateCoverPhoto);
+  }
   await CandidateSocials.update(toUpdateSocials.id, toUpdateSocials);
   await Candidate.update(_candidate.id, toUpdateCandidate);
   return true;

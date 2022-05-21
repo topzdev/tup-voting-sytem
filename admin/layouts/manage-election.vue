@@ -122,7 +122,7 @@ export default mixins(manageElectionMixins).extend({
   },
 
   computed: {
-    appBarTitle() {
+    appBarTitle(): string {
       if (!this.electionInfo) return "Manage Election";
 
       const electionTitle = this.electionInfo.title;

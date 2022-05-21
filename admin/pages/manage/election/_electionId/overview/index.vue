@@ -1,6 +1,22 @@
 <template>
   <span>
-    <page-bars :title="toolbarTitle"> </page-bars>
+    <page-bars :title="toolbarTitle">
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            class="ml-auto"
+            icon
+            text
+            v-bind="attrs"
+            @click="fetchOverview"
+            v-on="on"
+          >
+            <v-icon> mdi-refresh </v-icon></v-btn
+          >
+        </template>
+        <span>Refresh</span>
+      </v-tooltip>
+    </page-bars>
 
     <v-container>
       <v-row>
@@ -73,11 +89,15 @@ export default mixins(manageElectionMixins).extend({
     },
   },
 
+  methods: {
+    async fetchOverview() {
+      this.details = await overviewServices.getDetails(this.electionId);
+    },
+  },
   async fetch() {
     try {
       if (!this.electionId) return;
-
-      this.details = await overviewServices.getDetails(this.electionId);
+      await this.fetchOverview();
     } catch (error) {}
   },
 });

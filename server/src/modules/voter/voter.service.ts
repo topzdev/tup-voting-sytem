@@ -11,7 +11,10 @@ import { Election } from "../election/entity/election.entity";
 import { Organization } from "../organization/entity/organization.entity";
 import { Photo } from "../photo/photo.service";
 import { Voter } from "./entity/voter.entity";
-import { exportCSVDetailedError, generateCredentials } from "./voter.helper";
+import voterHelpers, {
+  exportCSVDetailedError,
+  generateCredentials,
+} from "./voter.helper";
 import {
   AllowVotersDto,
   CreateVoterBody,
@@ -457,10 +460,22 @@ const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
       `column missing/mismatch (${columnDiffs.join(",")})`
     );
 
+  const duplicateEmailAddress = voterHelpers.findDuplicate(
+    csvData.map((item) => item.email_address)
+  );
+
+  if (duplicateEmailAddress.length) {
+    throw new HttpException(
+      "BAD_REQUEST",
+      `Some of email address has duplicates. Those email addresses are: [${duplicateEmailAddress.join(
+        ", "
+      )}]`
+    );
+  }
   console.log("Default Column", columns, "Columns", dataColumns);
 
   // adding organization_id to voters info
-  const parsedVoter: any = csvData.map((item) => {
+  const parsedVoter: any[] = csvData.map((item) => {
     const { pin, voter_id } = generateCredentials();
 
     return {
@@ -470,8 +485,6 @@ const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
       election_id: _dto.election_id,
     };
   });
-
-  console.log("Parsed Voter", parsedVoter);
 
   const voterRepository = getRepository(Voter);
 

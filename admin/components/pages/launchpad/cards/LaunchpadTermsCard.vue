@@ -89,7 +89,6 @@ export default mixins(overviewMixin).extend({
     next: Function,
     back: Function,
     election: Object as PropOptions<Election>,
-    electionId: Number,
   },
 
   data() {
