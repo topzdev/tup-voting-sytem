@@ -15,7 +15,6 @@ const loginAttemptsRecorder = async (user: User) => {
   const currentAttemps = user.failed_login_attempts + 1;
   const warningAttempts = 3;
   const maxAttempts = configs.security.login_max_attempts;
-
   user.failed_login_attempts = currentAttemps;
   user.failed_login_time = new Date();
   user.save();
@@ -56,6 +55,7 @@ const loginSuccessGuard = async (user: User) => {
 const verifyOtpSuccessGuard = async (user: User) => {
   user.last_loggedin_time = new Date();
   user.login_otp = null;
+  user.last_login_otp_time = null;
   user.last_resend_otp_time = null;
 
   await user.save();
@@ -85,6 +85,12 @@ const adminValidateRecaptcha = async (token: string) => {
   try {
     const response = await axios.post(
       `https://www.google.com/recaptcha/api/siteverify?secret=${configs.recaptcha.admin_secret_key}&response=${token}`
+    );
+
+    console.log(
+      "Captach response",
+      response,
+      configs.recaptcha.admin_secret_key
     );
 
     return response.data.success;

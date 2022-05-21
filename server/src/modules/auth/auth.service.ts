@@ -1,25 +1,24 @@
-import {
-  AdminLoginCredentials,
-  DisabledError,
-  ResendAdminLoginOTP,
-  SystemLoginCredentials,
-  VerfiyAdminLoginOTP,
-  VoterLoginCredentials,
-} from "./auth.inteface";
+import dayjs from "dayjs";
 import { getRepository } from "typeorm";
-import { User } from "../user/entity/user.entity";
-import { validatePassword, validatePin } from "../../helpers/password.helper";
+import configs from "../../configs";
 import { HttpException } from "../../helpers/errors/http.exception";
 import {
   signJwtAdminPayload,
   signJwtVoterPayload,
 } from "../../helpers/jwt.helper";
-import { Voter } from "../voter/entity/voter.entity";
-import authHelpers, { generateOTP } from "./auth.helpers";
-import configs from "../../configs";
-import securityServices from "../security/security.service";
+import { validatePassword, validatePin } from "../../helpers/password.helper";
 import mailerServices from "../mailer/mailer.service";
-import dayjs from "dayjs";
+import securityServices from "../security/security.service";
+import { User } from "../user/entity/user.entity";
+import { Voter } from "../voter/entity/voter.entity";
+import { generateOTP } from "./auth.helpers";
+import {
+  AdminLoginCredentials,
+  ResendAdminLoginOTP,
+  SystemLoginCredentials,
+  VerfiyAdminLoginOTP,
+  VoterLoginCredentials,
+} from "./auth.inteface";
 
 const otp_resend_interval = configs.security.otp_resend_interval;
 
@@ -81,6 +80,7 @@ const adminLogin = async (_credentials: AdminLoginCredentials) => {
   }
 
   user.login_otp = generateOTP();
+  user.last_login_otp_time = new Date();
 
   await user.save();
 
@@ -133,6 +133,7 @@ const verifyAdminLoginOTP = async (dto: VerfiyAdminLoginOTP) => {
       "user.failed_login_time",
       "user.last_loggedin_time",
       "user.login_otp",
+      "user.last_login_otp_time",
     ])
     .where("user.id = :user_id", { user_id: dto.user_id })
     .getOne();
@@ -146,6 +147,21 @@ const verifyAdminLoginOTP = async (dto: VerfiyAdminLoginOTP) => {
       "BAD_REQUEST",
       "Please login first, before verifying OTP"
     );
+
+  const otpTimeDifference = dayjs().diff(
+    dayjs(user.last_login_otp_time),
+    "second"
+  );
+  const otpExpirationSeconds = configs.security.otp_expiration_seconds;
+
+  console.log("OTP TIME DIFF: ", otpTimeDifference, otpExpirationSeconds);
+
+  if (otpTimeDifference > otpExpirationSeconds) {
+    throw new HttpException(
+      "BAD_REQUEST",
+      "OTP expired, Please resend new otp"
+    );
+  }
 
   if (dto.otp !== user.login_otp) {
     await securityServices.loginAttemptsRecorder(user);
@@ -199,6 +215,7 @@ const resendAdminLoginOTP = async (dto: ResendAdminLoginOTP) => {
   }
 
   user.login_otp = generateOTP();
+  user.last_login_otp_time = new Date();
   user.last_resend_otp_time = new Date();
 
   await user.save();

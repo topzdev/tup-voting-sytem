@@ -76,5 +76,11 @@ export class User extends Timestamp {
     type: "timestamptz",
     nullable: true,
   })
+  last_login_otp_time: Date;
+
+  @Column({
+    type: "timestamptz",
+    nullable: true,
+  })
   last_resend_otp_time: Date;
 }

@@ -26,11 +26,11 @@
   "ChipsPartyChip": {
     "description": "Auto imported from components/chips/PartyChip.vue"
   },
-  "FormsLoginForm": {
-    "description": "Auto imported from components/forms/LoginForm.vue"
-  },
   "InputsPasswordField": {
     "description": "Auto imported from components/inputs/PasswordField.vue"
+  },
+  "FormsLoginForm": {
+    "description": "Auto imported from components/forms/LoginForm.vue"
   },
   "UtilsPageCenter": {
     "description": "Auto imported from components/utils/PageCenter.vue"
@@ -40,15 +40,6 @@
   },
   "PagesCandidatePageHeader": {
     "description": "Auto imported from components/pages/candidate/CandidatePageHeader.vue"
-  },
-  "PagesHomepageCarousel": {
-    "description": "Auto imported from components/pages/homepage/HomepageCarousel.vue"
-  },
-  "PagesPartyPageHeader": {
-    "description": "Auto imported from components/pages/party/PartyPageHeader.vue"
-  },
-  "PagesPartyPositionCandidates": {
-    "description": "Auto imported from components/pages/party/PartyPositionCandidates.vue"
   },
   "PagesElectionFinalTally": {
     "description": "Auto imported from components/pages/election/ElectionFinalTally.vue"
@@ -61,6 +52,15 @@
   },
   "PagesElectionPositionCandidates": {
     "description": "Auto imported from components/pages/election/ElectionPositionCandidates.vue"
+  },
+  "PagesHomepageCarousel": {
+    "description": "Auto imported from components/pages/homepage/HomepageCarousel.vue"
+  },
+  "PagesPartyPageHeader": {
+    "description": "Auto imported from components/pages/party/PartyPageHeader.vue"
+  },
+  "PagesPartyPositionCandidates": {
+    "description": "Auto imported from components/pages/party/PartyPositionCandidates.vue"
   },
   "PagesPreRegisterHeader": {
     "description": "Auto imported from components/pages/pre-register/PreRegisterHeader.vue"

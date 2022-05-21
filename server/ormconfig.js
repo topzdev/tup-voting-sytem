@@ -30,7 +30,7 @@ module.exports = {
   migrations: [join(__dirname, ormPath, "migration", "**", "*.{js,ts}")],
   subscribers: [join(__dirname, ormPath, "subscriber", "**", "*.{js,ts}")],
   // ssl: false,
-  ssl: Boolean(process.env.DATABASE_SSL)
+  ssl: Boolean(Number(process.env.DATABASE_SSL))
     ? {
         require: true,
         rejectUnauthorized: false,
