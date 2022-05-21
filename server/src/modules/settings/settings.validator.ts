@@ -30,10 +30,10 @@ const validations = {
     .withMessage("Is Public is required"),
 };
 
-const { slug, title, close_date, start_date, is_public, is_tally_public } =
+const { title, close_date, start_date, is_public, is_tally_public } =
   validations;
 
-const updateGeneral = [slug, title];
+const updateGeneral = [title];
 const updateDate = [start_date, close_date];
 
 const settingsValidator = {

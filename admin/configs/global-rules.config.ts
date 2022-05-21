@@ -1,18 +1,24 @@
 const globalRules = {
   start_date(close_date: any) {
     return [
-      (v: any) => !!v || "Start Date is required",
-      (v: any) =>
-        new Date(v) < new Date(close_date) ||
-        "Starting date must be past of Close date",
+      (v: Date) => !!v || "Start Date is required",
+      (v: Date) => !!v || "Start Date is required",
+      (v: Date) =>
+        new Date(v).getTime() > new Date().getTime() ||
+        "Starting date must advance from the current date.",
+      (v: Date) =>
+        new Date(v).getTime() < new Date(close_date).getTime() ||
+        "Starting date must be past of election closing date.",
     ];
   },
-  close_date: [
-    (v: any) => !!v || "Close date is required",
-    (v: any) =>
-      new Date(v) > new Date() ||
-      "Close date must be more than the current date",
-  ],
+  close_date(start_date: any) {
+    return [
+      (v: Date) => !!v || "Close date is required",
+      (v: Date) =>
+        new Date(v).getTime() >= new Date(start_date).getTime() ||
+        "Closing date must be over starting date, give some allowance to have running phase.",
+    ];
+  },
 
   slug: [
     (v: any) => !!v || "Slug is required",

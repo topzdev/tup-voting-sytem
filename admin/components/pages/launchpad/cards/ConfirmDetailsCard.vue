@@ -106,11 +106,7 @@
               <td>
                 <p class="body-1 mb-0" v-text="details.slug"></p>
               </td>
-              <td class="text-right">
-                <v-btn icon :to="generalRoute()" target="_blank">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-              </td>
+              <td class="text-right"></td>
             </tr>
 
             <tr>

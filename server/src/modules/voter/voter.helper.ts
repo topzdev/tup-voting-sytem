@@ -26,10 +26,9 @@ export const exportCSVDetailedError = (error: any) => {
   }
 };
 
-const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const nanoid = customAlphabet(alphabet, 10);
-
 export const generateCredentials = () => {
+  const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const nanoid = customAlphabet(alphabet, 10);
   const pin = encryptPin(nanoid());
   return {
     pin,

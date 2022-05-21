@@ -7,6 +7,7 @@ import { finalStatusSubquery } from "../launchpad/launchpad.helper";
 import { LaunchpadValidationData } from "../launchpad/launchpad.interface";
 import overviewHelpers from "../overview/overview.helpers";
 import { Photo } from "../photo/photo.service";
+import electionHelper from "./election.helper";
 import {
   CreateElectionBody,
   GetElectionBody,
@@ -251,7 +252,7 @@ const create = async (_logo: Photo, _election: CreateElectionBody) => {
   const election = Election.create({
     title: _election.title,
     description: _election.description,
-    slug: _election.slug,
+    slug: electionHelper.generateElectionSlug(),
     start_date: parseDate(_election.start_date),
     close_date: parseDate(_election.close_date),
     organization_id: _election.organization_id,
@@ -276,28 +277,6 @@ const update = async (_logo: Photo, _election: UpdateElectionBody) => {
 
   if (!curElection) {
     throw new HttpException("NOT_FOUND", "Election not found");
-  }
-
-  let toUpdateSlug = curElection.slug;
-
-  console.log("Prev:", curElection, "Passed:", _election);
-
-  // Check if slug is different from previous record of slug
-  if (curElection.slug !== _election.slug) {
-    //find if slug exist on other organization
-    const slugExist = await Election.findOne({
-      where: {
-        id: Not(curElection.id),
-        slug: _election.slug,
-      },
-    });
-
-    // if slug exist on other organization then return an error
-    if (slugExist) {
-      throw new HttpException("BAD_REQUEST", "Election slug has been used");
-    }
-
-    toUpdateSlug = _election.slug;
   }
 
   // check if organization is not empty
@@ -337,7 +316,6 @@ const update = async (_logo: Photo, _election: UpdateElectionBody) => {
     description: _election.description,
     start_date: parseDate(_election.start_date),
     close_date: parseDate(_election.close_date),
-    slug: toUpdateSlug,
     logo: toUpdateLogo,
   });
 

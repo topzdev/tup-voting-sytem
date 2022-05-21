@@ -21,7 +21,7 @@
               :withBtn="true"
             />
           </v-col>
-
+          <!-- 
           <v-col cols="12" class="mb-3">
             <v-text-field
               label="Slug *"
@@ -33,7 +33,7 @@
               :disabled="disabled.slug"
               hide-details="auto"
             ></v-text-field>
-          </v-col>
+          </v-col> -->
 
           <v-col cols="12" class="mb-3">
             <v-text-field
