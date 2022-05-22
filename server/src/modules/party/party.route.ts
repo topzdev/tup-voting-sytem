@@ -8,12 +8,7 @@ const router = express.Router();
 
 console.log("module: Party Module Loaded");
 
-router.get(
-  "/",
-  adminAuth,
-  rolesAllowed("SUPER_ADMIN"),
-  partyController.getAll
-);
+router.get("/", adminAuth, rolesAllowed("SUPER_ADMIN"), partyController.getAll);
 
 router.get("/:id", adminAuth, partyController.getOneById);
 
@@ -68,6 +63,12 @@ router.put(
   partyController.unarchive
 );
 
+router.post(
+  "/position-avail",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  partyController.checkPositionAvailability
+);
 const partyRoute = router;
 
 export default partyRoute;

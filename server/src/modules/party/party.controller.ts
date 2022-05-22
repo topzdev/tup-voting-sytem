@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import fileUpload from "express-fileupload";
-import { CreatePartyBody, GetPartyBody, UpdatePartyBody } from "./party.interface";
+import {
+  CreatePartyBody,
+  GetPartyBody,
+  UpdatePartyBody,
+} from "./party.interface";
 import partyService from "./party.service";
 import { unflatten } from "flat";
 
@@ -109,6 +113,20 @@ const unarchive = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const checkPositionAvailability = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const partyId = req.body.party_id;
+
+    res.status(200).json(await partyService.checkPositionAvailability(partyId));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const partyController = {
   getAll,
   getOneById,
@@ -118,6 +136,7 @@ const partyController = {
   restore,
   archive,
   unarchive,
+  checkPositionAvailability,
 };
 
 export default partyController;
