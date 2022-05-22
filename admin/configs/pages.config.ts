@@ -1,3 +1,4 @@
+import { Election } from "../services/election.service";
 import { Organization } from "../services/organization.service";
 import { RolesString } from "../types/roles";
 
@@ -51,6 +52,15 @@ const pageConfig = {
         } as PageConfigItem),
     };
   },
+
+  overview: () => {
+    return {
+      this: (election_id: Election["id"]) => {
+        return `/manage/election/${election_id}/overview/`;
+      },
+    };
+  },
+
   organization: () => {
     return {
       this: (organization_id: Organization["id"]) =>

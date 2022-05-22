@@ -20,7 +20,13 @@
                   outlined
                 ></v-text-field>
               </v-col>
-              <v-col> </v-col>
+              <v-col cols="auto" class="ml-auto">
+                <v-checkbox
+                  class="ml-auto"
+                  v-model="list.withArchive"
+                  label="Show Archived"
+                ></v-checkbox>
+              </v-col>
             </v-row>
           </v-col>
 
@@ -74,6 +80,7 @@ export default mixins(orgMixin, authMixin).extend({
         loading: true,
         items: [] as Election[],
         search: "",
+        withArchive: false,
         pagination: {
           page: 1,
           perPage: 10,
@@ -94,7 +101,7 @@ export default mixins(orgMixin, authMixin).extend({
       try {
         const result = await electionServices.getAll(this.organizationId, {
           search: this.list.search,
-          withArchive: true,
+          withArchive: this.list.withArchive,
         });
 
         this.list.items = result.items;
@@ -108,9 +115,13 @@ export default mixins(orgMixin, authMixin).extend({
   },
 
   watch: {
+    ["list.withArchive"]: debounce(async function () {
+      // @ts-ignore
+      this.fetchItems();
+    }, 500),
     ["list.search"]: debounce(async function () {
       // @ts-ignore
-      await this.fetchItems();
+      this.fetchItems();
     }, 500),
   },
 });

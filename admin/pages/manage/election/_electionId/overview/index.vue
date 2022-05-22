@@ -91,6 +91,7 @@ export default mixins(manageElectionMixins).extend({
 
   methods: {
     async fetchOverview() {
+      if (!this.electionId) return;
       this.details = await overviewServices.getDetails(this.electionId);
     },
   },

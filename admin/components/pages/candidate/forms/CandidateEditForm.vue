@@ -96,6 +96,7 @@
           </v-col>
 
           <v-col cols="12">
+            <label class="body-2 mb-1 d-flex" for="platform">Platform *</label>
             <editor-field
               label="Platform *"
               outlined
