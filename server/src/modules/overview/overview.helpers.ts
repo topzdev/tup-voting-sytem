@@ -6,7 +6,9 @@ import { ElectionUrls } from "./overview.interface";
 
 const generateElectionUrls = (election: Election): ElectionUrls => {
   const votingLongUrl = platformLinks.voting(election.slug);
-  const electionUrl = platformLinks.election(election.slug);
+  const electionUrl = election.is_public
+    ? platformLinks.election(election.slug)
+    : null;
   const preRegisterUrl = election.allow_pre_register
     ? platformLinks.preRegister(election.slug)
     : null;

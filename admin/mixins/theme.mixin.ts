@@ -2,6 +2,7 @@ import Vue from "vue";
 import colors from "vuetify/es5/util/colors";
 import { Colors } from "vuetify/lib/util/colors";
 import systemColors, { SystemColors } from "@/configs/system-colors.config";
+import { Organization } from "../services/organization.service";
 
 type AppTheme = {
   primary: SystemColors;
@@ -10,7 +11,7 @@ type AppTheme = {
 
 const themeMixin = Vue.extend({
   methods: {
-    changeTheme(theme?: AppTheme) {
+    changeTheme(theme?: Organization["theme"]) {
       const currentTheme = this.$vuetify.theme.themes;
 
       const defaultPrimary = colors.blue.darken2;

@@ -2,7 +2,7 @@
   <v-form ref="form" v-model="valid">
     <v-row>
       <v-col v-if="alert.show" cols="12">
-        <v-alert :type="alert.type">
+        <v-alert :type="alert.type" dismissible>
           {{ alert.message }}
         </v-alert>
       </v-col>
@@ -11,17 +11,6 @@
         <logo-uploader v-model="form.logo" />
       </v-col>
 
-      <v-col cols="12">
-        <v-text-field
-          label="Slug *"
-          outlined
-          placeholder="ex. tup-org-2021-2022"
-          :prefix="baseURL"
-          v-model="form.slug"
-          :rules="rules.slug"
-          hide-details="auto"
-        ></v-text-field>
-      </v-col>
       <v-col cols="12">
         <v-text-field
           label="Title *"
@@ -78,13 +67,19 @@ import DateTimePicker from "@/components/pickers/DateTimePicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
 import configs from "@/configs";
 import organizationApi from "@/services/organization.service";
-import globalRules from "../../../../configs/global-rules.config";
+import globalRules from "@/configs/global-rules.config";
+
+const getNextDay = (day: number) => {
+  var today = new Date();
+  var tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000 * day);
+  return tomorrow;
+};
+
 const defaultForm = {
-  slug: "",
   title: "",
   description: "",
-  start_date: new Date(),
-  close_date: new Date(),
+  start_date: getNextDay(1),
+  close_date: getNextDay(2),
   logo: null,
 };
 
@@ -117,7 +112,7 @@ export default Vue.extend({
         slug: globalRules.slug,
         title: [(v: any) => !!v || "Title is required"],
         start_date: globalRules.start_date(this.form.close_date),
-        close_date: globalRules.close_date,
+        close_date: globalRules.close_date(this.form.start_date),
       };
     },
   },
@@ -125,14 +120,13 @@ export default Vue.extend({
   methods: {
     async submit() {
       if (!this.form.logo) {
-        this.alert = {
+        return (this.alert = {
           show: true,
           type: "error",
           message: "Logo is required",
-        };
-
-        return;
+        });
       }
+
       this.loading = true;
 
       (this.$refs as any).form.validate();

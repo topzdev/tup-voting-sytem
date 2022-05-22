@@ -13,9 +13,9 @@
         <h1 class="display-2 font-weight-bold text--primary mx-auto mb-4">
           Thank you for voting!
         </h1>
-        <v-btn color="primary" large class="mt-2 mb-2" @click="show = true">
+        <!-- <v-btn color="primary" large class="mt-2 mb-2" @click="show = true">
           View Ballot Receipt
-        </v-btn>
+        </v-btn> -->
         <v-btn text color="primary" width="200" large @click="ballotLogout">
           Logout
         </v-btn>
@@ -38,12 +38,14 @@ import PageCenter from "@/components/utils/PageCenter.vue";
 import BallotReceiptDialog from "@/components/pages/ballot/dialogs/BallotReceiptDialog.vue";
 import mixins from "vue-typed-mixins";
 import ballotMixins from "@/mixins/ballot.mixins";
+import pageRoutes from "@/configs/page-routes";
 export default mixins(ballotMixins).extend({
   validate({ $accessor, route, redirect }) {
+    const slug = route.params.slug;
     if (!$accessor.ballot.votes.length) {
-      redirect(`/election/${route.params.slug}/ballot`);
+      redirect(pageRoutes.ballotMain(slug));
     } else if (!$accessor.ballot.ballotReceipt) {
-      redirect(`/election/${route.params.slug}/review`);
+      redirect(pageRoutes.ballotReview(slug));
     }
     return true;
   },
@@ -51,7 +53,7 @@ export default mixins(ballotMixins).extend({
   components: { AppImage, PageCenter, BallotReceiptDialog },
   data() {
     return {
-      show: false,
+      show: true,
     };
   },
 });

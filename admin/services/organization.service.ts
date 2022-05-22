@@ -119,19 +119,19 @@ const organizationServices = {
     ).data;
   },
 
-  async archive(id: string) {
+  async archive(id: Organization["id"]) {
     return (await apiClient.put(`${url}/archive/${id}`)).data;
   },
 
-  async unarchive(id: string) {
+  async unarchive(id: Organization["id"]) {
     return (await apiClient.put(`${url}/${id}`)).data;
   },
 
-  async restore(id: string) {
+  async restore(id: Organization["id"]) {
     return (await apiClient.put(`${url}/restore/${id}`)).data;
   },
 
-  async delete(id: string) {
+  async delete(id: Organization["id"]) {
     return (await apiClient.delete(`${url}/${id}`)).data;
   },
 };

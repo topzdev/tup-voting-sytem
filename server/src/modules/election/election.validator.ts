@@ -28,11 +28,10 @@ const validations = {
     .withMessage("Start Date is required"),
 };
 
-const { id, slug, title, organization_id, close_date, start_date } =
-  validations;
+const { id, title, organization_id, close_date, start_date } = validations;
 
-const create = [slug, title, organization_id, close_date, start_date];
-const update = [id, slug, title, close_date, start_date, organization_id];
+const create = [title, organization_id, close_date, start_date];
+const update = [id, title, close_date, start_date, organization_id];
 
 const electionValidator = {
   create,

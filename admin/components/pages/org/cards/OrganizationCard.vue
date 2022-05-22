@@ -16,12 +16,6 @@
           </p>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <v-btn
-            color="warning"
-            text
-            :to="`/manage/organization/${data.id}/edit`"
-            >Edit</v-btn
-          >
           <v-btn color="primary" text :to="`/organization/${data.id}`"
             >View</v-btn
           >

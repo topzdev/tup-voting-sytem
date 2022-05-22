@@ -4,13 +4,13 @@ const pageStatus = {
   launchpad: ["building"],
   results: ["completed", "archived"],
   party: {
-    create: ["building"],
-    edit: ["building"],
+    create: ["building", "preview"],
+    edit: ["building", "preview"],
   },
   voters: {
-    create: ["building"],
-    edit: ["building"],
-    import: ["building"],
+    create: ["building", "preview"],
+    edit: ["building", "preview"],
+    import: ["building", "preview"],
     export: ["building", "running", "completed", "archived"],
 
     table: {
@@ -19,13 +19,13 @@ const pageStatus = {
     },
   },
   positions: {
-    create: ["building"],
-    edit: ["building"],
-    arrange: ["building", "running"],
+    create: ["building", "preview"],
+    edit: ["building", "preview"],
+    arrange: ["building", "preview", "running"],
   },
   candidate: {
-    create: ["building"],
-    edit: ["building"],
+    create: ["building", "preview"],
+    edit: ["building", "preview"],
   },
   settings: {
     closeElection: ["running"],

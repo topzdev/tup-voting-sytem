@@ -6,6 +6,7 @@ import { Photo } from "../photo/photo.service";
 import { OrganizationLogo } from "./entity/organization-logo.entity";
 import { OrganizationTheme } from "./entity/organization-theme.entity";
 import { Organization } from "./entity/organization.entity";
+import organizationHelper from "./organization.helper";
 import {
   CreateOrganizationParams,
   GetOrganizationParams,
@@ -104,20 +105,6 @@ const create = async (
   _logo: Photo,
   _organization: CreateOrganizationParams
 ) => {
-  if (!_organization.slug) {
-    throw new HttpException("BAD_REQUEST", "Organization slug is required");
-  }
-
-  const exist = await Organization.findOne({
-    where: {
-      slug: _organization.slug,
-    },
-  });
-
-  if (exist) {
-    throw new HttpException("BAD_REQUEST", "Slug is already taken");
-  }
-
   const uploadedLogo = await photoUploader.upload(
     "org_photos",
     _logo.tempFilePath
@@ -137,7 +124,7 @@ const create = async (
   await organizationTheme.save();
 
   const organization = Organization.create({
-    slug: _organization.slug,
+    slug: organizationHelper.generateOrganizationSlug(),
     title: _organization.title,
     description: _organization.description,
     ticker: _organization.ticker,
@@ -166,28 +153,6 @@ const update = async (
 
   if (!curOrganization) {
     throw new HttpException("NOT_FOUND", "Organization not found");
-  }
-
-  let toUpdateSlug = curOrganization.slug;
-
-  console.log("Prev:", curOrganization, "Passed:", _organization);
-
-  // Check if slug is different from previous record of slug
-  if (curOrganization.slug !== _organization.slug) {
-    //find if slug exist on other organization
-    const slugExist = await Organization.findOne({
-      where: {
-        id: Not(curOrganization.id),
-        slug: _organization.slug,
-      },
-    });
-
-    // if slug exist on other organization then return an error
-    if (slugExist) {
-      throw new HttpException("BAD_REQUEST", "Organization slug has been used");
-    }
-
-    toUpdateSlug = _organization.slug;
   }
 
   let toUpdateLogo = curOrganization.logo;
@@ -244,7 +209,6 @@ const update = async (
     title: _organization.title,
     description: _organization.description,
     ticker: _organization.ticker,
-    slug: toUpdateSlug,
     logo: toUpdateLogo,
     theme: toUpdateTheme,
   });

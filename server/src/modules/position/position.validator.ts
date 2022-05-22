@@ -11,18 +11,10 @@ const validations = {
   title: body("title").notEmpty().withMessage("Title is required"),
   min_selected: body("min_selected")
     .notEmpty()
-    .withMessage("Minimum selected is required")
-    .isInt({
-      gt: 0,
-    })
-    .withMessage("minimum selected should be greater than 0"),
+    .withMessage("Minimum selected is required"),
   max_selected: body("max_selected")
     .notEmpty()
-    .withMessage("Maximum selected is required")
-    .isInt({
-      gt: 0,
-    })
-    .withMessage("maximum selected should be greater than 0"),
+    .withMessage("Maximum selected is required"),
 };
 
 const { id, title, max_selected, min_selected } = validations;

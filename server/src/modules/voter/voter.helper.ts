@@ -26,10 +26,9 @@ export const exportCSVDetailedError = (error: any) => {
   }
 };
 
-const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const nanoid = customAlphabet(alphabet, 10);
-
 export const generateCredentials = () => {
+  const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const nanoid = customAlphabet(alphabet, 10);
   const pin = encryptPin(nanoid());
   return {
     pin,
@@ -46,3 +45,23 @@ export const voterPinParser = (possbileHashedPin: string) => {
     return possbileHashedPin;
   }
 };
+
+export const findDuplicate = (array: any[]) => {
+  const duplicateEmailAddress = [];
+
+  const tempArray = array.sort((a, b) => a.localeCompare(b));
+
+  for (let i = 0; i < tempArray.length; i++) {
+    if (tempArray[i + 1] === tempArray[i]) {
+      duplicateEmailAddress.push(tempArray[i]);
+    }
+  }
+
+  return duplicateEmailAddress;
+};
+
+const voterHelpers = {
+  findDuplicate,
+};
+
+export default voterHelpers;

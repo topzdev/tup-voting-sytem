@@ -15,6 +15,7 @@ import {
   AdminLoginOTPTemplate,
   ElectionHasEndedTemplate,
   ElectionHasLaunchedTemplate,
+  PregistrationApprovedTemplate,
   ThankYouForVotingContextTemplate,
   VoterCredentialsContextTemplate,
 } from "./mailer.interface";
@@ -285,12 +286,34 @@ const sendAdminLoginOTP = async (data: AdminLoginOTPTemplate) => {
   return message;
 };
 
+const sendPreRegisterApproved = async (
+  data: PregistrationApprovedTemplate[]
+) => {
+  const messages: NewSendMailOptions<PregistrationApprovedTemplate>[] =
+    data.map((item) => ({
+      ...emailTemplates.preRegisterApproved,
+      to: item.email_address,
+      context: {
+        email_address: item.email_address,
+        title: emailTemplates.preRegisterApproved.title(item.title),
+        firstname: item.firstname,
+        lastname: item.lastname,
+        election_title: item.title,
+      },
+    }));
+
+  sendBulkMail(messages);
+
+  return messages;
+};
+
 const mailerServices = {
   sendVotersCredentialsEmail,
   sendThankYouForVotingEmail,
   sendElectionHasLaunched,
   sendElectionHasEnded,
   sendAdminLoginOTP,
+  sendPreRegisterApproved,
 };
 
 export default mailerServices;

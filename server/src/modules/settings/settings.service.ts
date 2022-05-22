@@ -50,28 +50,6 @@ const updateGeneral = async (
     );
   }
 
-  let toUpdateSlug = election.slug;
-
-  console.log("Prev:", election, "Passed:", election.slug);
-
-  // Check if slug is different from previous record of slug
-  if (election.slug !== _election.slug) {
-    //find if slug exist on other organization
-    const slugExist = await Election.findOne({
-      where: {
-        id: Not(_election.id),
-        slug: _election.slug,
-      },
-    });
-
-    // if slug exist on other organization then return an error
-    if (slugExist) {
-      throw new HttpException("BAD_REQUEST", "Election slug has been used");
-    }
-
-    toUpdateSlug = _election.slug;
-  }
-
   let toUpdateLogo = election.logo;
 
   if (_logo && _logo.tempFilePath) {
@@ -104,7 +82,6 @@ const updateGeneral = async (
   const toUpdateElection = Election.merge(election, {
     title: _election.title,
     description: _election.description,
-    slug: toUpdateSlug,
     logo: toUpdateLogo,
   });
 

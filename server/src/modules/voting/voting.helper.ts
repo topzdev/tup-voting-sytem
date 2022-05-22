@@ -41,13 +41,8 @@ export const generateBallotError = (election: Election) => {
   if (!election || election.final_status === "building") {
     error = VOTING_MESSAGES.electionNotFound;
     // check if election is running
-  } else if (election.final_status === "running") {
-    // check if the start date is past with the current date
-    if (new Date().getTime() <= new Date(election.start_date).getTime()) {
-      error = VOTING_MESSAGES.electionNotStarted;
-    }
-
-    // check if the election is completed or close
+  } else if (election.final_status === "preview") {
+    error = VOTING_MESSAGES.electionNotStarted;
   } else if (
     election.final_status === "completed" ||
     election.final_status === "archived"

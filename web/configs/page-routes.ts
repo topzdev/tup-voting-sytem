@@ -14,6 +14,12 @@ const pageRoutes = {
   preRegister: (slug: string) => {
     return `/pre-register?election=${slug}`;
   },
+  ballotMain: (slug: string) => {
+    return `/vote/${slug}/ballot`;
+  },
+  ballotReview: (slug: string) => {
+    return `/vote/${slug}/review`;
+  },
 };
 
 export default pageRoutes;

@@ -1,6 +1,18 @@
 <template>
   <span>
-    <page-bars back title="Edit Organization"> </page-bars>
+    <page-bars back title="Edit Organization">
+      <v-btn
+        v-if="defaultData"
+        large
+        text
+        color="error"
+        class="ml-auto"
+        @click="dialogs.delete = true"
+      >
+        <v-icon class="mr-1">mdi-delete</v-icon>
+        Delete</v-btn
+      >
+    </page-bars>
 
     <account-container>
       <v-col class="mx-auto text-center" md="6">
@@ -13,6 +25,11 @@
         />
       </v-col>
     </account-container>
+    <delete-organization-dialog
+      v-if="defaultData"
+      :organization="defaultData"
+      :dialog.sync="dialogs.delete"
+    />
   </span>
 </template>
 
@@ -23,7 +40,8 @@ import organizationServices from "@/services/organization.service";
 import Vue from "vue";
 import OrganizationCreateForm from "~/components/pages/org/forms/OrganizationCreateForm.vue";
 import OrganizationEditForm from "~/components/pages/org/forms/OrganizationEditForm.vue";
-import orgMixin from "../../../../mixins/org.mixins";
+import DeleteOrganizationDialog from "~/components/pages/org/dialogs/DeleteOrganizationDialog.vue";
+import orgMixin from "@/mixins/org.mixins";
 
 export default Vue.extend({
   auth: true,
@@ -32,10 +50,14 @@ export default Vue.extend({
     PageBars,
     AccountContainer,
     OrganizationCreateForm,
+    DeleteOrganizationDialog,
     OrganizationEditForm,
   },
   data() {
     return {
+      dialogs: {
+        delete: false,
+      },
       defaultData: null,
     };
   },

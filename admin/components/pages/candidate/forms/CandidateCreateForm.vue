@@ -21,11 +21,11 @@
         >
         </cover-photo-uploader>
 
-        <v-checkbox
+        <!-- <v-checkbox
           style="position: absolute; bottom: 10; left: 10"
           v-model="form.use_party_cover_photo"
           label="Use Party Cover Photo"
-        ></v-checkbox>
+        ></v-checkbox> -->
       </v-col>
 
       <v-col class="d-flex" cols="12" style="margin-top: -150px">
@@ -84,6 +84,7 @@
               v-model="form.position_id"
               :rules="rules.position_id"
               :electionId="electionId"
+              :disabled="disablePosition"
             ></position-picker>
           </v-col>
 
@@ -222,6 +223,12 @@ export default mixins(manageElectionMixins, candidateFormMixin).extend({
         }
       }
       this.loading = false;
+    },
+  },
+
+  computed: {
+    disablePosition(): boolean {
+      return this.form.party_id === "";
     },
   },
 });

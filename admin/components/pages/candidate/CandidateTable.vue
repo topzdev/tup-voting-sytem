@@ -70,7 +70,7 @@
                     <v-icon> mdi-pencil </v-icon>
                   </v-btn>
                 </template>
-                <span>Edit Voter</span>
+                <span>Edit Candidate</span>
               </v-tooltip>
             </template>
             <template v-slot:item.position="{ item }">
@@ -100,8 +100,15 @@ import candidateMixin from "@/mixins/candidate.mixin";
 import PositionPicker from "@/components/pickers/PositionPicker.vue";
 import PartyPicker from "@/components/pickers/PartyPicker.vue";
 import PartyChip from "@/components/chips/PartyChip.vue";
+import pageStatus from "../../../configs/page-status.config";
+import { statusOnlyAllowed } from "@/helpers/isAllowedByStatus.helper";
+import restrictionsMixins from "@/mixins/restrictions.mixin";
 
-export default mixins(manageElectionMixins, candidateMixin).extend({
+export default mixins(
+  manageElectionMixins,
+  candidateMixin,
+  restrictionsMixins
+).extend({
   components: {
     CandidateCard,
     CandidateEmpty,
@@ -135,6 +142,7 @@ export default mixins(manageElectionMixins, candidateMixin).extend({
           {
             text: "Action",
             value: "actions",
+            status: pageStatus.candidate.edit,
           },
         ],
         items: [] as Candidate[],

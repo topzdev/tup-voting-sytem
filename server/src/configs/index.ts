@@ -1,16 +1,7 @@
 import path, { join } from "path";
 import { __prod__ } from "../constant";
 
-require("dotenv").config(
-  !__prod__
-    ? { path: path.resolve(process.cwd(), "development.env") }
-    : undefined
-);
-
-console.log(
-  "config loaded at: ",
-  path.resolve(path.resolve(process.cwd(), process.env.NODE_ENV + ".env"))
-);
+require("dotenv").config();
 
 console.log("------------");
 console.log("is development? ", !__prod__);
@@ -99,6 +90,8 @@ const configs = {
   security: {
     login_max_attempts: parseInt(process.env.LOGIN_MAX_ATTEMPTS),
     otp_resend_interval: parseInt(process.env.OTP_RESEND_INTERVAL),
+    otp_expiration_seconds: parseInt(process.env.OTP_EXPIRATION_SECONDS),
+    // otp_expiration_seconds: 20,
   },
 
   recaptcha: {

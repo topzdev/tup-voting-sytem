@@ -1,5 +1,6 @@
 import { Brackets, getManager, getRepository } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
+import { Candidate } from "../candidate/entity/candidate.entity";
 import { Position } from "./entity/position.entity";
 import {
   CreatePositionBody,
@@ -149,6 +150,20 @@ const remove = async (_id: string) => {
   }
 
   const position = await Position.findOne(_id);
+
+  const candidates = await Candidate.find({
+    where: {
+      position_id: _id,
+    },
+    select: ["id"],
+  });
+
+  if (candidates.length) {
+    throw new HttpException(
+      "BAD_REQUEST",
+      "You cannot delete this, because some candidates depends on it"
+    );
+  }
 
   if (!position) {
     throw new HttpException("NOT_FOUND", "Position not found");

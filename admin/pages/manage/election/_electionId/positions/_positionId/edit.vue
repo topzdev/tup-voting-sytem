@@ -50,7 +50,13 @@ import PositionEditForm from "@/components/pages/positions/forms/PositionEditFor
 import positionServices from "@/services/position.service";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import pageStatus from "@/configs/page-status.config";
+
 export default mixins(manageElectionMixins, positionMixins).extend({
+  data() {
+    return {
+      defaultData: null as any,
+    };
+  },
   meta: {
     status: pageStatus.positions.edit,
   },
@@ -76,15 +82,45 @@ export default mixins(manageElectionMixins, positionMixins).extend({
   methods: {
     async remove() {
       if (!this.electionId) return;
-      const result = await positionServices.delete(this.positionId);
 
-      this.$accessor.snackbar.set({
+      this.$accessor.system.showAppDialog({
         show: true,
-        message: "Position Deleted",
-        timeout: 5000,
-        color: "success",
+        title: "Delete Position",
+        message: "Are you sure to delete this position?",
+        button: {
+          anyEventHide: false,
+          yesFunction: async ({ hideDialog }) => {
+            try {
+              const result = await positionServices.delete(this.positionId);
+
+              this.$accessor.snackbar.set({
+                show: true,
+                message: "Position Deleted",
+                timeout: 5000,
+                color: "success",
+              });
+              this.$router.back();
+            } catch (error: any) {
+              const message =
+                error.response?.data?.error?.message || error.message;
+
+              if (message) {
+                this.$accessor.snackbar.set({
+                  show: true,
+                  message: message,
+                  timeout: 5000,
+                  color: "error",
+                });
+              }
+            } finally {
+              hideDialog();
+            }
+          },
+          noFunction: ({ hideDialog }) => {
+            hideDialog();
+          },
+        },
       });
-      this.$router.back();
     },
 
     async update(data: any) {
@@ -103,12 +139,6 @@ export default mixins(manageElectionMixins, positionMixins).extend({
       this.$router.back();
     },
   },
-  data() {
-    return {
-      defaultData: null as any,
-    };
-  },
-
   fetchOnServer: false,
   async fetch() {
     try {

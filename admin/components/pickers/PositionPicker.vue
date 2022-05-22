@@ -1,5 +1,6 @@
 <template>
   <v-select
+    :disabled="disabled"
     :loading="loading"
     item-text="title"
     item-value="id"
@@ -58,6 +59,10 @@ export default Vue.extend({
       type: Array,
     },
 
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     label: {
       type: String,
       default: "",

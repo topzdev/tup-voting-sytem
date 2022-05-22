@@ -23,6 +23,7 @@ const getElectionDetails = async (_election_id: number) => {
       "election.status",
       "election.archive",
       "election.final_status",
+      "election.is_public",
       "election.allow_pre_register",
     ])
     .addSelect(finalStatusSubquery(builder.alias))

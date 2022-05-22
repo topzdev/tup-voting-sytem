@@ -12,9 +12,21 @@
 
         <v-card-text class="body-1">
           <v-row>
+            <v-col cols="12" v-if="electionUrl">
+              <v-text-field
+                label="Election Preview"
+                outlined
+                readonly
+                :value="electionUrl"
+                :append-icon="icons.clipboard"
+                @click:append="copyClipboard(electionUrl)"
+                hide-details="auto"
+              ></v-text-field>
+            </v-col>
+
             <v-col cols="12">
               <v-text-field
-                label="Voting Link"
+                label="Voting"
                 outlined
                 readonly
                 :value="longUrl"
@@ -23,7 +35,7 @@
                 hide-details="auto"
               ></v-text-field>
             </v-col>
-
+            <!-- 
             <v-col cols="12">
               <v-text-field
                 label="Voting Short Link"
@@ -31,14 +43,14 @@
                 readonly
                 :value="shortUrl"
                 :append-icon="icons.clipboard"
-                @click:append="copyClipboard(longUrl)"
+                @click:append="copyClipboard(shortUrl)"
                 hide-details="auto"
               ></v-text-field>
-            </v-col>
+            </v-col> -->
 
             <v-col cols="12" v-if="preRegisterUrl">
               <v-text-field
-                label="Pre-Registration Link"
+                label="Pre-Registration"
                 outlined
                 readonly
                 :value="preRegisterUrl"
@@ -85,12 +97,17 @@ export default Vue.extend({
       if (!this.urls) return "";
       return this.urls.preRegisterUrl;
     },
+    electionUrl(): string | undefined {
+      if (!this.urls) return "";
+      return this.urls.electionUrl;
+    },
   },
 
   methods: {
-    copyClipboard(url: string) {
+    copyClipboard(url: string | undefined) {
       const self = this;
 
+      if (!url) return;
       navigator.clipboard.writeText(url).then(function () {
         self.$accessor.snackbar.show({
           show: true,

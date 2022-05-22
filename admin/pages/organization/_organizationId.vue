@@ -6,9 +6,14 @@
       :title="pageBarTitle"
       :logo="pageBarLogo"
     >
-      <v-btn color="primary" class="ml-auto" :to="createPage" large
-        >New Election</v-btn
+      <v-btn
+        class="ml-auto mr-2"
+        text
+        large
+        :to="`/manage/organization/${organizationId}/edit`"
+        >Manage</v-btn
       >
+      <v-btn color="primary" :to="createPage" large>New Election</v-btn>
     </page-bars>
     <account-container>
       <election-list />
@@ -30,6 +35,7 @@ import organizationServices, {
   Organization,
 } from "@/services/organization.service";
 import mixins from "vue-typed-mixins";
+import pageConfig from "../../configs/pages.config";
 
 export default mixins(orgMixins, authMixins).extend({
   auth: true,
@@ -55,6 +61,10 @@ export default mixins(orgMixins, authMixins).extend({
   },
 
   computed: {
+    organizationEditRoute(): string {
+      return pageConfig.organization().this(this.organizationId).route;
+    },
+
     pageBarTitle(): string {
       if (!this.organization) return "Elections";
       return `${this.organization.ticker} Elections`;

@@ -72,7 +72,9 @@ import dayjs from "dayjs";
 import Vue, { PropOptions } from "vue";
 import mixins from "vue-typed-mixins";
 import overviewMixin from "@/mixins/overview.mixins";
-import { Election } from "../../../../services/election.service";
+import pageConfig from "@/configs/pages.config";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
+import { Election } from "@/services/election.service";
 
 const defaultAlert = {
   show: false,
@@ -80,7 +82,7 @@ const defaultAlert = {
   message: "",
 };
 
-export default mixins(overviewMixin).extend({
+export default mixins(manageElectionMixins).extend({
   components: {
     AppImage,
   },
@@ -89,7 +91,6 @@ export default mixins(overviewMixin).extend({
     next: Function,
     back: Function,
     election: Object as PropOptions<Election>,
-    electionId: Number,
   },
 
   data() {
@@ -127,7 +128,7 @@ export default mixins(overviewMixin).extend({
         button: {
           anyEventHide: false,
           yesFunction: async ({ hideDialog }) => {
-            if (!this.valid) return;
+            if (!this.valid || !this.electionId) return;
             this.loading = true;
 
             try {
@@ -146,7 +147,7 @@ export default mixins(overviewMixin).extend({
                 color: "success",
               });
 
-              this.$router.push(this.overviewPage());
+              this.$router.push(pageConfig.overview().this(this.electionId));
             } catch (error: any) {
               const message =
                 error.response?.data?.error?.message || error.message;

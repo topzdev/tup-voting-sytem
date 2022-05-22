@@ -21,8 +21,8 @@ const validations = {
 
 const { id, slug, title, ticker } = validations;
 
-const create = [slug, title, ticker];
-const update = [id, slug, title, ticker];
+const create = [title, ticker];
+const update = [id, , title, ticker];
 
 const organizationValidator = {
   create,

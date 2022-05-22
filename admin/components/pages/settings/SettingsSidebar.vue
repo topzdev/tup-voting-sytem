@@ -8,6 +8,7 @@
           :to="item.to"
           link
           replace
+          :color="item.color"
         >
           <v-list-item-icon>
             <v-icon v-text="item.icon"></v-icon>
@@ -22,7 +23,6 @@
 </template>
 
 <script lang="ts">
-import { RouteConfig } from "@nuxt/types/config/router";
 import Vue, { PropOptions } from "vue";
 import mixins from "vue-typed-mixins";
 import { statusOnlyAllowed } from "@/helpers/isAllowedByStatus.helper";
