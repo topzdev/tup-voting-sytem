@@ -5,7 +5,7 @@ const globalRules = {
       (v: Date) => !!v || "Start Date is required",
       (v: Date) =>
         new Date(v).getTime() > new Date().getTime() ||
-        "Starting date must advance from the current date.",
+        "Starting date must ahead from the current date.",
       (v: Date) =>
         new Date(v).getTime() < new Date(close_date).getTime() ||
         "Starting date must be past of election closing date.",

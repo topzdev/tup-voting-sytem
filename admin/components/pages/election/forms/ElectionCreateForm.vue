@@ -67,12 +67,19 @@ import DateTimePicker from "@/components/pickers/DateTimePicker.vue";
 import LogoUploader from "@/components/utils/LogoUploader.vue";
 import configs from "@/configs";
 import organizationApi from "@/services/organization.service";
-import globalRules from "../../../../configs/global-rules.config";
+import globalRules from "@/configs/global-rules.config";
+
+const getNextDay = (day: number) => {
+  var today = new Date();
+  var tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000 * day);
+  return tomorrow;
+};
+
 const defaultForm = {
   title: "",
   description: "",
-  start_date: new Date(),
-  close_date: new Date(new Date().getTime() + 30000),
+  start_date: getNextDay(1),
+  close_date: getNextDay(2),
   logo: null,
 };
 

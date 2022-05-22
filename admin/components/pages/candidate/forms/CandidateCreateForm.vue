@@ -84,6 +84,7 @@
               v-model="form.position_id"
               :rules="rules.position_id"
               :electionId="electionId"
+              :disabled="disablePosition"
             ></position-picker>
           </v-col>
 
@@ -222,6 +223,12 @@ export default mixins(manageElectionMixins, candidateFormMixin).extend({
         }
       }
       this.loading = false;
+    },
+  },
+
+  computed: {
+    disablePosition(): boolean {
+      return this.form.party_id === "";
     },
   },
 });
