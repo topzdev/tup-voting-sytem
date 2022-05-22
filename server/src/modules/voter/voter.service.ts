@@ -28,6 +28,7 @@ import {
   UpdateVoterBody,
 } from "./voter.interface";
 import { genHashedPassword } from "../../helpers/password.helper";
+import mailerServices from "../mailer/mailer.service";
 
 /*  
 !IMPORTANT
@@ -208,9 +209,16 @@ const grantPreRegister = async (
     throw new HttpException("BAD_REQUEST", "Voter id's is required");
 
   const voterRepository = getRepository(Voter);
+  const electionRepository = getRepository(Election);
 
-  const voters = await voterRepository
-    .createQueryBuilder("voter")
+  const electionBuilder = electionRepository.createQueryBuilder("election");
+  const voterBuilder = voterRepository.createQueryBuilder("voter");
+
+  const election = await electionBuilder.where({ id: _election_id }).getOne();
+
+  if (!_election_id) throw new HttpException("NOT_FOUND", "Election not found");
+
+  const save = await voterBuilder
     .update()
     .set({
       is_pre_register: false,
@@ -219,6 +227,23 @@ const grantPreRegister = async (
       id: In(_voters_ids),
     })
     .execute();
+
+  const voters = await voterBuilder
+    .where({
+      id: In(_voters_ids),
+    })
+    .getMany();
+
+  console.log(voters);
+
+  await mailerServices.sendPreRegisterApproved(
+    voters.map((item) => ({
+      email_address: item.email_address,
+      firstname: item.firstname,
+      lastname: item.lastname,
+      title: election.title,
+    }))
+  );
 
   return true;
 };

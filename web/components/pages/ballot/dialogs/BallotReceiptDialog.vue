@@ -2,6 +2,9 @@
   <v-dialog v-model="showLocal" width="500">
     <v-card>
       <v-card-title> Ballot Receipt </v-card-title>
+      <v-card-subtitle class="pt-1 pb-0 mb-1"
+        >This receipt will vanish after {{ timer }} seconds</v-card-subtitle
+      >
 
       <v-card-text class="pb-0">
         <v-simple-table
@@ -10,13 +13,13 @@
           style="user-select: none; pointer-event: none"
         >
           <template v-slot:default>
-            <thead>
+            <!-- <thead>
               <tr>
                 <th class="text-center py-2 primary white--text">
                   <h2>Ballot Receipt</h2>
                 </th>
               </tr>
-            </thead>
+            </thead> -->
 
             <tbody>
               <tr>
@@ -71,6 +74,7 @@ export default Vue.extend({
       loading: false,
       showLocal: this.show,
       receiptImage: "",
+      timer: 30,
     };
   },
 
@@ -80,6 +84,19 @@ export default Vue.extend({
     },
     showLocal(value): any {
       this.$emit("update:show", value);
+    },
+
+    timer: {
+      handler(value) {
+        if (value !== 0) {
+          setTimeout(() => {
+            this.timer--;
+          }, 1000);
+        } else {
+          this.showLocal = false;
+        }
+      },
+      immediate: true,
     },
   },
 

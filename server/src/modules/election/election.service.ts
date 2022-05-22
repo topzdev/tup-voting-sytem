@@ -18,7 +18,7 @@ import { Election } from "./entity/election.entity";
 const getAll = async (_orgId: string, _query: GetElectionBody) => {
   const electionRepository = getRepository(Election);
   const searchStirng = _query.search ? _query.search : "";
-
+  const withArchive = _query.withArchive ? _query.withArchive : "";
   if (!_orgId) {
     throw new HttpException("BAD_REQUEST", "Organization Id is required");
   }
@@ -40,6 +40,12 @@ const getAll = async (_orgId: string, _query: GetElectionBody) => {
         });
       })
     );
+  }
+
+  if (!withArchive) {
+    builder = builder.andWhere("election.archive = :withArchive", {
+      withArchive: false,
+    });
   }
 
   builder = builder.orderBy({
