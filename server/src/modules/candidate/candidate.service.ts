@@ -8,10 +8,13 @@ import {
 import { HttpException } from "../../helpers/errors/http.exception";
 import parseDate from "../../helpers/parse-date.helper";
 import photoUploader from "../../helpers/photo-uploader.helper";
+import { Party } from "../party/entity/party.entity";
 import { Photo } from "../photo/photo.service";
+import { Position } from "../position/entity/position.entity";
 import {
   CreateCandidateBody,
   GetCandidateBody,
+  PositionAvailabilityDTO,
   UpdateCandidateBody,
 } from "./candidate.interface";
 import { CandidateCoverPhoto } from "./entity/candidate-cover-photo.entity";
@@ -210,6 +213,14 @@ const update = async (
 
   if (!_candidate.id) {
     throw new HttpException("BAD_REQUEST", "Candidate ID is required");
+  }
+
+  if (_candidate.party_id) {
+    await checkPositionAvailability({
+      party_id: _candidate.party_id,
+      position_id: _candidate.position_id,
+      exceptCandidate: _candidate.id,
+    });
   }
 
   const curCandidate = await Candidate.findOne(_candidate.id, {
@@ -434,6 +445,62 @@ const importCandidatesFromCSV = async (_candidateCSV: File) => {
   return data;
 };
 
+const checkPositionAvailability = async (dto: PositionAvailabilityDTO) => {
+  const party_id = dto.party_id;
+  const position_id = dto.position_id;
+  const exceptCandidate = dto.exceptCandidate;
+
+  if (!party_id || !position_id) {
+  }
+  const candidateBuilder =
+    getRepository(Candidate).createQueryBuilder("candidate");
+  const positionBuillder =
+    getRepository(Position).createQueryBuilder("position");
+  const partyBuilder = getRepository(Party).createQueryBuilder("party");
+
+  const party = await partyBuilder
+    .where("party.id = :party_id", { party_id })
+    .getOne();
+
+  const position = await positionBuillder
+    .where("position.id = :position_id", {
+      position_id,
+    })
+    .getOne();
+
+  let candidatesPartial = candidateBuilder
+    .addSelect(["candidate.id"])
+    .where(
+      "candidate.party_id = :party_id AND candidate.position_id = :position_id",
+      {
+        position_id,
+        party_id,
+      }
+    );
+
+  if (exceptCandidate) {
+    candidatesPartial = candidatesPartial.andWhere(
+      "candidate.id != :exceptCandidate",
+      {
+        exceptCandidate,
+      }
+    );
+  }
+
+  let candidates = await candidatesPartial.getMany();
+
+  console.log("Position", position, "Candidates", candidates);
+
+  if (candidates.length >= position.max_selected) {
+    throw new HttpException(
+      "BAD_REQUEST",
+      `No available slot for ${position.title} in party "${party.title}"`
+    );
+  } else {
+    return true;
+  }
+};
+
 const candidateServices = {
   getAll,
   getById,
@@ -445,6 +512,7 @@ const candidateServices = {
   unarchive,
   importCandidatesFromCSV,
   exportCandidatesToCSV,
+  checkPositionAvailability,
 };
 
 export default candidateServices;

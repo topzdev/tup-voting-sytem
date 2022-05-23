@@ -126,7 +126,7 @@ export default mixins(authMixin).extend({
   },
 
   computed: {
-    topItems() {
+    topItems(): any[] {
       const user = this.$auth.user;
 
       return [

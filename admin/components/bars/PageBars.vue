@@ -49,7 +49,7 @@ export default Vue.extend({
   props: {
     title: String,
     back: Boolean,
-    backTo: String,
+    backTo: [String, Function],
     logo: [Object, String],
     backTooltip: String,
     cols: {
@@ -66,7 +66,12 @@ export default Vue.extend({
       if (this.back) {
         return this.$router.back();
       }
-      this.$router.push(this.backTo);
+
+      if (typeof this.backTo === "string") {
+        this.$router.push(this.backTo);
+      } else if (typeof this.backTo === "function") {
+        this.backTo();
+      }
     },
   },
 

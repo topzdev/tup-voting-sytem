@@ -10,18 +10,10 @@ export interface GetPartyBody {
 
 export type CreatePartyBody = Pick<
   Party,
-  | "ticker"
-  | "title"
-  | "description"
-  | "election_id"
+  "ticker" | "title" | "description" | "election_id"
 >;
 
-export type UpdatePartyBody
- = Pick<
+export type UpdatePartyBody = Pick<
   Party,
-  | "id"
-  | "ticker"
-  | "title"
-  | "description"
-  | "election_id"
+  "id" | "ticker" | "title" | "description" | "election_id"
 >;

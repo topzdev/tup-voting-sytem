@@ -6,15 +6,16 @@
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos aperiam amet
       autem sed facilis deserunt corrupti aliquid odit dolorem, provident
     </p>
-    <v-btn
-      v-if="hideByStatus(pageStatus.candidate.create)"
-      color="primary"
-      large
+    <v-alert
+      v-if="alert.show"
+      text
       width="75%"
-      class="mt-1 mx-auto"
-      :to="createCandidateRoute()"
-      >Create Candidate</v-btn
+      class="mx-auto"
+      :type="alert.type"
     >
+      {{ alert.message }}
+    </v-alert>
+    <create-candidate-button width="75%" btnClass="mt-1 mx-auto" />
   </span>
 </template>
 <script lang="ts">
@@ -22,15 +23,45 @@ import mixins from "vue-typed-mixins";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import candidateMixins from "@/mixins/candidate.mixin";
 import restrictionsMixin from "@/mixins/restrictions.mixin";
+import CreateCandidateButton from "@/components/pages/candidate/buttons/CreateCandidateButton.vue";
+
+const defaultAlert = {
+  show: false,
+  type: "",
+  message: "",
+};
+
 export default mixins(
   manageElectionMixins,
   candidateMixins,
   restrictionsMixin
 ).extend({
+  data() {
+    return {
+      alert: Object.assign({}, defaultAlert),
+    };
+  },
+  components: {
+    CreateCandidateButton,
+  },
   computed: {
     thisPageConfig() {
       return this.links["candidates"];
     },
+
+    noPosition(): boolean {
+      if (!this.electionInfo) return true;
+      return !this.electionInfo?.positionsCount;
+    },
+  },
+  created() {
+    if (this.noPosition) {
+      this.alert = {
+        show: true,
+        type: "error",
+        message: "No position available",
+      };
+    }
   },
 });
 </script>

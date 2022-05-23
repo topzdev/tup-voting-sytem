@@ -13,7 +13,7 @@
                 color="blue"
                 icons="mdi-file"
                 title="Import voters list from CSV"
-                body="Upload bulk voters info with excel, csv or any spreedshet format"
+                body="Upload bulk voters info with excel, csv or any spreadsheet format"
                 :proceedFunc="gotoForm.bind(null, 'csv')"
               />
             </v-col>

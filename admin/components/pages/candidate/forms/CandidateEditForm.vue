@@ -70,6 +70,7 @@
 
           <v-col cols="6">
             <party-picker
+              label="Party *"
               :prepend="prependParty"
               v-model="form.party_id"
               :electionId="electionId"
@@ -181,6 +182,7 @@ import EditorField from "@/components/input/EditorField.vue";
 import candidateFormMixin from "@/mixins/forms/candidate-form.mixin";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import { Candidate } from "@/services/candidate.service";
+import { scrollToTop } from "@/helpers/scrolls";
 
 export default mixins(candidateFormMixin, manageElectionMixins).extend({
   props: {
@@ -235,16 +237,15 @@ export default mixins(candidateFormMixin, manageElectionMixins).extend({
           });
           this.reset();
         } catch (error: any) {
-          console.log(error);
-          if (error) {
-            const message =
-              error.response?.data?.error?.message || error.message;
-            this.alert = {
-              show: true,
-              type: "error",
-              message: error.message,
-            };
-          }
+          const message = error.response?.data?.error?.message || error.message;
+
+          scrollToTop();
+
+          this.alert = {
+            show: true,
+            type: "error",
+            message: message,
+          };
         }
       }
       this.loading = false;

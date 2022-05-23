@@ -117,6 +117,11 @@ export type UpdateCandidateDto = Pick<
     cover_photo: File;
   };
 
+export type PositionAvailabilityDTO = {
+  party_id: Party["id"];
+  position_id: Position["id"];
+};
+
 const url = "/api/v1/candidate";
 
 const candidateServices = {
@@ -215,6 +220,10 @@ const candidateServices = {
 
   async delete(id: number): Promise<boolean> {
     return (await apiClient.delete(`${url}/${id}`)).data;
+  },
+
+  async positionAvailability(dto: PositionAvailabilityDTO) {
+    return (await apiClient.post(`${url}/position-avail/`, dto)).data;
   },
 };
 

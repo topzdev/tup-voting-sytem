@@ -72,6 +72,13 @@ router.post(
   candidateController.importFromCSV
 );
 
+router.post(
+  "/position-avail",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  candidateController.checkPositionAvailability
+);
+
 const candidateRoute = router;
 
 export default candidateRoute;

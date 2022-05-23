@@ -113,20 +113,6 @@ const unarchive = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const checkPositionAvailability = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const partyId = req.body.party_id;
-
-    res.status(200).json(await partyService.checkPositionAvailability(partyId));
-  } catch (error) {
-    next(error);
-  }
-};
-
 const partyController = {
   getAll,
   getOneById,
@@ -136,7 +122,6 @@ const partyController = {
   restore,
   archive,
   unarchive,
-  checkPositionAvailability,
 };
 
 export default partyController;

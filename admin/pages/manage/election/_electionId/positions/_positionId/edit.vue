@@ -100,6 +100,8 @@ export default mixins(manageElectionMixins, positionMixins).extend({
                 color: "success",
               });
               this.$router.back();
+
+              await this.$accessor.manageElection.refreshElection();
             } catch (error: any) {
               const message =
                 error.response?.data?.error?.message || error.message;
@@ -137,6 +139,8 @@ export default mixins(manageElectionMixins, positionMixins).extend({
         color: "success",
       });
       this.$router.back();
+
+      await this.$accessor.manageElection.refreshElection();
     },
   },
   fetchOnServer: false,

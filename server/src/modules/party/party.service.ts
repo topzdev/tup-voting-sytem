@@ -12,6 +12,7 @@ import {
 import { PartyLogo } from "./entity/party-logo.entity";
 import { PartyCoverPhoto } from "./entity/party-cover-photo.entity";
 import { Position } from "../position/entity/position.entity";
+import { Candidate } from "../candidate/entity/candidate.entity";
 
 const getAll = async (_electionId: string, _query: GetPartyBody) => {
   const partyRepository = getRepository(Party);
@@ -291,30 +292,6 @@ const unarchive = async (_id: string) => {
   return true;
 };
 
-const checkPositionAvailability = async (party_id: Party["id"]) => {
-  if (!party_id) {
-    throw new HttpException("BAD_REQUEST", "Party id is required");
-  }
-  const partyBuilder = getRepository(Party).createQueryBuilder("party");
-  const positionBuillder =
-    getRepository(Position).createQueryBuilder("position");
-  const party = await partyBuilder
-    .where("party.id = :party_id", {
-      party_id,
-    })
-    .getOne();
-
-  const election_id = party.election_id;
-
-  const position = await positionBuillder
-    .leftJoinAndSelect("position.candidates", "candidates")
-    .having("COUNT(candidates) <= position.max_selected")
-    .groupBy("candidates.created_at AND position.created_at")
-    .getMany();
-
-  return position;
-};
-
 const partyService = {
   getAll,
   getById,
@@ -324,7 +301,6 @@ const partyService = {
   restore,
   archive,
   unarchive,
-  checkPositionAvailability,
 };
 
 export default partyService;
