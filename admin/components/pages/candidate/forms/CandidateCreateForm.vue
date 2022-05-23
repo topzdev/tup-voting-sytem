@@ -70,24 +70,6 @@
             ></v-text-field>
           </v-col>
 
-          <v-col cols="6">
-            <party-picker
-              :prepend="prependParty"
-              v-model="form.party_id"
-              :electionId="electionId"
-            ></party-picker>
-          </v-col>
-
-          <v-col cols="6">
-            <position-picker
-              label="Position *"
-              v-model="form.position_id"
-              :rules="rules.position_id"
-              :electionId="electionId"
-              :disabled="disablePosition"
-            ></position-picker>
-          </v-col>
-
           <v-col cols="12">
             <v-textarea
               label="Description *"
@@ -215,10 +197,11 @@ export default mixins(manageElectionMixins, candidateFormMixin).extend({
           await this.createFunc(this.form);
           this.reset();
         } catch (error: any) {
+          const message = error.response?.data?.error?.message || error.message;
           this.alert = {
             show: true,
             type: "error",
-            message: error.message,
+            message: message,
           };
         }
       }
@@ -226,10 +209,6 @@ export default mixins(manageElectionMixins, candidateFormMixin).extend({
     },
   },
 
-  computed: {
-    disablePosition(): boolean {
-      return this.form.party_id === "";
-    },
-  },
+  computed: {},
 });
 </script>

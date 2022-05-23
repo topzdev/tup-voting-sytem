@@ -48,6 +48,8 @@ export default mixins(positionMixins, manageElectionMixins).extend({
         color: "success",
       });
       this.$router.back();
+
+      await this.$accessor.manageElection.refreshElection();
     },
   },
 });

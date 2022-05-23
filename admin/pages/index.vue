@@ -33,7 +33,7 @@ export default Vue.extend({
 
   computed: {
     createOrgRoute() {
-      return pageConfig.organization().create();
+      return pageConfig.organization().create().route;
     },
   },
 });

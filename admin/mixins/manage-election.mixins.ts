@@ -1,5 +1,9 @@
 import { statusOnlyAllowed } from "@/helpers/isAllowedByStatus.helper";
-import { Election, ElectionStatus } from "@/services/election.service";
+import {
+  Election,
+  ElectionStatus,
+  ElectionWithUrl,
+} from "@/services/election.service";
 import { Organization } from "@/services/organization.service";
 import Vue from "vue";
 import pageStatus from "@/configs/page-status.config";
@@ -39,7 +43,7 @@ const manageElectionMixins = Vue.extend({
       return this.electionInfo ? this.electionInfo.id : null;
     },
 
-    electionInfo(): Election | null {
+    electionInfo(): ElectionWithUrl | null {
       return this.$accessor.manageElection.election;
     },
 

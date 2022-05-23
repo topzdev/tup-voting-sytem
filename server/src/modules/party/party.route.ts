@@ -63,12 +63,6 @@ router.put(
   partyController.unarchive
 );
 
-router.post(
-  "/position-avail",
-  adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
-  partyController.checkPositionAvailability
-);
 const partyRoute = router;
 
 export default partyRoute;

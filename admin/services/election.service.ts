@@ -41,7 +41,12 @@ export type Election = {
   allow_pre_register: boolean;
 } & DataTimestamp;
 
-export type ElectionWithUrl = Election & { urls: ElectionUrls };
+export type ElectionWithUrl = Election & {
+  urls: ElectionUrls;
+  partiesCount: number;
+  candidatesCount: number;
+  positionsCount: number;
+};
 
 export interface GetElectionDto {
   search?: string;

@@ -1,3 +1,4 @@
+import { Candidate } from "../services/candidate.service";
 import { Election } from "../services/election.service";
 import { Organization } from "../services/organization.service";
 import { RolesString } from "../types/roles";
@@ -145,6 +146,28 @@ const pageConfig = {
         title: "Change Password",
         icon: "mdi-form-textbox-password",
         route: `${parentUrl}/change-password`,
+      }),
+    };
+  },
+
+  candidate: () => {
+    const parentUrl = "candidates";
+
+    return {
+      this: () => ({
+        title: "My Account",
+        icon: "mdi-account-circle-outline",
+        route: parentUrl + "/",
+        exact: true,
+      }),
+
+      create: () => ({
+        title: "Create Candidate",
+        route: parentUrl + "/create",
+      }),
+      edit: (candidate_id: Candidate["id"]) => ({
+        title: "Create Candidate",
+        route: `${parentUrl}/${candidate_id}/edit`,
       }),
     };
   },

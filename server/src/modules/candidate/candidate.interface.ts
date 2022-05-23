@@ -1,3 +1,5 @@
+import { Party } from "../party/entity/party.entity";
+import { Position } from "../position/entity/position.entity";
 import { CandidateSocials } from "./entity/candidate-socials.entity";
 import { Candidate } from "./entity/candidate.entity";
 
@@ -53,3 +55,9 @@ export type UpdateCandidateBody = Pick<
     | "website_url"
     | "insta_url"
   >;
+
+export type PositionAvailabilityDTO = {
+  party_id: Party["id"];
+  position_id: Position["id"];
+  exceptCandidate?: Candidate["id"];
+};

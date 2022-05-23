@@ -140,6 +140,7 @@ const getElectionWinners = async (_election_id: number) => {
     .leftJoinAndSelect("party.logo", "party_logo")
     .leftJoinAndSelect("candidates.votes", "votes")
     .loadRelationCountAndMap("candidates.votesCount", "candidates.votes")
+
     .leftJoinAndSelect("candidates.election", "election")
     //.where("election.final_status = 'completed'")
     .andWhere("election.is_tally_public = true")
@@ -202,6 +203,9 @@ const getById = async (_election_id: string) => {
     .leftJoinAndSelect("election.organization", "organization")
     .leftJoinAndSelect("organization.theme", "organization_theme")
     .leftJoinAndSelect("organization.logo", "organization_logo")
+    .loadRelationCountAndMap("election.partiesCount", "election.party")
+    .loadRelationCountAndMap("election.candidatesCount", "election.candidates")
+    .loadRelationCountAndMap("election.positionsCount", "election.positions")
     .where("election.id = :_election_id", { _election_id });
 
   const election = await builder.getOne();

@@ -1,14 +1,7 @@
 <template>
   <span>
     <page-bars title="Candidates">
-      <v-btn
-        v-if="hideByStatus(pageStatus.candidate.create)"
-        color="primary"
-        class="mr-2 ml-auto"
-        :to="createCandidateRoute()"
-        large
-        >New Candidate</v-btn
-      >
+      <create-candidate-button btn-class="mr-2 ml-auto" />
     </page-bars>
     <manage-container>
       <candidate-table />
@@ -18,22 +11,16 @@
 
 
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
+import ManageContainer from "@/components/containers/ManageContainer.vue";
+import CandidateTable from "@/components/pages/candidate/CandidateTable.vue";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
 import mixins from "vue-typed-mixins";
 import PageBars from "~/components/bars/PageBars.vue";
-import ManageContainer from "@/components/containers/ManageContainer.vue";
-import candidateMixins from "@/mixins/candidate.mixin";
-import CandidateTable from "@/components/pages/candidate/CandidateTable.vue";
-import restrictionsMixins from "@/mixins/restrictions.mixin";
-import manageElectionMixins from "@/mixins/manage-election.mixins";
-
-export default mixins(
-  candidateMixins,
-  restrictionsMixins,
-  manageElectionMixins
-).extend({
+import CreateCandidateButton from "@/components/pages/candidate/buttons/CreateCandidateButton.vue";
+export default mixins(manageElectionMixins).extend({
   components: {
     PageBars,
+    CreateCandidateButton,
     CandidateTable,
     ManageContainer,
   },

@@ -137,6 +137,26 @@ const importFromCSV = async (
   }
 };
 
+const checkPositionAvailability = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const party_id = req.body.party_id;
+    const position_id = req.body.position_id;
+
+    res.status(200).json(
+      await candidateService.checkPositionAvailability({
+        party_id,
+        position_id,
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
 const candidateController = {
   getAll,
   getOneById,
@@ -147,6 +167,7 @@ const candidateController = {
   archive,
   unarchive,
   importFromCSV,
+  checkPositionAvailability,
 };
 
 export default candidateController;
