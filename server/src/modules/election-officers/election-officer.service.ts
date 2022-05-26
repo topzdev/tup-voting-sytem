@@ -17,6 +17,7 @@ import { ElectionOfficer } from "./entity/election-offcer.entity";
 // const User = getRepository(User);
 
 const fieldsNeeded = [
+  "user.id",
   "user.firstname",
   "user.lastname",
   "user.username",

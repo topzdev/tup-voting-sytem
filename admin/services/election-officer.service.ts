@@ -31,7 +31,7 @@ export type GetOfficerByIdDto = {
 
 const url = "/api/v1/election-officer";
 
-const userServices = {
+const electionOfficerServices = {
   async getAll(body: GetElectionOfficerQuery) {
     return (await apiClient.post(`${url}/all/`, body)).data;
   },
@@ -48,4 +48,4 @@ const userServices = {
   },
 };
 
-export default userServices;
+export default electionOfficerServices;
