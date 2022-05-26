@@ -20,6 +20,8 @@ const fieldsNeeded = [
   "user.firstname",
   "user.lastname",
   "user.username",
+  "user.role",
+  "user.disabled",
   "user.email_address",
   "election_officer.id",
   "election_officer.organization_id",

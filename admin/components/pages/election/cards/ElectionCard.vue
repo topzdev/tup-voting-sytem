@@ -45,12 +45,7 @@
           </v-row>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <v-btn
-            color="primary"
-            text
-            :to="`/manage/election/${data.id}/overview`"
-            >View</v-btn
-          >
+          <v-btn color="primary" text :to="manageElectionRoute">View</v-btn>
         </v-col>
       </v-row>
     </v-card-text>
@@ -64,6 +59,7 @@ import ElectionStatusChip from "~/components/chips/ElectionStatusChip.vue";
 import dayjs from "dayjs";
 import AppImage from "@/components/app/AppImage.vue";
 import PublicityIcon from "~/components/icon/PublicityIcon.vue";
+import pageConfig from "../../../../configs/pages.config";
 
 export default Vue.extend({
   props: {
@@ -85,6 +81,9 @@ export default Vue.extend({
     },
     endDate(): string {
       return dayjs(this.data.close_date).format("MM/DD/YYYY - hh:mm a");
+    },
+    manageElectionRoute(): string {
+      return pageConfig.election(this.data.id).this().route;
     },
   },
 });

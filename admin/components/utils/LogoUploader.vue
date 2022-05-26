@@ -127,7 +127,8 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .logo-uploader {
-  position: relative;
+  display: inline-flex;
+  position: relative !important;
   border: 5px solid white;
   border-radius: 100%;
 

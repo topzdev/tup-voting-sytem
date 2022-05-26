@@ -6,14 +6,12 @@
       :title="pageBarTitle"
       :logo="pageBarLogo"
     >
-      <v-btn
-        class="ml-auto mr-2"
-        text
-        large
-        :to="`/manage/organization/${organizationId}/edit`"
+      <v-btn class="ml-auto mr-2" text large :to="organizationEditRoute"
         >Manage</v-btn
       >
-      <v-btn color="primary" :to="createPage" large>New Election</v-btn>
+      <v-btn color="primary" :to="createElectionRoute" large
+        >New Election</v-btn
+      >
     </page-bars>
     <account-container>
       <election-list />
@@ -22,22 +20,18 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import authMixins from "@/mixins/auth.mixins";
-import orgMixins from "@/mixins/org.mixins";
 import PageBars from "@/components/bars/PageBars.vue";
 import AccountContainer from "@/components/containers/AccountContainer.vue";
-
 import ElectionList from "@/components/pages/election/ElectionList.vue";
-import debounce from "@/helpers/debounce";
-import electionServices from "@/services/election.service";
+import pageConfig from "@/configs/pages.config";
+import authMixins from "@/mixins/auth.mixins";
 import organizationServices, {
   Organization,
 } from "@/services/organization.service";
 import mixins from "vue-typed-mixins";
-import pageConfig from "../../configs/pages.config";
+import orgMixin from "@/mixins/org.mixins";
 
-export default mixins(orgMixins, authMixins).extend({
+export default mixins(orgMixin, authMixins).extend({
   auth: true,
   layout: "account",
   components: {
@@ -49,12 +43,6 @@ export default mixins(orgMixins, authMixins).extend({
     title: "Dashboard",
   },
 
-  data() {
-    return {
-      organization: null as Organization | null,
-    };
-  },
-
   fetchOnServer: false,
   async fetch() {
     await this.fetchOrganization();
@@ -62,7 +50,11 @@ export default mixins(orgMixins, authMixins).extend({
 
   computed: {
     organizationEditRoute(): string {
-      return pageConfig.organization().this(this.organizationId).route;
+      return pageConfig.organization(this.organizationId).manageInfo().route;
+    },
+    createElectionRoute(): string {
+      return pageConfig.organization(this.organizationId).createElection()
+        .route;
     },
 
     pageBarTitle(): string {
@@ -77,16 +69,7 @@ export default mixins(orgMixins, authMixins).extend({
 
   methods: {
     async fetchOrganization() {
-      if (!this.organizationId) return;
-
-      try {
-        const result = await organizationServices.getById(
-          this.organizationId.toString()
-        );
-        this.organization = result;
-      } catch (error) {
-        console.log(error);
-      }
+      await this.$accessor.organization.fetchOrganization(this.organizationId);
     },
   },
 });

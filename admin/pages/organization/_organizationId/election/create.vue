@@ -11,28 +11,30 @@
   </span>
 </template>
 
-<script>
+<script lang="ts">
 import Vue, { PropOptions } from "vue";
 import PageBars from "@/components/bars/PageBars.vue";
 import AccountContainer from "@/components/containers/AccountContainer.vue";
 import ElectionCreateForm from "~/components/pages/election/forms/ElectionCreateForm.vue";
 import electionServices from "@/services/election.service";
 import orgMixin from "~/mixins/org.mixins";
+import mixins from "vue-typed-mixins";
+import pageConfig from "../../../../configs/pages.config";
 
-export default Vue.extend({
+export default mixins(orgMixin).extend({
   auth: true,
   layout: "account",
-  mixins: [orgMixin],
   components: {
     PageBars,
     AccountContainer,
     ElectionCreateForm,
   },
-  textFieldProps: {
-    outlined: true,
-    hideDetails: "auto",
-  },
 
+  computed: {
+    organizationId(): number {
+      return parseInt(this.$route.params.organizationId);
+    },
+  },
   methods: {
     async create(data) {
       try {
@@ -47,7 +49,9 @@ export default Vue.extend({
           timeout: 5000,
           color: "success",
         });
-        this.$router.push(`/organization/${this.organizationId}`);
+        this.$router.push(
+          pageConfig.organization(this.organizationId).this().route
+        );
       } catch (error) {
         throw error;
       }

@@ -1,16 +1,22 @@
 <template>
-  <v-dialog v-model="dialog" width="600">
+  <v-form ref="form" v-model="valid">
     <v-card outlined>
-      <v-card-title> Delete Organization </v-card-title>
+      <v-card-title> Remove Organization </v-card-title>
+      <v-divider></v-divider>
       <v-card-text>
-        <v-row class="no-gutters">
+        <v-row no-gutters>
           <v-col v-if="alert.show" cols="12">
-            <v-alert v-model="alert.show" dismissible :type="alert.type">
+            <v-alert
+              :type="alert.type"
+              v-model="alert.show"
+              dismissible
+              class="mb-0"
+            >
               {{ alert.message }}
             </v-alert>
           </v-col>
-          <v-col cols="12">
-            <p class="body-1">Type the organization title to continue.</p>
+          <v-col cols="8">
+            <p class="body-1">Type current organization title to continue.</p>
 
             <v-text-field
               outlined
@@ -22,35 +28,27 @@
       </v-card-text>
       <v-card-actions>
         <v-btn
-          text
-          class="mr-auto"
-          large
-          @click="$emit('update:dialog', false)"
-        >
-          Cancel
-        </v-btn>
-        <v-btn
           @click="submit"
           :loading="loading"
           :disabled="!verified"
           large
           color="error"
-          >Delete Organization</v-btn
+          >Remove Organization</v-btn
         >
       </v-card-actions>
     </v-card>
-  </v-dialog>
+  </v-form>
 </template>
 
 <script lang="ts">
-import configs from "@/configs";
+import Vue, { PropOptions } from "vue";
 import pageConfig from "@/configs/pages.config";
+import authMixin from "@/mixins/auth.mixins";
+import manageOrganizationMixin from "@/mixins/manage-organization.mixins";
 import organizationServices, {
   Organization,
 } from "@/services/organization.service";
-import { PropOptions } from "vue";
 import mixins from "vue-typed-mixins";
-import manageOrganizationMixin from "@/mixins/manage-organization.mixins";
 
 const defaultAlert = {
   show: false,
@@ -58,7 +56,7 @@ const defaultAlert = {
   message: "",
 };
 
-export default mixins(manageOrganizationMixin).extend({
+export default mixins(manageOrganizationMixin, authMixin).extend({
   props: {
     organization: {
       type: Object,
@@ -77,13 +75,12 @@ export default mixins(manageOrganizationMixin).extend({
       alert: Object.assign({}, defaultAlert),
       loading: false,
       photoData: null,
-
-      baseURL: configs.baseURL,
     };
   },
   watch: {
     "form.verify": {
       handler(value) {
+        if (!this.organization) return false;
         this.verified = value === this.organization.title;
       },
     },
@@ -93,8 +90,8 @@ export default mixins(manageOrganizationMixin).extend({
     async submit() {
       this.$accessor.system.showAppDialog({
         show: true,
-        title: "Delete Election",
-        message: "Are you sure to delete this election?",
+        title: "Remove Organization",
+        message: "Are you sure to remove this organization?",
         button: {
           anyEventHide: false,
           yesFunction: async ({ hideDialog }) => {
@@ -102,7 +99,7 @@ export default mixins(manageOrganizationMixin).extend({
             this.$accessor.system.showAuthenticationDialog({
               button: {
                 yesFunction: async () => {
-                  if (this.organization.id) {
+                  if (this.organization && this.organization.id) {
                     this.loading = true;
                     try {
                       await organizationServices.delete(this.organization.id);
@@ -135,8 +132,8 @@ export default mixins(manageOrganizationMixin).extend({
               },
               type: "default",
               message:
-                "The super admin must authenticate first before approving this action.",
-              allowedRole: "super-admin",
+                "The organization admin must authenticate first before approving this action.",
+              allowedRole: "admin",
               show: true,
             });
           },
