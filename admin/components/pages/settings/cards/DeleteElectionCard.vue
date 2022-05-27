@@ -12,7 +12,7 @@
           </v-col>
           <v-col cols="8">
             <p class="body-1">
-              Type election title to continue deleting this election.
+              Type election title to able delete the election.
             </p>
 
             <v-text-field

@@ -23,18 +23,20 @@ type ValidationIds =
 export const validationMessages: Record<ValidationIds, LaunchpadValidation> = {
   ["no-voters"]: {
     severity: "error",
-    title: "No Voters Registered",
-    message: "voters is essential in an election",
+    title: "No voters added in this election",
+    message: "Add at least 3 voters in able to launch the election",
   },
   ["no-parties"]: {
     severity: "warning",
     title: "No party added in this election",
-    message: "Np party test test test",
+    message:
+      "There is no Party added in this Election. (All candidates without Party will be labeled as “Independent”)",
   },
   ["no-positions"]: {
     severity: "error",
     title: "No positions added in this election",
-    message: "No positi9ons test test test",
+    message:
+      "There is no Position added in this Election. Add at least 1 in able to launch the Election.",
   },
   ["no-candidates"]: {
     severity: "error",
@@ -44,35 +46,35 @@ export const validationMessages: Record<ValidationIds, LaunchpadValidation> = {
   ["position-no-candidates"]: {
     severity: "warning",
     title: "Some of election positions has no candidates ",
-    message: "Hello WOrld Posiution must have Candidates",
+    message: "There is no Candidate added in this Position(s)",
   },
   ["start-date-behind"]: {
     severity: "warning",
     title: "Election start date is behind the current date",
-    message: "Please adjust your ",
+    message: "Warning: Your Election starting date is behind the Current date.",
   },
   ["close-date-behind"]: {
     severity: "error",
     title: "Election closing date is behind the current date",
     message:
-      "We cannot launch an election that closing date is left behind by the current data please update your closing date to adviekjwlej ",
+      "Cannot launch the Election. Please check if your Closing Date is ahead the Current date.",
   },
   ["insufficient-candidates"]: {
     severity: "error",
     title: "Insufficient candidates for position minimum vote selection.",
     message:
-      "These positions (n1, n2, n3) required a specific minimum vote selection but the candidates’ option is insufficient. ",
+      "These positions (n1, n2, n3) required a specific minimum vote selection but the candidates’ option is insufficient.",
   },
   ["candidates-no-position"]: {
     severity: "warning",
-    title: "Candidates no position assigned.",
-    message: "These candidates (n1, n2, n3) has no position assigned.",
+    title: "Candidates no position assigned",
+    message: "These candidates (n1, n2, n3) has no position assigned",
   },
   ["preview-mode"]: {
     severity: "info",
     title: "Election will be in preview mode",
     message:
-      "Since the election is behind the election start date the election will be in preview mode but when the start date reach the election it will automatically set as running phase and the voter can start voting.",
+      'The election will be on "Preview Mode" if the current date is behind the Election start date. The election will be on "Running Phase" if it reach the Election start date. In the "Running Phase", only the voter can start voting.',
   },
   ["no-slug-edit"]: {
     severity: "info",
@@ -139,9 +141,9 @@ export const launchpadValidationChecker = (data: LaunchpadValidationData) => {
   if (positonNoCandidates.length) {
     validations.push({
       ...validationMessages["position-no-candidates"],
-      message: `This list of position (${positonNoCandidates
+      message: `There is no Candidate added in this Position(s) (${positonNoCandidates
         .map((item) => item.title)
-        .join(",")}) has no candidates available`,
+        .join(",")})`,
     });
   }
 
@@ -156,7 +158,7 @@ export const launchpadValidationChecker = (data: LaunchpadValidationData) => {
         .map((item) => item.title)
         .join(
           ","
-        )}) required a specific minimum vote selection but the candidates’ option is insufficient. `,
+        )}) required a specific minimum vote selection but the candidates’ option is insufficient `,
     });
   }
 
@@ -169,8 +171,6 @@ export const launchpadValidationChecker = (data: LaunchpadValidationData) => {
         .join(",")}) has no position assigned. `,
     });
   }
-
-  validations.push(validationMessages["no-slug-edit"]);
 
   return validations;
 };

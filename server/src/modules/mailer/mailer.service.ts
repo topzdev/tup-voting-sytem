@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { getRepository } from "typeorm";
 import platformLinks from "../../configs/platform-links.config";
 import { HttpException } from "../../helpers/errors/http.exception";
@@ -95,7 +96,9 @@ const sendVotersCredentialsEmail = async (
       context: {
         firstname: item.firstname,
         lastname: item.lastname,
-        election_date: new Date(item.election.start_date).toString(),
+        election_date: dayjs(item.election.start_date).format(
+          "MMMM DD, YYYY hh:mm:ss a"
+        ),
         election_link: platformLinks.voting(item.election.slug),
         voterId: item.username,
         pin: voterPinParser(item.pin),

@@ -54,13 +54,13 @@
             <h3 class="mb-2 text--primary">Election has launched email</h3>
             <p>Send "Election has launched" to all voters.</p>
             <v-btn color="primary" large @click="sendElectionHasLaunchedToAll"
-              >Send Election has launched to all Voters</v-btn
+              >Notify voters that election has started</v-btn
             >
           </v-col>
 
           <v-col class="email-section" cols="12" v-if="show.electionHasEnded">
             <h3 class="mb-2 text--primary">Election has ended email</h3>
-            <p>Send "Election has ended" to all voters.</p>
+            <p>Notify voters that election has ended.</p>
             <v-btn color="primary" large @click="sendElectionHasEndedToAll"
               >Send Election has ended to all Voters</v-btn
             >
