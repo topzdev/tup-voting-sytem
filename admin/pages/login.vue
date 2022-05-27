@@ -1,9 +1,9 @@
 <template>
   <page-center>
-    <v-card width="450" flat>
+    <v-card class="" width="450" flat>
       <v-card-title>
         <v-row class="mb-4" no-gutters>
-          <v-col class="d-flex justify-center mb-2" md="12">
+          <v-col class="d-flex justify-center mb-5" cols="12" >
             <v-avatar size="80">
               <app-image
                 :size="80"
@@ -12,7 +12,7 @@
               />
             </v-avatar>
           </v-col>
-          <v-col>
+          <v-col class="d-flex" sm="12" >
             <h1
               class="headline text-center w-100"
               style="word-break: break-word"

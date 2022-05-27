@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col v-for="position in tally" :key="position.id" cols="4">
+    <v-col v-for="position in tally" :key="position.id" md="4" cols="12">
       <v-card style="height: 100%" outlined>
         <v-card-title class="pb-0">
           {{ position.title }}

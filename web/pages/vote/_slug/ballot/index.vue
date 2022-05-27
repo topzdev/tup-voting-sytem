@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="8" class="mx-auto">
+      <v-col md="8" class="mx-auto">
         <v-row>
           <!-- <v-col cols="12">
             <pre

@@ -32,6 +32,7 @@
               sm="12"
               md="6"
               lg="4"
+              cols="12"
             >
               <election-card :election="item" />
             </v-col>
