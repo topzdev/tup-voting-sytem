@@ -1,0 +1,4 @@
+BASE_SERVER_URL=http://localhost:5000
+GOOGLE_OAUTH_CLIENT_ID=193167905393-lfmi2jajb0e9nec0e5jttd7kodeof50c.apps.googleusercontent.com
+GOOGLE_OAUTH_REDIRECT_URI=http://localhost:7000/pre-register/
+BASE_NUXT_PORT=7000 

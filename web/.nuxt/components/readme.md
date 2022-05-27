@@ -6,12 +6,12 @@ You can directly use them in pages and other components without the need to impo
 
 **Tip:** If a component is conditionally rendered with `v-if` and is big, it is better to use `Lazy` or `lazy-` prefix to lazy load.
 
-- `<AppAvatar>` | `<app-avatar>` (components/app/AppAvatar.vue)
-- `<AppImage>` | `<app-image>` (components/app/AppImage.vue)
-- `<AppLoading>` | `<app-loading>` (components/app/AppLoading.vue)
 - `<CardsCandidateCard>` | `<cards-candidate-card>` (components/cards/CandidateCard.vue)
 - `<CardsElectionCard>` | `<cards-election-card>` (components/cards/ElectionCard.vue)
 - `<CardsPartyCard>` | `<cards-party-card>` (components/cards/PartyCard.vue)
+- `<AppAvatar>` | `<app-avatar>` (components/app/AppAvatar.vue)
+- `<AppImage>` | `<app-image>` (components/app/AppImage.vue)
+- `<AppLoading>` | `<app-loading>` (components/app/AppLoading.vue)
 - `<ChipsElectionChip>` | `<chips-election-chip>` (components/chips/ElectionChip.vue)
 - `<ChipsElectionStatusChip>` | `<chips-election-status-chip>` (components/chips/ElectionStatusChip.vue)
 - `<ChipsPartyChip>` | `<chips-party-chip>` (components/chips/PartyChip.vue)

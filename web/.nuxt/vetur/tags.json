@@ -1,13 +1,4 @@
 {
-  "AppAvatar": {
-    "description": "Auto imported from components/app/AppAvatar.vue"
-  },
-  "AppImage": {
-    "description": "Auto imported from components/app/AppImage.vue"
-  },
-  "AppLoading": {
-    "description": "Auto imported from components/app/AppLoading.vue"
-  },
   "CardsCandidateCard": {
     "description": "Auto imported from components/cards/CandidateCard.vue"
   },
@@ -16,6 +7,15 @@
   },
   "CardsPartyCard": {
     "description": "Auto imported from components/cards/PartyCard.vue"
+  },
+  "AppAvatar": {
+    "description": "Auto imported from components/app/AppAvatar.vue"
+  },
+  "AppImage": {
+    "description": "Auto imported from components/app/AppImage.vue"
+  },
+  "AppLoading": {
+    "description": "Auto imported from components/app/AppLoading.vue"
   },
   "ChipsElectionChip": {
     "description": "Auto imported from components/chips/ElectionChip.vue"
