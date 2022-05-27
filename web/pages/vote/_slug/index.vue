@@ -1,6 +1,6 @@
 <template>
   <page-center style="min-height: 90vh">
-    <v-card md="4" flat>
+    <v-card width="450" flat>
       <v-row>
         <v-col cols="12">
           <v-row>
