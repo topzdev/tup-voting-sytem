@@ -2,7 +2,7 @@
   <v-row>
     <v-col
       v-if="!$fetchState.pending && !$fetchState.error"
-      md="8"
+      cols="8"
       class="mx-auto"
     >
       <v-container v-if="election" class="py-0">
@@ -30,10 +30,10 @@
 
           <v-col cols="12">
             <v-row>
-              <v-col md="8">
+              <v-col cols="8">
                 <election-position-candidates :positions="positions" />
               </v-col>
-              <v-col md="4" class="px-md-10">
+              <v-col cols="4" class="px-10">
                 <election-party :party="party"></election-party>
               </v-col>
             </v-row>

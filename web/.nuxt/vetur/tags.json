@@ -1,13 +1,4 @@
 {
-  "CardsCandidateCard": {
-    "description": "Auto imported from components/cards/CandidateCard.vue"
-  },
-  "CardsElectionCard": {
-    "description": "Auto imported from components/cards/ElectionCard.vue"
-  },
-  "CardsPartyCard": {
-    "description": "Auto imported from components/cards/PartyCard.vue"
-  },
   "AppAvatar": {
     "description": "Auto imported from components/app/AppAvatar.vue"
   },
@@ -16,6 +7,15 @@
   },
   "AppLoading": {
     "description": "Auto imported from components/app/AppLoading.vue"
+  },
+  "CardsCandidateCard": {
+    "description": "Auto imported from components/cards/CandidateCard.vue"
+  },
+  "CardsElectionCard": {
+    "description": "Auto imported from components/cards/ElectionCard.vue"
+  },
+  "CardsPartyCard": {
+    "description": "Auto imported from components/cards/PartyCard.vue"
   },
   "ChipsElectionChip": {
     "description": "Auto imported from components/chips/ElectionChip.vue"

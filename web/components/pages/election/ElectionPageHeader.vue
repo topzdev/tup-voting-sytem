@@ -10,7 +10,7 @@
     </v-col>
     <v-col
       cols="12"
-      class="pl-10 d-flex flex-column flex-wrap justify-lg-end align-start"
+      class="pl-10 py-3 d-flex flex-column justify-end align-start"
     >
       <v-row style="width: 100%">
         <v-col cols="8" class="pt-0">
@@ -29,9 +29,7 @@
                 divider="/"
                 :items="breadcrumb"
               ></v-breadcrumbs>
-              <div class="text-md-h4 text-h5 font-weight-bold">
-                {{ election.title }}
-              </div>
+              <h1>{{ election.title }}</h1>
               <election-status-chip
                 class="font-weight-bold"
                 :status="election.final_status"
@@ -42,27 +40,26 @@
           </v-row>
         </v-col>
 
-        <v-col 
-        class="mt-lg-n16"  md="4" xs="2">
+        <v-col style="margin-top: -120px" cols="4">
           <v-card>
-            <v-list >
-              <v-list-item  >
+            <v-list>
+              <v-list-item>
                 <v-list-item-content>
                   <v-list-item-subtitle>Description</v-list-item-subtitle>
-                  <v-list-item-title style="overflow: auto; white-space: unset"  v-text="election.description">
+                  <v-list-item-title v-text="election.description">
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-subtitle>Start Date</v-list-item-subtitle>
-                  <v-list-item-title style="overflow: auto; white-space: unset" v-text="startDate"> </v-list-item-title>
+                  <v-list-item-title v-text="startDate"> </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-subtitle >Close Date</v-list-item-subtitle>
-                  <v-list-item-title style="overflow: auto; white-space: unset" v-text="endDate"> </v-list-item-title>
+                  <v-list-item-subtitle>Close Date</v-list-item-subtitle>
+                  <v-list-item-title v-text="endDate"> </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
