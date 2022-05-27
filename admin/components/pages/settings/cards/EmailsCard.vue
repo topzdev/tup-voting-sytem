@@ -52,7 +52,7 @@
             v-if="show.electionHasLaunched"
           >
             <h3 class="mb-2 text--primary">Election has launched email</h3>
-            <p>Send "Election has launched" to all voters.</p>
+            <p>Notify voters that election has launched.</p>
             <v-btn color="primary" large @click="sendElectionHasLaunchedToAll"
               >Notify voters that election has started</v-btn
             >

@@ -74,7 +74,7 @@ export const validationMessages: Record<ValidationIds, LaunchpadValidation> = {
     severity: "info",
     title: "Election will be in preview mode",
     message:
-      'The election will be on "Preview Mode" if the current date is behind the Election start date. The election will be on "Running Phase" if it reach the Election start date. In the "Running Phase", only the voter can start voting.',
+      'The election will be on "Preview Mode" if the current date is behind the election start date. The election will be on "Running Phase" if it reach the election start date. In the "Running Phase", only the voter can start voting.',
   },
   ["no-slug-edit"]: {
     severity: "info",
