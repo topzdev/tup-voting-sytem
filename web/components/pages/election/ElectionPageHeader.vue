@@ -45,24 +45,24 @@
         <v-col 
         class="mt-lg-n16"  md="4" xs="2">
           <v-card>
-            <v-list>
-              <v-list-item>
-                <v-list-item-content >
+            <v-list >
+              <v-list-item  >
+                <v-list-item-content>
                   <v-list-item-subtitle>Description</v-list-item-subtitle>
-                  <v-list-item-title   v-text="election.description">
+                  <v-list-item-title style="overflow: auto; white-space: unset"  v-text="election.description">
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-subtitle>Start Date</v-list-item-subtitle>
-                  <v-list-item-title v-text="startDate"> </v-list-item-title>
+                  <v-list-item-title style="overflow: auto; white-space: unset" v-text="startDate"> </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-subtitle>Close Date</v-list-item-subtitle>
-                  <v-list-item-title v-text="endDate"> </v-list-item-title>
+                  <v-list-item-subtitle >Close Date</v-list-item-subtitle>
+                  <v-list-item-title style="overflow: auto; white-space: unset" v-text="endDate"> </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
