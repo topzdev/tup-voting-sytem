@@ -2,6 +2,12 @@ import apiClient from ".";
 import { Organization } from "./organization.service";
 import { User } from "./user.service";
 
+export type ElectionOfficer = {
+  organization_id: number;
+  id: number;
+  user: User;
+};
+
 export interface GetElectionOfficerQuery {
   search?: string;
   order?: any;

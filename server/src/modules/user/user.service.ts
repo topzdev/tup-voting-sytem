@@ -19,11 +19,22 @@ import {
 
 // const User = getRepository(User);
 
+const fieldsNeeded = [
+  "user.id",
+  "user.firstname",
+  "user.lastname",
+  "user.username",
+  "user.role",
+  "user.disabled",
+  "user.email_address",
+];
+
 const getAll = async (user: PickedUser, _query: GetUserQuery) => {
   const userRepository = getRepository(User);
 
   let builder = userRepository
     .createQueryBuilder("user")
+    .select(fieldsNeeded)
     .where("user.role NOT IN(:...roles)", {
       roles: [UserRole["ELECTION_OFFICER"], UserRole["SUPER_ADMIN"]],
     });

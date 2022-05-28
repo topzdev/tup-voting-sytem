@@ -137,9 +137,9 @@ export default mixins(manageElectionMixins).extend({
     backToPage() {
       if (!this.electionInfo) return this.$router.back();
 
-      const orgElectionPath = `/organization/${this.electionInfo.organization_id}`;
-
-      this.$router.push(orgElectionPath);
+      this.$router.push(
+        pageConfig.organization(this.electionInfo.organization_id).this().route
+      );
     },
   },
 });

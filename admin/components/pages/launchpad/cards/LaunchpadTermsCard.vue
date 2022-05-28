@@ -147,7 +147,9 @@ export default mixins(manageElectionMixins).extend({
                 color: "success",
               });
 
-              this.$router.push(pageConfig.overview().this(this.electionId));
+              this.$router.push(
+                pageConfig.election(this.electionId).this().route
+              );
             } catch (error: any) {
               const message =
                 error.response?.data?.error?.message || error.message;

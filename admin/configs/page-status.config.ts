@@ -11,7 +11,7 @@ const pageStatus = {
     create: ["building", "preview"],
     edit: ["building", "preview"],
     import: ["building", "preview"],
-    export: ["building", "running", "completed", "archived"],
+    export: ["building", "preview", "running", "completed", "archived"],
 
     table: {
       isVoted: ["running", "completed", "archived"],

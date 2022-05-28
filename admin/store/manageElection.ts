@@ -61,7 +61,7 @@ export const actions = actionTree(
       if (!election || !organization) return;
 
       const result = await electionServices.delete(election.id);
-      this.$router.push(pageConfig.organization().this(organization.id).route);
+      this.$router.push(pageConfig.organization(organization.id).this().route);
     },
   }
 );

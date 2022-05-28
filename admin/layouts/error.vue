@@ -26,7 +26,7 @@ export default Vue.extend({
     error: {
       type: Object,
       default: null,
-    } as PropOptions<NuxtError>,
+    } as PropOptions<any>,
   },
 
   head() {
@@ -41,10 +41,12 @@ export default Vue.extend({
       return (this.error && this.error.statusCode) || 500;
     },
     message(): string {
-      return this.error.message || "Something went wrong";
+      const message =
+        this.error.response?.data?.error?.message || this.error.message;
+
+      return message || "Something went wrong";
     },
     titlePage(): string {
-      // @ts-ignore
       return `${this.statusCode} - ${this.message}`;
     },
   },

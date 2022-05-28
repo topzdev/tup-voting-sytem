@@ -159,7 +159,7 @@ export default Vue.extend({
       (this.$refs as any).form.validate();
 
       if (this.valid) {
-        let allowedRole: UserRoles = undefined;
+        let allowedRole: UserRoles | undefined = undefined;
 
         switch (this.dialog.allowedRole) {
           case "super-admin":

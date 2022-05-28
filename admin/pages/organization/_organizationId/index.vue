@@ -1,15 +1,24 @@
 <template>
   <span>
     <page-bars
-      backTo="/"
+      :backTo="backTo"
       backTooltip="Back to Organization"
       :title="pageBarTitle"
       :logo="pageBarLogo"
     >
-      <v-btn class="ml-auto mr-2" text large :to="organizationEditRoute"
+      <v-btn
+        v-if="rolesAllowed(this.pageRoles.organization.manage)"
+        class="ml-auto mr-2"
+        text
+        large
+        :to="organizationEditRoute"
         >Manage</v-btn
       >
-      <v-btn color="primary" :to="createElectionRoute" large
+      <v-btn
+        v-if="rolesAllowed(this.pageRoles.organization.create)"
+        color="primary"
+        :to="createElectionRoute"
+        large
         >New Election</v-btn
       >
     </page-bars>
@@ -25,13 +34,11 @@ import AccountContainer from "@/components/containers/AccountContainer.vue";
 import ElectionList from "@/components/pages/election/ElectionList.vue";
 import pageConfig from "@/configs/pages.config";
 import authMixins from "@/mixins/auth.mixins";
-import organizationServices, {
-  Organization,
-} from "@/services/organization.service";
-import mixins from "vue-typed-mixins";
 import orgMixin from "@/mixins/org.mixins";
+import rolesRestriction from "@/mixins/roles-restriction.mixin";
+import mixins from "vue-typed-mixins";
 
-export default mixins(orgMixin, authMixins).extend({
+export default mixins(orgMixin, authMixins, rolesRestriction).extend({
   auth: true,
   layout: "account",
   components: {
@@ -43,9 +50,12 @@ export default mixins(orgMixin, authMixins).extend({
     title: "Dashboard",
   },
 
-  fetchOnServer: false,
   async fetch() {
-    await this.fetchOrganization();
+    try {
+      await this.$accessor.organization.fetchOrganization(this.organizationId);
+    } catch (error) {
+      throw new Error("Error");
+    }
   },
 
   computed: {
@@ -65,11 +75,10 @@ export default mixins(orgMixin, authMixins).extend({
       if (!this.organization) return null;
       return this.organization.logo;
     },
-  },
-
-  methods: {
-    async fetchOrganization() {
-      await this.$accessor.organization.fetchOrganization(this.organizationId);
+    backTo() {
+      return this.rolesAllowed(this.pageRoles.organization.button.back)
+        ? "/"
+        : null;
     },
   },
 });

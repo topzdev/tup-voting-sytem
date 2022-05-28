@@ -12,6 +12,7 @@ import { IsAlpha, IsLowercase, NotContains } from "class-validator";
 import { Election } from "../../election/entity/election.entity";
 import { OrganizationTheme } from "./organization-theme.entity";
 import { Voter } from "../../voter/entity/voter.entity";
+import { ElectionOfficer } from "../../election-officers/entity/election-offcer.entity";
 
 @Entity("organization")
 export class Organization extends Timestamp {
@@ -44,6 +45,12 @@ export class Organization extends Timestamp {
 
   @OneToMany(() => Election, (election) => election.organization)
   elections: Election[];
+
+  @OneToMany(
+    () => ElectionOfficer,
+    (election_officer) => election_officer.organization
+  )
+  election_officers: ElectionOfficer[];
 
   @Column({
     default: false,

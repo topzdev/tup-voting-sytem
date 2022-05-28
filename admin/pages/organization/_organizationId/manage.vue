@@ -21,6 +21,10 @@ import ManageOrganizationSidebar from "@/components/pages/org/sidebars/ManageOrg
 import mixins from "vue-typed-mixins";
 import orgMixin from "@/mixins/org.mixins";
 export default mixins(orgMixin).extend({
+  middleware: ["roles"],
+  meta: {
+    allowedRoles: ["SUPER_ADMIN", "ADMIN"],
+  },
   components: {
     PageBars,
     ManageOrganizationSidebar,

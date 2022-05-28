@@ -92,8 +92,8 @@ const pageConfig = {
 
       deleteOrganization: () =>
         ({
-          title: "Delete Organization",
-          route: `${parentRoute}/manage/delete`,
+          title: "Remove Organization",
+          route: `${parentRoute}/manage/remove`,
           icon: "mdi-delete",
         } as PageConfigItem),
     };

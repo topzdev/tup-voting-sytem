@@ -2,6 +2,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -21,6 +22,6 @@ export class ElectionOfficer extends Timestamp {
   @Column()
   organization_id: number;
 
-  @OneToOne(() => Organization)
+  @ManyToOne(() => Organization, (org) => org.election_officers)
   organization: Organization;
 }

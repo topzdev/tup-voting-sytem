@@ -11,7 +11,7 @@
       large
       width="75%"
       class="mt-1 mx-auto"
-      :to="createPage"
+      :to="createElectionRoute"
       >Create Election</v-btn
     >
   </span>
@@ -24,7 +24,11 @@ import mixins from "vue-typed-mixins";
 export default mixins(orgMixins).extend({
   computed: {
     thisPageConfig() {
-      return pageConfig.election();
+      return pageConfig.organization(this.organizationId).this();
+    },
+    createElectionRoute() {
+      return pageConfig.organization(this.organizationId).createElection()
+        .route;
     },
   },
 });

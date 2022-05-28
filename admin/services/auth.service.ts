@@ -3,7 +3,7 @@ import { AdminUser } from "../types/user";
 
 const url = "/api/v1/auth";
 
-export type UserRoles = "sadmin" | "admin" | undefined;
+export type UserRoles = "sadmin" | "admin" | "elec_ofc";
 
 export interface SystemLoginCredentials {
   usernameOrEmail?: string;

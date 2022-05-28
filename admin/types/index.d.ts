@@ -1,4 +1,6 @@
+import { Auth } from "@nuxtjs/auth-next";
 import { accessorType } from "~/store";
+import { AuthUser } from "../services/user.service";
 
 type Recaptcha = {
   getResponse: () => string;
@@ -15,5 +17,8 @@ declare module "vue/types/vue" {
 declare module "@nuxt/types" {
   interface NuxtAppOptions {
     $accessor: typeof accessorType;
+  }
+  interface Auth {
+    user: AuthUser;
   }
 }

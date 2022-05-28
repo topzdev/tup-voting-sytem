@@ -1,4 +1,6 @@
 import Vue from "vue";
+import { ElectionOfficer } from "../services/election-officer.service";
+import { AuthUser } from "../services/user.service";
 import {
   AuthenticationDialogConfig,
   AuthenticationDialogType,
@@ -49,6 +51,14 @@ const authMixin = Vue.extend({
   },
 
   computed: {
+    user() {
+      return this.$auth.user as AuthUser;
+    },
+
+    electionOfficer(): ElectionOfficer | undefined {
+      return this.user.election_officer;
+    },
+
     fullname(): string {
       if (!this.$auth.loggedIn) return "";
 
