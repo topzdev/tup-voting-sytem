@@ -277,11 +277,23 @@ const systemLogin = async (_credentials: SystemLoginCredentials) => {
   if (user.disabled)
     throw new HttpException("BAD_REQUEST", "Account is currently disabled");
 
-  if (_credentials.allowedRole && user.role !== _credentials.allowedRole)
-    throw new HttpException(
+  const allowedRoles = _credentials.allowedRoles;
+  if (allowedRoles) {
+    const roleError = new HttpException(
       "BAD_REQUEST",
       "Account not allowed in this action"
     );
+
+    if (typeof allowedRoles === "string") {
+      if (allowedRoles !== user.role) {
+        throw roleError;
+      }
+    } else if (Array.isArray(allowedRoles)) {
+      if (!allowedRoles.filter((item) => item === user.role).length) {
+        throw roleError;
+      }
+    }
+  }
 
   if (!(await validatePassword(_credentials.password, user.password))) {
     throw new HttpException("BAD_REQUEST", "Incorrect password");

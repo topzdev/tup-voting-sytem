@@ -1,4 +1,5 @@
 import { User } from "../user/entity/user.entity";
+import { UserRoleValue } from "../user/user.inteface";
 
 export interface AdminLoginCredentials {
   token: string;
@@ -9,7 +10,7 @@ export interface AdminLoginCredentials {
 export interface SystemLoginCredentials {
   usernameOrEmail: string;
   password: string;
-  allowedRole?: "sadmin" | "admin";
+  allowedRoles?: UserRoleValue[] | UserRoleValue;
 }
 
 export interface VoterLoginCredentials {

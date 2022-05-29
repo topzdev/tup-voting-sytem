@@ -23,7 +23,7 @@
                 outlined
                 v-model="form.usernameOrEmail"
                 :rules="rules.usernameOrEmail"
-                label="Username"
+                label="Username or Email Address"
                 required
                 hide-details="auto"
               ></v-text-field>
@@ -159,26 +159,13 @@ export default Vue.extend({
       (this.$refs as any).form.validate();
 
       if (this.valid) {
-        let allowedRole: UserRoles | undefined = undefined;
-
-        switch (this.dialog.allowedRole) {
-          case "super-admin":
-            allowedRole = "sadmin";
-            break;
-
-          case "admin":
-            allowedRole = "admin";
-            break;
-
-          default:
-            allowedRole = undefined;
-            break;
-        }
+        let allowedRoles: UserRoles[] | UserRoles | undefined =
+          this.dialog.allowedRoles;
 
         try {
           const result = await authServices.systemLogin({
             ...this.form,
-            allowedRole,
+            allowedRoles,
           });
 
           console.log(result);

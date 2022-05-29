@@ -11,7 +11,7 @@ const rolesName = {
 };
 
 const rolesMiddleware: Middleware = ({ $auth, redirect, route, error }) => {
-  if (!$auth.loggedIn || !$auth.user) return redirect("/login");
+  if (!($auth as any).loggedIn || !$auth.user) return redirect("/login");
 
   if (!process.server) {
     const user = $auth.user;

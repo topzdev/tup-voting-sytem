@@ -29,10 +29,11 @@ export default Vue.extend({
     } as PropOptions<any>,
   },
 
-  head() {
+  head(): any {
+    const title = this.titlePage;
     return {
       // @ts-ignore
-      title: this.titlePage,
+      title,
     };
   },
 

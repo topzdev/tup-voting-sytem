@@ -127,9 +127,11 @@ export default mixins(manageElectionMixins).extend({
 
       const electionTitle = this.electionInfo.title;
 
-      return electionTitle.includes("Election")
-        ? `${electionTitle}`
-        : `${electionTitle} Election`;
+      return (
+        electionTitle.toLowerCase().includes("election")
+          ? `${electionTitle}`
+          : `${electionTitle} Election`
+      ).toLowerCase();
     },
   },
 

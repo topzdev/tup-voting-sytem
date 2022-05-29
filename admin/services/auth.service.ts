@@ -8,7 +8,7 @@ export type UserRoles = "sadmin" | "admin" | "elec_ofc";
 export interface SystemLoginCredentials {
   usernameOrEmail?: string;
   password?: string;
-  allowedRole?: UserRoles;
+  allowedRoles?: UserRoles | UserRoles[];
 }
 
 export type AdminLoginCredentials = {

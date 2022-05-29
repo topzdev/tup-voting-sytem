@@ -47,6 +47,7 @@ import editUserMixin from "@/mixins/edit-user";
 import userServices from "@/services/user.service";
 import mixins from "vue-typed-mixins";
 import pageConfig from "@/configs/pages.config";
+import pageRoles from "@/configs/page-roles";
 import UserEditForm from "../forms/UserEditForm.vue";
 import authMixin from "../../../../mixins/auth.mixins";
 
@@ -106,7 +107,7 @@ export default mixins(editUserMixin, authMixin).extend({
                   },
                 },
                 "current-only-password",
-                "super-admin"
+                pageRoles.dialogs.removeAccount
               );
             }
           },

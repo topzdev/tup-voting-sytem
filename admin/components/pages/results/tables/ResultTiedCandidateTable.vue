@@ -83,6 +83,7 @@ import ResultCandidateLegends from "./ResultCandidateLegends.vue";
 import { Position } from "@/services/position.service";
 import mixins from "vue-typed-mixins";
 import authMixin from "@/mixins/auth.mixins";
+import pageRoles from "../../../../configs/page-roles";
 
 export default mixins(authMixin).extend({
   props: {
@@ -146,41 +147,40 @@ export default mixins(authMixin).extend({
 
   methods: {
     save() {
-      this.$accessor.system.showAuthenticationDialog({
-        button: {
-          yesFunction: async () => {
-            const candidatesWithPos = this.items.map((item, idx) => ({
-              candidate_id: item.id,
-              pos: idx + 1,
-            }));
+      this.systemAuthentication(
+        {
+          button: {
+            yesFunction: async () => {
+              const candidatesWithPos = this.items.map((item, idx) => ({
+                candidate_id: item.id,
+                pos: idx + 1,
+              }));
 
-            console.log(candidatesWithPos);
+              console.log(candidatesWithPos);
 
-            const data = {
-              election_id: this.position.election_id,
-              position_id: this.position.id,
-              candidatesWithPos,
-              tie_resolved_message: this.tie_resolved_message,
-            };
+              const data = {
+                election_id: this.position.election_id,
+                position_id: this.position.id,
+                candidatesWithPos,
+                tie_resolved_message: this.tie_resolved_message,
+              };
 
-            await resultsServices.resolveTie(data);
+              await resultsServices.resolveTie(data);
 
-            await this.$accessor.electionResult.fetchResults();
+              await this.$accessor.electionResult.fetchResults();
 
-            this.$accessor.snackbar.set({
-              show: true,
-              message: `${this.position.title} Tie Issue Resolved`,
-              timeout: 5000,
-              color: "success",
-            });
+              this.$accessor.snackbar.set({
+                show: true,
+                message: `${this.position.title} Tie Issue Resolved`,
+                timeout: 5000,
+                color: "success",
+              });
+            },
           },
         },
-        type: "default",
-        message:
-          "For Super Admins, enter your credential to approved this action.",
-        allowedRole: "super-admin",
-        show: true,
-      });
+        "current-only-password",
+        pageRoles.dialogs.resolveTie
+      );
     },
 
     reset() {

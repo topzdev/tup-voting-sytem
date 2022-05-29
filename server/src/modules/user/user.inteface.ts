@@ -6,6 +6,8 @@ export enum UserRole {
   ELECTION_OFFICER = "elec_ofc",
 }
 
+export type UserRoleValue = "sadmin" | "admin" | "elec_ofc";
+
 export interface GetUserQuery {
   search?: string;
   order?: any;

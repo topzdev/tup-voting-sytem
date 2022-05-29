@@ -49,6 +49,7 @@ import organizationServices, {
   Organization,
 } from "@/services/organization.service";
 import mixins from "vue-typed-mixins";
+import pageRoles from "../../../../configs/page-roles";
 
 const defaultAlert = {
   show: false,
@@ -96,46 +97,46 @@ export default mixins(manageOrganizationMixin, authMixin).extend({
           anyEventHide: false,
           yesFunction: async ({ hideDialog }) => {
             hideDialog();
-            this.$accessor.system.showAuthenticationDialog({
-              button: {
-                yesFunction: async () => {
-                  if (this.organization && this.organization.id) {
-                    this.loading = true;
-                    try {
-                      await organizationServices.delete(this.organization.id);
 
-                      this.$router.push(pageConfig.dashboard().this().route);
+            this.systemAuthentication(
+              {
+                button: {
+                  yesFunction: async () => {
+                    if (this.organization && this.organization.id) {
+                      this.loading = true;
+                      try {
+                        await organizationServices.delete(this.organization.id);
 
-                      this.$accessor.snackbar.set({
-                        show: true,
-                        message: `Organization ${this.organization.title} deleted`,
-                        timeout: 5000,
-                        color: "success",
-                      });
-                    } catch (error: any) {
-                      const message =
-                        error.response?.data?.error?.message || error.message;
+                        this.$router.push(pageConfig.dashboard().this().route);
 
-                      if (message) {
-                        this.alert = {
+                        this.$accessor.snackbar.set({
                           show: true,
-                          type: "error",
-                          message: message,
-                        };
+                          message: `Organization ${this.organization.title} deleted`,
+                          timeout: 5000,
+                          color: "success",
+                        });
+                      } catch (error: any) {
+                        const message =
+                          error.response?.data?.error?.message || error.message;
+
+                        if (message) {
+                          this.alert = {
+                            show: true,
+                            type: "error",
+                            message: message,
+                          };
+                        }
+                      } finally {
+                        hideDialog();
+                        this.loading = false;
                       }
-                    } finally {
-                      hideDialog();
-                      this.loading = false;
                     }
-                  }
+                  },
                 },
               },
-              type: "default",
-              message:
-                "The organization admin must authenticate first before approving this action.",
-              allowedRole: "admin",
-              show: true,
-            });
+              "current-only-password",
+              pageRoles.dialogs.deleteOrganization
+            );
           },
           noFunction: ({ hideDialog }) => {
             hideDialog();

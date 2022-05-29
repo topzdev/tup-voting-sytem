@@ -63,6 +63,7 @@ import mixins from "vue-typed-mixins";
 import electionOfficerServices from "@/services/election-officer.service";
 import userServices from "@/services/user.service";
 import { User } from "@/services/user.service";
+import pageRoles from "../../../../configs/page-roles";
 
 const defaultAlert = {
   show: false,
@@ -296,7 +297,7 @@ export default mixins(manageOrganizationMixin, authMixin).extend({
                 },
               },
               "current",
-              "super-admin"
+              pageRoles.dialogs.deleleElectionOfficer
             );
           },
           noFunction: ({ hideDialog }) => {
