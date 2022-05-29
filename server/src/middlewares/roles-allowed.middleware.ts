@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { HttpException } from "../helpers/errors/http.exception";
 import { UserRole } from "../modules/user/user.inteface";
 
-type RolesString = keyof typeof UserRole;
+export type RolesString = keyof typeof UserRole;
 
 const rolesAllowed = (roles: RolesString | RolesString[]) => {
   return (req: Request, res: Response, next: NextFunction) => {

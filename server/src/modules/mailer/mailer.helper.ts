@@ -11,7 +11,7 @@ const from = "TUP Voting admin@tupvoting.com";
 export const emailTemplates = {
   voterCredentails: {
     from,
-    subject: "Your voters credentails",
+    subject: "Your voters credentials",
     template: "voter-credentials" as EmailTemplates,
     title: "Your $electionTitle Voter Credentails",
   },

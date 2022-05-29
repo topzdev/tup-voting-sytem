@@ -33,7 +33,7 @@
           <v-item-group>
             <v-row>
               <v-col
-                md="4"
+                cols="4"
                 v-for="(candidate, idx) in data.candidates"
                 :key="idx"
               >

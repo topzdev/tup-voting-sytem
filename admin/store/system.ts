@@ -1,5 +1,6 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import { SystemLoginCredentials } from "../services/auth.service";
+import pageRoles from "../configs/page-roles";
+import { SystemLoginCredentials, UserRoles } from "../services/auth.service";
 
 type DialogButtonsFunction = ({ hideDialog: Function }) => void;
 
@@ -13,7 +14,7 @@ export type AuthenticationDialogConfig = {
   title?: string;
   message?: string;
   type?: AuthenticationDialogType;
-  allowedRole?: "super-admin" | "admin" | "all";
+  allowedRoles?: UserRoles[] | UserRoles;
   default?: {
     usernameOrEmail?: string;
     password?: string;
@@ -63,7 +64,7 @@ const defaultAuthenticationDialog: AuthenticationDialogConfig = {
   show: false,
   title: "",
   message: "",
-  allowedRole: "all",
+  allowedRoles: pageRoles.dialogs.default,
   default: {
     usernameOrEmail: "",
     password: "",

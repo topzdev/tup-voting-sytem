@@ -29,7 +29,8 @@
             <v-col
               v-for="item in completed"
               :key="item.id"
-              cols="12"
+              sm="12"
+              md="6"
               lg="4"
             >
               <election-card :election="item" />

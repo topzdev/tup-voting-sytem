@@ -13,14 +13,14 @@ router.get("/:id", adminAuth, positionController.getOneById);
 router.get(
   "/all/:electionId",
   adminAuth,
-  rolesAllowed("SUPER_ADMIN"),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   positionController.getAll
 );
 
 router.post(
   "/",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   validate(positionValidator.create),
   positionController.create
 );
@@ -28,7 +28,7 @@ router.post(
 router.put(
   "/",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   validate(positionValidator.update),
   positionController.update
 );
@@ -36,21 +36,21 @@ router.put(
 router.put(
   "/display-order",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   positionController.updateDisplayOrder
 );
 
 router.delete(
   "/:id",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   positionController.remove
 );
 
 router.put(
   "/restore/:id",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   positionController.restore
 );
 

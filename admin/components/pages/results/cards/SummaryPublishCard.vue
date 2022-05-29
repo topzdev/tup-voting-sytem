@@ -34,8 +34,11 @@ import Vue, { PropOptions } from "vue";
 import { ResultIssue } from "@/services/results.service";
 import { Election, ElectionWithUrl } from "@/services/election.service";
 import settingsServices from "../../../../services/settings.service";
+import pageRoles from "../../../../configs/page-roles";
+import mixins from "vue-typed-mixins";
+import authMixin from "../../../../mixins/auth.mixins";
 
-export default Vue.extend({
+export default mixins(authMixin).extend({
   props: {
     election: {
       type: Object,
@@ -113,36 +116,35 @@ export default Vue.extend({
           yesFunction: async ({ hideDialog }) => {
             hideDialog();
 
-            this.$accessor.system.showAuthenticationDialog({
-              button: {
-                yesFunction: async () => {
-                  try {
-                    await this.$accessor.electionResult.publishResult();
+            this.systemAuthentication(
+              {
+                button: {
+                  yesFunction: async () => {
+                    try {
+                      await this.$accessor.electionResult.publishResult();
 
-                    this.$accessor.snackbar.set({
-                      show: true,
-                      message: `Election result is now published`,
-                      timeout: 5000,
-                      color: "success",
-                    });
-                  } catch (error) {
-                    console.error(error);
+                      this.$accessor.snackbar.set({
+                        show: true,
+                        message: `Election result is now published`,
+                        timeout: 5000,
+                        color: "success",
+                      });
+                    } catch (error) {
+                      console.error(error);
 
-                    this.$accessor.snackbar.set({
-                      show: true,
-                      message: `Can't publish result now, Try again later.`,
-                      timeout: 5000,
-                      color: "error",
-                    });
-                  }
+                      this.$accessor.snackbar.set({
+                        show: true,
+                        message: `Can't publish result now, Try again later.`,
+                        timeout: 5000,
+                        color: "error",
+                      });
+                    }
+                  },
                 },
               },
-              type: "default",
-              message:
-                "The election officer must authenticate first before approving this action.",
-              allowedRole: "super-admin",
-              show: true,
-            });
+              "current-only-password",
+              pageRoles.dialogs.publishResult
+            );
           },
           noFunction: ({ hideDialog }) => {
             hideDialog();
@@ -161,34 +163,33 @@ export default Vue.extend({
           yesFunction: async ({ hideDialog }) => {
             hideDialog();
 
-            this.$accessor.system.showAuthenticationDialog({
-              button: {
-                yesFunction: async () => {
-                  try {
-                    await this.$accessor.electionResult.unPublishResult();
+            this.systemAuthentication(
+              {
+                button: {
+                  yesFunction: async () => {
+                    try {
+                      await this.$accessor.electionResult.unPublishResult();
 
-                    this.$accessor.snackbar.set({
-                      show: true,
-                      message: `Election result is unpublished`,
-                      timeout: 5000,
-                      color: "success",
-                    });
-                  } catch (error) {
-                    this.$accessor.snackbar.set({
-                      show: true,
-                      message: `Can't unpublish result now, Try again later.`,
-                      timeout: 5000,
-                      color: "error",
-                    });
-                  }
+                      this.$accessor.snackbar.set({
+                        show: true,
+                        message: `Election result is unpublished`,
+                        timeout: 5000,
+                        color: "success",
+                      });
+                    } catch (error) {
+                      this.$accessor.snackbar.set({
+                        show: true,
+                        message: `Can't unpublish result now, Try again later.`,
+                        timeout: 5000,
+                        color: "error",
+                      });
+                    }
+                  },
                 },
               },
-              type: "default",
-              message:
-                "The election officer must authenticate first before approving this action.",
-              allowedRole: "super-admin",
-              show: true,
-            });
+              "current-only-password",
+              pageRoles.dialogs.unPublishResult
+            );
           },
           noFunction: ({ hideDialog }) => {
             hideDialog();

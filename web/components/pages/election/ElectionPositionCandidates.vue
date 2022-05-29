@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col class="text-subtitle-2 text-md-h6 font-weight-black" cols="12">
+    <v-col cols="12">
       <h2>Positions and Candidates</h2>
     </v-col>
     <template v-if="positions && positions.length">
@@ -12,8 +12,7 @@
             <v-col
               v-for="candidate in item.candidates"
               :key="candidate.id"
-              md="4"
-              
+              cols="4"
             >
               <candidate-card :candidate="candidate"></candidate-card>
             </v-col>
