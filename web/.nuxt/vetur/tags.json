@@ -1,6 +1,12 @@
 {
-  "FormsLoginForm": {
-    "description": "Auto imported from components/forms/LoginForm.vue"
+  "AppAvatar": {
+    "description": "Auto imported from components/app/AppAvatar.vue"
+  },
+  "AppImage": {
+    "description": "Auto imported from components/app/AppImage.vue"
+  },
+  "AppLoading": {
+    "description": "Auto imported from components/app/AppLoading.vue"
   },
   "CardsCandidateCard": {
     "description": "Auto imported from components/cards/CandidateCard.vue"
@@ -20,14 +26,8 @@
   "ChipsPartyChip": {
     "description": "Auto imported from components/chips/PartyChip.vue"
   },
-  "AppAvatar": {
-    "description": "Auto imported from components/app/AppAvatar.vue"
-  },
-  "AppImage": {
-    "description": "Auto imported from components/app/AppImage.vue"
-  },
-  "AppLoading": {
-    "description": "Auto imported from components/app/AppLoading.vue"
+  "FormsLoginForm": {
+    "description": "Auto imported from components/forms/LoginForm.vue"
   },
   "InputsPasswordField": {
     "description": "Auto imported from components/inputs/PasswordField.vue"
@@ -37,6 +37,9 @@
   },
   "PagesBallotStepper": {
     "description": "Auto imported from components/pages/ballot/BallotStepper.vue"
+  },
+  "PagesCandidatePageHeader": {
+    "description": "Auto imported from components/pages/candidate/CandidatePageHeader.vue"
   },
   "PagesElectionFinalTally": {
     "description": "Auto imported from components/pages/election/ElectionFinalTally.vue"
@@ -52,9 +55,6 @@
   },
   "PagesHomepageCarousel": {
     "description": "Auto imported from components/pages/homepage/HomepageCarousel.vue"
-  },
-  "PagesCandidatePageHeader": {
-    "description": "Auto imported from components/pages/candidate/CandidatePageHeader.vue"
   },
   "PagesPartyPageHeader": {
     "description": "Auto imported from components/pages/party/PartyPageHeader.vue"

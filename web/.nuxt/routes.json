@@ -2,80 +2,80 @@
   {
     "name": "pre-register",
     "path": "/pre-register",
-    "component": "C:\\\\Users\\\\tunga\\\\OneDrive\\\\Desktop\\\\TUP-Manila Web-based Voting System\\\\System\\\\tup-voting-sytem\\\\web\\\\pages\\\\pre-register\\\\index.vue",
+    "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\pre-register\\\\index.vue",
     "chunkName": "pages/pre-register/index",
-    "_name": "_d36b18c0"
+    "_name": "_74344464"
   },
   {
     "name": "election-slug",
     "path": "/election/:slug",
-    "component": "C:\\\\Users\\\\tunga\\\\OneDrive\\\\Desktop\\\\TUP-Manila Web-based Voting System\\\\System\\\\tup-voting-sytem\\\\web\\\\pages\\\\election\\\\_slug\\\\index.vue",
+    "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\index.vue",
     "chunkName": "pages/election/_slug/index",
-    "_name": "_3fed4f94"
+    "_name": "_2c66a0f2"
   },
   {
     "path": "/vote/:slug?",
-    "component": "C:\\\\Users\\\\tunga\\\\OneDrive\\\\Desktop\\\\TUP-Manila Web-based Voting System\\\\System\\\\tup-voting-sytem\\\\web\\\\pages\\\\vote\\\\_slug.vue",
+    "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\vote\\\\_slug.vue",
     "chunkName": "pages/vote/_slug",
     "children": [
       {
         "name": "vote-slug",
         "path": "",
-        "component": "C:\\\\Users\\\\tunga\\\\OneDrive\\\\Desktop\\\\TUP-Manila Web-based Voting System\\\\System\\\\tup-voting-sytem\\\\web\\\\pages\\\\vote\\\\_slug\\\\index.vue",
+        "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\vote\\\\_slug\\\\index.vue",
         "chunkName": "pages/vote/_slug/index",
-        "_name": "_b4d46972"
+        "_name": "_32e65bfa"
       },
       {
         "path": "ballot",
-        "component": "C:\\\\Users\\\\tunga\\\\OneDrive\\\\Desktop\\\\TUP-Manila Web-based Voting System\\\\System\\\\tup-voting-sytem\\\\web\\\\pages\\\\vote\\\\_slug\\\\ballot.vue",
+        "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\vote\\\\_slug\\\\ballot.vue",
         "chunkName": "pages/vote/_slug/ballot",
         "children": [
           {
             "name": "vote-slug-ballot",
             "path": "",
-            "component": "C:\\\\Users\\\\tunga\\\\OneDrive\\\\Desktop\\\\TUP-Manila Web-based Voting System\\\\System\\\\tup-voting-sytem\\\\web\\\\pages\\\\vote\\\\_slug\\\\ballot\\\\index.vue",
+            "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\vote\\\\_slug\\\\ballot\\\\index.vue",
             "chunkName": "pages/vote/_slug/ballot/index",
-            "_name": "_04d33423"
+            "_name": "_48b48242"
           },
           {
             "name": "vote-slug-ballot-final",
             "path": "final",
-            "component": "C:\\\\Users\\\\tunga\\\\OneDrive\\\\Desktop\\\\TUP-Manila Web-based Voting System\\\\System\\\\tup-voting-sytem\\\\web\\\\pages\\\\vote\\\\_slug\\\\ballot\\\\final.vue",
+            "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\vote\\\\_slug\\\\ballot\\\\final.vue",
             "chunkName": "pages/vote/_slug/ballot/final",
-            "_name": "_4a21dac7"
+            "_name": "_20f46583"
           },
           {
             "name": "vote-slug-ballot-review",
             "path": "review",
-            "component": "C:\\\\Users\\\\tunga\\\\OneDrive\\\\Desktop\\\\TUP-Manila Web-based Voting System\\\\System\\\\tup-voting-sytem\\\\web\\\\pages\\\\vote\\\\_slug\\\\ballot\\\\review.vue",
+            "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\vote\\\\_slug\\\\ballot\\\\review.vue",
             "chunkName": "pages/vote/_slug/ballot/review",
-            "_name": "_0ab33952"
+            "_name": "_03b59fca"
           }
         ],
-        "_name": "_7d5b037f"
+        "_name": "_5b44d443"
       }
     ],
-    "_name": "_c867264a"
+    "_name": "_6165419f"
   },
   {
     "name": "election-slug-candidate-candidateId",
     "path": "/election/:slug?/candidate/:candidateId?",
-    "component": "C:\\\\Users\\\\tunga\\\\OneDrive\\\\Desktop\\\\TUP-Manila Web-based Voting System\\\\System\\\\tup-voting-sytem\\\\web\\\\pages\\\\election\\\\_slug\\\\candidate\\\\_candidateId.vue",
+    "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\candidate\\\\_candidateId.vue",
     "chunkName": "pages/election/_slug/candidate/_candidateId",
-    "_name": "_61076466"
+    "_name": "_24c27622"
   },
   {
     "name": "election-slug-party-partyId",
     "path": "/election/:slug?/party/:partyId?",
-    "component": "C:\\\\Users\\\\tunga\\\\OneDrive\\\\Desktop\\\\TUP-Manila Web-based Voting System\\\\System\\\\tup-voting-sytem\\\\web\\\\pages\\\\election\\\\_slug\\\\party\\\\_partyId.vue",
+    "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\election\\\\_slug\\\\party\\\\_partyId.vue",
     "chunkName": "pages/election/_slug/party/_partyId",
-    "_name": "_11d71dac"
+    "_name": "_0fa4a930"
   },
   {
     "name": "index",
     "path": "/",
-    "component": "C:\\\\Users\\\\tunga\\\\OneDrive\\\\Desktop\\\\TUP-Manila Web-based Voting System\\\\System\\\\tup-voting-sytem\\\\web\\\\pages\\\\index.vue",
+    "component": "C:\\\\development\\\\tup-voting-system\\\\web\\\\pages\\\\index.vue",
     "chunkName": "pages/index",
-    "_name": "_5c54590d"
+    "_name": "_274d10d1"
   }
 ]
