@@ -1,9 +1,10 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="8" class="mx-auto">
-        <v-row>
-          <!-- <v-col cols="12">
+  <row>
+    <v-col class="px-0 py-0" cols="12">
+      <v-row>
+        <v-col cols="12" lg="10" xl="8" class="mx-auto">
+          <v-row>
+            <!-- <v-col cols="12">
             <pre
               style="
                 position: fixed;
@@ -20,48 +21,49 @@
             >
           </v-col> -->
 
-          <v-col v-if="summaryError.length" cols="12" class="mx-auto">
-            <v-alert type="error" outlined>
-              <ul>
-                <li v-for="item in summaryError" :key="item.id">
-                  <span v-html="item.title"></span>
+            <v-col v-if="summaryError.length" cols="12" class="mx-auto">
+              <v-alert type="error" outlined>
+                <ul>
+                  <li v-for="item in summaryError" :key="item.id">
+                    <span v-html="item.title"></span>
 
-                  <v-btn
-                    text
-                    small
-                    color="error"
-                    @click="scrollToElement(item.id)"
-                    >Fix me!</v-btn
-                  >
-                </li>
-              </ul>
-            </v-alert>
-          </v-col>
+                    <v-btn
+                      text
+                      small
+                      color="error"
+                      @click="scrollToElement(item.id)"
+                      >Fix me!</v-btn
+                    >
+                  </li>
+                </ul>
+              </v-alert>
+            </v-col>
 
-          <v-col
-            v-for="(item, idx) in ballotItems"
-            :key="idx"
-            cols="12"
-            class="mx-auto"
-          >
-            <ballot-card
-              :id="postionIdGenerator(item.id)"
-              :data="item"
-              :error="showError ? hasError(item.id) : null"
-            />
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
-    <ballot-stepper>
-      <v-app-bar-title>Ballot</v-app-bar-title>
+            <v-col
+              v-for="(item, idx) in ballotItems"
+              :key="idx"
+              cols="12"
+              class="mx-auto"
+            >
+              <ballot-card
+                :id="postionIdGenerator(item.id)"
+                :data="item"
+                :error="showError ? hasError(item.id) : null"
+              />
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+      <ballot-stepper>
+        <v-app-bar-title>Ballot</v-app-bar-title>
 
-      <v-btn class="ml-auto" color="primary" large @click="submit">
-        Next - Review Ballot
-      </v-btn>
-    </ballot-stepper>
-    <candidate-dialog />
-  </v-container>
+        <v-btn class="ml-auto" color="primary" large @click="submit">
+          Next - Review Ballot
+        </v-btn>
+      </ballot-stepper>
+      <candidate-dialog />
+    </v-col>
+  </row>
 </template>
 
 <script lang="ts">

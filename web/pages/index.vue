@@ -1,44 +1,56 @@
 <template>
-  <v-container>
-    <homepage-carousel class="mb-5" />
+  <div>
+    <homepage-carousel class="mb-5 mt-n5" />
+    <v-container>
+      <v-row>
+        <template v-if="elections">
+          <v-col v-if="preview && preview.length" cols="12" class="mx-auto">
+            <h2 class="mb-2">Preview Election</h2>
 
-    <v-row>
-      <template v-if="elections">
-        <v-col v-if="preview && preview.length" md="12" class="mx-auto">
-          <h2 class="mb-2">Preview Election</h2>
+            <v-row>
+              <v-col
+                v-for="item in preview"
+                :key="item.id"
+                cols="12"
+                md="6"
+                xl="4"
+              >
+                <election-card :election="item" />
+              </v-col>
+            </v-row>
+          </v-col>
+          <v-col v-if="running && running.length" cols="12" class="mx-auto">
+            <h2 class="mb-2">Currently Running Elections</h2>
 
-          <v-row>
-            <v-col v-for="item in preview" :key="item.id" cols="12" lg="4">
-              <election-card :election="item" />
-            </v-col>
-          </v-row>
-        </v-col>
-        <v-col v-if="running && running.length" md="12" class="mx-auto">
-          <h2 class="mb-2">Currently Running Elections</h2>
+            <v-row>
+              <v-col
+                v-for="item in running"
+                :key="item.id"
+                cols="12"
+                md="6"
+                xl="4"
+              >
+                <election-card :election="item" />
+              </v-col>
+            </v-row>
+          </v-col>
+          <v-col v-if="completed && completed.length" cols="12" class="mx-auto">
+            <h2 class="mb-2">Completed Elections</h2>
 
-          <v-row>
-            <v-col v-for="item in running" :key="item.id" cols="12" lg="4">
-              <election-card :election="item" />
-            </v-col>
-          </v-row>
-        </v-col>
-        <v-col v-if="completed && completed.length" md="12" class="mx-auto">
-          <h2 class="mb-2">Completed Elections</h2>
-
-          <v-row>
-            <v-col
-              v-for="item in completed"
-              :key="item.id"
-              sm="12"
-              md="6"
-              lg="4"
-            >
-              <election-card :election="item" />
-            </v-col>
-          </v-row>
-        </v-col>
-      </template>
-      <!-- <v-col cols="12">
+            <v-row>
+              <v-col
+                v-for="item in completed"
+                :key="item.id"
+                cols="12"
+                md="6"
+                xl="4"
+              >
+                <election-card :election="item" />
+              </v-col>
+            </v-row>
+          </v-col>
+        </template>
+        <!-- <v-col cols="12">
         <h2 class="mb-2">Party</h2>
 
         <v-row>
@@ -47,8 +59,9 @@
           </v-col>
         </v-row>
       </v-col> -->
-    </v-row>
-  </v-container>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 

@@ -1,38 +1,69 @@
 <template>
-  <page-center class="d-flex flex-start" style="height: 100vh">
-    <v-row>
-      <v-col cols="4" class="mx-auto d-flex align-center flex-column">
-        <pre-register-header v-if="election" :election="election" />
+  <v-row class="my-0" style="height: 100%">
+    <v-col class="py-0" cols="12" lg="8">
+      <v-img
+        class="d-flex align-end px-5"
+        height="100%"
+        width="100%"
+        alt="Technological University of the Philippines Art by strryblstar"
+        :src="background"
+      >
+        <p class="text-primary white--text">
+          <a
+            class="white--text text-decoration-none"
+            href="https://www.deviantart.com/strryblstar/art/Technological-University-of-the-Philippines-TUP-573058166"
+            >"Technological University of the Philippines"</a
+          >
+          Art by
+          <a
+            class="text-decoration-underline white--text font-weight-bold"
+            href="https://www.deviantart.com/strryblstar"
+            >strryblstar</a
+          >
+        </p>
+      </v-img>
+    </v-col>
+    <v-col cols="12" lg="4">
+      <v-card
+        flat
+        style="height: 100%"
+        class="d-flex flex-column justify-center align-center"
+      >
+        <v-card-text class="text--primary text-center">
+          <pre-register-header v-if="election" :election="election" />
 
-        <v-row style="width: 100%" class="mt-5">
-          <v-col
+          <template
             v-if="!success && !error"
             cols="12"
             class="d-flex justify-center"
           >
-            <v-btn color="red white--text" large @click="showGoogleConsent"
+            <v-btn
+              class="mt-5"
+              color="red white--text"
+              large
+              @click="showGoogleConsent"
               ><v-icon>mdi-google</v-icon>
-              <span class="ml-2">Pre-Register with Google</span>
+              <span>Pre-Register with Google</span>
             </v-btn>
-          </v-col>
-          <v-col v-if="!error && success" class="text-center" cols="12">
-            <h1>You're Successfully Registered</h1>
+          </template>
+          <template v-if="!error && success" class="text-center" cols="12">
+            <h2 class="mt-5">You're Successfully Registered</h2>
             <p>
               After the admin verifiy your accoun proceed to election ballot. We
               will sent you your credentials thru email when election is started
             </p>
             <v-btn color="primary" to="/">Go to Homepage</v-btn>
-          </v-col>
-          <v-col v-else-if="error" class="text-center mt-5">
-            <election-error :electionError="error" />
+          </template>
+          <template v-else-if="error" class="text-center mt-5">
+            <election-error class="mt-5" :electionError="error" />
             <v-btn large class="mt-5" color="error" @click="reset"
               >Reload</v-btn
             >
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
-  </page-center>
+          </template>
+        </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
@@ -47,6 +78,7 @@ export default Vue.extend({
 
   data() {
     return {
+      background: require("~/static/pre-register-background.gif"),
       election: null as Election | null,
       success: null,
       error: null,

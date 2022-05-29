@@ -1,6 +1,6 @@
 <template>
-  <v-card rounded flat>
-    <v-carousel height="450" hide-delimiters>
+  <v-card v-resize="onResize" rounded outlined>
+    <v-carousel :height="carouselHeight" hide-delimiters>
       <v-carousel-item
         v-for="(item, i) in items"
         :key="i"
@@ -16,6 +16,12 @@
 import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
+  data() {
+    return {
+      carouselHeight: 500,
+    };
+  },
+
   computed: {
     items() {
       return [
@@ -29,8 +35,22 @@ export default Vue.extend({
       ];
     },
   },
+
+  mounted() {
+    this.onResize();
+  },
+
+  methods: {
+    onResize() {
+      const windowWidth = window.innerWidth;
+      if (windowWidth <= 600) {
+        this.carouselHeight = 200;
+      } else if (windowWidth > 600 && windowWidth <= 960) {
+        this.carouselHeight = 350;
+      } else {
+        this.carouselHeight = 500;
+      }
+    },
+  },
 });
 </script>
-
-<style>
-</style>
