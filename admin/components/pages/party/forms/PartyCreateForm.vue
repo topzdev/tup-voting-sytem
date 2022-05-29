@@ -36,7 +36,7 @@
         <v-row>
           <v-col cols="12">
             <v-text-field
-              label="Partylist Name*"
+              label="Party name*"
               outlined
               v-model="form.title"
               :rules="rules.title"
@@ -46,7 +46,7 @@
 
           <v-col cols="12">
             <v-text-field
-              label="Partylist Alias/Ticker *"
+              label="Party Alias/Ticker *"
               outlined
               v-model="form.ticker"
               :rules="rules.ticker"
