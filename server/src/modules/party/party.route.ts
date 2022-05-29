@@ -8,21 +8,31 @@ const router = express.Router();
 
 console.log("module: Party Module Loaded");
 
-router.get("/", adminAuth, rolesAllowed("SUPER_ADMIN"), partyController.getAll);
+router.get(
+  "/",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
+  partyController.getAll
+);
 
-router.get("/:id", adminAuth, partyController.getOneById);
+router.get(
+  "/:id",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
+  partyController.getOneById
+);
 
 router.get(
   "/all/:electionId",
   adminAuth,
-  rolesAllowed("SUPER_ADMIN"),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   partyController.getAll
 );
 
 router.post(
   "/",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   validate(partyValidator.create),
   partyController.create
 );
@@ -30,7 +40,7 @@ router.post(
 router.put(
   "/",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   validate(partyValidator.update),
   partyController.update
 );
@@ -38,28 +48,28 @@ router.put(
 router.delete(
   "/:id",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   partyController.remove
 );
 
 router.put(
   "/restore/:id",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   partyController.restore
 );
 
 router.put(
   "/archive/:id",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   partyController.archive
 );
 
 router.put(
   "/unarchive/:id",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   partyController.unarchive
 );
 

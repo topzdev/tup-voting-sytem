@@ -1,5 +1,6 @@
 import apiClient from ".";
 import transformParamsToUrl from "@/helpers/paramsToUrl.helpers";
+import { ElectionOfficer } from "./election-officer.service";
 
 const url = "/api/v1/user";
 
@@ -11,7 +12,11 @@ export type User = {
   email_address: string;
   disabled: boolean;
   role: string;
+  election_officer_id: number;
+  election_officer?: ElectionOfficer;
 };
+
+export type AuthUser = User;
 
 export interface GetUsersDto {
   search?: string;
@@ -24,6 +29,7 @@ export interface GetUsersDto {
 export enum UserRole {
   SUPER_ADMIN = "sadmin",
   ADMIN = "admin",
+  ELECTION_OFFICER = "elec_ofc",
 }
 
 export type CreateUserDto = {
@@ -32,7 +38,7 @@ export type CreateUserDto = {
   username: string;
   password: string;
   email_address: string;
-  role: UserRole;
+  role: Omit<UserRole, "elect_ofc">;
 };
 
 export type UpdateUserDto = {

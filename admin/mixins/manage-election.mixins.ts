@@ -26,8 +26,8 @@ type ElectionPages =
   | "positions"
   | "voters"
   | "settings"
-  | "launchpad"
-  | "extra";
+  | "launchpad";
+// | "extra";
 
 type ElectionPageLinks = Record<ElectionPages, ManageElectionPage>;
 
@@ -119,12 +119,12 @@ const manageElectionMixins = Vue.extend({
           status: pageStatus.launchpad,
         },
 
-        extra: {
-          icon: icons.development,
-          title: "Development",
-          toolbarTitle: "Development Extra",
-          to: `${basePath}/extra`,
-        },
+        // extra: {
+        //   icon: icons.development,
+        //   title: "Development",
+        //   toolbarTitle: "Development Extra",
+        //   to: `${basePath}/extra`,
+        // },
       };
     },
 

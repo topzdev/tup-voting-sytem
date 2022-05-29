@@ -25,6 +25,7 @@ import userServices from "@/services/user.service";
 import PageBars from "@/components/bars/PageBars.vue";
 import UserCreateForm from "@/components/pages/users/forms/UserCreateForm.vue";
 import Vue, { PropOptions } from "vue";
+import pageConfig from "../../../configs/pages.config";
 
 export default Vue.extend({
   components: { UserCreateForm, PageBars },
@@ -54,7 +55,7 @@ export default Vue.extend({
   methods: {
     cancelFunc() {
       this.isOpenLocal = false;
-      this.$nuxt.$router.push("/settings/user");
+      this.$nuxt.$router.push(pageConfig.users().this().route);
     },
 
     async submitFunc(body: any) {
@@ -66,7 +67,7 @@ export default Vue.extend({
           timeout: 5000,
           color: "success",
         });
-        this.$nuxt.$router.push("/settings/user");
+        this.$nuxt.$router.push(pageConfig.users().this().route);
       } catch (error: any) {
         throw error.response.data.error;
       }

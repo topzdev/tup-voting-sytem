@@ -11,9 +11,12 @@ import { unflatten } from "flat";
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { page, take, order, search, withArchive } = req.query as any;
+    const user = req.admin;
+
+    console.log(user);
 
     res.status(200).json(
-      await organizationService.getAll({
+      await organizationService.getAll(user, {
         page: page ? parseInt(page) : undefined,
         take: take ? parseInt(take) : undefined,
         order,

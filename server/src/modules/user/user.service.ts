@@ -1,9 +1,10 @@
-import { FindManyOptions, getRepository, ILike, Not } from "typeorm";
+import { Brackets, FindManyOptions, getRepository, ILike, Not } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
 import {
   genHashedPassword,
   validatePassword,
 } from "../../helpers/password.helper";
+import { PickedUser } from "../../type/express-serve-static-core";
 import securityServices from "../security/security.service";
 import { User } from "./entity/user.entity";
 import userHelper from "./user.helper";
@@ -13,40 +14,77 @@ import {
   CreateUser,
   GetUserQuery,
   UpdateUser,
+  UserRole,
 } from "./user.inteface";
 
 // const User = getRepository(User);
 
-const getAll = async (_query: GetUserQuery) => {
-  let options: FindManyOptions<User> = {};
+const fieldsNeeded = [
+  "user.id",
+  "user.firstname",
+  "user.lastname",
+  "user.username",
+  "user.role",
+  "user.disabled",
+  "user.email_address",
+];
 
-  if (_query.search) {
-    options.where = [
-      { firstname: ILike(`%${_query.search}%`) },
-      { lastname: ILike(`%${_query.search}%`) },
-      { username: ILike(`%${_query.search}%`) },
-      { email_address: ILike(`%${_query.search}%`) },
-    ];
+const getAll = async (user: PickedUser, _query: GetUserQuery) => {
+  const userRepository = getRepository(User);
+
+  let builder = userRepository
+    .createQueryBuilder("user")
+    .select(fieldsNeeded)
+    .where("user.role NOT IN(:...roles)", {
+      roles: [UserRole["ELECTION_OFFICER"], UserRole["SUPER_ADMIN"]],
+    });
+
+  if (user) {
+    builder = builder.andWhere("user.id != :user_id", {
+      user_id: user.id,
+    });
   }
 
+  console.log("get all but user", user);
+
+  if (_query.search) {
+    builder = builder.andWhere(
+      new Brackets((sqb) => {
+        sqb.orWhere("user.firstname ILIKE :firstname", {
+          firstname: _query.search,
+        });
+        sqb.orWhere("user.lastname ILIKE :lastname", {
+          lastname: _query.search,
+        });
+        sqb.orWhere("user.username ILIKE :username", {
+          username: _query.search,
+        });
+        sqb.orWhere("user.email_address ILIKE :email_address", {
+          email_address: _query.search,
+        });
+      })
+    );
+  }
+
+  builder = builder.orderBy({
+    "user.created_at": "DESC",
+  });
+
   if (_query.order) {
-    options.order = _query.order;
+    builder = builder.addOrderBy("user.firstname", _query.order);
   }
 
   if (_query.page && _query.take) {
-    options.skip = (_query.page - 1) * _query.take;
-    options.take = _query.take;
+    const offset = _query.page * _query.take - _query.take;
+    builder = builder.offset(offset).limit(_query.take);
   }
 
-  const [users, count] = await User.findAndCount(options);
-
-  console.log("Test", {
-    users,
-  });
+  const [items, count] = await builder.getManyAndCount();
 
   return {
-    items: users,
+    items,
     count,
+    itemsCount: items.length,
   };
 };
 

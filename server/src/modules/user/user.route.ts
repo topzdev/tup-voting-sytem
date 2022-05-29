@@ -25,7 +25,7 @@ router.get(
 router.get(
   "/my-account",
   adminAuth,
-  rolesAllowed(["SUPER_ADMIN", "ADMIN"]),
+  rolesAllowed(["SUPER_ADMIN", "ADMIN", "ELECTION_OFFICER"]),
   userController.myAccount
 );
 

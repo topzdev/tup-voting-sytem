@@ -2,9 +2,10 @@ import { Brackets, getRepository, Not } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
 import parseDate from "../../helpers/parse-date.helper";
 import photoUploader from "../../helpers/photo-uploader.helper";
+import { PickedUser } from "../../type/express-serve-static-core";
 import { Candidate } from "../candidate/entity/candidate.entity";
 import { finalStatusSubquery } from "../launchpad/launchpad.helper";
-import { LaunchpadValidationData } from "../launchpad/launchpad.interface";
+import { Organization } from "../organization/entity/organization.entity";
 import overviewHelpers from "../overview/overview.helpers";
 import { Photo } from "../photo/photo.service";
 import electionHelper from "./election.helper";
@@ -15,13 +16,19 @@ import {
 } from "./election.interface";
 import { ElectionLogo } from "./entity/election-logo.entity";
 import { Election } from "./entity/election.entity";
-const getAll = async (_orgId: string, _query: GetElectionBody) => {
+const getAll = async (
+  _orgId: Organization["id"],
+  user: PickedUser,
+  _query: GetElectionBody
+) => {
   const electionRepository = getRepository(Election);
   const searchStirng = _query.search ? _query.search : "";
   const withArchive = _query.withArchive ? _query.withArchive : "";
   if (!_orgId) {
     throw new HttpException("BAD_REQUEST", "Organization Id is required");
   }
+
+  await electionHelper.electionOfficerGuard(user, _orgId);
 
   let builder = electionRepository.createQueryBuilder("election");
 
@@ -74,61 +81,6 @@ const getAll = async (_orgId: string, _query: GetElectionBody) => {
   };
 };
 
-const getPublic = async (_orgId: string, _query: GetElectionBody) => {
-  const electionRepository = getRepository(Election);
-  const searchStirng = _query.search ? _query.search : "";
-
-  if (!_orgId) {
-    throw new HttpException("BAD_REQUEST", "Organization Id is required");
-  }
-
-  let builder = electionRepository.createQueryBuilder("election");
-  const election = (await builder.getOne()) as LaunchpadValidationData;
-  builder = builder
-    .addSelect(finalStatusSubquery(builder.alias))
-    .andWhere("election.organization_id = :orgId", {
-      orgId: _orgId,
-    })
-    // .where("election.final_status = 'preview'")
-    .where("election.is_public = false")
-    .leftJoinAndSelect("election.logo", "logo");
-
-  if (searchStirng) {
-    builder = builder.andWhere(
-      new Brackets((sqb) => {
-        sqb.orWhere("election.title ILIKE :title", {
-          title: `%${searchStirng}%`,
-        });
-      })
-    );
-  }
-
-  builder = builder.orderBy({
-    "election.created_at": "DESC",
-  });
-
-  if (_query.order) {
-    builder = builder.addOrderBy("election.title", _query.order);
-  }
-
-  if (_query.page && _query.take) {
-    const offset = _query.page * _query.take - _query.take;
-    builder = builder.offset(offset).limit(_query.take);
-  }
-
-  const items = await builder.getMany();
-
-  const totalCount = await electionRepository.count({
-    where: { organization_id: _orgId },
-  });
-  console.log("test");
-  return {
-    items,
-    totalCount,
-    itemsCount: items.length,
-  };
-};
-
 const getElectionWinners = async (_election_id: number) => {
   const candidateRepository = getRepository(Candidate);
 
@@ -167,19 +119,6 @@ const getBySlug = async (_slug: string) => {
 
   const election = await builder.getOne();
 
-  // await Election.findOne({
-  //   where: {
-  //     slug: _slug,
-  //     archive: false,
-  //   },
-  //   relations: [
-  //     "logo",
-  //     "organization",
-  //     "organization.theme",
-  //     "organization.logo",
-  //   ],
-  // });
-
   const urls = overviewHelpers.generateElectionUrls(election);
 
   return { ...election, urls } || null;
@@ -189,7 +128,7 @@ const isExistBySlug = async (_slug: string) => {
   return !!(await getBySlug(_slug));
 };
 
-const getById = async (_election_id: string) => {
+const getById = async (user: PickedUser, _election_id: string) => {
   if (!_election_id)
     throw new HttpException("BAD_REQUEST", "Election ID is required");
 
@@ -210,19 +149,9 @@ const getById = async (_election_id: string) => {
 
   const election = await builder.getOne();
 
-  // const election = await Election.findOne(_id, {
-  //   relations: [
-  //     "logo",
-  //     "organization",
-  //     "organization.theme",
-  //     "organization.logo",
-  //   ],
-  //   where: {
-  //     archive: false,
-  //   },
-  // });
+  if (!election) throw new HttpException("NOT_FOUND", "Election not found");
 
-  // console.log(election);
+  await electionHelper.electionOfficerGuard(user, election.organization_id);
 
   const urls = overviewHelpers.generateElectionUrls(election);
 
@@ -399,7 +328,6 @@ const electionServices = {
   unarchive,
   isExistBySlug,
   getBySlug,
-  getPublic,
   getElectionWinners,
 };
 

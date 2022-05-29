@@ -1,19 +1,26 @@
 <template>
   <span>
     <page-bars
-      backTo="/"
+      :backTo="backTo"
       backTooltip="Back to Organization"
       :title="pageBarTitle"
       :logo="pageBarLogo"
     >
       <v-btn
+        v-if="rolesAllowed(this.pageRoles.organization.manage)"
         class="ml-auto mr-2"
         text
         large
-        :to="`/manage/organization/${organizationId}/edit`"
+        :to="organizationEditRoute"
         >Manage</v-btn
       >
-      <v-btn color="primary" :to="createPage" large>New Election</v-btn>
+      <v-btn
+        v-if="rolesAllowed(this.pageRoles.organization.create)"
+        color="primary"
+        :to="createElectionRoute"
+        large
+        >New Election</v-btn
+      >
     </page-bars>
     <account-container>
       <election-list />
@@ -22,22 +29,16 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import authMixins from "@/mixins/auth.mixins";
-import orgMixins from "@/mixins/org.mixins";
 import PageBars from "@/components/bars/PageBars.vue";
 import AccountContainer from "@/components/containers/AccountContainer.vue";
-
 import ElectionList from "@/components/pages/election/ElectionList.vue";
-import debounce from "@/helpers/debounce";
-import electionServices from "@/services/election.service";
-import organizationServices, {
-  Organization,
-} from "@/services/organization.service";
+import pageConfig from "@/configs/pages.config";
+import authMixins from "@/mixins/auth.mixins";
+import orgMixin from "@/mixins/org.mixins";
+import rolesRestriction from "@/mixins/roles-restriction.mixin";
 import mixins from "vue-typed-mixins";
-import pageConfig from "../../configs/pages.config";
 
-export default mixins(orgMixins, authMixins).extend({
+export default mixins(orgMixin, authMixins, rolesRestriction).extend({
   auth: true,
   layout: "account",
   components: {
@@ -49,20 +50,21 @@ export default mixins(orgMixins, authMixins).extend({
     title: "Dashboard",
   },
 
-  data() {
-    return {
-      organization: null as Organization | null,
-    };
-  },
-
-  fetchOnServer: false,
   async fetch() {
-    await this.fetchOrganization();
+    try {
+      await this.$accessor.organization.fetchOrganization(this.organizationId);
+    } catch (error) {
+      throw new Error("Error");
+    }
   },
 
   computed: {
     organizationEditRoute(): string {
-      return pageConfig.organization().this(this.organizationId).route;
+      return pageConfig.organization(this.organizationId).manageInfo().route;
+    },
+    createElectionRoute(): string {
+      return pageConfig.organization(this.organizationId).createElection()
+        .route;
     },
 
     pageBarTitle(): string {
@@ -73,20 +75,10 @@ export default mixins(orgMixins, authMixins).extend({
       if (!this.organization) return null;
       return this.organization.logo;
     },
-  },
-
-  methods: {
-    async fetchOrganization() {
-      if (!this.organizationId) return;
-
-      try {
-        const result = await organizationServices.getById(
-          this.organizationId.toString()
-        );
-        this.organization = result;
-      } catch (error) {
-        console.log(error);
-      }
+    backTo() {
+      return this.rolesAllowed(this.pageRoles.organization.button.back)
+        ? "/"
+        : null;
     },
   },
 });

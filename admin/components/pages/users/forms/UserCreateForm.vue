@@ -139,10 +139,11 @@ export default Vue.extend({
         try {
           if (this.submitFunc) await this.submitFunc(this.form);
         } catch (error: any) {
+          const message = error.response?.data?.error?.message || error.message;
           this.alert = {
             show: true,
             type: "error",
-            message: error.message,
+            message: message,
           };
         }
       }

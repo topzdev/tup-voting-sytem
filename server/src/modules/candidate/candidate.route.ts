@@ -10,19 +10,24 @@ const router = express.Router();
 
 console.log("module: Candidates Module Loaded");
 
-router.get("/:id", adminAuth, candidateController.getOneById);
+router.get(
+  "/:id",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
+  candidateController.getOneById
+);
 
 router.get(
   "/all/:election_id",
   adminAuth,
-  rolesAllowed("SUPER_ADMIN"),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   candidateController.getAll
 );
 
 router.post(
   "/",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   validate(candidateValidator.create),
   sanitize(candidateSanitizer.create),
   candidateController.create
@@ -31,7 +36,7 @@ router.post(
 router.put(
   "/",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   validate(candidateValidator.update),
   sanitize(candidateSanitizer.update),
   candidateController.update
@@ -40,42 +45,42 @@ router.put(
 router.delete(
   "/:id",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   candidateController.remove
 );
 
 router.put(
   "/restore/:id",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   candidateController.restore
 );
 
 router.put(
   "/archive/:id",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   candidateController.archive
 );
 
 router.put(
   "/unarchive/:id",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   candidateController.unarchive
 );
 
 router.post(
   "/import/csv",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   candidateController.importFromCSV
 );
 
 router.post(
   "/position-avail",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
   candidateController.checkPositionAvailability
 );
 

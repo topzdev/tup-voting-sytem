@@ -11,31 +11,12 @@ import { unflatten } from "flat";
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const orgId = req.params.org_id;
+    const user = req.admin;
 
     const { page, take, order, search, withArchive } = req.query as any;
 
     res.status(200).json(
-      await electionService.getAll(orgId, {
-        page: page ? parseInt(page) : undefined,
-        take: take ? parseInt(take) : undefined,
-        order,
-        search,
-        withArchive: withArchive ? Boolean(withArchive) : undefined,
-      })
-    );
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getPublic = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const orgId = req.params.org_id;
-
-    const { page, take, order, search, withArchive } = req.query as any;
-
-    res.status(200).json(
-      await electionService.getPublic(orgId, {
+      await electionService.getAll(parseInt(orgId), user, {
         page: page ? parseInt(page) : undefined,
         take: take ? parseInt(take) : undefined,
         order,
@@ -66,8 +47,8 @@ const getElectionWinners = async (
 const getOneById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
-
-    res.status(200).json(await electionService.getById(id));
+    const user = req.admin;
+    res.status(200).json(await electionService.getById(user, id));
   } catch (error) {
     next(error);
   }
@@ -182,7 +163,6 @@ const electionController = {
   unarchive,
   getOneBySlug,
   isExistBySlug,
-  getPublic,
   getElectionWinners,
 };
 

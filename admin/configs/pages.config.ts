@@ -44,42 +44,57 @@ const pageConfig = {
         } as PageConfigItem),
     };
   },
-  election: () => {
+  election: (election_id: Election["id"]) => {
+    const parentRoute = "/manage/election/" + election_id;
+
     return {
       this: () =>
         ({
-          route: "/election",
+          route: parentRoute + "/overview",
           icon: "",
         } as PageConfigItem),
     };
   },
 
-  overview: () => {
+  organization: (organization_id?: Organization["id"]) => {
+    const parentRoute = `/organization/${organization_id || ""}`;
     return {
-      this: (election_id: Election["id"]) => {
-        return `/manage/election/${election_id}/overview/`;
-      },
-    };
-  },
-
-  organization: () => {
-    return {
-      this: (organization_id: Organization["id"]) =>
+      this: () =>
         ({
-          route: `/organization/${organization_id}`,
+          route: parentRoute,
           icon: "",
         } as PageConfigItem),
-
-      edit: (organization_id: Organization["id"]) =>
-        ({
-          route: `/manage/organization/${organization_id}`,
-          icon: "",
-        } as PageConfigItem),
-
       create: () =>
         ({
-          route: `/manage/organization/create`,
+          route: `${parentRoute}/create`,
           icon: "",
+        } as PageConfigItem),
+
+      createElection: () =>
+        ({
+          route: `${parentRoute}/election/create`,
+          icon: "",
+        } as PageConfigItem),
+
+      manageInfo: () =>
+        ({
+          title: "Organization Info",
+          route: `${parentRoute}/manage/info/`,
+          icon: "mdi-note-edit-outline",
+        } as PageConfigItem),
+
+      manageElectionOfficer: () =>
+        ({
+          title: "Election Officers",
+          route: `${parentRoute}/manage/election-officer`,
+          icon: "mdi-account-tie-outline",
+        } as PageConfigItem),
+
+      deleteOrganization: () =>
+        ({
+          title: "Remove Organization",
+          route: `${parentRoute}/manage/remove`,
+          icon: "mdi-delete",
         } as PageConfigItem),
     };
   },

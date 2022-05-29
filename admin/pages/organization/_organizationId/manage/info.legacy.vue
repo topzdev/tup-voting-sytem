@@ -33,7 +33,7 @@
   </span>
 </template>
 
-<script>
+<script lang="ts">
 import PageBars from "@/components/bars/PageBars.vue";
 import AccountContainer from "@/components/containers/AccountContainer.vue";
 import organizationServices from "@/services/organization.service";
@@ -41,11 +41,11 @@ import Vue from "vue";
 import OrganizationCreateForm from "~/components/pages/org/forms/OrganizationCreateForm.vue";
 import OrganizationEditForm from "~/components/pages/org/forms/OrganizationEditForm.vue";
 import DeleteOrganizationDialog from "~/components/pages/org/dialogs/DeleteOrganizationDialog.vue";
+import mixins from "vue-typed-mixins";
 import orgMixin from "@/mixins/org.mixins";
 
-export default Vue.extend({
+export default mixins(orgMixin).extend({
   auth: true,
-  mixins: [orgMixin],
   components: {
     PageBars,
     AccountContainer,
@@ -63,6 +63,7 @@ export default Vue.extend({
   },
 
   fetchOnServer: false,
+
   async fetch() {
     try {
       this.defaultData = await organizationServices.getById(
@@ -85,7 +86,7 @@ export default Vue.extend({
           color: "success",
         });
         this.$router.push("/");
-      } catch (error) {
+      } catch (error: any) {
         throw error.response.data.error;
       }
     },

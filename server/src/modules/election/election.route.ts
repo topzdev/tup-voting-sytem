@@ -13,15 +13,8 @@ router.get("/:id", adminAuth, electionController.getOneById);
 router.get(
   "/all/:org_id",
   adminAuth,
-  rolesAllowed("SUPER_ADMIN"),
+  rolesAllowed(["SUPER_ADMIN", "ADMIN", "ELECTION_OFFICER"]),
   electionController.getAll
-);
-
-router.get(
-  "/public/:org_id",
-  adminAuth,
-  rolesAllowed("SUPER_ADMIN"),
-  electionController.getPublic
 );
 
 router.get(

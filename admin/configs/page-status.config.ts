@@ -11,7 +11,7 @@ const pageStatus = {
     create: ["building", "preview"],
     edit: ["building", "preview"],
     import: ["building", "preview"],
-    export: ["building", "running", "completed", "archived"],
+    export: ["building", "preview", "running", "completed", "archived"],
 
     table: {
       isVoted: ["running", "completed", "archived"],
@@ -21,7 +21,7 @@ const pageStatus = {
   positions: {
     create: ["building", "preview"],
     edit: ["building", "preview"],
-    arrange: ["building", "preview", "running"],
+    arrange: ["building", "preview"],
   },
   candidate: {
     create: ["building", "preview"],
@@ -46,7 +46,7 @@ const pageStatus = {
 
   overview: {
     counts: {
-      participation: ["preview", "completed", "archived"],
+      participation: ["running", "completed", "archived"],
     },
   },
 };

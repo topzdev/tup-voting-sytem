@@ -6,7 +6,8 @@
       <v-row>
         <v-col v-if="previewMode" cols="12">
           <h2 class="title mb-2 text--primary">
-            The Election will be in Preview Mode until the election started
+            The election will be in <b>preview mode</b> until the election
+            started
           </h2>
           <p class="subtitle-1">
             The voting will start when election reaches {{ start_date }}
@@ -16,7 +17,7 @@
         <v-col cols="12">
           <h2 class="title mb-2 text--primary">
             You <span class="error--text">will not be allowed</span> to change
-            following after your election launches
+            following after your election is running
           </h2>
           <ul class="subtitle-1 blue--text">
             <li>Add, Edit, or Delete Candidates</li>
@@ -29,7 +30,7 @@
         <v-col cols="12">
           <h3 class="title mb-2 text--primary">
             You <span class="success--text">will be allowed</span> to change
-            following after your election launches
+            following after your election is running
           </h3>
           <ul class="subtitle-1 blue--text">
             <li>Add, Edit and Delete Voters</li>
@@ -75,6 +76,8 @@ import overviewMixin from "@/mixins/overview.mixins";
 import pageConfig from "@/configs/pages.config";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import { Election } from "@/services/election.service";
+import pageRoles from "../../../../configs/page-roles";
+import authMixin from "../../../../mixins/auth.mixins";
 
 const defaultAlert = {
   show: false,
@@ -82,7 +85,7 @@ const defaultAlert = {
   message: "",
 };
 
-export default mixins(manageElectionMixins).extend({
+export default mixins(manageElectionMixins, authMixin).extend({
   components: {
     AppImage,
   },
@@ -128,41 +131,53 @@ export default mixins(manageElectionMixins).extend({
         button: {
           anyEventHide: false,
           yesFunction: async ({ hideDialog }) => {
-            if (!this.valid || !this.electionId) return;
-            this.loading = true;
+            this.systemAuthentication(
+              {
+                button: {
+                  yesFunction: async () => {
+                    if (!this.valid || !this.electionId) return;
+                    this.loading = true;
 
-            try {
-              const result = await launchpadServices.launchElection(
-                this.electionId
-              );
+                    try {
+                      const result = await launchpadServices.launchElection(
+                        this.electionId
+                      );
 
-              await this.$accessor.manageElection.reFetchElection(
-                this.electionId
-              );
+                      await this.$accessor.manageElection.reFetchElection(
+                        this.electionId
+                      );
 
-              this.$accessor.snackbar.set({
-                show: true,
-                message: "Election successfully launched",
-                timeout: 10000,
-                color: "success",
-              });
+                      this.$accessor.snackbar.set({
+                        show: true,
+                        message: "Election successfully launched",
+                        timeout: 10000,
+                        color: "success",
+                      });
 
-              this.$router.push(pageConfig.overview().this(this.electionId));
-            } catch (error: any) {
-              const message =
-                error.response?.data?.error?.message || error.message;
+                      this.$router.push(
+                        pageConfig.election(this.electionId).this().route
+                      );
+                    } catch (error: any) {
+                      const message =
+                        error.response?.data?.error?.message || error.message;
 
-              if (message) {
-                this.alert = {
-                  show: true,
-                  type: "error",
-                  message: message,
-                };
-              }
-            } finally {
-              this.loading = false;
-              hideDialog();
-            }
+                      if (message) {
+                        this.alert = {
+                          show: true,
+                          type: "error",
+                          message: message,
+                        };
+                      }
+                    } finally {
+                      this.loading = false;
+                      hideDialog();
+                    }
+                  },
+                },
+              },
+              "current-only-password",
+              pageRoles.dialogs.launchElection
+            );
           },
           noFunction: ({ hideDialog }) => {
             hideDialog();

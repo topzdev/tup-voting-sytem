@@ -118,13 +118,12 @@ const verifyAdminLoginOTP = async (dto: VerfiyAdminLoginOTP) => {
 
   if (!dto.otp) throw new HttpException("BAD_REQUEST", "OTP is required");
 
-  const user = await getRepository(User)
+  let user = await getRepository(User)
     .createQueryBuilder("user")
     .select([
       "user.id",
       "user.firstname",
       "user.lastname",
-      "user.password",
       "user.username",
       "user.email_address",
       "user.disabled",
@@ -135,6 +134,7 @@ const verifyAdminLoginOTP = async (dto: VerfiyAdminLoginOTP) => {
       "user.login_otp",
       "user.last_login_otp_time",
     ])
+    .leftJoinAndSelect("user.election_officer", "election_officer")
     .where("user.id = :user_id", { user_id: dto.user_id })
     .getOne();
 
@@ -168,15 +168,25 @@ const verifyAdminLoginOTP = async (dto: VerfiyAdminLoginOTP) => {
     throw new HttpException("BAD_REQUEST", "OTP is incorrect");
   }
 
-  const { token, expiresIn } = signJwtAdminPayload(user);
+  const returnUser = {
+    id: user.id,
+    username: user.username,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    email_address: user.email_address,
+    role: user.role,
+    election_officer: user.election_officer,
+  };
 
   delete user.password;
+
+  const { token, expiresIn } = signJwtAdminPayload(returnUser);
 
   await securityServices.verifyOtpSuccessGuard(user);
 
   return {
     token,
-    user,
+    user: returnUser,
     expiresIn,
   };
 };
@@ -267,11 +277,23 @@ const systemLogin = async (_credentials: SystemLoginCredentials) => {
   if (user.disabled)
     throw new HttpException("BAD_REQUEST", "Account is currently disabled");
 
-  if (_credentials.allowedRole && user.role !== _credentials.allowedRole)
-    throw new HttpException(
+  const allowedRoles = _credentials.allowedRoles;
+  if (allowedRoles) {
+    const roleError = new HttpException(
       "BAD_REQUEST",
       "Account not allowed in this action"
     );
+
+    if (typeof allowedRoles === "string") {
+      if (allowedRoles !== user.role) {
+        throw roleError;
+      }
+    } else if (Array.isArray(allowedRoles)) {
+      if (!allowedRoles.filter((item) => item === user.role).length) {
+        throw roleError;
+      }
+    }
+  }
 
   if (!(await validatePassword(_credentials.password, user.password))) {
     throw new HttpException("BAD_REQUEST", "Incorrect password");

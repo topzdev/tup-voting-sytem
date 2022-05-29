@@ -66,7 +66,7 @@ const organizationServices = {
   async getAll(query: GetOrganizationDto) {
     return (await apiClient.get(`${url}/${transformParamsToUrl(query)}`)).data;
   },
-  async getById(id: string) {
+  async getById(id: Organization["id"]) {
     return (await apiClient.get(`${url}/${id}`)).data;
   },
 

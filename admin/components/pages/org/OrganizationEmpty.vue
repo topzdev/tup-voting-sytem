@@ -12,11 +12,13 @@
 </template>
 vue <script lang="ts">
 import Vue from "vue";
+import mixins from "vue-typed-mixins";
 import pageConfig from "~/configs/pages.config";
-export default Vue.extend({
+import orgMixin from "@/mixins/org.mixins";
+export default mixins(orgMixin).extend({
   computed: {
     thisPageConfig() {
-      return pageConfig.organization();
+      return pageConfig.organization(this.organizationId).this();
     },
   },
 });
