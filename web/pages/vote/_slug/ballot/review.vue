@@ -16,7 +16,7 @@
           <v-col
             v-for="candidate in item.candidates"
             :key="candidate.id"
-            md="2"
+            md="5"
           >
             <candidate-card :data="candidate" :readonly="true" />
           </v-col>

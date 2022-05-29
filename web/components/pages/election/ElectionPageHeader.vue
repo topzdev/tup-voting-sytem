@@ -15,7 +15,7 @@
       <v-row style="width: 100%">
         <v-col cols="8" class="pt-0">
           <v-row>
-            <v-col cols="auto" style="margin-top: -80px">
+            <v-col class="ml-17 pl-14 pl-sm-4" cols="auto" style="margin-top: -80px">
               <app-avatar
                 :alt="election.title"
                 :size="180"
@@ -29,7 +29,7 @@
                 divider="/"
                 :items="breadcrumb"
               ></v-breadcrumbs>
-              <div class="text-md-h4 text-h5 font-weight-bold">
+              <div class="text-md-h4 text-h5 font-weight-bold text-center text-sm-left">
                 {{ election.title }}
               </div>
               <election-status-chip

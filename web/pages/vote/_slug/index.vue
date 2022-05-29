@@ -1,8 +1,8 @@
 <template>
   <page-center style="min-height: 90vh">
-    <v-card md="4" flat>
+    <v-card  flat>
       <v-row>
-        <v-col cols="12">
+        <v-col cols="12" >
           <v-row>
             <v-col v-if="election" cols="12">
               <election-header :show-logout="false" />
