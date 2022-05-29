@@ -20,9 +20,9 @@
       class="pl-10 py-3 d-flex flex-column justify-end align-start"
     >
       <v-row style="width: 100%">
-        <v-col cols="8">
+        <v-col md="8">
           <v-row>
-            <v-col cols="auto" style="margin-top: -80px">
+            <v-col class="pl-14 pl-sm-4" style="margin-top: -80px">
               <app-avatar
                 :alt="fullname"
                 :size="220"
@@ -36,13 +36,13 @@
                 divider="/"
                 :items="breadcrumb"
               ></v-breadcrumbs>
-              <h1 class="headline-1">{{ fullname }}</h1>
+              <h1 class="headline-1 text-center text-sm-left">{{ fullname }}</h1>
               <p class="text--secondary body-1" v-html="positionTitle"></p>
             </v-col>
           </v-row>
         </v-col>
 
-        <v-col cols="4" style="margin-top: -70px">
+        <v-col class="mt-md-n16 mt-auto"  md="4" xs="2">
           <v-card>
             <v-list>
               <v-list-item v-if="candidate.election">

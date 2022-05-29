@@ -49,6 +49,7 @@ export default {
     "@nuxtjs/vuetify",
     // https://typed-vuex.roe.dev/getting-started/getting-started-nuxt
     "nuxt-typed-vuex",
+    
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules

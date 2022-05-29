@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="7" class="mx-auto">
+    <v-col md="7" class="mx-auto">
       <v-container v-if="party" class="py-0">
         <v-row>
           <v-col cols="12">
@@ -9,7 +9,7 @@
 
           <v-col cols="12">
             <v-row>
-              <v-col cols="8">
+              <v-col md="8">
                 <party-position-candidates :positions="positions" />
               </v-col>
             </v-row>

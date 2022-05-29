@@ -10,7 +10,7 @@
         <v-col
           v-for="candidate in item.candidates"
           :key="candidate.id"
-          cols="4"
+          lg="6"
         >
           <candidate-card :candidate="candidate"></candidate-card>
         </v-col>

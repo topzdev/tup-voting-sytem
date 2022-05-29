@@ -4,25 +4,25 @@
 
     <v-row>
       <template v-if="elections">
-        <v-col v-if="preview && preview.length" lg="12" class="mx-auto">
+        <v-col v-if="preview && preview.length" md="12" class="mx-auto">
           <h2 class="mb-2">Preview Election</h2>
 
           <v-row>
-            <v-col v-for="item in preview" :key="item.id" sm="12" md="6" lg="4">
+            <v-col v-for="item in preview" :key="item.id" cols="12" lg="4">
               <election-card :election="item" />
             </v-col>
           </v-row>
         </v-col>
-        <v-col v-if="running && running.length" lg="12" class="mx-auto">
+        <v-col v-if="running && running.length" md="12" class="mx-auto">
           <h2 class="mb-2">Currently Running Elections</h2>
 
           <v-row>
-            <v-col v-for="item in running" :key="item.id" sm="12" md="6" lg="4">
+            <v-col v-for="item in running" :key="item.id" cols="12" lg="4">
               <election-card :election="item" />
             </v-col>
           </v-row>
         </v-col>
-        <v-col v-if="completed && completed.length" lg="12" class="mx-auto">
+        <v-col v-if="completed && completed.length" md="12" class="mx-auto">
           <h2 class="mb-2">Completed Elections</h2>
 
           <v-row>

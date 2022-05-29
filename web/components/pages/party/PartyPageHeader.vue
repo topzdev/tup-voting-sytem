@@ -17,12 +17,12 @@
     </v-col>
     <v-col
       cols="12"
-      class="pl-10 py-3 d-flex flex-column justify-end align-start"
+      class="py-3 d-flex flex-column justify-space-between align-center"
     >
       <v-row style="width: 100%">
-        <v-col cols="8">
+        <v-col md="8">
           <v-row>
-            <v-col cols="auto" style="margin-top: -80px">
+            <v-col class="pl-14 pl-sm-4" style="margin-top: -80px">
               <app-avatar
                 :alt="party.title"
                 :size="220"
@@ -30,13 +30,13 @@
               ></app-avatar>
             </v-col>
 
-            <v-col class="pt-0" style="height: auto">
+            <v-col class="pt-0 " style="height: auto">
               <v-breadcrumbs
                 class="py-0 px-0"
                 divider="/"
                 :items="breadcrumb"
               ></v-breadcrumbs>
-              <h1 class="headline-1">
+              <h1 class="headline-1 text-center text-sm-left">
                 {{ party.title }}
 
                 <span class="text--secondary"> ({{ party.ticker }}) </span>
@@ -45,7 +45,7 @@
           </v-row>
         </v-col>
 
-        <v-col cols="4" style="margin-top: -70px">
+        <v-col class="mt-lg-n16"  md="4">
           <v-card>
             <v-list>
               <v-list-item v-if="party.description">

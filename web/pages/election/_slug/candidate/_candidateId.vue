@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="7" class="mx-auto">
+    <v-col cols="12" md="7" class="mx-auto">
       <v-container v-if="candidate" class="py-0">
         <v-row>
           <v-col cols="12">
@@ -8,7 +8,7 @@
           </v-col>
 
           <v-col cols="12">
-            <v-col cols="7">
+            <v-col md="7">
               <h3>Description</h3>
               <p v-html="candidate.description"></p>
 
