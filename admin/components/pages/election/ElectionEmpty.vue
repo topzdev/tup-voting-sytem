@@ -1,10 +1,8 @@
 <template>
   <span>
-    <v-icon size="100">{{ thisPageConfig.icon }}</v-icon>
     <h1 class="display-2">No Election Yet</h1>
     <p class="mt-3 mx-auto body-1" style="width: 75%">
-      Create an election for your school or organization in seconds. Voters can
-      vote from any location, on any device.
+      Please create a new election.
     </p>
     <v-btn
       color="primary"

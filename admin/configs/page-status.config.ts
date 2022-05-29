@@ -15,7 +15,7 @@ const pageStatus = {
 
     table: {
       isVoted: ["running", "completed", "archived"],
-      action: ["building"],
+      action: ["building", "preview"],
     },
   },
   positions: {

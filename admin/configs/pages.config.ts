@@ -62,7 +62,7 @@ const pageConfig = {
       this: () =>
         ({
           route: parentRoute,
-          icon: "",
+          icon: "vote-outline",
         } as PageConfigItem),
       create: () =>
         ({
