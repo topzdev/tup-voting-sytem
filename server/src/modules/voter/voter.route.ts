@@ -115,17 +115,17 @@ router.post(
 );
 
 router.post(
-  "/disallow",
+  "/disable",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
-  voterController.disallowVoters
+  voterController.disableVoters
 );
 
 router.post(
-  "/allow",
+  "/enable",
   adminAuth,
   rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
-  voterController.allowVoters
+  voterController.enableVoters
 );
 
 router.post(

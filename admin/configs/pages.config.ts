@@ -66,7 +66,7 @@ const pageConfig = {
         } as PageConfigItem),
       create: () =>
         ({
-          route: `${parentRoute}/create`,
+          route: `${parentRoute}create`,
           icon: "",
         } as PageConfigItem),
 

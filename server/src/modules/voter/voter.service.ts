@@ -1,4 +1,3 @@
-import { exit } from "process";
 import { Brackets, getConnection, getRepository, In, Not } from "typeorm";
 import {
   File,
@@ -6,29 +5,26 @@ import {
   parseJsontoCsv,
 } from "../../helpers/csv-parser.helper";
 import { HttpException } from "../../helpers/errors/http.exception";
-import { ElectionVoted } from "../voting/entity/voted.entity";
 import { Election } from "../election/entity/election.entity";
-import { Organization } from "../organization/entity/organization.entity";
-import { Photo } from "../photo/photo.service";
+import mailerServices from "../mailer/mailer.service";
+import { ElectionVoted } from "../voting/entity/voted.entity";
 import { Voter } from "./entity/voter.entity";
 import voterHelpers, {
   exportCSVDetailedError,
   generateCredentials,
 } from "./voter.helper";
 import {
-  AllowVotersDto,
   CreateVoterBody,
-  DisallowVotersDto,
+  DisableVotersDto,
+  EnableVotersDto,
   GetElectionMembersDto,
+  GetPregisteredVoterBody,
   GetVoterBody,
-  GetVoterElectionDto,
   ImportVotersByCSVDto,
   ImportVotersByElectionDto,
   RemoveVotersDto,
   UpdateVoterBody,
 } from "./voter.interface";
-import { genHashedPassword } from "../../helpers/password.helper";
-import mailerServices from "../mailer/mailer.service";
 
 /*  
 !IMPORTANT
@@ -38,6 +34,20 @@ username is a column on entity
 but accept username as voter_id
 always return voter_id not username  client side
 */
+
+const voterOverview = async (_electionId: Election["id"]) => {
+  const voterRepository = getRepository(Voter);
+
+  if (!_electionId)
+    throw new HttpException("BAD_REQUEST", "Election id is required");
+
+  let builder = voterRepository
+    .createQueryBuilder("voter")
+    .leftJoinAndSelect("voter.voted", "voted")
+    .where("voter.election_id = :electionId", {
+      electionId: _electionId,
+    });
+};
 
 const getAll = async (_electionId: string, _query: GetVoterBody) => {
   const voterRepository = getRepository(Voter);
@@ -49,13 +59,9 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
   let builder = voterRepository
     .createQueryBuilder("voter")
     .leftJoinAndSelect("voter.voted", "voted")
-    .where(
-      "voter.election_id = :electionId AND voter.is_pre_register = :is_pre_register",
-      {
-        electionId: _electionId,
-        is_pre_register: false,
-      }
-    );
+    .where("voter.election_id = :electionId", {
+      electionId: _electionId,
+    });
 
   if (searchStirng) {
     builder = builder.andWhere(
@@ -80,6 +86,23 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
     "voter.created_at": "DESC",
   });
 
+  const availability = _query.availability;
+  if (availability && availability !== "all") {
+    const is_disabled = availability === "disabled" ? true : false;
+
+    builder = builder.andWhere("voter.disabled = :is_disabled", {
+      is_disabled,
+    });
+  }
+
+  const registration = _query.registration;
+  if (registration && registration !== "all") {
+    const is_pre_registered = registration === "prereg" ? true : false;
+    builder = builder.andWhere("voter.is_pre_register = :is_pre_registered", {
+      is_pre_registered,
+    });
+  }
+
   if (_query.order) {
     builder = builder.addOrderBy("voter.firstname", _query.order);
     builder = builder.addOrderBy("voter.lastname", _query.order);
@@ -98,7 +121,7 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
     "voter.id",
     "voter.username",
     "voter.email_address",
-    "voter.is_allowed",
+    "voter.disabled",
     "voter.election_id",
     "voter.archive",
     "voter.is_pre_register",
@@ -119,7 +142,7 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
 
 const getAllPreRegistered = async (
   _electionId: string,
-  _query: GetVoterBody
+  _query: GetPregisteredVoterBody
 ) => {
   const voterRepository = getRepository(Voter);
   const searchStirng = _query.search ? _query.search : "";
@@ -660,7 +683,7 @@ const exportVotersToCSV = async (_electionId: number) => {
   };
 };
 
-const disallowVoters = async (_dto: DisallowVotersDto) => {
+const disableVoters = async (_dto: DisableVotersDto) => {
   if (!_dto.voter_ids.length)
     throw new HttpException("BAD_REQUEST", "Please provide voter id's");
 
@@ -674,14 +697,14 @@ const disallowVoters = async (_dto: DisallowVotersDto) => {
       id: In(_dto.voter_ids),
     },
     {
-      is_allowed: false,
+      disabled: true,
     }
   );
 
   return true;
 };
 
-const allowVoters = async (_dto: AllowVotersDto) => {
+const enableVoters = async (_dto: EnableVotersDto) => {
   if (!_dto.voter_ids.length)
     throw new HttpException("BAD_REQUEST", "Please provide voter id's");
 
@@ -695,7 +718,7 @@ const allowVoters = async (_dto: AllowVotersDto) => {
       id: In(_dto.voter_ids),
     },
     {
-      is_allowed: true,
+      disabled: false,
     }
   );
 
@@ -758,8 +781,8 @@ const voterServices = {
   importVotersByElection,
   importVotersByCSV,
   exportVotersToCSV,
-  disallowVoters,
-  allowVoters,
+  disableVoters,
+  enableVoters,
   getElectionVoters,
   removeVoters,
   grantPreRegister,

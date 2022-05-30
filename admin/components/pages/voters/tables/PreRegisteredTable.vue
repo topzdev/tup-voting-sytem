@@ -106,6 +106,10 @@ export default mixins(
   },
 
   watch: {
+    async ["table.pagination.perPage"]() {
+      await this.fetchItems();
+    },
+
     async ["table.pagination.page"](val) {
       await this.fetchItems();
     },

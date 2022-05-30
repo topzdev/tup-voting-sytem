@@ -1,22 +1,20 @@
 import { NextFunction, Request, Response } from "express";
 import fileUpload from "express-fileupload";
+import { unflatten } from "flat";
 import {
   CreateVoterBody,
-  UpdateVoterBody,
-  GetVoterBody,
-  ImportVotersByElectionDto,
   ImportVotersByCSVDto,
-  DisallowVotersDto,
+  ImportVotersByElectionDto,
   RemoveVotersDto,
-  GetVoterElectionDto,
+  UpdateVoterBody,
 } from "./voter.interface";
 import voterService from "./voter.service";
-import { unflatten } from "flat";
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const electionId = req.params.electionId;
-    const { page, take, order, search } = req.query as any;
+    const { page, take, order, search, availability, registration } =
+      req.query as any;
 
     res.status(200).json(
       await voterService.getAll(electionId, {
@@ -24,6 +22,8 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
         take: take ? parseInt(take) : undefined,
         order,
         search,
+        availability,
+        registration,
       })
     );
   } catch (error) {
@@ -38,7 +38,8 @@ const getAllPreRegistered = async (
 ) => {
   try {
     const election_id = req.params.election_id;
-    const { page, take, order, search } = req.query as any;
+    const { page, take, order, search, availability, registration } =
+      req.query as any;
 
     res.status(200).json(
       await voterService.getAllPreRegistered(election_id, {
@@ -226,23 +227,27 @@ const importVotersByCsv = async (
   }
 };
 
-const disallowVoters = async (
+const disableVoters = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const dto = req.body;
-    res.status(200).json(await voterService.disallowVoters(dto));
+    res.status(200).json(await voterService.disableVoters(dto));
   } catch (error) {
     next(error);
   }
 };
 
-const allowVoters = async (req: Request, res: Response, next: NextFunction) => {
+const enableVoters = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const dto = req.body;
-    res.status(200).json(await voterService.allowVoters(dto));
+    res.status(200).json(await voterService.enableVoters(dto));
   } catch (error) {
     next(error);
   }
@@ -291,8 +296,8 @@ const voterController = {
   importVotersByElection,
   importVotersByCsv,
 
-  disallowVoters,
-  allowVoters,
+  disableVoters,
+  enableVoters,
   removeVoters,
   getElectionVoters,
 

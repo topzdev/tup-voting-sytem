@@ -18,6 +18,7 @@
         :items="table.items"
         :server-items-length="table.pagination.total"
         :page.sync="table.pagination.page"
+        :items-per-page.sync="table.pagination.perPage"
         :footer-props="{
           'items-per-page-options': table.pagination.itemsPerPageOptions,
         }"
@@ -95,7 +96,10 @@ export default Vue.extend({
   },
 
   watch: {
-    async ["table.paginations.page"](val) {
+    async ["table.pagination.perPage"]() {
+      await this.fetchItems();
+    },
+    async ["table.pagination.page"](val) {
       await this.fetchItems();
     },
     ["table.search"]: debounce(async function () {
