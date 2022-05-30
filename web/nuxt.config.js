@@ -87,15 +87,19 @@ export default {
     },
     meta:{
       title: 'TUPM-Organization Voting Platform',
-      author: 'Dev404 '
+      author: 'Dev404',
+      mobileApp: 'true',
+      mobileAppIOS: 'true'
     },
 
     manifest: {
       name: 'TUPM-Organization Voting Platform',
       short_name: 'TUPM-OVP',
       description: 'This voting platform is exclusive for the use of accredited organization of T.U.P. - Manila',
+      start_url: '/',
       lang: "en",
     },
+    
   },
 
   auth: {

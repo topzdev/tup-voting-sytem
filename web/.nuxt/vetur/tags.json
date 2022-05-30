@@ -1,12 +1,12 @@
 {
-  "ChipsElectionChip": {
-    "description": "Auto imported from components/chips/ElectionChip.vue"
+  "AppAvatar": {
+    "description": "Auto imported from components/app/AppAvatar.vue"
   },
-  "ChipsElectionStatusChip": {
-    "description": "Auto imported from components/chips/ElectionStatusChip.vue"
+  "AppImage": {
+    "description": "Auto imported from components/app/AppImage.vue"
   },
-  "ChipsPartyChip": {
-    "description": "Auto imported from components/chips/PartyChip.vue"
+  "AppLoading": {
+    "description": "Auto imported from components/app/AppLoading.vue"
   },
   "CardsCandidateCard": {
     "description": "Auto imported from components/cards/CandidateCard.vue"
@@ -17,14 +17,14 @@
   "CardsPartyCard": {
     "description": "Auto imported from components/cards/PartyCard.vue"
   },
-  "AppAvatar": {
-    "description": "Auto imported from components/app/AppAvatar.vue"
+  "ChipsElectionChip": {
+    "description": "Auto imported from components/chips/ElectionChip.vue"
   },
-  "AppImage": {
-    "description": "Auto imported from components/app/AppImage.vue"
+  "ChipsElectionStatusChip": {
+    "description": "Auto imported from components/chips/ElectionStatusChip.vue"
   },
-  "AppLoading": {
-    "description": "Auto imported from components/app/AppLoading.vue"
+  "ChipsPartyChip": {
+    "description": "Auto imported from components/chips/PartyChip.vue"
   },
   "FormsLoginForm": {
     "description": "Auto imported from components/forms/LoginForm.vue"
@@ -34,9 +34,6 @@
   },
   "UtilsPageCenter": {
     "description": "Auto imported from components/utils/PageCenter.vue"
-  },
-  "PagesBallotStepper": {
-    "description": "Auto imported from components/pages/ballot/BallotStepper.vue"
   },
   "PagesCandidatePageHeader": {
     "description": "Auto imported from components/pages/candidate/CandidatePageHeader.vue"
@@ -62,6 +59,9 @@
   "PagesPartyPositionCandidates": {
     "description": "Auto imported from components/pages/party/PartyPositionCandidates.vue"
   },
+  "PagesBallotStepper": {
+    "description": "Auto imported from components/pages/ballot/BallotStepper.vue"
+  },
   "PagesPreRegisterHeader": {
     "description": "Auto imported from components/pages/pre-register/PreRegisterHeader.vue"
   },
@@ -70,6 +70,9 @@
   },
   "PagesVotingElectionHeader": {
     "description": "Auto imported from components/pages/voting/ElectionHeader.vue"
+  },
+  "PagesElectionListsTallyCandidateListItem": {
+    "description": "Auto imported from components/pages/election/lists/TallyCandidateListItem.vue"
   },
   "PagesBallotCard": {
     "description": "Auto imported from components/pages/ballot/cards/BallotCard.vue"
@@ -82,8 +85,5 @@
   },
   "PagesBallotDialogsCandidateDialog": {
     "description": "Auto imported from components/pages/ballot/dialogs/CandidateDialog.vue"
-  },
-  "PagesElectionListsTallyCandidateListItem": {
-    "description": "Auto imported from components/pages/election/lists/TallyCandidateListItem.vue"
   }
 }

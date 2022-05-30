@@ -16,6 +16,16 @@
       "content": "yes"
     },
     {
+      "hid": "apple-mobile-web-app-capable",
+      "name": "apple-mobile-web-app-capable",
+      "content": "yes"
+    },
+    {
+      "hid": "apple-mobile-web-app-status-bar-style",
+      "name": "apple-mobile-web-app-status-bar-style",
+      "content": "default"
+    },
+    {
       "hid": "apple-mobile-web-app-title",
       "name": "apple-mobile-web-app-title",
       "content": "TUPM-Organization Voting Platform"
@@ -23,7 +33,7 @@
     {
       "hid": "author",
       "name": "author",
-      "content": "Dev404 "
+      "content": "Dev404"
     },
     {
       "hid": "description",
@@ -68,8 +78,65 @@
       "sizes": "512x512"
     },
     {
+      "href": "/_nuxt/icons/splash_iphonese_640x1136.3b86f8.png",
+      "media": "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)",
+      "rel": "apple-touch-startup-image",
+      "hid": "apple-touch-startup-image-iphonese"
+    },
+    {
+      "href": "/_nuxt/icons/splash_iphone6_50x1334.3b86f8.png",
+      "media": "(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)",
+      "rel": "apple-touch-startup-image",
+      "hid": "apple-touch-startup-image-iphone6"
+    },
+    {
+      "href": "/_nuxt/icons/splash_iphoneplus_1080x1920.3b86f8.png",
+      "media": "(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)",
+      "rel": "apple-touch-startup-image",
+      "hid": "apple-touch-startup-image-iphoneplus"
+    },
+    {
+      "href": "/_nuxt/icons/splash_iphonex_1125x2436.3b86f8.png",
+      "media": "(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)",
+      "rel": "apple-touch-startup-image",
+      "hid": "apple-touch-startup-image-iphonex"
+    },
+    {
+      "href": "/_nuxt/icons/splash_iphonexr_828x1792.3b86f8.png",
+      "media": "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)",
+      "rel": "apple-touch-startup-image",
+      "hid": "apple-touch-startup-image-iphonexr"
+    },
+    {
+      "href": "/_nuxt/icons/splash_iphonexsmax_1242x2688.3b86f8.png",
+      "media": "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)",
+      "rel": "apple-touch-startup-image",
+      "hid": "apple-touch-startup-image-iphonexsmax"
+    },
+    {
+      "href": "/_nuxt/icons/splash_ipad_1536x2048.3b86f8.png",
+      "media": "(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)",
+      "rel": "apple-touch-startup-image",
+      "hid": "apple-touch-startup-image-ipad"
+    },
+    {
+      "media": "(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)",
+      "rel": "apple-touch-startup-image",
+      "hid": "apple-touch-startup-image-ipadpro1"
+    },
+    {
+      "media": "(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)",
+      "rel": "apple-touch-startup-image",
+      "hid": "apple-touch-startup-image-ipadpro2"
+    },
+    {
+      "media": "(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)",
+      "rel": "apple-touch-startup-image",
+      "hid": "apple-touch-startup-image-ipadpro3"
+    },
+    {
       "rel": "manifest",
-      "href": "/_nuxt/manifest.5f787e4f.json",
+      "href": "/_nuxt/manifest.303a5f2e.json",
       "hid": "manifest"
     }
   ],
