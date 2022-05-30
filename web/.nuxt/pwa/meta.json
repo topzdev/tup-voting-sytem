@@ -1,5 +1,5 @@
 {
-  "title": "tup-voting-web",
+  "title": "TUPM-Organization Voting Platform",
   "meta": [
     {
       "hid": "charset",
@@ -18,12 +18,17 @@
     {
       "hid": "apple-mobile-web-app-title",
       "name": "apple-mobile-web-app-title",
-      "content": "tup-voting-web"
+      "content": "TUPM-Organization Voting Platform"
+    },
+    {
+      "hid": "author",
+      "name": "author",
+      "content": "Dev404 "
     },
     {
       "hid": "description",
       "name": "description",
-      "content": "## Build Setup"
+      "content": "This voting platform is exclusive for the use of accredited organization of T.U.P. - Manila"
     },
     {
       "hid": "og:type",
@@ -35,36 +40,36 @@
       "hid": "og:title",
       "name": "og:title",
       "property": "og:title",
-      "content": "tup-voting-web"
+      "content": "TUPM-Organization Voting Platform"
     },
     {
       "hid": "og:site_name",
       "name": "og:site_name",
       "property": "og:site_name",
-      "content": "tup-voting-web"
+      "content": "TUPM-Organization Voting Platform"
     },
     {
       "hid": "og:description",
       "name": "og:description",
       "property": "og:description",
-      "content": "## Build Setup"
+      "content": "This voting platform is exclusive for the use of accredited organization of T.U.P. - Manila"
     }
   ],
   "link": [
     {
       "hid": "shortcut-icon",
       "rel": "shortcut icon",
-      "href": "/_nuxt/icons/icon_64x64.c50de2.png"
+      "href": "/_nuxt/icons/icon_64x64.3b86f8.png"
     },
     {
       "hid": "apple-touch-icon",
       "rel": "apple-touch-icon",
-      "href": "/_nuxt/icons/icon_512x512.c50de2.png",
+      "href": "/_nuxt/icons/icon_512x512.3b86f8.png",
       "sizes": "512x512"
     },
     {
       "rel": "manifest",
-      "href": "/_nuxt/manifest.ebe79b96.json",
+      "href": "/_nuxt/manifest.5f787e4f.json",
       "hid": "manifest"
     }
   ],

@@ -81,7 +81,19 @@ export default {
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
+    icon:{
+      fileName: 'logo.png',
+      sizes: [64, 120, 144, 152, 192, 384, 512],
+    },
+    meta:{
+      title: 'TUPM-Organization Voting Platform',
+      author: 'Dev404 '
+    },
+
     manifest: {
+      name: 'TUPM-Organization Voting Platform',
+      short_name: 'TUPM-OVP',
+      description: 'This voting platform is exclusive for the use of accredited organization of T.U.P. - Manila',
       lang: "en",
     },
   },
