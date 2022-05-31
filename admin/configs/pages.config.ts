@@ -1,6 +1,7 @@
 import { Candidate } from "../services/candidate.service";
 import { Election } from "../services/election.service";
 import { Organization } from "../services/organization.service";
+import { Voters } from "../services/voters.service";
 import { RolesString } from "../types/roles";
 
 type PageConfigItem = {
@@ -184,6 +185,36 @@ const pageConfig = {
         title: "Create Candidate",
         route: `${parentUrl}/${candidate_id}/edit`,
       }),
+    };
+  },
+
+  voters: (election_id: Election["id"]) => {
+    console.log("Election ID", election_id);
+    const parentUrl = "/manage/election/" + election_id + "/voters";
+
+    return {
+      this: () =>
+        ({
+          route: parentUrl,
+          title: "Voters",
+        } as PageConfigItem),
+
+      create: () =>
+        ({
+          route: parentUrl + "/create",
+          title: "Create Voter",
+        } as PageConfigItem),
+
+      import: () =>
+        ({
+          route: parentUrl + "/import",
+          title: "Import Voters",
+        } as PageConfigItem),
+      edit: (voter_id: Voters["id"]) =>
+        ({
+          route: `${parentUrl}/${voter_id}/edit`,
+          title: "Edit Voter",
+        } as PageConfigItem),
     };
   },
 };

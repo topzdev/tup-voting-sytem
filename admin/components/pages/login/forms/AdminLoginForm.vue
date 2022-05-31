@@ -62,7 +62,7 @@ import authServices, { AdminLoginReturn } from "@/services/auth.service";
 import { ErrorTypes } from "@/pages/login.vue";
 
 const defaultForm = {
-  usernameOrEmail: "christianlugod05@gmail.com",
+  usernameOrEmail: "",
   password: "",
 };
 

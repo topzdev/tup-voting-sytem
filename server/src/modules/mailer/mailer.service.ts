@@ -54,10 +54,10 @@ const sendVotersCredentialsEmail = async (
   let voterBuilder = voterRepository.createQueryBuilder("voter");
 
   voterBuilder = voterBuilder.where(
-    "voter.election_id = :_election_id AND voter.is_allowed = :is_allowed",
+    "voter.election_id = :_election_id AND voter.disabled = :disabled",
     {
       _election_id,
-      is_allowed: true,
+      disabled: false,
     }
   );
 
@@ -74,7 +74,6 @@ const sendVotersCredentialsEmail = async (
       "voter.firstname",
       "voter.lastname",
       "voter.id",
-      "voter.is_allowed",
       "voter.email_address",
       "voter.username",
       "voter.pin",
@@ -164,8 +163,10 @@ const sendElectionHasLaunched = async (_election_ids: number[]) => {
     .addSelect([
       "voter.firstname",
       "voter.lastname",
-      "voter.is_allowed",
+      "voter.disabled",
       "voter.email_address",
+      "voter.disabled",
+      "voter.is_pre_register",
       "election.id",
       "election.start_date",
       "election.close_date",
@@ -179,10 +180,11 @@ const sendElectionHasLaunched = async (_election_ids: number[]) => {
     //   final_status: "running",
     // })
     .andWhere(
-      "voter.election_id IN(:..._election_ids) AND voter.is_allowed = :is_allowed",
+      "voter.election_id IN(:..._election_ids) AND voter.disabled = :disabled",
       {
         _election_ids: _election_ids,
-        is_allowed: true,
+        disabled: false,
+        is_pre_register: false,
         // voters_ids: [32, 24, 6], // remove this
       }
     );
@@ -223,7 +225,8 @@ const sendElectionHasEnded = async (_election_ids: number[]) => {
     .addSelect([
       "voter.firstname",
       "voter.lastname",
-      "voter.is_allowed",
+      "voter.disabled",
+      "voter.is_pre_register",
       "voter.email_address",
       "election.id",
       "election.start_date",
@@ -238,10 +241,11 @@ const sendElectionHasEnded = async (_election_ids: number[]) => {
     //   final_status: "running",
     // })
     .where(
-      "voter.election_id IN(:..._election_ids) AND voter.is_allowed = :is_allowed ",
+      "voter.election_id IN(:..._election_ids) AND voter.disabled = :disabled AND voter.is_pre_register =:is_pre_register ",
       {
         _election_ids: _election_ids,
-        is_allowed: true,
+        disabled: true,
+        is_pre_register: false,
       }
     );
 

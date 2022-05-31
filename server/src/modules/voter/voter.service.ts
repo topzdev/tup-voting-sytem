@@ -129,15 +129,11 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
     "voter.is_pre_register",
   ]);
 
-  const items = await builder.getMany();
-
-  const totalCount = await voterRepository.count({
-    where: { election_id: _electionId },
-  });
+  const [items, count] = await builder.getManyAndCount();
 
   return {
     items,
-    totalCount,
+    totalCount: count,
     itemsCount: items.length,
   };
 };
@@ -204,7 +200,6 @@ const getAllPreRegistered = async (
     "voter.id",
     "voter.username",
     "voter.email_address",
-    "voter.is_allowed",
     "voter.election_id",
     "voter.archive",
     "voter.is_pre_register",

@@ -8,14 +8,14 @@
         class="mr-2"
         outlined
         large
-        @click="importVoterRoute"
+        :to="importVoterRoute"
         >Import Voters</v-btn
       >
       <v-btn
         v-if="hideByStatus(pageStatus.voters.create)"
         color="primary"
         class="mr-2"
-        @click="createVoterRoute"
+        :to="createVoterRoute"
         large
         >Add Voters</v-btn
       >
@@ -150,6 +150,7 @@ import authMixin from "../../../../mixins/auth.mixins";
 import debounce from "../../../../helpers/debounce";
 import VotersAvailabilityPicker from "~/components/pages/voters/pickers/VotersAvailabilityPicker.vue";
 import VotersRegistrationPicker from "~/components/pages/voters/pickers/VotersRegistrationPicker.vue";
+import pageConfig from "../../../../configs/pages.config";
 export default mixins(
   votersMixin,
   manageElectionMixins,
@@ -219,6 +220,14 @@ export default mixins(
   },
 
   computed: {
+    createVoterRoute(): string {
+      if (!this.electionId) return "";
+      return pageConfig.voters(this.electionId).create().route;
+    },
+    importVoterRoute(): string {
+      if (!this.electionId) return "";
+      return pageConfig.voters(this.electionId).import().route;
+    },
     itemsPerPageOptions(): number[] {
       return [5, 10, 15, 20, this.table.pagination.total];
     },

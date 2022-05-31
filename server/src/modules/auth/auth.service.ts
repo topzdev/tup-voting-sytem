@@ -329,7 +329,8 @@ const voterLogin = async (_credentials: VoterLoginCredentials) => {
       "voter.lastname",
       "voter.username",
       "voter.pin",
-      "voter.is_allowed",
+      "voter.disabled",
+      "voter.is_pre_register",
       "voter.election_id",
     ])
     .where(

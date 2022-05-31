@@ -26,7 +26,7 @@
     <template v-slot:item.actions="{ item }">
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn icon v-bind="attrs" v-on="on" @click="editVoterRoute(item.id)">
+          <v-btn icon v-bind="attrs" v-on="on" :to="editVoterRoute(item.id)">
             <v-icon> mdi-pencil </v-icon>
           </v-btn>
         </template>
@@ -39,8 +39,10 @@
 <script lang="ts">
 import restrictionsMixin from "@/mixins/restrictions.mixin";
 import mixins from "vue-typed-mixins";
-
-export default mixins(restrictionsMixin).extend({
+import pageConfig from "@/configs/pages.config";
+import { Voters } from "../../../../services/voters.service";
+import manageElectionMixins from "../../../../mixins/manage-election.mixins";
+export default mixins(manageElectionMixins, restrictionsMixin).extend({
   props: {
     itemsPerPageOptions: Array,
     table: Object,
@@ -56,6 +58,7 @@ export default mixins(restrictionsMixin).extend({
           text: "Is Voted",
           value: "voted",
           status: this.pageStatus.voters.table.isVoted,
+          sortable: false,
         },
         {
           text: "Voter ID",
@@ -95,6 +98,13 @@ export default mixins(restrictionsMixin).extend({
           align: "right",
         },
       ]);
+    },
+  },
+
+  methods: {
+    editVoterRoute(voter_id: Voters["id"]) {
+      if (!this.electionId) return "";
+      return pageConfig.voters(this.electionId).edit(voter_id).route;
     },
   },
 });
