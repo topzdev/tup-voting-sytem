@@ -15,7 +15,7 @@ export type Voters = {
   lastname: string;
   email_address: string;
   pin: string;
-  is_allowed: boolean;
+  disabled: boolean;
   election_id: number;
   created_at: string;
   updated_at: string;
@@ -25,11 +25,13 @@ export type Voters = {
   is_pre_register: boolean;
 } & DataTimestamp;
 
-export interface GetVotersDto {
+export interface GetVoterBody {
   search?: string;
   order?: any;
   page: number;
   take: number;
+  availability: "all" | "disabled" | "enabled" | string;
+  registration: "all" | "reg" | "prereg" | string;
 }
 
 export interface GetVoterElectionDto {
@@ -83,17 +85,27 @@ export type RemoveVotersDto = {
   election_id: number;
 };
 
+export interface GetPregisteredVoterBody {
+  search?: string;
+  order?: any;
+  page: number;
+  take: number;
+}
+
 const url = "/api/v1/voter";
 
 const votersServices = {
-  async getAll(electionId: number, query: GetVotersDto) {
+  async getAll(electionId: number, query: GetVoterBody) {
     return (
       await apiClient.get(
         `${url}/all/${electionId}${transformParamsToUrl(query)}`
       )
     ).data;
   },
-  async getAllPreRegistered(electionId: number, query: GetVotersDto) {
+  async getAllPreRegistered(
+    electionId: number,
+    query: GetPregisteredVoterBody
+  ) {
     return (
       await apiClient.get(
         `${url}/all-pre-registered/${electionId}${transformParamsToUrl(query)}`
@@ -183,11 +195,11 @@ const votersServices = {
       })
     ).data;
   },
-  async allow(_dto: AllowVotersDto) {
-    return (await apiClient.post(`${url}/allow/`, _dto)).data;
+  async disable(_dto: AllowVotersDto) {
+    return (await apiClient.post(`${url}/disable/`, _dto)).data;
   },
-  async disallow(_dto: DisallowVotersDto) {
-    return (await apiClient.post(`${url}/disallow/`, _dto)).data;
+  async enable(_dto: DisallowVotersDto) {
+    return (await apiClient.post(`${url}/enable/`, _dto)).data;
   },
   async remove(_dto: DisallowVotersDto) {
     return (await apiClient.post(`${url}/remove/`, _dto)).data;

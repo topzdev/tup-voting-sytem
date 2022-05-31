@@ -131,6 +131,7 @@ export default mixins(manageElectionMixins, authMixin).extend({
         button: {
           anyEventHide: false,
           yesFunction: async ({ hideDialog }) => {
+            hideDialog();
             this.systemAuthentication(
               {
                 button: {

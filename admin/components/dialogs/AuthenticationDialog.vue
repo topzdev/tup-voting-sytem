@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="show" persistent :min-width="width" :width="width">
-    <v-form ref="form" v-model="valid">
+    <v-form ref="form" v-model="valid" @submit.prevent="yesFunc">
       <v-card>
         <v-card-title class="text-h5" v-html="title"> </v-card-title>
         <v-card-text>
@@ -42,7 +42,9 @@
         </v-card-text>
         <v-card-actions :class="[buttonSpaceBetweenClass]">
           <v-btn color="primary" text @click="noFunc"> {{ noLabel }} </v-btn>
-          <v-btn color="primary" text @click="yesFunc"> {{ yesLabel }} </v-btn>
+          <v-btn color="primary" type="submit" text @click="yesFunc">
+            {{ yesLabel }}
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-form>

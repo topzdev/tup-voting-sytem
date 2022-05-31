@@ -23,8 +23,10 @@ import Vue from "vue";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import votersServices from "@/services/voters.service";
 import VotersCreateForm from "../forms/VotersCreateForm.vue";
+import mixins from "vue-typed-mixins";
+import votersMixin from "../../../../mixins/voters.mixin";
 
-export default manageElectionMixins.extend({
+export default mixins(manageElectionMixins, votersMixin).extend({
   props: {
     isOpen: Boolean,
   },
@@ -75,6 +77,8 @@ export default manageElectionMixins.extend({
         });
 
         this.isOpenLocal = false;
+
+        this.refreshTable();
       } catch (error: any) {
         throw error.response.data.error;
       } finally {

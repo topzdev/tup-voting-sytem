@@ -59,6 +59,8 @@ import votersServices from "@/services/voters.service";
 import VotersImportCard from "../cards/VotersImportCard.vue";
 import VotersImportFromCSVForm from "../forms/VotersImportFromCSVForm.vue";
 import VotersImportFromElectionForm from "../forms/VotersImportFromElectionForm.vue";
+import mixins from "vue-typed-mixins";
+import votersMixin from "../../../../mixins/voters.mixin";
 
 const forms = {
   csv: {
@@ -76,7 +78,7 @@ const forms = {
 
 type FormKeys = keyof typeof forms;
 
-export default manageElectionMixins.extend({
+export default mixins(votersMixin, manageElectionMixins).extend({
   props: {
     isOpen: Boolean,
   },
@@ -136,6 +138,7 @@ export default manageElectionMixins.extend({
           color: "success",
         });
         this.isOpenLocal = false;
+        this.refreshTable();
       } catch (error: any) {
         throw error.response.data.error;
       }
@@ -158,6 +161,7 @@ export default manageElectionMixins.extend({
           color: "success",
         });
         this.isOpenLocal = false;
+        this.refreshTable();
       } catch (error: any) {
         throw error.response.data.error;
       }

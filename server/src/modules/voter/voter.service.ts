@@ -43,10 +43,12 @@ const voterOverview = async (_electionId: Election["id"]) => {
 
   let builder = voterRepository
     .createQueryBuilder("voter")
-    .leftJoinAndSelect("voter.voted", "voted")
+    .addSelect(["COUNT(voter.is_pre_register=true) as preRegisterCount"])
+
     .where("voter.election_id = :electionId", {
       electionId: _electionId,
-    });
+    })
+    .getCount();
 };
 
 const getAll = async (_electionId: string, _query: GetVoterBody) => {
@@ -89,7 +91,6 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
   const availability = _query.availability;
   if (availability && availability !== "all") {
     const is_disabled = availability === "disabled" ? true : false;
-
     builder = builder.andWhere("voter.disabled = :is_disabled", {
       is_disabled,
     });
@@ -102,6 +103,7 @@ const getAll = async (_electionId: string, _query: GetVoterBody) => {
       is_pre_registered,
     });
   }
+  console.log(availability, registration);
 
   if (_query.order) {
     builder = builder.addOrderBy("voter.firstname", _query.order);
@@ -700,6 +702,7 @@ const disableVoters = async (_dto: DisableVotersDto) => {
       disabled: true,
     }
   );
+  console.log("Disabled Voter", result);
 
   return true;
 };

@@ -23,6 +23,14 @@ const votersMixin = mixins(manageElectionMixins).extend({
     importVoterRoute() {
       this.$router.push(`${this.pagePath}/import`);
     },
+
+    refreshTable() {
+      this.$router.push({
+        query: {
+          refresh: "1",
+        },
+      });
+    },
   },
 });
 
