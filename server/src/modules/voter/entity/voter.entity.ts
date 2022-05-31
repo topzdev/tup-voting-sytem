@@ -35,9 +35,9 @@ export class Voter extends Timestamp {
   pin: string;
 
   @Column({
-    default: true,
+    default: false,
   })
-  is_allowed: boolean;
+  disabled: boolean;
 
   @Column({
     default: false,

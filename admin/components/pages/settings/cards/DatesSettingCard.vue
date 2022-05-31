@@ -88,7 +88,6 @@ export default mixins(manageElectionMixins).extend({
 
     closeDateDisable(): boolean {
       if (!this.electionInfo) return true;
-
       return this.electionInfo.final_status !== "building";
     },
 

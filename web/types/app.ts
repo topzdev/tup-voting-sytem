@@ -206,7 +206,7 @@ export type Voter = {
   usernamne: string;
   email_address: string;
   pin: string;
-  is_allowed: boolean;
+  disabled: boolean;
   election_id: number;
   election: Election;
   voted: ElectionVoted;

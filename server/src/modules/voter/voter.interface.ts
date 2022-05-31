@@ -5,6 +5,15 @@ export interface GetVoterBody {
   order?: any;
   page: number;
   take: number;
+  availability: "all" | "disabled" | "enabled";
+  registration: "all" | "reg" | "prereg";
+}
+
+export interface GetPregisteredVoterBody {
+  search?: string;
+  order?: any;
+  page: number;
+  take: number;
 }
 
 export interface GetVoterElectionDto {
@@ -39,12 +48,12 @@ export type ImportVotersByCSVDto = {
   election_id: number;
 };
 
-export type DisallowVotersDto = {
+export type DisableVotersDto = {
   voter_ids: number[];
   election_id: number;
 };
 
-export type AllowVotersDto = {
+export type EnableVotersDto = {
   voter_ids: number[];
   election_id: number;
 };

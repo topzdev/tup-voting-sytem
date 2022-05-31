@@ -108,6 +108,8 @@ export default mixins(manageElectionMixins).extend({
           page: 1,
           take: 10,
           search: this.search,
+          availability: "enabled",
+          registration: "reg",
         });
 
         this.items = data.items.map((item) => ({

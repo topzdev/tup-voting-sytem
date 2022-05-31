@@ -329,13 +329,19 @@ const voterLogin = async (_credentials: VoterLoginCredentials) => {
       "voter.lastname",
       "voter.username",
       "voter.pin",
-      "voter.is_allowed",
+      "voter.disabled",
+      "voter.is_pre_register",
       "voter.election_id",
     ])
-    .where("voter.username = :voter_id AND voter.election_id = :election_id", {
-      voter_id: _credentials.voter_id,
-      election_id: _credentials.election_id,
-    })
+    .where(
+      "voter.username = :voter_id AND voter.election_id = :election_id AND voter.disabled =:disabled AND voter.is_pre_register = :is_pre_registered",
+      {
+        voter_id: _credentials.voter_id,
+        election_id: _credentials.election_id,
+        disabled: false,
+        is_pre_registered: false,
+      }
+    )
     .getOne();
 
   console.log(voter);
