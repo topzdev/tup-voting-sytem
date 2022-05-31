@@ -4,8 +4,11 @@ import {
   Column,
   BaseEntity,
   CreateDateColumn,
+  OneToOne,
+  JoinColumn,
 } from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
+import { ElectionOfficer } from "../../election-officers/entity/election-offcer.entity";
 import { UserRole } from "../user.inteface";
 
 @Entity("user")
@@ -83,4 +86,8 @@ export class User extends Timestamp {
     nullable: true,
   })
   last_resend_otp_time: Date;
+
+  @OneToOne(() => ElectionOfficer, (electionOfficer) => electionOfficer.user)
+  @JoinColumn()
+  election_officer: ElectionOfficer;
 }

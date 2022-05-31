@@ -50,7 +50,6 @@ const votersFormMixin = Vue.extend({
     rules() {
       return {
         firstname: [(v: any) => !!v || "First Name is required"],
-        middlename: [(v: any) => !!v || "Middle Name is required"],
         lastname: [(v: any) => !!v || "Last Name is required"],
         platform: [(v: any) => !!v || "Platform is required"],
         description: [(v: any) => !!v || "Description is required"],

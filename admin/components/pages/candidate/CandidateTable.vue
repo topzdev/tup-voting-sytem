@@ -49,7 +49,7 @@
 
           <v-data-table
             :loading="table.loading"
-            :headers="table.headers"
+            :headers="headers"
             :items="table.items"
             :server-items-length="table.pagination.total"
             :page.sync="table.pagination.page"
@@ -122,29 +122,7 @@ export default mixins(
     return {
       table: {
         loading: false,
-        headers: [
-          {
-            text: "First Name",
-            value: "firstname",
-          },
-          {
-            text: "Last Name",
-            value: "lastname",
-          },
-          {
-            text: "Position",
-            value: "position",
-          },
-          {
-            text: "Party",
-            value: "party",
-          },
-          {
-            text: "Action",
-            value: "actions",
-            status: pageStatus.candidate.edit,
-          },
-        ],
+
         items: [] as Candidate[],
         search: "",
         pagination: {
@@ -175,6 +153,32 @@ export default mixins(
     },
     prependPosition() {
       return [{ id: "all", title: "All" }];
+    },
+
+    headers() {
+      return this.filterByStatus([
+        {
+          text: "First Name",
+          value: "firstname",
+        },
+        {
+          text: "Last Name",
+          value: "lastname",
+        },
+        {
+          text: "Position",
+          value: "position",
+        },
+        {
+          text: "Party",
+          value: "party",
+        },
+        {
+          text: "Action",
+          value: "actions",
+          status: pageStatus.candidate.edit,
+        },
+      ]);
     },
   },
 

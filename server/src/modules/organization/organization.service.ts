@@ -2,6 +2,7 @@ import { validate } from "class-validator";
 import { getRepository, Not } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
 import photoUploader from "../../helpers/photo-uploader.helper";
+import { PickedUser } from "../../type/express-serve-static-core";
 import { Photo } from "../photo/photo.service";
 import { OrganizationLogo } from "./entity/organization-logo.entity";
 import { OrganizationTheme } from "./entity/organization-theme.entity";
@@ -15,7 +16,7 @@ import {
 
 // const User = getRepository(User);
 
-const getAll = async (_query: GetOrganizationParams) => {
+const getAll = async (user: PickedUser, _query: GetOrganizationParams) => {
   const orgRepository = getRepository(Organization);
 
   const searchStirng = _query.search ? _query.search : "";
@@ -25,10 +26,16 @@ const getAll = async (_query: GetOrganizationParams) => {
   let builder = orgRepository
     .createQueryBuilder("org")
     .leftJoinAndSelect("org.logo", "logo")
-    .leftJoinAndSelect("org.theme", "theme")
-    .orderBy({
-      "org.created_at": "ASC",
-    });
+    .leftJoinAndSelect("org.theme", "theme");
+
+  const election_officer = user.election_officer;
+  if (election_officer) {
+    builder = builder
+      .leftJoinAndSelect("org.election_officers", "election_officers")
+      .andWhere("election_officers.id = :election_officer_id", {
+        election_officer_id: 6,
+      });
+  }
 
   if (!withArchive) {
     builder = builder.andWhere("org.archive = :bol", { bol: false });
@@ -60,6 +67,10 @@ const getAll = async (_query: GetOrganizationParams) => {
     builder = builder.offset(offset).limit(_query.take);
   }
 
+  builder = builder.orderBy({
+    "org.created_at": "ASC",
+  });
+
   const [items, count] = await builder.getManyAndCount();
   return {
     items,
@@ -83,7 +94,10 @@ const getById = async (_id: string) => {
     },
   });
 
-  return organization || null;
+  if (!organization)
+    throw new HttpException("NOT_FOUND", "Organization not found");
+
+  return organization;
 };
 
 const getBySlug = async (_slug: string) => {
@@ -97,6 +111,9 @@ const getBySlug = async (_slug: string) => {
     },
     relations: ["logo", "theme"],
   });
+
+  if (!organization)
+    throw new HttpException("NOT_FOUND", "Organization not found");
 
   return organization || null;
 };

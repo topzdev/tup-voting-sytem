@@ -10,7 +10,7 @@
 
         <p class="my-3">Vote Submitted</p>
 
-        <h1 class="display-2 font-weight-bold text--primary mx-auto mb-4">
+        <h1 class="font-weight-bold text--primary mx-auto mb-4">
           Thank you for voting!
         </h1>
         <!-- <v-btn color="primary" large class="mt-2 mb-2" @click="show = true">

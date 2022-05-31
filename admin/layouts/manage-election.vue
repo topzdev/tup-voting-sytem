@@ -127,9 +127,11 @@ export default mixins(manageElectionMixins).extend({
 
       const electionTitle = this.electionInfo.title;
 
-      return electionTitle.includes("Election")
-        ? `${electionTitle}`
-        : `${electionTitle} Election`;
+      return (
+        electionTitle.toLowerCase().includes("election")
+          ? `${electionTitle}`
+          : `${electionTitle} Election`
+      ).toLowerCase();
     },
   },
 
@@ -137,9 +139,9 @@ export default mixins(manageElectionMixins).extend({
     backToPage() {
       if (!this.electionInfo) return this.$router.back();
 
-      const orgElectionPath = `/organization/${this.electionInfo.organization_id}`;
-
-      this.$router.push(orgElectionPath);
+      this.$router.push(
+        pageConfig.organization(this.electionInfo.organization_id).this().route
+      );
     },
   },
 });

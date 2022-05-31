@@ -1,17 +1,15 @@
 <template>
   <span>
-    <v-icon size="100">{{ thisPageConfig.icon }}</v-icon>
     <h1 class="display-2">No Election Yet</h1>
     <p class="mt-3 mx-auto body-1" style="width: 75%">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos aperiam amet
-      autem sed facilis deserunt corrupti aliquid odit dolorem, provident
+      Please create a new election.
     </p>
     <v-btn
       color="primary"
       large
       width="75%"
       class="mt-1 mx-auto"
-      :to="createPage"
+      :to="createElectionRoute"
       >Create Election</v-btn
     >
   </span>
@@ -24,7 +22,11 @@ import mixins from "vue-typed-mixins";
 export default mixins(orgMixins).extend({
   computed: {
     thisPageConfig() {
-      return pageConfig.election();
+      return pageConfig.organization(this.organizationId).this();
+    },
+    createElectionRoute() {
+      return pageConfig.organization(this.organizationId).createElection()
+        .route;
     },
   },
 });

@@ -44,6 +44,12 @@
           Login
         </v-btn>
       </v-col>
+
+      <v-col class="text-center mt-2 mt-lg-5" cols="12">
+        <v-btn to="/" large color="primary" text
+          >Go to TUP Voting Homepage</v-btn
+        >
+      </v-col>
     </v-row>
     <recaptcha />
   </v-form>

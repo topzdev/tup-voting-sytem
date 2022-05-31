@@ -4,7 +4,12 @@
       <h2>Positions and Candidates</h2>
     </v-col>
     <template v-if="positions && positions.length">
-      <v-col v-for="item in positions" :key="item.id" cols="12" class="pt-0">
+      <v-col
+        v-for="item in positions"
+        :key="item.id"
+        cols="12"
+        class="pt-0 mb-lg-0 mb-5"
+      >
         <h3>{{ item.title }}</h3>
         <p>{{ item.description }}</p>
         <v-row>
@@ -12,8 +17,10 @@
             <v-col
               v-for="candidate in item.candidates"
               :key="candidate.id"
-              md="4"
-              
+              cols="12"
+              sm="6"
+              md="6"
+              lg="4"
             >
               <candidate-card :candidate="candidate"></candidate-card>
             </v-col>

@@ -5,9 +5,10 @@ import userServices from "./user.service";
 const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { page, take, order, search } = req.query as any;
+    const user_id = req.admin;
 
     res.status(200).json(
-      await userServices.getAll({
+      await userServices.getAll(user_id, {
         page,
         take,
         order,

@@ -1,4 +1,7 @@
 import Vue from "vue";
+import { UserRoles } from "../services/auth.service";
+import { ElectionOfficer } from "../services/election-officer.service";
+import { AuthUser } from "../services/user.service";
 import {
   AuthenticationDialogConfig,
   AuthenticationDialogType,
@@ -17,18 +20,22 @@ const authMixin = Vue.extend({
         "type" | "allowedRole" | "show"
       >,
       type: AuthenticationDialogType = "default",
-      allowedRole: "super-admin" | "admin" | "all" = "all"
+      allowedRoles: UserRoles[] | UserRoles
     ) {
-      await this.$auth.fetchUser();
-
       let message = "";
       let callname = "";
       let username = this.$auth.user?.username as string;
 
-      if (this.$auth.user?.role === "sadmin") {
-        callname = "Super Admin";
-      } else {
-        callname = "Admin";
+      const currentUserRole = this.$auth.user?.role;
+
+      switch (currentUserRole) {
+        case "sadmin" || "admin":
+          callname = "Administrator";
+          break;
+
+        case "elec_ofc":
+          callname = "Election Officer";
+          break;
       }
 
       if (type === "current-only-password") {
@@ -42,13 +49,21 @@ const authMixin = Vue.extend({
           usernameOrEmail: username,
         },
         message,
-        allowedRole,
+        allowedRoles,
         show: true,
       });
     },
   },
 
   computed: {
+    user() {
+      return this.$auth.user as AuthUser;
+    },
+
+    electionOfficer(): ElectionOfficer | undefined {
+      return this.user.election_officer;
+    },
+
     fullname(): string {
       if (!this.$auth.loggedIn) return "";
 

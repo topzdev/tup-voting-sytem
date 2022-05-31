@@ -4,7 +4,7 @@ import { User } from "../../modules/user/entity/user.entity";
 import { Voter } from "../../modules/voter/entity/voter.entity";
 type PickedUser = Pick<
   User,
-  "id" | "username" | "firstname" | "lastname" | "role"
+  "id" | "username" | "firstname" | "lastname" | "role" | "election_officer"
 >;
 
 type PickedVoter = Pick<Voter, "id" | "username" | "firstname" | "lastname">;

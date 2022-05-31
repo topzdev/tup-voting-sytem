@@ -4,7 +4,7 @@
       <v-sheet
         rounded
         style="margin-top: -10px; overflow: hidden"
-        height="300"
+        height="250"
         outlined
       >
         <app-image
@@ -15,34 +15,49 @@
         ></app-image>
       </v-sheet>
     </v-col>
-    <v-col
-      cols="12"
-      class="pl-10 py-3 d-flex flex-column justify-end align-start"
-    >
-      <v-row style="width: 100%">
-        <v-col md="8">
+    <v-col cols="12" class="px-lg-10">
+      <v-row>
+        <v-col cols="12" lg="8">
           <v-row>
-            <v-col class="pl-14 pl-sm-4" style="margin-top: -80px">
+            <v-col
+              cols="12"
+              lg="auto"
+              style="margin-top: -80px"
+              class="text-lg-left text-center"
+            >
               <app-avatar
                 :alt="fullname"
-                :size="220"
+                :size="200"
                 :src="candidate.profile_photo"
               ></app-avatar>
             </v-col>
 
-            <v-col class="pt-0" style="height: auto">
+            <v-col
+              cols="12"
+              lg=""
+              class="pt-0 text-center text-lg-left"
+              style="height: auto"
+            >
               <v-breadcrumbs
-                class="py-0 px-0"
+                class="
+                  px-auto
+                  py-0
+                  px-lg-0
+                  d-flex
+                  justify-center justify-lg-start
+                "
                 divider="/"
                 :items="breadcrumb"
               ></v-breadcrumbs>
-              <h1 class="headline-1 text-center text-sm-left">{{ fullname }}</h1>
+              <h1>
+                {{ fullname }}
+              </h1>
               <p class="text--secondary body-1" v-html="positionTitle"></p>
             </v-col>
           </v-row>
         </v-col>
 
-        <v-col class="mt-md-n16 mt-auto"  md="4" xs="2">
+        <v-col class="mt-lg-n16 mt-auto" cols="12" lg="4">
           <v-card>
             <v-list>
               <v-list-item v-if="candidate.election">

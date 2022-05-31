@@ -1,10 +1,10 @@
 <template>
   <v-row>
     <v-col class="d-flex align-center text-center flex-column" md="12">
-      <h1
+      <h2
         class="display-2 font-weight-bold text--primary mx-auto"
         v-html="title"
-      ></h1>
+      ></h2>
 
       <p v-if="body" class="subtitle-1 text--secondary mt-2" v-html="body"></p>
     </v-col>

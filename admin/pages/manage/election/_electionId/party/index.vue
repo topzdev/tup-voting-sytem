@@ -1,13 +1,13 @@
 <template>
   <span>
-    <page-bars title="Partylist">
+    <page-bars title="Party">
       <v-btn
         v-if="hideByStatus(pageStatus.candidate.create)"
         color="primary"
         class="mr-2 ml-auto"
         @click="createPartyRoute"
         large
-        >New Partylist</v-btn
+        >New Party</v-btn
       >
     </page-bars>
     <manage-container>

@@ -18,7 +18,8 @@ import PageBars from "@/components/bars/PageBars.vue";
 import AccountContainer from "@/components/containers/AccountContainer.vue";
 import OrganizationList from "@/components/pages/org/OrganizationList.vue";
 import pageConfig from "../configs/pages.config";
-export default Vue.extend({
+import mixins from "vue-typed-mixins";
+export default mixins(authMixins).extend({
   auth: true,
   layout: "account",
   mixins: [authMixins],
@@ -35,6 +36,15 @@ export default Vue.extend({
     createOrgRoute() {
       return pageConfig.organization().create().route;
     },
+  },
+
+  created() {
+    if (this.electionOfficer) {
+      this.$router.push(
+        pageConfig.organization(this.electionOfficer.organization_id).this()
+          .route
+      );
+    }
   },
 });
 </script>

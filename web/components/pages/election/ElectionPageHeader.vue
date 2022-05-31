@@ -4,18 +4,20 @@
       <v-sheet
         rounded
         style="margin-top: -10px"
-        height="150"
+        height="250"
         :color="colors.primary"
       ></v-sheet>
     </v-col>
-    <v-col
-      cols="12"
-      class="pl-10 d-flex flex-column flex-wrap justify-lg-end align-start"
-    >
-      <v-row style="width: 100%">
-        <v-col cols="8" class="pt-0">
+    <v-col cols="12" class="px-lg-10">
+      <v-row>
+        <v-col class="pt-0" cols="12" lg="8">
           <v-row>
-            <v-col class="ml-17 pl-14 pl-sm-4" cols="auto" style="margin-top: -80px">
+            <v-col
+              class="text-lg-left text-center"
+              cols="12"
+              lg="auto"
+              style="margin-top: -80px"
+            >
               <app-avatar
                 :alt="election.title"
                 :size="180"
@@ -23,15 +25,26 @@
               ></app-avatar>
             </v-col>
 
-            <v-col style="height: auto">
+            <v-col
+              class="text-lg-left text-center"
+              cols="12"
+              lg=""
+              style="height: auto"
+            >
               <v-breadcrumbs
-                class="py-0 px-0"
+                class="
+                  px-auto
+                  py-0
+                  px-lg-0
+                  d-flex
+                  justify-center justify-lg-start
+                "
                 divider="/"
                 :items="breadcrumb"
               ></v-breadcrumbs>
-              <div class="text-md-h4 text-h5 font-weight-bold text-center text-sm-left">
+              <h1>
                 {{ election.title }}
-              </div>
+              </h1>
               <election-status-chip
                 class="font-weight-bold"
                 :status="election.final_status"
@@ -42,27 +55,37 @@
           </v-row>
         </v-col>
 
-        <v-col 
-        class="mt-lg-n16"  md="4" xs="2">
-          <v-card>
-            <v-list >
-              <v-list-item  >
+        <v-col class="mt-lg-n16" cols="12" lg="4">
+          <v-card class="w-100">
+            <v-list>
+              <v-list-item>
                 <v-list-item-content>
                   <v-list-item-subtitle>Description</v-list-item-subtitle>
-                  <v-list-item-title style="overflow: auto; white-space: unset"  v-text="election.description">
+                  <v-list-item-title
+                    style="overflow: auto; white-space: unset"
+                    v-text="election.description"
+                  >
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-subtitle>Start Date</v-list-item-subtitle>
-                  <v-list-item-title style="overflow: auto; white-space: unset" v-text="startDate"> </v-list-item-title>
+                  <v-list-item-title
+                    style="overflow: auto; white-space: unset"
+                    v-text="startDate"
+                  >
+                  </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-subtitle >Close Date</v-list-item-subtitle>
-                  <v-list-item-title style="overflow: auto; white-space: unset" v-text="endDate"> </v-list-item-title>
+                  <v-list-item-subtitle>Close Date</v-list-item-subtitle>
+                  <v-list-item-title
+                    style="overflow: auto; white-space: unset"
+                    v-text="endDate"
+                  >
+                  </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>

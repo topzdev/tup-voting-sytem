@@ -13,7 +13,7 @@
           <v-col cols="12">
             <p class="body-1 mb-0">
               Are you sure to close this election? It will automatically
-              complete the election and the voters can't vote.
+              complete the election and the voters wil not be able to vote.
             </p>
           </v-col>
         </v-row>

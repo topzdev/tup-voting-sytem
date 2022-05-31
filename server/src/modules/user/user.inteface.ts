@@ -3,7 +3,10 @@ import { User } from "./entity/user.entity";
 export enum UserRole {
   SUPER_ADMIN = "sadmin",
   ADMIN = "admin",
+  ELECTION_OFFICER = "elec_ofc",
 }
+
+export type UserRoleValue = "sadmin" | "admin" | "elec_ofc";
 
 export interface GetUserQuery {
   search?: string;

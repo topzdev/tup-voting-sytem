@@ -20,6 +20,7 @@ import partyPublicRoute from "./modules/public/party/party-public.route";
 import homepageRoute from "./modules/public/homepage/homepage.route";
 import securityRoute from "./modules/security/security.route";
 import electionPublicRoute from "./modules/public/election/election-public.route";
+import electionOfficerRoute from "./modules/election-officers/election-officer.route";
 const router = express.Router();
 
 router.use("/user", userRoute);
@@ -43,5 +44,6 @@ router.use("/public/party", partyPublicRoute);
 router.use("/public/homepage", homepageRoute);
 router.use("/public/election", electionPublicRoute);
 router.use("/security", securityRoute);
+router.use("/election-officer", electionOfficerRoute);
 
 export default router;

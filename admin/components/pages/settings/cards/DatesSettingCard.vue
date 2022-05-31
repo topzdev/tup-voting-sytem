@@ -87,9 +87,8 @@ export default mixins(manageElectionMixins).extend({
     },
 
     closeDateDisable(): boolean {
-      if (!this.electionStatus) return true;
-
-      return !statusOnlyAllowed(this.electionStatus, ["running", "building"]);
+      if (!this.electionInfo) return true;
+      return this.electionInfo.final_status !== "building";
     },
 
     overallDisable(): boolean {

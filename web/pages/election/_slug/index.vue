@@ -30,10 +30,10 @@
 
           <v-col cols="12">
             <v-row>
-              <v-col md="8">
+              <v-col md="12" lg="8">
                 <election-position-candidates :positions="positions" />
               </v-col>
-              <v-col md="4" class="px-md-10">
+              <v-col md="12" lg="4" class="px-lg-10">
                 <election-party :party="party"></election-party>
               </v-col>
             </v-row>

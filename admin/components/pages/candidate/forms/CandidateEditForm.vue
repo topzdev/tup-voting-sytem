@@ -50,10 +50,9 @@
 
           <v-col cols="6">
             <v-text-field
-              label="Middle Name *"
+              label="Middle Name"
               outlined
               v-model="form.middlename"
-              :rules="rules.middlename"
               hide-details="auto"
             ></v-text-field>
           </v-col>

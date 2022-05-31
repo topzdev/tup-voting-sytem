@@ -58,21 +58,23 @@ import ResultCandidateChart from "@/components/pages/results/charts/ResultCandid
 import ResultWinnerSection from "@/components/pages/results/sections/ResultWinnerSection.vue";
 import ResultCandidateTable from "@/components/pages/results/tables/ResultCandidateTable.vue";
 import ResultTiedCandidateTable from "@/components/pages/results/tables/ResultTiedCandidateTable.vue";
+import pageRoles from "@/configs/page-roles";
+import authMixin from "@/mixins/auth.mixins";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
 import {
   CandidateTieResult,
   ResultCandidate,
   ResultPositionsWithWinner,
 } from "@/services/results.service";
+import { PropOptions } from "vue";
+import mixins from "vue-typed-mixins";
 
 type Menu = {
   title: string;
   action: () => void;
 };
 
-import Vue, { PropOptions } from "vue";
-import mixins from "vue-typed-mixins";
-import manageElectionMixins from "@/mixins/manage-election.mixins";
-export default mixins(manageElectionMixins).extend({
+export default mixins(manageElectionMixins, authMixin).extend({
   props: {
     position: {
       type: Object,
@@ -154,38 +156,37 @@ export default mixins(manageElectionMixins).extend({
             yesFunction: async ({ hideDialog }) => {
               hideDialog();
 
-              this.$accessor.system.showAuthenticationDialog({
-                button: {
-                  yesFunction: async () => {
-                    try {
-                      await this.$accessor.electionResult.resetTieBreaker(
-                        this.position.id
-                      );
+              this.systemAuthentication(
+                {
+                  button: {
+                    yesFunction: async () => {
+                      try {
+                        await this.$accessor.electionResult.resetTieBreaker(
+                          this.position.id
+                        );
 
-                      this.$accessor.snackbar.set({
-                        show: true,
-                        message: `Position ${this.position.title} tie breaker reset`,
-                        timeout: 5000,
-                        color: "success",
-                      });
-                    } catch (error) {
-                      console.error(error);
+                        this.$accessor.snackbar.set({
+                          show: true,
+                          message: `Position ${this.position.title} tie breaker reset`,
+                          timeout: 5000,
+                          color: "success",
+                        });
+                      } catch (error) {
+                        console.error(error);
 
-                      this.$accessor.snackbar.set({
-                        show: true,
-                        message: `Can't reset position right now, Try again later.`,
-                        timeout: 5000,
-                        color: "error",
-                      });
-                    }
+                        this.$accessor.snackbar.set({
+                          show: true,
+                          message: `Can't reset position right now, Try again later.`,
+                          timeout: 5000,
+                          color: "error",
+                        });
+                      }
+                    },
                   },
                 },
-                type: "default",
-                message:
-                  "The election officer must authenticate first before approving this action.",
-                allowedRole: "super-admin",
-                show: true,
-              });
+                "current-only-password",
+                pageRoles.dialogs.resetTieBreaker
+              );
             },
             noFunction: ({ hideDialog }) => {
               hideDialog();
