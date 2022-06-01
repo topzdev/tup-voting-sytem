@@ -24,6 +24,18 @@ export type ElectionHasLaunchedTemplate = {
   election_start_date: string;
 };
 
+export type ElectionWillStartTemplate = {
+  firstname: string;
+  lastname: string;
+  title: string;
+  election_title: string;
+  election_end_date: string;
+  election_start_date: string;
+  election_link: string;
+  election_vote_link: string;
+  is_public: boolean;
+};
+
 export type ElectionHasEndedTemplate = {
   title: string;
   election_title: string;

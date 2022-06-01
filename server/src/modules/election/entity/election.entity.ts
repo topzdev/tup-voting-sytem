@@ -17,6 +17,7 @@ import { ElectionLogo } from "./election-logo.entity";
 import { ElectionVotes } from "../../voting/entity/votes.entity";
 import { Voter } from "../../voter/entity/voter.entity";
 import { ElectionVoted } from "../../voting/entity/voted.entity";
+import { ElectionMails } from "../../mailer/entity/election-mails.entity";
 
 export enum ElectionStatusEnum {
   BUILDING = 1,
@@ -52,6 +53,10 @@ export class Election extends Timestamp {
   @OneToOne(() => ElectionLogo)
   @JoinColumn()
   logo: ElectionLogo;
+
+  @OneToOne(() => ElectionMails)
+  @JoinColumn()
+  election_mails: ElectionMails;
 
   @Column({ nullable: true })
   organization_id: number;

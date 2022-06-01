@@ -16,6 +16,7 @@ import {
   AdminLoginOTPTemplate,
   ElectionHasEndedTemplate,
   ElectionHasLaunchedTemplate,
+  ElectionWillStartTemplate,
   PregistrationApprovedTemplate,
   ThankYouForVotingContextTemplate,
   VoterCredentialsContextTemplate,
@@ -214,6 +215,36 @@ const sendElectionHasLaunched = async (_election_ids: number[]) => {
   return true;
 };
 
+const mailElectionWillStart = async (elections: Election[]) => {
+  const messages: NewSendMailOptions<ElectionWillStartTemplate>[] = [];
+
+  console.log(elections);
+
+  elections.forEach((election) => {
+    election.voters.forEach((voter) => {
+      messages.push({
+        ...emailTemplates.electionWillStart,
+        to: voter.email_address,
+        context: {
+          election_end_date: new Date(election.close_date).toString(),
+          election_start_date: new Date(election.start_date).toString(),
+          election_title: election.title,
+          title: emailTemplates.electionWillStart.title(election.title),
+          election_link: platformLinks.election(election.slug),
+          election_vote_link: platformLinks.voting(election.slug),
+          firstname: voter.firstname,
+          lastname: voter.lastname,
+          is_public: election.is_public,
+        },
+      });
+    });
+  });
+
+  console.log(messages);
+
+  sendBulkMail(messages);
+};
+
 const sendElectionHasEnded = async (_election_ids: number[]) => {
   const voterRepository = getRepository(Voter);
 
@@ -321,6 +352,7 @@ const mailerServices = {
   sendElectionHasEnded,
   sendAdminLoginOTP,
   sendPreRegisterApproved,
+  mailElectionWillStart,
 };
 
 export default mailerServices;
