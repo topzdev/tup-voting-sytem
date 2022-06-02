@@ -114,6 +114,35 @@ const sendVotersCredentialsEmail = async (
   return messages;
 };
 
+const mailVotersCredentialsEmail = async (elections: Election[]) => {
+  const messages: NewSendMailOptions<VoterCredentialsContextTemplate>[] = [];
+
+  elections.forEach((election) => {
+    election.voters.forEach((voter) => {
+      messages.push({
+        ...emailTemplates.voterCredentails,
+        to: voter.email_address,
+        context: {
+          firstname: voter.firstname,
+          lastname: voter.lastname,
+          election_date: dayjs(election.start_date).format(
+            "MMMM DD, YYYY hh:mm:ss a"
+          ),
+          election_link: platformLinks.voting(election.slug),
+          voterId: voter.username,
+          pin: voterPinParser(voter.pin),
+          title: emailTemplates.voterCredentails.title.replace(
+            "$electionTitle",
+            election.title
+          ),
+        },
+      });
+    });
+  });
+
+  sendBulkMail(messages);
+};
+
 const sendThankYouForVotingEmail = async (_voter_id: number) => {
   const voterRepository = getRepository(Voter);
 
@@ -306,6 +335,30 @@ const sendElectionHasEnded = async (_election_ids: number[]) => {
   return true;
 };
 
+const mailElectionHasEnded = async (elections: Election[]) => {
+  const messages: NewSendMailOptions<ElectionHasEndedTemplate>[] = [];
+
+  elections.forEach((election) => {
+    election.voters.forEach((voter) => {
+      messages.push({
+        ...emailTemplates.electionHasEnded,
+        to: voter.email_address,
+        context: {
+          election_end_date: new Date(election.close_date).toString(),
+          election_title: election.title,
+          title: emailTemplates.electionHasEnded.title.replace(
+            "$electionTitle",
+            election.title
+          ),
+          election_result_link: platformLinks.election(election.slug),
+        },
+      });
+    });
+  });
+
+  sendBulkMail(messages);
+};
+
 const sendAdminLoginOTP = async (data: AdminLoginOTPTemplate) => {
   const message: NewSendMailOptions<AdminLoginOTPTemplate> = {
     ...emailTemplates.sendAdminLoginOTP,
@@ -353,6 +406,8 @@ const mailerServices = {
   sendAdminLoginOTP,
   sendPreRegisterApproved,
   mailElectionWillStart,
+  mailVotersCredentialsEmail,
+  mailElectionHasEnded,
 };
 
 export default mailerServices;
