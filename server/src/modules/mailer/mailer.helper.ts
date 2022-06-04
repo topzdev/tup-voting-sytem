@@ -4,7 +4,8 @@ export type EmailTemplates =
   | "election-has-launched"
   | "thank-you-for-voting"
   | "login-otp-verifcation"
-  | "preregister-approved";
+  | "preregister-approved"
+  | "election-will-launch";
 
 const from = "TUP Voting admin@tupvoting.com";
 
@@ -44,5 +45,11 @@ export const emailTemplates = {
     subject: "Pre-Registration Approved",
     template: "preregister-approved" as EmailTemplates,
     title: (title) => `You're Pre-Registration on ${title} is approved`,
+  },
+  electionWillStart: {
+    from,
+    subject: "Election will start",
+    template: "election-will-start" as EmailTemplates,
+    title: (title) => `The election ${title} will start`,
   },
 };

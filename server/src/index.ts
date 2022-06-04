@@ -3,6 +3,7 @@ import { createConnection } from "typeorm";
 import bootsrap from "./app";
 import cloudinary from "cloudinary";
 import configs from "./configs";
+require("./cron");
 
 cloudinary.v2.config(configs.cloudinary);
 

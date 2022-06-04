@@ -1,0 +1,36 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Election will launched</title>
+  </head>
+  <body>
+
+    <p>Hi, {{firstname}} {{lastname}}</p>
+
+    <br />
+    <p>
+      {{election_title}}
+      will launch at
+      {{election_start_date}}, Please submit your vote before the election end
+      on
+      {{election_end_date}}</p>
+    <br />
+
+    {{#if is_public}}
+      <p>View election information here
+        <a href="{{election_result_link}}">here</a></p>
+      <p>or directly vote
+        <a href="{{election_vote_link}}">here</a>
+        when election started</p>
+    {{else}}
+
+      <p>When election is officially started you can vote
+        <a href="{{election_result_link}}">here</a>
+        .</p>
+    {{/if}}
+    <small>Dont send this email to anyone, and dont reply in this email. Thank
+      you.</small>
+  </body>
+</html>
