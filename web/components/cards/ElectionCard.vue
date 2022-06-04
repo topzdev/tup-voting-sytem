@@ -27,10 +27,10 @@
             </v-col>
             <v-col class="">
               <p class="body mb-0 mt-1">
-                <span class="text--secondary">to</span>
+                <span class="text--secondary">Start</span>
                 <span class="text--primary"> {{ startDate }}</span>
-
-                <span class="text--secondary">from</span>
+                &#8212;
+                <span class="text--secondary">End</span>
                 <span class="text--primary"> {{ endDate }}</span>
               </p>
             </v-col>

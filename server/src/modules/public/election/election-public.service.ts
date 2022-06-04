@@ -60,7 +60,7 @@ const getElectionContent = async (slug: string) => {
     .leftJoinAndSelect("party.cover_photo", "party_cover_photo")
 
     .where(publicElectionWhereQuery("election"))
-    .andWhere("election.slug = :slug", {
+    .andWhere("election.slug = :slug AND organization.id IS NOT NULL", {
       slug,
     })
     .orderBy({

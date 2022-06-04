@@ -3,6 +3,7 @@ import { getRepository, Not } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
 import photoUploader from "../../helpers/photo-uploader.helper";
 import { PickedUser } from "../../type/express-serve-static-core";
+import { Election } from "../election/entity/election.entity";
 import { Photo } from "../photo/photo.service";
 import { OrganizationLogo } from "./entity/organization-logo.entity";
 import { OrganizationTheme } from "./entity/organization-theme.entity";

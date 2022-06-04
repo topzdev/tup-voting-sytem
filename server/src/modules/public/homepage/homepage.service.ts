@@ -12,7 +12,8 @@ const getElectionsContent = async () => {
     .addSelect(finalStatusSubquery(electionBuilder.alias))
     .leftJoinAndSelect("election.logo", "logo")
     .leftJoinAndSelect("election.organization", "organization")
-    .where(publicElectionWhereQuery("election"));
+    .where(publicElectionWhereQuery("election"))
+    .andWhere("organization.id IS NOT NULL");
 
   electionBuilder = electionBuilder.orderBy({
     "election.created_at": "DESC",

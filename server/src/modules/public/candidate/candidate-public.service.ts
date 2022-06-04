@@ -17,10 +17,14 @@ const getCandidate = async (candidate_id: Candidate["id"]) => {
     .leftJoinAndSelect("candidate.election", "election")
     .leftJoinAndSelect("candidate.profile_photo", "profile_photo")
     .leftJoinAndSelect("candidate.cover_photo", "cover_photo")
+    .leftJoinAndSelect("election.organization", "organization")
     .where(publicElectionWhereQuery("election"))
-    .andWhere("candidate.id = :candidate_id", {
-      candidate_id,
-    });
+    .andWhere(
+      "candidate.id = :candidate_id AND election.id IS NOT NULL AND organization.id IS NOT NULL",
+      {
+        candidate_id,
+      }
+    );
 
   const candidate = await candidateBuilder.getOne();
 

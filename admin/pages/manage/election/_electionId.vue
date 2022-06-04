@@ -1,5 +1,9 @@
 <template>
-  <div v-if="$fetchState.pending">Loading...</div>
+  <div v-if="$fetchState.pending">
+    <page-center>
+      <app-loading />
+    </page-center>
+  </div>
   <div v-else-if="$fetchState.error">Something went wrong</div>
   <nuxt-child v-else />
 </template>
@@ -10,10 +14,16 @@ import Vue, { PropOptions } from "vue";
 import mixins from "vue-typed-mixins";
 import themeMixin from "~/mixins/theme.mixin";
 import { Organization } from "@/services/organization.service";
+import PageCenter from "@/components/utils/PageCenter.vue";
 export default mixins(themeMixin).extend({
   auth: true,
   layout: "manage-election",
   middleware: ["status"],
+
+  components: {
+    PageCenter,
+  },
+
   watch: {
     organization: {
       immediate: true,

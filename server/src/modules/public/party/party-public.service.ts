@@ -15,10 +15,14 @@ const getPartyContent = async (party_id: Party["id"]) => {
     .leftJoinAndSelect("party.logo", "logo")
     .leftJoinAndSelect("party.cover_photo", "cover")
     .leftJoinAndSelect("party.election", "election")
+    .leftJoinAndSelect("election.organization", "organization")
     .where(publicElectionWhereQuery("election"))
-    .andWhere("party.id = :party_id", {
-      party_id,
-    });
+    .andWhere(
+      "party.id = :party_id AND election.id IS NOT NULL AND organization.id IS NOT NULL",
+      {
+        party_id,
+      }
+    );
 
   const party = await partyBuilder.getOne();
 
