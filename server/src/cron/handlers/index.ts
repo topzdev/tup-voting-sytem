@@ -92,7 +92,7 @@ const sendElectionCredentialsHandler = async () => {
 
     // call mailer service to send the emails
     console.log("sending emails");
-    mailerServices.mailVotersCredentialsEmail(elections);
+    // mailerServices.mailVotersCredentialsEmail(elections);
 
     console.log("saving records");
     // if no errors, save dates of election started datetime
@@ -154,7 +154,7 @@ const sendElectionHasEnded = async () => {
 
     // call mailer service to send the emails
     console.log("sending emails");
-    mailerServices.mailElectionHasEnded(elections);
+    // mailerServices.mailElectionHasEnded(elections);
 
     console.log("saving records");
     // if no errors, save dates of election started datetime
