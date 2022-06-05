@@ -7,7 +7,7 @@
         <v-col class="shrink">
           <manage-organization-sidebar />
         </v-col>
-        <v-col cols="6" class="grow">
+        <v-col cols="12" lg="8" xl="6" class="grow">
           <nuxt-child />
         </v-col>
       </v-row>

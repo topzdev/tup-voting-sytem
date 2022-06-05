@@ -34,7 +34,7 @@
       </v-menu>
     </page-bars>
 
-    <v-container>
+    <v-container fluid>
       <v-card>
         <v-card-title>
           <v-row align="center">

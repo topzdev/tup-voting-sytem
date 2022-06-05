@@ -28,7 +28,7 @@
       </v-menu>
     </page-bars>
 
-    <v-container>
+    <v-container fluid>
       <v-row v-if="!$fetchState.pending && !$fetchState.error">
         <v-col cols="12">
           <result-summary-section />

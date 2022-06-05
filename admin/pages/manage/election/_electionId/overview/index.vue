@@ -18,7 +18,7 @@
       </v-tooltip>
     </page-bars>
 
-    <v-container>
+    <v-container fluid>
       <v-row>
         <template v-if="!$fetchState.pending && !$fetchState.error && details">
           <v-col cols="12">

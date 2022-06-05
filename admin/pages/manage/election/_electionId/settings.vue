@@ -2,7 +2,7 @@
   <span>
     <page-bars title="Election Settings"> </page-bars>
 
-    <v-container>
+    <v-container fluid>
       <v-row>
         <v-col class="shrink">
           <settings-sidebar />

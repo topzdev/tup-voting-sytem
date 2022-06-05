@@ -1,5 +1,5 @@
 <template>
-  <v-container style="height: 70vh">
+  <v-container fluid style="height: 70vh">
     <v-row v-if="!hasDefaultSlot" no-gutters>
       <v-col
         v-if="hasStateSlot"
@@ -9,14 +9,23 @@
         <slot name="states"></slot>
       </v-col>
 
-      <v-col v-if="hasCenteredSlot" class="mx-auto d-flex" md="6">
+      <v-col
+        v-if="hasCenteredSlot"
+        class="mx-auto d-flex"
+        cols="12"
+        md="8"
+        xl="6"
+      >
         <slot name="centered"></slot>
       </v-col>
 
       <v-col
         v-if="hasFormSlot"
         class="mx-auto text-center d-flex align-center mt-10"
-        md="4"
+        cols="12"
+        md="8"
+        lg="6"
+        xl="4"
       >
         <slot name="form"></slot>
       </v-col>
