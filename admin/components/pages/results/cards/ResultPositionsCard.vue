@@ -34,19 +34,19 @@
           <template v-if="position.isTieOccured && !position.is_tie_resolved">
             <result-tied-candidate-table
               :position="position"
-              :candidates="parsedCandidates"
+              :candidates="candidates"
             />
           </template>
           <template v-else>
             <result-candidate-table
               :position="position"
-              :candidates="parsedCandidates"
+              :candidates="candidates"
             />
           </template>
         </v-col>
 
         <v-col cols="6">
-          <result-candidate-chart :results="parsedCandidates" />
+          <result-candidate-chart :results="candidates" />
         </v-col>
       </v-row>
     </v-card-text>
@@ -96,23 +96,20 @@ export default mixins(manageElectionMixins, authMixin).extend({
     },
 
     parsedCandidates(): ResultPositionsWithWinner["candidates"] {
-      let candidates: ResultCandidate[] = [];
+      // this.position.candidates.forEach(function (item) {
+      //   let tieItem = item as CandidateTieResult;
+      //   if (tieItem.tie) {
+      //     candidates = [
+      //       ...candidates,
+      //       ...tieItem.candidates.map((item) => ({ ...item, tie: true })),
+      //     ];
+      //   } else {
+      //     candidates = [...candidates, item as ResultCandidate];
+      //   }
+      // });
 
-      this.position.candidates.forEach(function (item) {
-        let tieItem = item as CandidateTieResult;
-        if (tieItem.tie) {
-          candidates = [
-            ...candidates,
-            ...tieItem.candidates.map((item) => ({ ...item, tie: true })),
-          ];
-        } else {
-          candidates = [...candidates, item as ResultCandidate];
-        }
-      });
-
-      return candidates;
+      return this.candidates;
     },
-
     winners(): ResultPositionsWithWinner["winners"] {
       return this.position.winners;
     },

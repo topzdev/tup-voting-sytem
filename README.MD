@@ -22,3 +22,9 @@
 - commit updates
 - type 'heroku git:remote -a tup-voting-platform-dev'
 - deploy the subfolder you want to deploy, type 'git subtree push --prefix web heroku-platform-dev master'
+
+---
+
+###One Line Deploy
+
+- heroku git:remote -a tup-voting-server-dev && git subtree push --prefix server heroku-server-dev master && heroku git:remote -a tup-voting-admin-dev && git subtree push --prefix admin heroku-admin-dev master && heroku git:remote -a tup-voting-platform-dev && git subtree push --prefix web heroku-platform-dev master

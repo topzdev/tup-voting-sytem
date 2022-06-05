@@ -5,6 +5,7 @@ import {
 } from "../../helpers/csv-parser.helper";
 import { HttpException } from "../../helpers/errors/http.exception";
 import { Candidate } from "../candidate/entity/candidate.entity";
+import { ElectionOfficer } from "../election-officers/entity/election-offcer.entity";
 import { Election } from "../election/entity/election.entity";
 import { finalStatusSubquery } from "../launchpad/launchpad.helper";
 import { Position } from "../position/entity/position.entity";
@@ -111,10 +112,26 @@ const getElectionWinners = async (_election_id: Election["id"]) => {
 
 const downloadElectionResults = async (_election_id: Election["id"]) => {
   const results = await getElectionResults(_election_id);
+  const election = await getRepository(Election)
+    .createQueryBuilder("election")
+    .leftJoinAndSelect("election.organization", "organization")
+    .leftJoinAndSelect("organization.election_officers", "election_officers")
+    .leftJoinAndSelect("election_officers.user", "election_officers_user")
+    .where("election.id = :election_id", {
+      election_id: _election_id,
+    })
+    .getOne();
 
   const divider = "#########";
 
   const data = [];
+
+  if (!election) throw new HttpException("NOT_FOUND", "Election not found");
+
+  data.push(["Title: " + election.title]);
+  data.push(["Description: " + election.description]);
+  data.push([""]);
+  data.push([""]);
 
   results.positions.forEach((position) => {
     // add position title
@@ -171,6 +188,23 @@ const downloadElectionResults = async (_election_id: Election["id"]) => {
     data.push([""]);
     data.push([""]);
   });
+
+  const organization = election.organization;
+  const election_officers = organization.election_officers;
+  console.log(election_officers);
+
+  if (election_officers && election_officers.length) {
+    data.push(["Assigned Election Officers:"]);
+    data.push([""]);
+
+    election_officers.forEach((item) => {
+      if (item.user) {
+        data.push([
+          ` ${item.user.lastname},${item.user.firstname} (${item.user.email_address})`,
+        ]);
+      }
+    });
+  }
 
   return {
     filename: `election-results-${_election_id}-(${Date.now()}).csv`,
@@ -285,8 +319,8 @@ const downloadVoteAudit = async (_election_id: Election["id"]) => {
       // name: `${item.voter.lastname}, ${item.voter.firstname}`,
       voter_id: item.voter.username,
       receipt_id: item.receipt_id,
-      // ip: item.ip,
-      // ua: item.ua,
+      ip: item.ip,
+      ua: item.ua,
       voted_date: item.created_at,
     });
   });
@@ -295,8 +329,8 @@ const downloadVoteAudit = async (_election_id: Election["id"]) => {
     // { label: "Name", value: "name" },
     { label: "Voter Id", value: "voter_id" },
     { label: "Ballot Receipt", value: "receipt_id" },
-    // { label: "IP Address", value: "ip" },
-    // { label: "User Agent", value: "ua" },
+    { label: "IP Address", value: "ip" },
+    { label: "User Agent", value: "ua" },
     { label: "Vote Date/Time", value: "voted_date" },
   ];
 

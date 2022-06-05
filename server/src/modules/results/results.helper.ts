@@ -84,18 +84,20 @@ const getResultPositionsWithWinners = (result: InitialPosition[]) => {
     const finalResults = getResultsWithPossibleTie(mergeSameVote, max_selected);
 
     // const winners = sortAndSplice(candidates, max_selected);
-    const winnerResult = getResultWinners(
-      initialResult.candidates,
-      max_selected,
-      finalResults.istieOccured
-    );
+    const winnerResult = currentPosition.is_tie_resolved
+      ? getResultWinners(
+          initialResult.candidates,
+          max_selected,
+          finalResults.istieOccured
+        ).winners
+      : [];
 
     resultWithWinners.push({
       ...currentPosition,
       totalVotes: initialResult.totalVotes,
       candidates: finalResults.candidates,
       isTieOccured: finalResults.istieOccured,
-      winners: winnerResult.winners,
+      winners: winnerResult,
     });
   }
 
@@ -226,35 +228,32 @@ const mergeCandidatesWithSameVotes = (_candidates: ResultCandidate[]) => {
   */
 };
 
+const sortCandidates = (
+  candidates: ResultCandidate[],
+  is_tie_occured: boolean
+) => {
+  if (candidates.length) {
+    if (is_tie_occured) {
+      const hasPosition = candidates[0].pos;
+
+      if (hasPosition) {
+        candidates.sort((a, b) => a.pos - b.pos);
+      }
+    } else {
+      candidates.sort((a, b) => b.votesCount - a.votesCount);
+    }
+  }
+
+  return candidates;
+};
+
 const getResultWinners = (
   _candidates: ResultCandidate[],
   _maxWinners: number,
   _istieOccured: boolean
 ) => {
-  let winners;
-  let isTieResolved;
-
-  if (_candidates.length) {
-    if (_istieOccured) {
-      const hasPosition = _candidates[0].pos;
-
-      if (hasPosition) {
-        winners = _candidates
-          .sort((a, b) => a.pos - b.pos)
-          .splice(0, _maxWinners);
-        isTieResolved = true;
-      } else {
-        isTieResolved = false;
-      }
-    } else {
-      winners = _candidates
-        .sort((a, b) => b.votesCount - a.votesCount)
-        .splice(0, _maxWinners);
-    }
-  }
   return {
-    winners,
-    isTieResolved,
+    winners: sortCandidates(_candidates, _istieOccured).splice(0, _maxWinners),
   };
 };
 
@@ -267,7 +266,7 @@ const getResultsWithPossibleTie = (
   // storing max winners
 
   // declaring winners array where the candidates will be appended
-  let candidates: (ResultCandidate | CandidateTieResult)[] = [];
+  let candidates: ResultCandidate[] = [];
   let istieOccured = false;
   let spotLeftCounter = _maxWinners;
 
@@ -286,11 +285,19 @@ const getResultsWithPossibleTie = (
         spotLeftCounter <= candidatesLength &&
         candidatesLength > spotLeftCounter
       ) {
-        candidates.push({
-          candidates: tempItem.candidates,
-          tie: true,
-          spotLeft: spotLeftCounter,
-        });
+        // candidates.push({
+        //   candidates: tempItem.candidates,
+        //   tie: true,
+        //   spotLeft: spotLeftCounter,
+        // });
+
+        candidates = [
+          ...candidates,
+          ...tempItem.candidates.map((item) => {
+            item.tie = true;
+            return item;
+          }),
+        ];
 
         istieOccured = true;
         // if there is a spot then they are the finals winners
@@ -308,7 +315,7 @@ const getResultsWithPossibleTie = (
   });
 
   return {
-    candidates,
+    candidates: sortCandidates(candidates, istieOccured),
     istieOccured,
   };
 };

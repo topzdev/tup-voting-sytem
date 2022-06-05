@@ -36,7 +36,10 @@
           </transition-group>
         </draggable>
         <v-row no-gutters class="w-100">
-          <v-col v-if="!isArranging" cols="12">
+          <v-col
+            v-if="!isArranging && hideByStatus(pageStatus.positions.arrange)"
+            cols="12"
+          >
             <p class="caption">
               Drag one item on list to start items arrangement.
             </p>

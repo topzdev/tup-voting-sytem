@@ -14,6 +14,7 @@ export type ResultCandidate = Candidate & {
   votesCount: number;
   candidateName: string;
   votePercentage: number;
+  tie: boolean;
 };
 
 export type CandidateTieResult = {

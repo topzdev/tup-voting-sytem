@@ -88,8 +88,11 @@ export default Vue.extend({
       return ["Voted %"];
     },
 
-    percentage(): number {
-      return (this.other_info.votedCount / this.other_info.votersCount) * 100;
+    percentage(): string {
+      return (
+        (this.other_info.votedCount / this.other_info.votersCount) *
+        100
+      ).toFixed(2);
     },
 
     series(): any {

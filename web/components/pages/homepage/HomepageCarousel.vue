@@ -26,7 +26,7 @@ export default Vue.extend({
     items() {
       return [
         {
-          src: "/carousel/carousel-1.jpg",
+          src: "/carousel/carousel-1.png",
         },
 
         {

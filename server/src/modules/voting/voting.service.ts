@@ -256,12 +256,12 @@ const submitBallot = async (
     console.log("Voter Receipt", voterReceipt);
 
     // send email after submitting voter
-    mailerServices.sendThankYouForVotingEmail(voter.id);
+    // mailerServices.sendThankYouForVotingEmail(voter.id);
 
     return { ...voterReceipt, election_title: election.title };
   } catch (error) {
+    console.error(error);
     await queryRunner.rollbackTransaction();
-    throw error;
   } finally {
     await queryRunner.release();
   }

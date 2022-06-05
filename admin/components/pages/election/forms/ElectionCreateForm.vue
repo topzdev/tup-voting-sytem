@@ -8,7 +8,7 @@
       </v-col>
 
       <v-col align="center" cols="12">
-        <logo-uploader v-model="form.logo" />
+        <logo-uploader v-model="form.logo" withBtn />
       </v-col>
 
       <v-col cols="12">
