@@ -83,21 +83,27 @@ const getResultPositionsWithWinners = (result: InitialPosition[]) => {
 
     const finalResults = getResultsWithPossibleTie(mergeSameVote, max_selected);
 
-    // const winners = sortAndSplice(candidates, max_selected);
-    const winnerResult = currentPosition.is_tie_resolved
-      ? getResultWinners(
-          initialResult.candidates,
-          max_selected,
-          finalResults.istieOccured
-        ).winners
-      : [];
+    let winners = getResultWinners(
+      initialResult.candidates,
+      max_selected,
+      finalResults.istieOccured
+    ).winners;
+
+    let finalWinner = [];
+    if (finalResults.istieOccured) {
+      if (currentPosition.is_tie_resolved) {
+        finalWinner = winners;
+      }
+    } else {
+      finalWinner = winners;
+    }
 
     resultWithWinners.push({
       ...currentPosition,
       totalVotes: initialResult.totalVotes,
       candidates: finalResults.candidates,
       isTieOccured: finalResults.istieOccured,
-      winners: winnerResult,
+      winners: finalWinner,
     });
   }
 

@@ -24,7 +24,7 @@
 
     <v-card-text>
       <v-row>
-        <v-col v-if="winners" cols="12" class="pt-0">
+        <v-col v-if="winners && winners.length" cols="12" class="pt-0">
           <result-winner-section :winners="winners" />
 
           <v-divider></v-divider>

@@ -90,9 +90,9 @@ export default Vue.extend({
 
     percentage(): string {
       return (
-        (this.other_info.votedCount / this.other_info.votersCount) *
-        100
-      ).toFixed(2);
+        ((this.other_info.votedCount / this.other_info.votersCount) * 100) |
+        0
+      ).toFixed(0);
     },
 
     series(): any {
