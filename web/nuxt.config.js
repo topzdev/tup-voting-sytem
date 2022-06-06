@@ -49,7 +49,6 @@ export default {
     "@nuxtjs/vuetify",
     // https://typed-vuex.roe.dev/getting-started/getting-started-nuxt
     "nuxt-typed-vuex",
-    
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -81,25 +80,25 @@ export default {
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
-    icon:{
-      fileName: 'logo.png',
+    icon: {
+      fileName: "logo.png",
       sizes: [64, 120, 144, 152, 192, 384, 512],
     },
-    meta:{
-      title: 'TUPM-Organization Voting Platform',
-      author: 'Dev404',
-      mobileApp: 'true',
-      mobileAppIOS: 'true'
+    meta: {
+      title: "TUPM-Organization Voting Platform",
+      author: "Dev404",
+      mobileApp: "true",
+      mobileAppIOS: "true",
     },
 
     manifest: {
-      name: 'TUPM-Organization Voting Platform',
-      short_name: 'TUPM-OVP',
-      description: 'This voting platform is exclusive for the use of accredited organization of T.U.P. - Manila',
-      start_url: '/',
+      name: "TUPM-Organization Voting Platform",
+      short_name: "TUPM-OVP",
+      description:
+        "This voting platform is exclusive for the use of accredited organization of T.U.P. - Manila",
+      start_url: "/",
       lang: "en",
     },
-    
   },
 
   auth: {
@@ -162,5 +161,35 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    devtools: false, //true
+    analyze: true,
+    extractCSS: {
+      ignoreOrder: true,
+    },
+    html: {
+      minify: {
+        collapseBooleanAttributes: true,
+        decodeEntities: true,
+        minifyCSS: true,
+        minifyJS: true,
+        processConditionalComments: true,
+        removeEmptyAttributes: true,
+        removeRedundantAttributes: true,
+        trimCustomFragments: true,
+        useShortDoctype: true,
+        preserveLineBreaks: false,
+        collapseWhitespace: true,
+        removeComments: true,
+      },
+    },
+    terser: {
+      // https://github.com/terser/terser#compress-options
+      terserOptions: {
+        compress: {
+          drop_console: true,
+        },
+      },
+    },
+  },
 };

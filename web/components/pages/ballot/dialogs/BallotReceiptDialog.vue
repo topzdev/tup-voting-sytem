@@ -59,7 +59,6 @@
   </v-dialog>
 </template>
 <script lang="ts">
-import html2canvas from "html2canvas";
 import { BallotReceipt } from "@/types/app";
 import Vue, { PropOptions } from "vue";
 
@@ -106,40 +105,7 @@ export default Vue.extend({
     },
   },
 
-  methods: {
-    download() {
-      this.generateReceiptToImage();
-
-      if (!this.receipt?.receipt_id) return;
-
-      let link = document.createElement("a");
-      link.download = this.receipt.receipt_id + ".png";
-      link.href = `data:image/png;base64${this.receiptImage}`;
-      link.click();
-    },
-
-    generateReceiptToImage() {
-      if (this.receiptImage) return;
-      this.loading = true;
-      const node = document.getElementById("receiptTable");
-      console.log("Node", node);
-      const self = this;
-      if (node) {
-        html2canvas(node)
-          .then(function (canvas) {
-            var myImage = canvas.toDataURL("image/png");
-            self.receiptImage = myImage;
-            // node.remove();
-          })
-          .catch(function (error) {
-            console.error("oops, something went wrong!", error);
-          })
-          .finally(function () {
-            self.loading = false;
-          });
-      }
-    },
-  },
+  methods: {},
   created() {
     // this.$nextTick(function () {
     //   if (process.client) {
