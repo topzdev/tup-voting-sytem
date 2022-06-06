@@ -9,14 +9,14 @@
         </v-col>
         <v-col class="px-3 d-flex flex-column justify-center text-left">
           <h2 class="title text-truncate text--secondary" :title="data.title">
-            <span class="text--primary font-weight-bold" :title="data.ticker">
-              {{ data.ticker }} -
-            </span>
             {{ data.title }}
+            <span class="text--primary font-weight-bold" :title="data.ticker">
+              ({{ data.ticker }})
+            </span>
           </h2>
 
           <p v-if="data.description" class="body-2 my-0 text--secondary">
-            {{ data.description }}
+            {{ trimmedDescription }}
           </p>
         </v-col>
 
@@ -49,6 +49,15 @@ export default mixins(partyMixin, restrictionsMixin).extend({
       type: Object,
       required: true,
     } as PropOptions<Party>,
+  },
+
+  computed: {
+    trimmedDescription(): string {
+      const description = this.data.description;
+      return description.length >= 100
+        ? description.split("").splice(0, 100).join("") + "..."
+        : description;
+    },
   },
 });
 </script>

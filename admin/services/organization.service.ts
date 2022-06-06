@@ -23,7 +23,7 @@ export type Organization = {
   slug: string;
   ticker: string;
   title: string;
-  description?: string;
+  description: string;
   archive: boolean;
   themePrimary: string;
   themeSecondary: string;

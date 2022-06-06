@@ -12,7 +12,7 @@
             {{ data.title }} <b>({{ data.ticker }})</b>
           </h2>
           <p v-if="data.description" class="body-2 my-0 text--secondary">
-            {{ data.description }}
+            {{ trimmedDescription }}
           </p>
         </v-col>
         <v-col cols="auto" class="ml-auto">
@@ -39,6 +39,14 @@ export default Vue.extend({
       type: Object,
       required: true,
     } as PropOptions<Organization>,
+  },
+  computed: {
+    trimmedDescription(): string {
+      const description = this.data.description;
+      return description.length >= 250
+        ? description.split("").splice(0, 250).join("") + "..."
+        : description;
+    },
   },
 });
 </script>

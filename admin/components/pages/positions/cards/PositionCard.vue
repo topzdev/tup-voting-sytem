@@ -15,7 +15,7 @@
             {{ data.title }}
           </h2>
           <p v-if="data.description" class="body-2 my-0 text--secondary">
-            <span class="text-capitalize"> {{ data.description }} </span>
+            <span class="text-capitalize"> {{ trimmedDescription }} </span>
           </p>
           <p class="caption mt-2 mb-0">{{ voteSelectText }}</p>
         </v-col>
@@ -55,6 +55,12 @@ export default mixins(positionsMixin, restrictionsMixin).extend({
   computed: {
     voteSelectText(): string {
       return `Voters can select a maximum of ${this.data.max_selected} and a minimum of ${this.data.min_selected} candidates`;
+    },
+    trimmedDescription(): string {
+      const description = this.data.description;
+      return description.length >= 150
+        ? description.split("").splice(0, 150).join("") + "..."
+        : description;
     },
   },
 });

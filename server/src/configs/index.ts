@@ -72,6 +72,13 @@ const configs = {
   nodemailer: {
     username: process.env.NODEMAILER_USERNAME,
     password: process.env.NODEMAILER_PASSWORD,
+    host: process.env.NODEMAILER_HOST,
+    port: Number(process.env.NODEMAILER_PORT),
+  },
+
+  mailgun: {
+    domain: process.env.MAILGUN_DOMAIN,
+    api_key: process.env.MAILGUN_API_KEY,
   },
 
   platform: {

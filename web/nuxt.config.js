@@ -164,9 +164,6 @@ export default {
   build: {
     devtools: false, //true
     analyze: true,
-    extractCSS: {
-      ignoreOrder: true,
-    },
     html: {
       minify: {
         collapseBooleanAttributes: true,

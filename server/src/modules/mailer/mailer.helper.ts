@@ -7,7 +7,7 @@ export type EmailTemplates =
   | "preregister-approved"
   | "election-will-launch";
 
-const from = "TUP Voting admin@tupvoting.com";
+const from = "TUP Voting System system@tupvote.com";
 
 export const emailTemplates = {
   voterCredentails: {
