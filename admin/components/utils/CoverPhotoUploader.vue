@@ -19,6 +19,7 @@
         <app-image
           :src="parsedUrl"
           :max-height="height"
+          height="100%"
           max-width="100%"
           width="300px"
         ></app-image>

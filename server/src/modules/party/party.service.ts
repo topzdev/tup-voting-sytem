@@ -168,13 +168,13 @@ const update = async (_logo: Photo, _party: UpdatePartyBody, _cover: Photo) => {
       console.log("Logo is EMPTY so saving a new one");
       toUpdateLogo = PartyLogo.create({
         public_id: uploadedLogo.public_id,
-        url: uploadedLogo.url,
+        url: uploadedLogo.secure_url,
       });
       toUpdateLogo = await toUpdateLogo.save();
     } else {
       console.log("Logo is AVAILABLE so saving a new one");
       toUpdateLogo.public_id = uploadedLogo.public_id;
-      toUpdateLogo.url = uploadedLogo.url;
+      toUpdateLogo.url = uploadedLogo.secure_url;
     }
   }
 
@@ -199,13 +199,13 @@ const update = async (_logo: Photo, _party: UpdatePartyBody, _cover: Photo) => {
       console.log("Cover Photo is EMPTY so saving a new one");
       toUpdateCoverPhoto = PartyCoverPhoto.create({
         public_id: uploadedCoverPhoto.public_id,
-        url: uploadedCoverPhoto.url,
+        url: uploadedCoverPhoto.secure_url,
       });
       toUpdateCoverPhoto = await toUpdateCoverPhoto.save();
     } else {
       console.log("Cover Photo is AVAILABLE so saving a new one");
       toUpdateCoverPhoto.public_id = uploadedCoverPhoto.public_id;
-      toUpdateCoverPhoto.url = uploadedCoverPhoto.url;
+      toUpdateCoverPhoto.url = uploadedCoverPhoto.secure_url;
     }
   }
 

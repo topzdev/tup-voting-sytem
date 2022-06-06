@@ -278,13 +278,13 @@ const update = async (
     if (!curCandidate.profile_photo) {
       toUpdateProfilePhoto = CandidateProfilePhoto.create({
         public_id: uploadedProfilePhoto.public_id,
-        url: uploadedProfilePhoto.url,
+        url: uploadedProfilePhoto.secure_url,
       });
       await toUpdateProfilePhoto.save();
     } else {
       toUpdateProfilePhoto = CandidateProfilePhoto.merge(toUpdateProfilePhoto, {
         public_id: uploadedProfilePhoto.public_id,
-        url: uploadedProfilePhoto.url,
+        url: uploadedProfilePhoto.secure_url,
       });
     }
   }
@@ -304,13 +304,13 @@ const update = async (
     if (!curCandidate.cover_photo) {
       toUpdateCoverPhoto = CandidateCoverPhoto.create({
         public_id: uploadedCoverPhoto.public_id,
-        url: uploadedCoverPhoto.url,
+        url: uploadedCoverPhoto.secure_url,
       });
       await toUpdateCoverPhoto.save();
     } else {
       toUpdateCoverPhoto = CandidateCoverPhoto.merge(toUpdateCoverPhoto, {
         public_id: uploadedCoverPhoto.public_id,
-        url: uploadedCoverPhoto.url,
+        url: uploadedCoverPhoto.secure_url,
       });
     }
   }

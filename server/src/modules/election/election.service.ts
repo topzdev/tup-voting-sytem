@@ -227,12 +227,12 @@ const update = async (_logo: Photo, _election: UpdateElectionBody) => {
     if (!curElection.logo) {
       toUpdateLogo = ElectionLogo.create({
         public_id: uploadedLogo.public_id,
-        url: uploadedLogo.url,
+        url: uploadedLogo.secure_url,
       });
       await toUpdateLogo.save();
     } else {
       toUpdateLogo.public_id = uploadedLogo.public_id;
-      toUpdateLogo.url = uploadedLogo.url;
+      toUpdateLogo.url = uploadedLogo.secure_url;
     }
   }
 

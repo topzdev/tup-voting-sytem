@@ -192,13 +192,13 @@ const update = async (
       console.log("Logo is EMPTY so saving a new one");
       toUpdateLogo = OrganizationLogo.create({
         public_id: uploadedLogo.public_id,
-        url: uploadedLogo.url,
+        url: uploadedLogo.secure_url,
       });
       toUpdateLogo = await toUpdateLogo.save();
     } else {
       console.log("Logo is AVAILABLE so saving a new one");
       toUpdateLogo.public_id = uploadedLogo.public_id;
-      toUpdateLogo.url = uploadedLogo.url;
+      toUpdateLogo.url = uploadedLogo.secure_url;
     }
   }
 
