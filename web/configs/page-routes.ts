@@ -3,7 +3,22 @@ const pageRoutes = {
     return `/election/${slug}`;
   },
   voting: (slug: string) => {
-    return `/vote/${slug}`;
+    const parentPath = `/vote/${slug}`;
+
+    return {
+      this: () => ({
+        route: parentPath,
+      }),
+      ballot: () => ({
+        route: parentPath + "/ballot",
+      }),
+      review: () => ({
+        route: parentPath + "/ballot/review",
+      }),
+      final: () => ({
+        route: parentPath + "/ballot/final",
+      }),
+    };
   },
   party: (electionSlug: string, id: number) => {
     return `${pageRoutes.election(electionSlug)}/party/${id}`;
@@ -18,7 +33,7 @@ const pageRoutes = {
     return `/vote/${slug}/ballot`;
   },
   ballotReview: (slug: string) => {
-    return `/vote/${slug}/review`;
+    return `/vote/${slug}/ballot/review`;
   },
 };
 

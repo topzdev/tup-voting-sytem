@@ -1,5 +1,5 @@
 <template>
-  <row>
+  <v-row>
     <v-col class="px-0 py-0" cols="12">
       <v-row>
         <v-col cols="12" lg="10" xl="8" class="mx-auto">
@@ -20,7 +20,6 @@
         </pre
             >
           </v-col> -->
-
             <v-col v-if="summaryError.length" cols="12" class="mx-auto">
               <v-alert type="error" outlined>
                 <ul>
@@ -55,7 +54,7 @@
         </v-col>
       </v-row>
       <ballot-stepper>
-        <v-app-bar-title>Ballot</v-app-bar-title>
+        <h2 class="title">Ballot</h2>
 
         <v-btn class="ml-auto" color="primary" large @click="submit">
           Next - Review Ballot
@@ -63,7 +62,7 @@
       </ballot-stepper>
       <candidate-dialog />
     </v-col>
-  </row>
+  </v-row>
 </template>
 
 <script lang="ts">
@@ -135,7 +134,7 @@ export default mixins(ballotMixins).extend({
         this.showError = true;
         this.generateErrorSummary();
       } else {
-        this.$router.push(`${this.pagePath}ballot/review`);
+        this.gotoReview();
       }
     },
 

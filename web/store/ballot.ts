@@ -17,14 +17,15 @@ export const state = () => ({
   error: {
     election: null as ElectionErrorMessage | null,
   },
-  ballotReceipt: {
-    ip: "::1",
-    ua: "PostmanRuntime/7.29.0",
-    receipt_id: "TUPELECT-3-WDAVEMJRJ",
-    created_at: "2022-03-20T11:01:35.836Z",
-    election_title: "TUP Tite Annual Election",
-    id: 3,
-  } as BallotReceipt | null,
+  // ballotReceipt: {
+  //   ip: "::1",
+  //   ua: "PostmanRuntime/7.29.0",
+  //   receipt_id: "TUPELECT-3-WDAVEMJRJ",
+  //   created_at: "2022-03-20T11:01:35.836Z",
+  //   election_title: "TUP Tite Annual Election",
+  //   id: 3,
+  // } as BallotReceipt | null,
+  ballotReceipt: null as BallotReceipt | null,
   ballotErrors: [] as BallotError[],
 
   // election: {} as any,
@@ -48,6 +49,9 @@ export const getters = getterTree(state, {
         (_voteItem) => _voteItem.position_id === _ballotItem.id
       ),
     })),
+
+  allPositionIsRequired: (state) =>
+    state.items.every((item) => item.min_selected > 0),
 });
 
 export const mutations = mutationTree(state, {

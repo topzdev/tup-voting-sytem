@@ -2,7 +2,7 @@
   <v-row v-if="election" class="no-gutters">
     <v-col class="d-flex justify-center mb-3" cols="12">
       <nuxt-link :to="electionRoute">
-        <v-avatar size="80">
+        <v-avatar size="80" style="border: 1px solid gray">
           <app-image :size="80" :src="election.logo" :alt="election.title" />
         </v-avatar>
       </nuxt-link>
@@ -14,8 +14,8 @@
           <span class="font-weight-bold">Election</span>
         </h1>
       </nuxt-link>
-      <p class="text-center body-1">
-        {{ election.description }}
+      <p v-if="election.description" class="text-center body-1">
+        {{ trimmedDescription }}
       </p>
     </v-col>
 
@@ -48,6 +48,14 @@ export default mixins(ballotMixins).extend({
     electionRoute(): string {
       if (!this.election) return "/";
       return pageRoutes.election(this.election.slug);
+    },
+
+    trimmedDescription(): string {
+      if (!this.election) return "";
+      const description = this.election.description;
+      return description.length >= 100
+        ? description.split("").splice(0, 100).join("") + "..."
+        : description;
     },
   },
 });

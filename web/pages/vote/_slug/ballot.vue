@@ -34,9 +34,19 @@ import CandidateDialog from "@/components/pages/ballot/dialogs/CandidateDialog.v
 import PageCenter from "@/components/utils/PageCenter.vue";
 import ElectionError from "~/components/pages/voting/ElectionError.vue";
 import AppLoading from "@/components/app/AppLoading.vue";
+import pageRoutes from "@/configs/page-routes";
 
 export default mixins(ballotMixins).extend({
   auth: true,
+  created() {},
+
+  validate({ $accessor, route, redirect, $auth }) {
+    if (!$auth.loggedIn) {
+      redirect(pageRoutes.voting(route.params.slug).this().route);
+    }
+    return true;
+  },
+
   components: {
     ElectionHeader,
     BallotCard,

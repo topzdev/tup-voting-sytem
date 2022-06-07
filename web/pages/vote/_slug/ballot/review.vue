@@ -14,16 +14,23 @@
         </v-col>
         <v-col>
           <v-row class="d-flex justify-center">
-            <v-col
-              v-for="candidate in item.candidates"
-              :key="candidate.id"
-              cols="12"
-              sm="6"
-              md="4"
-              lg="3"
-            >
-              <candidate-card :data="candidate" :readonly="true" />
-            </v-col>
+            <template v-if="item.candidates.length">
+              <v-col
+                v-for="candidate in item.candidates"
+                :key="candidate.id"
+                cols="12"
+                sm="6"
+                md="4"
+                lg="3"
+              >
+                <candidate-card :data="candidate" :readonly="true" />
+              </v-col>
+            </template>
+            <template v-else>
+              <v-col class="text-center" cols="12">
+                <p class="text--secondary">Did not vote for this position</p>
+              </v-col>
+            </template>
           </v-row>
         </v-col>
       </v-row>
@@ -33,7 +40,7 @@
           Back
         </v-btn>
 
-        <v-app-bar-title class="ml-3">Review Your Ballot</v-app-bar-title>
+        <h2 class="title ml-3">Review Your Ballot</h2>
 
         <v-btn
           class="ml-auto"
@@ -56,6 +63,7 @@ import mixins from "vue-typed-mixins";
 import ballotMixins from "@/mixins/ballot.mixins";
 import CandidateCard from "@/components/pages/ballot/cards/CandidateCard.vue";
 import BallotStepper from "@/components/pages/ballot/BallotStepper.vue";
+import pageRoutes from "../../../../configs/page-routes";
 export default mixins(ballotMixins).extend({
   components: {
     CandidateCard,
@@ -63,8 +71,11 @@ export default mixins(ballotMixins).extend({
   },
 
   validate({ $accessor, route, redirect }) {
-    if (!$accessor.ballot.votes.length) {
-      redirect(`/election/${route.params.slug}/ballot`);
+    if (
+      $accessor.ballot.allPositionIsRequired &&
+      !$accessor.ballot.votes.length
+    ) {
+      redirect(pageRoutes.voting(route.params.slug).this().route);
     }
     return true;
   },

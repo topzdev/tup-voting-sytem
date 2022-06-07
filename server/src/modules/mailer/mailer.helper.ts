@@ -14,7 +14,7 @@ export const emailTemplates = {
     from,
     subject: "Your voters credentials",
     template: "voter-credentials" as EmailTemplates,
-    title: "Your $electionTitle Voter Credentails",
+    title: "Your $electionTitle Voter Credentials",
   },
   thankYouForVoting: {
     from,

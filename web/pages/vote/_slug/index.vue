@@ -37,9 +37,18 @@ import ballotMixin from "@/mixins/ballot.mixins";
 import mixins from "vue-typed-mixins";
 import ElectionHeader from "~/components/pages/voting/ElectionHeader.vue";
 import ElectionError from "~/components/pages/voting/ElectionError.vue";
+import pageRoutes from "../../../configs/page-routes";
 
 export default mixins(ballotMixin).extend({
   auth: "guest",
+  created() {},
+  validate({ $accessor, route, redirect, $auth }) {
+    if ($auth.loggedIn) {
+      redirect(pageRoutes.voting(route.params.slug).ballot().route);
+    }
+    return true;
+  },
+
   components: {
     LoginForm,
     PageCenter,

@@ -598,6 +598,7 @@ const importVotersByCSV = async (_file: File, _dto: ImportVotersByCSVDto) => {
 
 const importVotersByElection = async (_dto: ImportVotersByElectionDto) => {
   const electionIds = _dto.electionIds;
+  const voterRepository = getRepository(Voter);
 
   if (!electionIds.from || !electionIds.to)
     throw new HttpException("BAD_REQUEST", "Election ID's are required");
@@ -617,18 +618,43 @@ const importVotersByElection = async (_dto: ImportVotersByElectionDto) => {
   if (!electionVoters.length)
     throw new HttpException("BAD_REQUEST", "No Election Members found");
 
-  const newElectionVoters = Voter.create(
-    electionVoters.map((item) => ({
-      firstname: item.firstname,
-      lastname: item.lastname,
-      email_address: item.email_address,
-      pin: item.pin,
-      username: item.username,
-      election_id: electionIds.to,
-    }))
-  );
+  const duplicateEntry = await voterRepository
+    .createQueryBuilder("voter")
+    .where(
+      "voter.email_address IN(:...email_addresses) AND voter.election_id = :election_id",
+      {
+        email_addresses: electionVoters.map((item) => item.email_address),
+        election_id: electionIds.to,
+      }
+    )
+    .addSelect(["voter.id", "voter.email_address"])
+    .distinctOn(["voter.email_address"])
+    .getMany();
 
-  const voterRepository = getRepository(Voter);
+  console.log(duplicateEntry);
+
+  if (duplicateEntry.length) {
+    throw new HttpException(
+      "BAD_REQUEST",
+      `Some of email address is already exist. Those email addresses are: [${duplicateEntry
+        .map((item) => item.email_address)
+        .join(", ")}]`
+    );
+  }
+
+  const newElectionVoters = Voter.create(
+    electionVoters.map((item) => {
+      const { pin, voter_id } = generateCredentials();
+      return {
+        firstname: item.firstname,
+        lastname: item.lastname,
+        email_address: item.email_address,
+        pin: pin,
+        username: voter_id,
+        election_id: electionIds.to,
+      };
+    })
+  );
 
   const insertedElectionVoters = await voterRepository
     .createQueryBuilder()

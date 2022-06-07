@@ -42,10 +42,13 @@ import pageRoutes from "@/configs/page-routes";
 export default mixins(ballotMixins).extend({
   validate({ $accessor, route, redirect }) {
     const slug = route.params.slug;
-    if (!$accessor.ballot.votes.length) {
-      redirect(pageRoutes.ballotMain(slug));
+    if (
+      $accessor.ballot.allPositionIsRequired &&
+      !$accessor.ballot.votes.length
+    ) {
+      redirect(pageRoutes.voting(slug).ballot().route);
     } else if (!$accessor.ballot.ballotReceipt) {
-      redirect(pageRoutes.ballotReview(slug));
+      redirect(pageRoutes.voting(slug).review().route);
     }
     return true;
   },

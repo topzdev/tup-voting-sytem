@@ -167,7 +167,7 @@ export default mixins(breadcrumbMixins).extend({
     voteButton(): any {
       return {
         show: this.election.final_status === "running",
-        url: pageRoutes.voting(this.election.slug),
+        url: pageRoutes.voting(this.election.slug).this().route,
       };
     },
 

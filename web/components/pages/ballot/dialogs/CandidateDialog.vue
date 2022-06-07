@@ -1,8 +1,14 @@
 <template>
   <v-dialog v-model="dialog" width="560px">
     <v-card v-if="data">
-      <span class="d-flex flex-column">
+      <v-card
+        class="d-flex flex-column grey lighten-3"
+        height="230px"
+        width="580px"
+        flat
+      >
         <app-image
+          v-if="data.cover_photo"
           class="cover-photo"
           width="580px"
           height="230px"
@@ -10,13 +16,14 @@
         />
 
         <v-avatar
+          v-if="data.profile_photo"
           size="200"
           color="white"
-          class="profile-photo mx-auto v-sheet"
+          :class="profilePhotoClass"
         >
           <app-image size="200" :src="data.profile_photo"></app-image>
         </v-avatar>
-      </span>
+      </v-card>
 
       <v-card-text class="text-center pb-0">
         <v-col cols="12">
@@ -104,6 +111,16 @@ export default Vue.extend({
   },
 
   computed: {
+    profilePhotoClass(): string {
+      var classList = ["profile-photo", "mx-auto", "v-sheet"];
+
+      if (this.data?.cover_photo) {
+        classList.push("profile-photo-margin ");
+      }
+
+      return classList.join(" ");
+    },
+
     data() {
       return this.$accessor.ballot.candidate;
     },
@@ -172,8 +189,16 @@ export default Vue.extend({
 
 <style scoped>
 .profile-photo {
-  margin-top: -80px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   border: 1px solid lightgrey;
+  margin-top: 20px;
+}
+
+.profile-photo-margin {
+  /* margin-top: -80px; */
 }
 
 .cover-photo {
