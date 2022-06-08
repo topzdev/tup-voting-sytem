@@ -30,35 +30,42 @@
         class="d-flex flex-column justify-center align-center"
       >
         <v-card-text class="text--primary text-center">
-          <pre-register-header v-if="election" :election="election" />
+          <template v-if="!$fetchState.pending">
+            <pre-register-header v-if="election" :election="election" />
 
-          <template
-            v-if="!success && !error"
-            cols="12"
-            class="d-flex justify-center"
-          >
-            <v-btn
-              class="mt-5"
-              color="red white--text"
-              large
-              @click="showGoogleConsent"
-              ><v-icon>mdi-google</v-icon>
-              <span>Pre-Register with Google</span>
-            </v-btn>
-          </template>
-          <template v-if="!error && success" class="text-center" cols="12">
-            <h2 class="mt-5">You're Successfully Registered</h2>
-            <p>
-              After the admin verifiy your accoun proceed to election ballot. We
-              will sent you your credentials thru email when election is started
-            </p>
-            <v-btn color="primary" to="/">Go to Homepage</v-btn>
-          </template>
-          <template v-else-if="error" class="text-center mt-5">
-            <election-error class="mt-5" :electionError="error" />
-            <v-btn large class="mt-5" color="error" @click="reset"
-              >Reload</v-btn
+            <template
+              v-if="!success && !error"
+              cols="12"
+              class="d-flex justify-center"
             >
+              <v-btn
+                class="mt-5"
+                color="red white--text"
+                large
+                @click="showGoogleConsent"
+                ><v-icon>mdi-google</v-icon>
+                <span>Pre-Register with Google</span>
+              </v-btn>
+            </template>
+            <template v-if="!error && success" class="text-center" cols="12">
+              <h2 class="mt-5">You're Successfully Registered</h2>
+              <p>
+                After the admin verifiy your accoun proceed to election ballot.
+                We will sent you your credentials thru email when election is
+                started
+              </p>
+              <v-btn color="primary" to="/">Go to Homepage</v-btn>
+            </template>
+            <template v-else-if="error" class="text-center mt-5">
+              <election-error class="mt-5" :electionError="error" />
+              <v-btn large class="mt-5" color="error" @click="reset"
+                >Reload</v-btn
+              >
+            </template>
+          </template>
+
+          <template v-else>
+            <app-loading/>
           </template>
         </v-card-text>
       </v-card>

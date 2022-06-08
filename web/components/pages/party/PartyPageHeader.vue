@@ -3,15 +3,17 @@
     <v-col cols="12">
       <v-sheet
         rounded
+        color="grey lighten-4"
         style="margin-top: -10px; overflow: hidden"
-        height="250"
+        min-height="250"
         outlined
       >
         <app-image
+          v-if="party.cover_photo"
           :alt="party.title"
           :src="party.cover_photo"
           max-width="100%"
-          height="300"
+          height="250"
         ></app-image>
       </v-sheet>
     </v-col>

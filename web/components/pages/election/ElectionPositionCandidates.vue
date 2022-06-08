@@ -8,7 +8,7 @@
         v-for="item in positions"
         :key="item.id"
         cols="12"
-        class="pt-0 mb-lg-0 mb-5"
+        class="pt-0 mb-lg-5 mb-5"
       >
         <h3>{{ item.title }}</h3>
         <p>{{ item.description }}</p>

@@ -2,12 +2,14 @@
   <v-row>
     <v-col cols="12">
       <v-sheet
+        color="grey lighten-4"
         rounded
         style="margin-top: -10px; overflow: hidden"
-        height="250"
+        min-height="250"
         outlined
       >
         <app-image
+          v-if="coverPhoto"
           :alt="fullname"
           :src="coverPhoto"
           max-width="100%"

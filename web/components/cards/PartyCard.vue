@@ -2,12 +2,15 @@
   <v-card style="overflow: hidden" :to="partyRoute">
     <v-row no-gutters>
       <v-col cols="12">
-        <app-image
-          max-height="100%"
-          width="100%"
-          :height="70"
-          :src="party.cover_photo"
-        ></app-image>
+        <v-card min-height="70px" flat color="grey lighten-4">
+          <app-image
+            v-if="party.cover_photo"
+            max-height="100%"
+            width="100%"
+            :height="70"
+            :src="party.cover_photo"
+          ></app-image>
+        </v-card>
       </v-col>
 
       <v-col
