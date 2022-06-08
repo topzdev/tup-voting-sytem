@@ -2,7 +2,7 @@
   <v-card>
     <v-card-text>
       <v-row no-gutters align="center">
-        <v-col cols="auto">
+        <v-col class="d-flex align-start" cols="auto">
           <v-avatar size="50" :title="data.ticker">
             <app-image :size="50" :src="data.logo" :alt="data.title" />
           </v-avatar>
@@ -11,9 +11,11 @@
           <h2 class="title text-truncate text--primary" :title="data.title">
             {{ data.title }} <b>({{ data.ticker }})</b>
           </h2>
-          <p v-if="data.description" class="body-2 my-0 text--secondary">
-            {{ trimmedDescription }}
-          </p>
+          <app-read-more
+            class="mb-0 text--secondary"
+            :max_length="100"
+            :text="data.description"
+          />
         </v-col>
         <v-col cols="auto" class="ml-auto">
           <v-btn color="primary" text :to="`/organization/${data.id}`"

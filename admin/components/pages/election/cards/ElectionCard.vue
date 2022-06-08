@@ -15,9 +15,13 @@
             {{ data.title }}
             <publicity-icon :size="20" :value="data.is_public" />
           </h2>
-          <p v-if="data.description" class="body-2 my-0 text--secondary">
-            {{ trimmedDescription }}
-          </p>
+
+          <app-read-more
+            v-if="data.description"
+            class="mb-0 text--secondary"
+            :max_length="100"
+            :text="data.description"
+          />
         </v-col>
         <v-col>
           <v-row class="d-flex align-center">
@@ -84,12 +88,6 @@ export default Vue.extend({
     },
     manageElectionRoute(): string {
       return pageConfig.election(this.data.id).this().route;
-    },
-    trimmedDescription(): string {
-      const description = this.data.description;
-      return description.length >= 100
-        ? description.split("").splice(0, 90).join("") + "..."
-        : description;
     },
   },
 });

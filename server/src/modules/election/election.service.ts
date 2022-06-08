@@ -68,7 +68,7 @@ const getAll = async (
     builder = builder.offset(offset).limit(_query.take);
   }
 
-  const items = await builder.getMany();
+  const [items, itemsCount] = await builder.getManyAndCount();
 
   const totalCount = await electionRepository.count({
     where: { organization_id: _orgId },
@@ -77,7 +77,7 @@ const getAll = async (
   return {
     items,
     totalCount,
-    itemsCount: items.length,
+    itemsCount,
   };
 };
 

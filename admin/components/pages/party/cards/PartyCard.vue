@@ -15,9 +15,11 @@
             </span>
           </h2>
 
-          <p v-if="data.description" class="body-2 my-0 text--secondary">
-            {{ trimmedDescription }}
-          </p>
+          <app-read-more
+            class="mb-0 text--secondary"
+            :max_length="100"
+            :text="data.description"
+          />
         </v-col>
 
         <v-col cols="auto" class="ml-auto">
@@ -49,15 +51,6 @@ export default mixins(partyMixin, restrictionsMixin).extend({
       type: Object,
       required: true,
     } as PropOptions<Party>,
-  },
-
-  computed: {
-    trimmedDescription(): string {
-      const description = this.data.description;
-      return description.length >= 100
-        ? description.split("").splice(0, 100).join("") + "..."
-        : description;
-    },
   },
 });
 </script>

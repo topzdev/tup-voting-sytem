@@ -28,7 +28,15 @@ const getElectionDetails = async (_election_id: number) => {
     ])
     .addSelect(finalStatusSubquery(builder.alias))
 
-    .loadRelationCountAndMap("election.votersCount", "election.voters")
+    .loadRelationCountAndMap(
+      "election.votersCount",
+      "election.voters",
+      "voters",
+      (qb) =>
+        qb.andWhere("voters.is_pre_register = :preregistered", {
+          preregistered: false,
+        })
+    )
     .loadRelationCountAndMap("election.votesCount", "election.votes")
     .loadRelationCountAndMap("election.votedCount", "election.voted")
     .loadRelationCountAndMap("election.partiesCount", "election.party")

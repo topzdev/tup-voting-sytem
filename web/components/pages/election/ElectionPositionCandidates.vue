@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col class="text-subtitle-2 text-md-h6 font-weight-black" cols="12">
+    <v-col class="text-subtitle-2 text-md-h6 font-weight-black mb-5" cols="12">
       <h2>Positions and Candidates</h2>
     </v-col>
     <template v-if="positions && positions.length">
@@ -10,8 +10,8 @@
         cols="12"
         class="pt-0 mb-lg-5 mb-5"
       >
-        <h3>{{ item.title }}</h3>
-        <p>{{ item.description }}</p>
+        <h3 class="title mb-2">{{ item.title }}</h3>
+        <app-read-more class="mb-5 text--secondary" :text="item.description" />
         <v-row>
           <template v-if="item.candidates && item.candidates.length">
             <v-col

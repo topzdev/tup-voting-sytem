@@ -72,11 +72,14 @@ const getAll = async (user: PickedUser, _query: GetOrganizationParams) => {
     "org.created_at": "ASC",
   });
 
-  const [items, count] = await builder.getManyAndCount();
+  const [items, itemsCount] = await builder.getManyAndCount();
+
+  const totalCount = await orgRepository.count();
+
   return {
     items,
-    totalCount: count,
-    itemsCount: items.length,
+    totalCount,
+    itemsCount,
   };
 };
 

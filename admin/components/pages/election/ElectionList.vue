@@ -1,58 +1,71 @@
 <template>
   <v-row style="height: 100%">
-    <v-col v-if="list.loading" class="text-center" cols="12">
+    <v-col v-if="$fetchState.pending" class="d-flex justify-center" cols="12">
       <app-loading></app-loading>
     </v-col>
 
-    <template v-if="!list.loading">
-      <v-col cols="8" class="mx-auto" v-if="list.pagination.total">
-        <v-row no-gutters class="mb-4">
-          <v-col cols="12">
-            <v-row>
-              <v-col cols="5" class="mb-4">
-                <v-text-field
-                  v-model="list.search"
-                  :loading="list.loading"
-                  append-icon="mdi-magnify"
-                  label="Search election by title"
-                  single-line
-                  hide-details
-                  outlined
-                ></v-text-field>
-              </v-col>
-              <v-col cols="auto" class="ml-auto">
-                <v-checkbox
-                  class="ml-auto"
-                  v-model="list.withArchive"
-                  label="Show Archived"
-                ></v-checkbox>
-              </v-col>
-            </v-row>
-          </v-col>
+    <v-col
+      v-else-if="!$fetchState.pending && !totalCount"
+      class="mx-auto text-center d-flex align-center justify-center h-100"
+      md="5"
+    >
+      <election-empty />
+    </v-col>
 
-          <template v-if="list.items.length">
-            <v-col
-              v-for="item in list.items"
-              :key="item.id"
-              cols="12"
-              class="mb-3"
-            >
-              <election-card :data="item" />
+    <v-col
+      cols="8"
+      class="mx-auto"
+      v-if="!$fetchState.pending && totalCount && list.items"
+    >
+      <v-row no-gutters class="mb-4">
+        <v-col cols="12">
+          <v-row>
+            <v-col cols="5" class="mb-4">
+              <v-text-field
+                v-model="list.search"
+                :loading="list.loading"
+                append-icon="mdi-magnify"
+                label="Search election by title"
+                single-line
+                hide-details
+                outlined
+              ></v-text-field>
             </v-col>
-          </template>
+            <v-col cols="auto" class="ml-auto">
+              <v-checkbox
+                class="ml-auto"
+                v-model="list.withArchive"
+                label="Show Archived"
+              ></v-checkbox>
+            </v-col>
+          </v-row>
+        </v-col>
 
-          <v-col v-else class="text-center" cols="12"> No items found </v-col>
-        </v-row>
-      </v-col>
+        <v-col v-if="list.loading" class="text-center" cols="12">
+          <app-loading></app-loading>
+        </v-col>
 
-      <v-col
-        v-else
-        class="mx-auto text-center d-flex align-center justify-center h-100"
-        md="5"
-      >
-        <election-empty />
-      </v-col>
-    </template>
+        <template v-else-if="!list.loading && list.items.length">
+          <v-col
+            v-for="item in list.items"
+            :key="item.id"
+            cols="12"
+            class="mb-3"
+          >
+            <election-card :data="item" />
+          </v-col>
+        </template>
+
+        <v-col
+          v-else-if="!list.loading && !list.items.length"
+          class="text-center"
+          cols="12"
+        >
+          No election found
+        </v-col>
+      </v-row>
+    </v-col>
+    <v-col v-else-if="$fetchState.error"> Something went wrong </v-col>
   </v-row>
 </template>
 
@@ -76,9 +89,10 @@ export default mixins(orgMixin, authMixin).extend({
 
   data() {
     return {
+      totalCount: 0,
       list: {
         loading: true,
-        items: [] as Election[],
+        items: [] as Election[] | null,
         search: "",
         withArchive: false,
         pagination: {
@@ -105,7 +119,8 @@ export default mixins(orgMixin, authMixin).extend({
         });
 
         this.list.items = result.items;
-        this.list.pagination.total = result.totalCount;
+        this.list.pagination.total = result.itemsCount;
+        this.totalCount = result.totalCount;
       } catch (error) {
         console.log(error);
       } finally {

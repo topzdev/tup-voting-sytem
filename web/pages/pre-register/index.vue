@@ -65,7 +65,7 @@
           </template>
 
           <template v-else>
-            <app-loading/>
+            <app-loading />
           </template>
         </v-card-text>
       </v-card>
@@ -120,9 +120,8 @@ export default Vue.extend({
 
     setElectionSlug() {
       const state = this.$route.query.state as string;
-
+      console.log("SEt ELection SLug", state);
       if (state) {
-        const query = this.$route.query;
         const slug = JSON.parse(state).slug;
         this.$router.push({
           query: {
@@ -182,6 +181,11 @@ export default Vue.extend({
 
       return this.$route.query.election;
     },
+  },
+  created() {
+    console.log(this.$route.query);
+    const state = this.$route.query.state as string;
+    console.log(state);
   },
 });
 </script>

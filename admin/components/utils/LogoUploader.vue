@@ -129,7 +129,7 @@ export default Vue.extend({
 .logo-uploader {
   display: inline-flex;
   position: relative !important;
-  border: 5px solid white;
+  border: 1px solid lightgrey;
   border-radius: 100%;
 
   .v-avatar {

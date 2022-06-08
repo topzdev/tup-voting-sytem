@@ -65,7 +65,7 @@ export default mixins(restrictionsMixin).extend({
       let items: CountItem[] = [];
 
       items.push({
-        title: `Participated (${localCounts.votedCount}/${localCounts.votersCount} Voters)`,
+        title: `Participated (${localCounts.votedCount}/${localCounts.votersCount} Registered Voters)`,
         color: "green lighten-1",
         icon: icons.voteParticipation,
         count: localCounts.votedCount,
