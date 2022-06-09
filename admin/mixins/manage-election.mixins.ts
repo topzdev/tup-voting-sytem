@@ -26,7 +26,8 @@ type ElectionPages =
   | "positions"
   | "voters"
   | "settings"
-  | "launchpad";
+  | "launchpad"
+  | "officers";
 // | "extra";
 
 type ElectionPageLinks = Record<ElectionPages, ManageElectionPage>;
@@ -102,6 +103,13 @@ const manageElectionMixins = Vue.extend({
           icon: icons.voters,
           title: "Voters",
           to: `${basePath}/voters`,
+        },
+
+        officers: {
+          icon: icons.officers,
+          title: "Officers",
+          to: `${basePath}/officers`,
+          toolbarTitle: "Election Officers",
         },
 
         settings: {

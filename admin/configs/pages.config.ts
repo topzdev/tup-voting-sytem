@@ -54,6 +54,13 @@ const pageConfig = {
           route: parentRoute + "/overview",
           icon: "",
         } as PageConfigItem),
+
+      officers: () =>
+        ({
+          title: "Election Officers",
+          route: `${parentRoute}/officers`,
+          icon: "mdi-account-tie-outline",
+        } as PageConfigItem),
     };
   },
 
@@ -82,13 +89,6 @@ const pageConfig = {
           title: "Organization Info",
           route: `${parentRoute}/manage/info/`,
           icon: "mdi-note-edit-outline",
-        } as PageConfigItem),
-
-      manageElectionOfficer: () =>
-        ({
-          title: "Election Officers",
-          route: `${parentRoute}/manage/election-officer`,
-          icon: "mdi-account-tie-outline",
         } as PageConfigItem),
 
       deleteOrganization: () =>

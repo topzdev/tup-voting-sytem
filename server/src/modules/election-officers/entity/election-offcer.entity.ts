@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Timestamp } from "../../../entity/timestamp.inherit";
+import { Election } from "../../election/entity/election.entity";
 import { Organization } from "../../organization/entity/organization.entity";
 import { User } from "../../user/entity/user.entity";
 
@@ -19,9 +20,11 @@ export class ElectionOfficer extends Timestamp {
   @OneToOne(() => User, (user) => user.election_officer)
   user: User;
 
-  @Column()
-  organization_id: number;
+  @Column({
+    nullable: true,
+  })
+  election_id: number;
 
-  @ManyToOne(() => Organization, (org) => org.election_officers)
-  organization: Organization;
+  @ManyToOne(() => Election, (election) => election.election_officers)
+  election: Election;
 }

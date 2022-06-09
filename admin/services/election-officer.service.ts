@@ -1,9 +1,10 @@
 import apiClient from ".";
+import { Election } from "./election.service";
 import { Organization } from "./organization.service";
 import { User } from "./user.service";
 
 export type ElectionOfficer = {
-  organization_id: number;
+  election_id: number;
   id: number;
   user: User;
 };
@@ -13,7 +14,7 @@ export interface GetElectionOfficerQuery {
   order?: any;
   page: number;
   take: number;
-  organization_id: number;
+  election_id: number;
 }
 
 export type ChangeRoleDto = Pick<User, "role" | "id">;
@@ -22,7 +23,7 @@ export type CreateElectionOfficerDto = Pick<
   User,
   "firstname" | "lastname" | "username" | "email_address"
 > & {
-  organization_id: Organization["id"];
+  election_id: Election["id"];
 };
 
 export type UpdateElectionOfficerDto = Pick<
@@ -32,7 +33,7 @@ export type UpdateElectionOfficerDto = Pick<
 
 export type GetOfficerByIdDto = {
   user_id: User["id"];
-  organization_id: Organization["id"];
+  election_id: Election["id"];
 };
 
 const url = "/api/v1/election-officer";

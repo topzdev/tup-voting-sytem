@@ -1,67 +1,85 @@
 <template>
-  <v-form ref="form" v-model="valid">
-    <v-card outlined>
-      <v-card-title>
-        Election Officers
+  <span>
+    <page-bars title="Election Officers">
+      <v-btn
+        color="primary"
+        large
+        class="ml-auto"
+        @click="dialogs.create = true"
+        >Add Officer</v-btn
+      >
+    </page-bars>
 
-        <v-btn
-          color="primary"
-          large
-          class="ml-auto"
-          @click="dialogs.create = true"
-          >Add Officer</v-btn
-        >
-      </v-card-title>
-      <v-card-text class="py-0">
-        <v-row no-gutters>
-          <v-col v-if="alert.show" cols="12">
-            <v-alert
-              :type="alert.type"
-              v-model="alert.show"
-              dismissible
-              class="mb-0"
-            >
-              {{ alert.message }}
-            </v-alert>
-          </v-col>
-        </v-row>
-      </v-card-text>
-      <election-officer-table
-        :table.sync="table"
-        :editOfficer="editOfficer"
-        :enableOfficer="enableOfficer"
-        :resetPassword="resetPassword"
-        :deleteOfficer="deleteOfficer"
+    <v-container fluid>
+      <v-row>
+        <v-col v-if="alert.show" cols="12">
+          <v-alert
+            :type="alert.type"
+            v-model="alert.show"
+            dismissible
+            class="mb-0"
+          >
+            {{ alert.message }}
+          </v-alert>
+        </v-col>
+
+        <v-col cols="12">
+          <v-card>
+            <v-card-title>
+              <v-row>
+                <v-col class="d-flex" cols="3">
+                  <v-text-field
+                    v-model="table.search"
+                    append-icon="mdi-magnify"
+                    label="Search Officer by ID, First Name or Last Name"
+                    single-line
+                    hide-details
+                    outlined
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-card-title>
+
+            <election-officer-table
+              :table.sync="table"
+              :editOfficer="editOfficer"
+              :enableOfficer="enableOfficer"
+              :resetPassword="resetPassword"
+              :deleteOfficer="deleteOfficer"
+            />
+          </v-card>
+        </v-col>
+      </v-row>
+      <edit-election-officer-dialog
+        v-if="selectedOfficerId"
+        :show.sync="dialogs.update"
+        :officerId="selectedOfficerId"
+        :electionId="electionId"
+        :refresh="fetchItems"
       />
-    </v-card>
 
-    <edit-election-officer-dialog
-      v-if="selectedOfficerId"
-      :show.sync="dialogs.update"
-      :officerId="selectedOfficerId"
-      :organizationId="organizationId"
-      :refresh="fetchItems"
-    />
-
-    <add-election-officer-dialog
-      :organizationId="organizationId"
-      :show.sync="dialogs.create"
-      :refresh="fetchItems"
-    />
-  </v-form>
+      <add-election-officer-dialog
+        :electionId="electionId"
+        :show.sync="dialogs.create"
+        :refresh="fetchItems"
+      />
+    </v-container>
+  </span>
 </template>
 
 <script lang="ts">
+import PageBars from "~/components/bars/PageBars.vue";
 import AddElectionOfficerDialog from "@/components/pages/org/dialogs/AddElectionOfficerDialog.vue";
 import EditElectionOfficerDialog from "@/components/pages/org/dialogs/EditElectionOfficerDialog.vue";
 import ElectionOfficerTable from "@/components/pages/org/tables/ElectionOfficerTable.vue";
+import pageRoles from "@/configs/page-roles";
 import authMixin from "@/mixins/auth.mixins";
+import manageElectionMixins from "@/mixins/manage-election.mixins";
 import electionOfficerServices from "@/services/election-officer.service";
 import userServices, { User } from "@/services/user.service";
 import mixins from "vue-typed-mixins";
-import pageRoles from "../../../../configs/page-roles";
-import manageElectionMixins from "../../../../mixins/manage-election.mixins";
-
+import PageCenter from "@/components/utils/PageCenter.vue";
+import debounce from "@/helpers/debounce";
 const defaultAlert = {
   show: false,
   type: "",
@@ -78,6 +96,8 @@ export default mixins(manageElectionMixins, authMixin).extend({
     ElectionOfficerTable,
     AddElectionOfficerDialog,
     EditElectionOfficerDialog,
+    PageCenter,
+    PageBars,
   },
 
   data() {
@@ -99,8 +119,20 @@ export default mixins(manageElectionMixins, authMixin).extend({
         loading: false,
         headers: [
           {
-            text: "Name",
+            text: "Firstname",
             value: "firstname",
+          },
+          {
+            text: "Lastname",
+            value: "lastname",
+          },
+          {
+            text: "Username",
+            value: "username",
+          },
+          {
+            text: "Email Address",
+            value: "email_address",
           },
           {
             text: "Disabled",
@@ -110,6 +142,7 @@ export default mixins(manageElectionMixins, authMixin).extend({
             text: "Actions",
             value: "actions",
             align: "right",
+            sortable: false,
           },
         ],
         items: [],
@@ -125,6 +158,13 @@ export default mixins(manageElectionMixins, authMixin).extend({
   },
   async fetch() {
     await this.fetchItems();
+  },
+
+  watch: {
+    ["table.search"]: debounce(async function () {
+      // @ts-ignore
+      await this.fetchItems();
+    }, 500),
   },
 
   methods: {
@@ -173,36 +213,34 @@ export default mixins(manageElectionMixins, authMixin).extend({
         button: {
           anyEventHide: false,
           yesFunction: async ({ hideDialog }) => {
-            if (this.valid) {
-              this.loading = true;
-              try {
-                const result = await userServices.disableUser({
-                  id: user.id,
-                  disabled: !user.disabled,
-                });
-                this.$accessor.snackbar.set({
+            this.loading = true;
+            try {
+              const result = await userServices.disableUser({
+                id: user.id,
+                disabled: !user.disabled,
+              });
+              this.$accessor.snackbar.set({
+                show: true,
+                message: `Officer Account Succesfully ${disableText}d`,
+                timeout: 5000,
+                color: "success",
+              });
+
+              this.fetchItems();
+            } catch (error: any) {
+              const message =
+                error.response?.data?.error?.message || error.message;
+
+              if (message) {
+                this.alert = {
                   show: true,
-                  message: `Officer Account Succesfully ${disableText}d`,
-                  timeout: 5000,
-                  color: "success",
-                });
-
-                this.fetchItems();
-              } catch (error: any) {
-                const message =
-                  error.response?.data?.error?.message || error.message;
-
-                if (message) {
-                  this.alert = {
-                    show: true,
-                    type: "error",
-                    message: message,
-                  };
-                }
-              } finally {
-                hideDialog();
-                this.loading = false;
+                  type: "error",
+                  message: message,
+                };
               }
+            } finally {
+              hideDialog();
+              this.loading = false;
             }
           },
           noFunction: ({ hideDialog }) => {
@@ -306,3 +344,6 @@ export default mixins(manageElectionMixins, authMixin).extend({
   },
 });
 </script>
+
+<style>
+</style>

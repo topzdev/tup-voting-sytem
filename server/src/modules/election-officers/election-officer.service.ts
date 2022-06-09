@@ -1,11 +1,9 @@
 import { Brackets, getRepository, Not } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
 import { genHashedPassword } from "../../helpers/password.helper";
-import { PickedUser } from "../../type/express-serve-static-core";
-import securityServices from "../security/security.service";
 import { User } from "../user/entity/user.entity";
-import { UserRole } from "../user/user.inteface";
 import userHelper from "../user/user.helper";
+import { UserRole } from "../user/user.inteface";
 import {
   CreateElectionOfficerDto,
   GetElectionOfficerQuery,
@@ -25,25 +23,25 @@ const fieldsNeeded = [
   "user.disabled",
   "user.email_address",
   "election_officer.id",
-  "election_officer.organization_id",
+  "election_officer.election_id",
 ];
 
 const getOfficers = async (_query: GetElectionOfficerQuery) => {
   const userRepository = getRepository(User);
-  const organization_id = _query.organization_id;
+  const election_id = _query.election_id;
 
-  if (!organization_id)
-    throw new HttpException("BAD_REQUEST", "Organization ID is required");
+  if (!election_id)
+    throw new HttpException("BAD_REQUEST", "Election ID is required");
 
   let builder = userRepository
     .createQueryBuilder("user")
     .select(fieldsNeeded)
     .leftJoinAndSelect("user.election_officer", "election_officer")
     .where(
-      "user.role = :role AND election_officer.organization_id = :organization_id",
+      "user.role = :role AND election_officer.election_id = :election_id",
       {
         role: UserRole["ELECTION_OFFICER"],
-        organization_id: organization_id,
+        election_id: election_id,
       }
     );
 
@@ -99,11 +97,11 @@ const getOfficerById = async (dto: GetOfficerByIdDto) => {
     .select(fieldsNeeded)
     .leftJoinAndSelect("user.election_officer", "election_officer")
     .where(
-      "user.id = :user_id AND user.role = :role AND election_officer.organization_id = :organization_id",
+      "user.id = :user_id AND user.role = :role AND election_officer.election_id = :election_id",
       {
         role: UserRole["ELECTION_OFFICER"],
         user_id: dto.user_id,
-        organization_id: dto.organization_id,
+        election_id: dto.election_id,
       }
     );
 
@@ -131,7 +129,7 @@ const create = async (dto: CreateElectionOfficerDto) => {
   }
 
   let election_officer = ElectionOfficer.create({
-    organization_id: dto.organization_id,
+    election_id: dto.election_id,
   });
 
   await election_officer.save();
