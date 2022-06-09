@@ -12,7 +12,7 @@ const icons = {
   clipboard: "mdi-clipboard-multiple-outline",
   accountLocked: "mdi-account-lock",
   accountDisabled: "mdi-account-off",
-  officers: "mdi-account-tie-outline",
+  officers: "mdi-account-tie-hat",
 };
 
 export default icons;
