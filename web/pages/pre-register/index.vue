@@ -39,6 +39,7 @@
                 class="d-flex justify-center"
               >
                 <v-btn
+                  :disabled="!isInit"
                   class="mt-5"
                   color="red white--text"
                   large
@@ -48,11 +49,15 @@
                 </v-btn>
               </template>
               <template v-if="!error && success" class="text-center" cols="12">
-                <h2 class="mt-5">You're Successfully Registered</h2>
-                <p>
-                  After the admin verifiy your accoun proceed to election
-                  ballot. We will sent you your credentials thru email when
-                  election is started
+                <h2
+                  class="display-1 font-weight-bold text--primary mx-auto mt-5"
+                >
+                  You're Successfully Pre-Registered
+                </h2>
+                <p class="subtitle-1 text--secondary mt-2">
+                  After the admin verify your account, please proceed to
+                  election ballot. We will send you your credentials thru email
+                  when election is started
                 </p>
                 <v-btn color="primary" to="/">Go to Homepage</v-btn>
               </template>
@@ -95,6 +100,8 @@ export default Vue.extend({
       success: null,
       error: null,
       loading: false,
+      isInit: false,
+      isSignIn: false,
     };
   },
 
@@ -168,9 +175,14 @@ export default Vue.extend({
     },
   },
   created() {
-    console.log(this.$route.query);
-    const state = this.$route.query.state as string;
-    console.log(state);
+    let that = this;
+    let checkGauthLoad = setInterval(function () {
+      if (that.$gAuth) {
+        that.isInit = that.$gAuth.isInit;
+        that.isSignIn = that.$gAuth.isAuthorized;
+        if (that.isInit) clearInterval(checkGauthLoad);
+      }
+    }, 1000);
   },
 });
 </script>

@@ -2,7 +2,7 @@
   <v-row>
     <v-col class="d-flex align-center text-center flex-column" md="12">
       <h2
-        class="display-2 font-weight-bold text--primary mx-auto"
+        class="display-1 font-weight-bold text--primary mx-auto"
         v-html="title"
       ></h2>
 
