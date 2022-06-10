@@ -46,12 +46,6 @@ export class Organization extends Timestamp {
   @OneToMany(() => Election, (election) => election.organization)
   elections: Election[];
 
-  @OneToMany(
-    () => ElectionOfficer,
-    (election_officer) => election_officer.organization
-  )
-  election_officers: ElectionOfficer[];
-
   @Column({
     default: false,
   })

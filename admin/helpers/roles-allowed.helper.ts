@@ -2,10 +2,10 @@ import { RolesString, UserRole, UserRolesValue } from "../types/roles";
 
 export const rolesOnlyAllowed = (
   userRole: UserRolesValue,
-  rolesAllowed: RolesString[]
+  rolesAllowed: UserRolesValue[]
 ) => {
-  return rolesAllowed.findIndex((item: RolesString) => {
-    return UserRole[item] === userRole;
+  return rolesAllowed.findIndex((item) => {
+    return item === userRole;
   }) !== -1
     ? true
     : false;

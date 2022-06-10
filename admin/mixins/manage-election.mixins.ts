@@ -8,16 +8,13 @@ import { Organization } from "@/services/organization.service";
 import Vue from "vue";
 import pageStatus from "@/configs/page-status.config";
 import icons from "../configs/icons";
+import pageRoles from "../configs/page-roles";
+import { rolesOnlyAllowed } from "../helpers/roles-allowed.helper";
+import mixins from "vue-typed-mixins";
+import roleRestrictionsMixin from "./roles-restriction.mixin";
+import { IdToken } from "@nuxtjs/auth-next";
+import pageConfig, { PageConfigItem } from "../configs/pages.config";
 
-type ManageElectionPage = {
-  icon: string;
-  title: string;
-  to: string;
-  status?: any[];
-  exactPath?: string;
-  show?: boolean;
-  toolbarTitle?: string;
-};
 type ElectionPages =
   | "overview"
   | "results"
@@ -26,12 +23,13 @@ type ElectionPages =
   | "positions"
   | "voters"
   | "settings"
-  | "launchpad";
+  | "launchpad"
+  | "officers";
 // | "extra";
 
-type ElectionPageLinks = Record<ElectionPages, ManageElectionPage>;
+type ElectionPageLinks = Record<ElectionPages, PageConfigItem>;
 
-const manageElectionMixins = Vue.extend({
+const manageElectionMixins = mixins(roleRestrictionsMixin).extend({
   computed: {
     manageElectionRoute(): string {
       if (!this.electionId) return "/";
@@ -63,78 +61,37 @@ const manageElectionMixins = Vue.extend({
     },
 
     links(): ElectionPageLinks {
-      const electionId = this.$route.params.electionId;
-      const basePath = `/manage/election/${electionId}`;
+      const electionRoutes = pageConfig.election(
+        this.electionId as Election["id"]
+      );
 
       return {
-        overview: {
-          icon: icons.overview,
-          title: "Overview",
-          to: `${basePath}/overview`,
-        },
-
-        results: {
-          icon: icons.results,
-          title: "Results",
-          to: `${basePath}/results`,
-          status: pageStatus.results,
-        },
-
-        party: {
-          icon: icons.party,
-          title: "Party",
-          to: `${basePath}/party`,
-        },
-
-        positions: {
-          icon: icons.positions,
-          title: "Positions",
-          to: `${basePath}/positions`,
-        },
-
-        candidates: {
-          icon: icons.candidates,
-          title: "Candidates",
-          to: `${basePath}/candidates`,
-        },
-
-        voters: {
-          icon: icons.voters,
-          title: "Voters",
-          to: `${basePath}/voters`,
-        },
-
-        settings: {
-          icon: icons.settings,
-          title: "Settings",
-          toolbarTitle: "Election Settings",
-          to: `${basePath}/settings`,
-        },
-
-        launchpad: {
-          icon: icons.launchpad,
-          title: "Launchpad",
-          to: `${basePath}/launchpad`,
-          toolbarTitle: "Launch Election",
-          status: pageStatus.launchpad,
-        },
-
-        // extra: {
-        //   icon: icons.development,
-        //   title: "Development",
-        //   toolbarTitle: "Development Extra",
-        //   to: `${basePath}/extra`,
-        // },
+        overview: electionRoutes.this(),
+        results: electionRoutes.results(),
+        party: electionRoutes.party(),
+        positions: electionRoutes.positions(),
+        candidates: electionRoutes.candidates(),
+        voters: electionRoutes.voters(),
+        officers: electionRoutes.officers(),
+        settings: electionRoutes.settings(),
+        launchpad: electionRoutes.launchpad(),
       };
     },
 
-    sidebarLinks(): ManageElectionPage[] {
+    sidebarLinks(): PageConfigItem[] | null {
       return Object.keys(this.links)
         .map((item) => this.links[item])
         .filter((item) => {
           if (!this.electionStatus || !item.status) return item;
 
           if (statusOnlyAllowed(this.electionStatus, item.status)) return item;
+        })
+        .filter((item) => {
+          if (!item.allowedRoles) return item;
+
+          console.log(item.allowedRoles, this.rolesAllowed(item.allowedRoles));
+
+          if (this.rolesAllowed(item.allowedRoles)) return item;
         });
     },
   },

@@ -8,7 +8,7 @@ import electionOfficerService from "./election-officer.service";
 
 const getOfficers = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { page, take, order, search, organization_id } = req.body as any;
+    const { page, take, order, search, election_id } = req.body as any;
 
     res.status(200).json(
       await electionOfficerService.getOfficers({
@@ -16,7 +16,7 @@ const getOfficers = async (req: Request, res: Response, next: NextFunction) => {
         take,
         order,
         search,
-        organization_id,
+        election_id,
       })
     );
   } catch (error) {

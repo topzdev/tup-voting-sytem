@@ -20,10 +20,11 @@ import PageBars from "@/components/bars/PageBars.vue";
 import ManageOrganizationSidebar from "@/components/pages/org/sidebars/ManageOrganizationSidebar.vue";
 import mixins from "vue-typed-mixins";
 import orgMixin from "@/mixins/org.mixins";
+import { UserRolesValue } from "@/types/roles";
 export default mixins(orgMixin).extend({
   middleware: ["roles"],
   meta: {
-    allowedRoles: ["SUPER_ADMIN", "ADMIN"],
+    allowedRoles: ["sadmin", "admin"] as UserRolesValue[],
   },
   components: {
     PageBars,

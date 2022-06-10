@@ -33,6 +33,7 @@ export default {
     { src: "~/plugins/vue-datetime-picker", mode: "client" },
     { src: "~/plugins/vue-draggable", mode: "client" },
     { src: "~/plugins/tiptap-vuetify", mode: "client" },
+    { src: "~/plugins/tiptap-vuetify", mode: "client" },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

@@ -67,30 +67,7 @@
       <v-toolbar-title v-text="title" />
       <v-spacer />
 
-      <v-menu offset-y bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            large
-            class="text-capitalize"
-            color="primary"
-            dark
-            v-bind="attrs"
-            v-on="on"
-            depressed
-          >
-            <v-avatar color="teal" size="30" class="mr-1">
-              {{ initials }}
-            </v-avatar>
-            {{ fullname }}
-          </v-btn>
-        </template>
-
-        <v-list>
-          <v-list-item @click="logout()">
-            <v-list-item-title>Logout</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+      <user-menu />
     </v-app-bar>
     <v-main>
       <Nuxt />
@@ -112,9 +89,9 @@ import authMixin from "~/mixins/auth.mixins";
 import mixins from "vue-typed-mixins";
 import { rolesOnlyAllowed } from "../helpers/roles-allowed.helper";
 import { UserRolesValue } from "../types/roles";
-
+import UserMenu from "@/components/menus/UserMenu.vue";
 export default mixins(authMixin).extend({
-  components: { AppSnackbar, AuthenticationDialog },
+  components: { AppSnackbar, AuthenticationDialog, UserMenu },
   data() {
     return {
       clipped: true,

@@ -11,9 +11,6 @@
       'items-per-page-options': table.pagination.itemsPerPageOptions,
     }"
   >
-    <template v-slot:item.firstname="{ item }">
-      {{ item.firstname }} {{ item.lastname }}
-    </template>
     <template v-slot:item.actions="{ item }">
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
@@ -42,14 +39,14 @@
         <span>Edit Information</span>
       </v-tooltip>
 
-      <v-tooltip bottom>
+      <!-- <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on" @click="deleteOfficer(item)">
             <v-icon> mdi-delete </v-icon>
           </v-btn>
         </template>
         <span>Delete Officer</span>
-      </v-tooltip>
+      </v-tooltip> -->
     </template>
   </v-data-table>
 </template>

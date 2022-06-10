@@ -81,6 +81,7 @@
 import Vue, { PropOptions } from "vue";
 import electionOfficerServices from "@/services/election-officer.service";
 import { Organization } from "../../../../services/organization.service";
+import { Election } from "../../../../services/election.service";
 const defaultForm = {
   firstname: "",
   lastname: "",
@@ -100,9 +101,9 @@ export default Vue.extend({
       type: Boolean,
       default: true,
     },
-    organizationId: {
+    electionId: {
       type: Number,
-    } as PropOptions<Organization["id"]>,
+    } as PropOptions<Election["id"]>,
 
     refresh: {
       type: Function,
@@ -142,7 +143,7 @@ export default Vue.extend({
         try {
           const response = await electionOfficerServices.create({
             ...this.form,
-            organization_id: this.organizationId,
+            election_id: this.electionId,
           });
           this.$accessor.snackbar.set({
             show: true,

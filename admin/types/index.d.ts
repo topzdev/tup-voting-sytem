@@ -1,4 +1,4 @@
-import { Auth } from "@nuxtjs/auth-next";
+import { Auth as AuthDefault } from "@nuxtjs/auth-next";
 import { accessorType } from "~/store";
 import { AuthUser } from "../services/user.service";
 
@@ -18,7 +18,7 @@ declare module "@nuxt/types" {
   interface NuxtAppOptions {
     $accessor: typeof accessorType;
   }
-  interface Auth {
+  type Auth = AuthDefault & {
     user: AuthUser;
-  }
+  };
 }

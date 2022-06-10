@@ -28,8 +28,6 @@ const getAll = async (
     throw new HttpException("BAD_REQUEST", "Organization Id is required");
   }
 
-  await electionHelper.electionOfficerGuard(user, _orgId);
-
   let builder = electionRepository.createQueryBuilder("election");
 
   builder = builder
@@ -150,8 +148,6 @@ const getById = async (user: PickedUser, _election_id: string) => {
   const election = await builder.getOne();
 
   if (!election) throw new HttpException("NOT_FOUND", "Election not found");
-
-  await electionHelper.electionOfficerGuard(user, election.organization_id);
 
   const urls = overviewHelpers.generateElectionUrls(election);
 

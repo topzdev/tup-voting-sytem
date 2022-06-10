@@ -189,8 +189,7 @@ const downloadElectionResults = async (_election_id: Election["id"]) => {
     data.push([""]);
   });
 
-  const organization = election.organization;
-  const election_officers = organization.election_officers;
+  const election_officers = election.election_officers;
   console.log(election_officers);
 
   if (election_officers && election_officers.length) {

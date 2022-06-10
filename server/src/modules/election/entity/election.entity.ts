@@ -18,6 +18,7 @@ import { ElectionVotes } from "../../voting/entity/votes.entity";
 import { Voter } from "../../voter/entity/voter.entity";
 import { ElectionVoted } from "../../voting/entity/voted.entity";
 import { ElectionMails } from "../../mailer/entity/election-mails.entity";
+import { ElectionOfficer } from "../../election-officers/entity/election-offcer.entity";
 
 export enum ElectionStatusEnum {
   BUILDING = 1,
@@ -117,4 +118,10 @@ export class Election extends Timestamp {
     select: false,
   })
   final_status: string;
+
+  @OneToMany(
+    () => ElectionOfficer,
+    (election_officer) => election_officer.election
+  )
+  election_officers: ElectionOfficer[];
 }

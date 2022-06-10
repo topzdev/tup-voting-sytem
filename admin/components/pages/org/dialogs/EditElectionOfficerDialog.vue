@@ -81,6 +81,7 @@
 import Vue, { PropOptions } from "vue";
 import electionOfficerServices from "@/services/election-officer.service";
 import { Organization } from "@/services/organization.service";
+import { Election } from "../../../../services/election.service";
 const defaultForm = {
   id: 0,
   firstname: "",
@@ -104,9 +105,9 @@ export default Vue.extend({
       type: Boolean,
       default: true,
     },
-    organizationId: {
+    electionId: {
       type: Number,
-    } as PropOptions<Organization["id"]>,
+    } as PropOptions<Election["id"]>,
 
     refresh: {
       type: Function,
@@ -150,7 +151,7 @@ export default Vue.extend({
         this.loading = true;
         const response = await electionOfficerServices.getById({
           user_id: this.officerId,
-          organization_id: this.organizationId,
+          election_id: this.electionId,
         });
 
         this.form = Object.assign({}, response);

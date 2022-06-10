@@ -2,13 +2,22 @@ import { Candidate } from "../services/candidate.service";
 import { Election } from "../services/election.service";
 import { Organization } from "../services/organization.service";
 import { Voters } from "../services/voters.service";
-import { RolesString } from "../types/roles";
+import { RolesString, UserRolesValue } from "../types/roles";
+import icons from "./icons";
+import pageRoles from "./page-roles";
+import pageStatus from "./page-status.config";
 
-type PageConfigItem = {
+export type PageConfigItem = {
   title: string;
   route: string;
   icon: string;
-  allowedRoles?: RolesString[];
+  allowedRoles: UserRolesValue[];
+  to: string;
+  status?: any[];
+  exactPath?: string;
+  show?: boolean;
+  toolbarTitle?: string;
+  roles?: any[];
 };
 
 const pageConfig = {
@@ -41,7 +50,7 @@ const pageConfig = {
           route: "/admin",
           title: "Admin",
           icon: "mdi-shield-crown-outline",
-          allowedRoles: ["SUPER_ADMIN"],
+          allowedRoles: ["sadmin"],
         } as PageConfigItem),
     };
   },
@@ -51,8 +60,79 @@ const pageConfig = {
     return {
       this: () =>
         ({
+          title: "Overview",
           route: parentRoute + "/overview",
-          icon: "",
+          to: parentRoute + "/overview",
+          icon: icons.overview,
+        } as PageConfigItem),
+
+      officers: () =>
+        ({
+          icon: icons.officers,
+          title: "Officers",
+          to: `${parentRoute}/officers`,
+          route: `${parentRoute}/officers`,
+          toolbarTitle: "Election Officers",
+          allowedRoles: pageRoles.election.election_officer,
+        } as PageConfigItem),
+
+      results: () =>
+        ({
+          icon: icons.results,
+          title: "Results",
+          to: `${parentRoute}/results`,
+          route: `${parentRoute}/results`,
+          status: pageStatus.results,
+        } as PageConfigItem),
+
+      party: () =>
+        ({
+          icon: icons.party,
+          title: "Party",
+          to: `${parentRoute}/party`,
+          route: `${parentRoute}/party`,
+        } as PageConfigItem),
+
+      positions: () =>
+        ({
+          icon: icons.positions,
+          title: "Positions",
+          to: `${parentRoute}/positions`,
+          route: `${parentRoute}/positions`,
+        } as PageConfigItem),
+
+      candidates: () =>
+        ({
+          icon: icons.candidates,
+          title: "Candidates",
+          to: `${parentRoute}/candidates`,
+          route: `${parentRoute}/candidates`,
+        } as PageConfigItem),
+      voters: () =>
+        ({
+          icon: icons.voters,
+          title: "Voters",
+          to: `${parentRoute}/voters`,
+          route: `${parentRoute}/voters`,
+        } as PageConfigItem),
+
+      settings: () =>
+        ({
+          icon: icons.settings,
+          title: "Settings",
+          toolbarTitle: "Election Settings",
+          to: `${parentRoute}/settings`,
+          route: `${parentRoute}/settings`,
+        } as PageConfigItem),
+
+      launchpad: () =>
+        ({
+          icon: icons.launchpad,
+          title: "Launchpad",
+          to: `${parentRoute}/launchpad`,
+          route: `${parentRoute}/launchpad`,
+          toolbarTitle: "Launch Election",
+          status: pageStatus.launchpad,
         } as PageConfigItem),
     };
   },
@@ -82,13 +162,6 @@ const pageConfig = {
           title: "Organization Info",
           route: `${parentRoute}/manage/info/`,
           icon: "mdi-note-edit-outline",
-        } as PageConfigItem),
-
-      manageElectionOfficer: () =>
-        ({
-          title: "Election Officers",
-          route: `${parentRoute}/manage/election-officer`,
-          icon: "mdi-account-tie-outline",
         } as PageConfigItem),
 
       deleteOrganization: () =>
