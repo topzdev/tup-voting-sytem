@@ -7,12 +7,12 @@ import { Election } from "../election/entity/election.entity";
 
 export const PREREGISTER_MESSAGES = {
   is_preregistered: {
-    title: "You already applied for pre registration",
-    message: "Please wait for your application to be approved",
+    title: "You already pre-registered",
+    body: "Please wait for your application to be approved",
   },
   is_already_registered: {
     title: "You already registered",
-    message: "You can now vote to your designated election",
+    body: "You can now vote to your designated election",
   },
   electionNotFound: {
     title: "Election not found",

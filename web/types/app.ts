@@ -236,3 +236,9 @@ export type SocialLink = {
   icon: string;
   title: string;
 };
+
+declare module "vue/types/vue" {
+  interface Vue {
+    $gAuth: any;
+  }
+}

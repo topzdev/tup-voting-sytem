@@ -19,23 +19,15 @@ const validations = {
     .toInt(),
 };
 
-const {
-  param_slug,
-  election_id,
-  firstname,
-  lastname,
-  code,
-  google_id,
-  email_address,
-} = validations;
+const { param_slug, election_id, email_address } = validations;
 
 const getElection = [param_slug];
 
-const getVoterInfo = [code];
+const getVoterInfo = [];
 
 const isRegistered = [email_address, election_id];
 
-const preRegisterVoter = [code, election_id];
+const preRegisterVoter = [election_id];
 
 const preregisterValidator = {
   getElection,

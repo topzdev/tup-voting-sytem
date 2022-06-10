@@ -63,14 +63,7 @@ const isRegistered = async ({ _election_id, _email_address }) => {
 };
 
 const preRegisterVoter = async (_voterInfo: PreRegisterVoterInfo) => {
-  const { access_token, id_token } = await preregisterHelpers.getGoogleTokens(
-    _voterInfo.code
-  );
-
-  const userInfo = await preregisterHelpers.getGoogleUserInfo({
-    access_token,
-    id_token,
-  });
+  const userInfo = _voterInfo.user;
 
   const voter = await Voter.findOne({
     select: ["email_address", "firstname", "lastname", "id", "is_pre_register"],

@@ -1,5 +1,12 @@
+export type GoogleRawInfo = {
+  id: string;
+  given_name: string;
+  family_name: string;
+  email: string;
+};
+
 export type PreRegisterVoterInfo = {
-  code: string;
+  user: GoogleRawInfo;
   election_id: number;
 };
 

@@ -32,35 +32,40 @@
         <v-card-text class="text--primary text-center">
           <template v-if="!$fetchState.pending">
             <pre-register-header v-if="election" :election="election" />
-
-            <template
-              v-if="!success && !error"
-              cols="12"
-              class="d-flex justify-center"
-            >
-              <v-btn
-                class="mt-5"
-                color="red white--text"
-                large
-                @click="showGoogleConsent"
-                ><v-icon>mdi-google</v-icon>
-                <span>Pre-Register with Google</span>
-              </v-btn>
-            </template>
-            <template v-if="!error && success" class="text-center" cols="12">
-              <h2 class="mt-5">You're Successfully Registered</h2>
-              <p>
-                After the admin verifiy your accoun proceed to election ballot.
-                We will sent you your credentials thru email when election is
-                started
-              </p>
-              <v-btn color="primary" to="/">Go to Homepage</v-btn>
-            </template>
-            <template v-else-if="error" class="text-center mt-5">
-              <election-error class="mt-5" :electionError="error" />
-              <v-btn large class="mt-5" color="error" @click="reset"
-                >Reload</v-btn
+            <template v-if="!loading">
+              <template
+                v-if="!success && !error"
+                cols="12"
+                class="d-flex justify-center"
               >
+                <v-btn
+                  class="mt-5"
+                  color="red white--text"
+                  large
+                  @click="showGoogleConsent"
+                  ><v-icon>mdi-google</v-icon>
+                  <span>Pre-Register with Google</span>
+                </v-btn>
+              </template>
+              <template v-if="!error && success" class="text-center" cols="12">
+                <h2 class="mt-5">You're Successfully Registered</h2>
+                <p>
+                  After the admin verifiy your accoun proceed to election
+                  ballot. We will sent you your credentials thru email when
+                  election is started
+                </p>
+                <v-btn color="primary" to="/">Go to Homepage</v-btn>
+              </template>
+              <template v-else-if="error" class="text-center mt-5">
+                <election-error class="mt-5" :electionError="error" />
+                <v-btn large class="mt-5" color="error" @click="reset"
+                  >Reload</v-btn
+                >
+              </template>
+            </template>
+            <template v-else>
+              <h3 class="mt-5">One Moment...</h3>
+              <app-loading />
             </template>
           </template>
 
@@ -89,21 +94,55 @@ export default Vue.extend({
       election: null as Election | null,
       success: null,
       error: null,
+      loading: false,
     };
   },
 
   async fetch() {
     await this.getElection();
-    await this.fetchUserInfo();
+    // await this.fetchUserInfo();
   },
 
   methods: {
-    showGoogleConsent() {
-      this.$auth.loginWith("google", {
-        params: {
-          state: JSON.stringify({ slug: this.slug }),
-        },
-      });
+    async showGoogleConsent() {
+      if (this.election) {
+        try {
+          const googleUser = await this.$gAuth.signIn();
+
+          console.log(googleUser);
+          this.loading = true;
+          if (!googleUser) {
+            return null;
+          }
+
+          const rawUser = googleUser.getBasicProfile();
+
+          const user = {
+            id: rawUser.getId(),
+            given_name: rawUser.getGivenName(),
+            family_name: rawUser.getFamilyName(),
+            email: rawUser.getEmail(),
+          };
+
+          console.log(user);
+
+          const response = await preRegisterServices.preRegister({
+            user,
+            election_id: this.election.id,
+          });
+
+          this.success = response;
+        } catch (err: any) {
+          console.error(err);
+          if (err.response) {
+            const error = err.response.data.error.message;
+            console.error(error);
+            this.error = error;
+          }
+        } finally {
+          this.loading = false;
+        }
+      }
     },
 
     async getElection() {
@@ -118,45 +157,6 @@ export default Vue.extend({
       }
     },
 
-    setElectionSlug() {
-      const state = this.$route.query.state as string;
-      console.log("SEt ELection SLug", state);
-      if (state) {
-        const slug = JSON.parse(state).slug;
-        this.$router.push({
-          query: {
-            election: slug,
-          },
-        });
-      }
-    },
-
-    async fetchUserInfo() {
-      console.log(this.$route.query);
-      const code = this.$route.query.code as string;
-
-      if (code && this.election) {
-        try {
-          const response = await preRegisterServices.preRegister({
-            code,
-            election_id: this.election.id,
-          });
-          console.log(code);
-
-          this.success = response;
-        } catch (err: any) {
-          const error = err.response.data.error.message;
-          console.error(error);
-          this.error = error;
-          this.$router.push({
-            query: {
-              election: this.slug,
-            },
-          });
-        }
-      }
-    },
-
     reset() {
       this.$nuxt.refresh();
     },
@@ -164,21 +164,6 @@ export default Vue.extend({
 
   computed: {
     slug() {
-      const state = this.$route.query.state as string;
-
-      if (state) {
-        const query = this.$route.query;
-        const slug = JSON.parse(state).slug;
-        // this.$router.push({
-        //   query: {
-        //     ...query,
-        //     election: slug,
-        //   },
-        // });
-
-        return slug;
-      }
-
       return this.$route.query.election;
     },
   },
