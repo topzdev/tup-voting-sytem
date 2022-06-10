@@ -117,14 +117,14 @@ export default mixins(manageElectionMixins, authMixin).extend({
     menu(): Menu[] {
       let list: Menu[] = [];
 
-      if (this.position.isTieOccured && this.position.is_tie_resolved) {
-        list.push({
-          title: "Reset Tie",
-          action: async () => {
-            await this.resetTieBreaker();
-          },
-        });
-      }
+      // if (this.position.isTieOccured && this.position.is_tie_resolved) {
+      //   list.push({
+      //     title: "Reset Tie",
+      //     action: async () => {
+      //       await this.resetTieBreaker();
+      //     },
+      //   });
+      // }
 
       return list;
     },

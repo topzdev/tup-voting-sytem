@@ -15,10 +15,11 @@ import mixins from "vue-typed-mixins";
 import themeMixin from "~/mixins/theme.mixin";
 import { Organization } from "@/services/organization.service";
 import PageCenter from "@/components/utils/PageCenter.vue";
+import pageConfig from "../../../configs/pages.config";
 export default mixins(themeMixin).extend({
   auth: true,
   layout: "manage-election",
-  middleware: ["status"],
+  middleware: ["status", "roles"],
 
   components: {
     PageCenter,
@@ -33,6 +34,23 @@ export default mixins(themeMixin).extend({
     },
   },
   fetchOnServer: false,
+
+  validate({ $auth, redirect, params }) {
+    const election_id = params.electionId;
+
+    console.log(election_id);
+
+    const user = $auth.user;
+    if (user.election_officer) {
+      if (user.election_officer.election_id !== parseInt(election_id)) {
+        redirect(
+          pageConfig.election(user.election_officer.election_id).this().route
+        );
+      }
+    }
+
+    return true;
+  },
 
   methods: {
     updateTheme() {

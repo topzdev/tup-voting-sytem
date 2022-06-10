@@ -4,9 +4,10 @@ import { Organization } from "../services/organization.service";
 import { Voters } from "../services/voters.service";
 import { RolesString, UserRolesValue } from "../types/roles";
 import icons from "./icons";
+import pageRoles from "./page-roles";
 import pageStatus from "./page-status.config";
 
-type PageConfigItem = {
+export type PageConfigItem = {
   title: string;
   route: string;
   icon: string;
@@ -59,15 +60,20 @@ const pageConfig = {
     return {
       this: () =>
         ({
+          title: "Overview",
           route: parentRoute + "/overview",
-          icon: "",
+          to: parentRoute + "/overview",
+          icon: icons.overview,
         } as PageConfigItem),
 
       officers: () =>
         ({
-          title: "Election Officers",
+          icon: icons.officers,
+          title: "Officers",
+          to: `${parentRoute}/officers`,
           route: `${parentRoute}/officers`,
-          icon: "mdi-account-tie-outline",
+          toolbarTitle: "Election Officers",
+          allowedRoles: pageRoles.election.election_officer,
         } as PageConfigItem),
 
       results: () =>
@@ -75,7 +81,58 @@ const pageConfig = {
           icon: icons.results,
           title: "Results",
           to: `${parentRoute}/results`,
+          route: `${parentRoute}/results`,
           status: pageStatus.results,
+        } as PageConfigItem),
+
+      party: () =>
+        ({
+          icon: icons.party,
+          title: "Party",
+          to: `${parentRoute}/party`,
+          route: `${parentRoute}/party`,
+        } as PageConfigItem),
+
+      positions: () =>
+        ({
+          icon: icons.positions,
+          title: "Positions",
+          to: `${parentRoute}/positions`,
+          route: `${parentRoute}/positions`,
+        } as PageConfigItem),
+
+      candidates: () =>
+        ({
+          icon: icons.candidates,
+          title: "Candidates",
+          to: `${parentRoute}/candidates`,
+          route: `${parentRoute}/candidates`,
+        } as PageConfigItem),
+      voters: () =>
+        ({
+          icon: icons.voters,
+          title: "Voters",
+          to: `${parentRoute}/voters`,
+          route: `${parentRoute}/voters`,
+        } as PageConfigItem),
+
+      settings: () =>
+        ({
+          icon: icons.settings,
+          title: "Settings",
+          toolbarTitle: "Election Settings",
+          to: `${parentRoute}/settings`,
+          route: `${parentRoute}/settings`,
+        } as PageConfigItem),
+
+      launchpad: () =>
+        ({
+          icon: icons.launchpad,
+          title: "Launchpad",
+          to: `${parentRoute}/launchpad`,
+          route: `${parentRoute}/launchpad`,
+          toolbarTitle: "Launch Election",
+          status: pageStatus.launchpad,
         } as PageConfigItem),
     };
   },

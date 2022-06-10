@@ -41,7 +41,7 @@ const electionOfficerGuard = async (user: PickedUser, election_id: number) => {
     ) {
       throw new HttpException(
         "BAD_REQUEST",
-        "You are not election officer assigned in this route"
+        "You are not election officer assigned in this election"
       );
     }
   }

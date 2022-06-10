@@ -4,12 +4,13 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { UserRolesValue } from "../types/roles";
+import pageRoles from "@/configs/page-roles";
+import { UserRolesValue } from "@/types/roles";
 
 export default Vue.extend({
   middleware: ["roles"],
   meta: {
-    allowedRoles: ["sadmin"] as UserRolesValue[],
+    allowedRoles: pageRoles.admin.this,
   },
 });
 </script>

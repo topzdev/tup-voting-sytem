@@ -21,7 +21,7 @@ export default {
   },
 
   router: {
-    middleware: ["auth", "roles"],
+    middleware: ["auth"],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -32,6 +32,7 @@ export default {
     { src: "~/plugins/axios-port.plugins" },
     { src: "~/plugins/vue-datetime-picker", mode: "client" },
     { src: "~/plugins/vue-draggable", mode: "client" },
+    { src: "~/plugins/tiptap-vuetify", mode: "client" },
     { src: "~/plugins/tiptap-vuetify", mode: "client" },
   ],
 

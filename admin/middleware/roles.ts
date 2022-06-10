@@ -11,15 +11,22 @@ const rolesName = {
 };
 
 const rolesMiddleware: Middleware = ({ $auth, redirect, route, error }) => {
-  if (!($auth as any).loggedIn || !$auth.user) return redirect("/login");
+  if (!$auth.loggedIn || !$auth.user) return redirect("/login");
 
   if (!process.server) {
     const user = $auth.user;
 
-    if (route.meta && route.meta[0].allowedRoles) {
-      const rolesAllowed = route.meta[0].allowedRoles;
+    console.log(route.meta);
 
-      console.log(rolesAllowed);
+    if (
+      route.meta &&
+      route.meta.length &&
+      route.meta.filter((item) => item.allowedRoles).length
+    ) {
+      const rolesAllowed = route.meta.filter((item) => item.allowedRoles)[0]
+        .allowedRoles;
+
+      console.log("Allowed Roles: ", rolesAllowed, $auth.user.role);
 
       if (!rolesOnlyAllowed($auth.user.role as UserRolesValue, rolesAllowed)) {
         return error({

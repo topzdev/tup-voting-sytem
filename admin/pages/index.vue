@@ -24,13 +24,14 @@ export default mixins(authMixins).extend({
   auth: true,
   layout: "account",
   mixins: [authMixins],
+  middleware: ['roles'],
 
   meta: {
     rolesAllowed: pageRoles.admin.this,
   },
 
   validate({ $auth, redirect }) {
-    if ($auth.user.election_officer) {
+    if ($auth.loggedIn && $auth.user.election_officer) {
       redirect(
         pageConfig.election($auth.user.election_officer.election_id).this()
           .route

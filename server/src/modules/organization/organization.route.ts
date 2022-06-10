@@ -11,7 +11,7 @@ console.log("module: Organization Module Loaded");
 router.get(
   "/",
   adminAuth,
-  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
   organizationController.getAll
 );
 

@@ -89,9 +89,8 @@ const defaultAlert = {
 export default mixins(manageElectionMixins, authMixin).extend({
   middleware: ["roles"],
   meta: {
-    rolesAllowed: pageRoles.election.election_officer,
+    allowedRoles: pageRoles.election.election_officer,
   },
-
   props: {
     dialog: {
       type: Boolean,
@@ -198,6 +197,7 @@ export default mixins(manageElectionMixins, authMixin).extend({
         this.table.pagination.total = result.totalCount;
       } catch (error) {
         console.log(error);
+        throw Error("Something went wrong");
       } finally {
         this.loading = false;
       }

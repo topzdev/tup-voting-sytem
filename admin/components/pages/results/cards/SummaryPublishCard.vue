@@ -15,7 +15,7 @@
         </template>
 
         <template v-else>
-          <v-btn class="mb-3" text @click="unpublish">Unpublish</v-btn>
+          <!-- <v-btn class="mb-3" text @click="unpublish">Unpublish</v-btn> -->
           <v-btn
             color="blue"
             depressed
