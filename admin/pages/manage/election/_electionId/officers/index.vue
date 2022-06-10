@@ -87,6 +87,11 @@ const defaultAlert = {
 };
 
 export default mixins(manageElectionMixins, authMixin).extend({
+  middleware: ["roles"],
+  meta: {
+    rolesAllowed: pageRoles.election.election_officer,
+  },
+
   props: {
     dialog: {
       type: Boolean,

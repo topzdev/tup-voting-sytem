@@ -43,7 +43,7 @@
       elevation="0"
     >
       <div v-if="electionInfo" class="d-flex align-center">
-        <v-tooltip bottom>
+        <v-tooltip v-if="showBackButton" bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-btn fab text v-bind="attrs" @click="backToPage" v-on="on">
               <v-icon large> mdi-chevron-left </v-icon></v-btn
@@ -68,6 +68,7 @@
       </div>
       <v-spacer />
       <election-clock />
+      <user-menu />
     </v-app-bar>
 
     <!-- App Main -->
@@ -97,7 +98,7 @@ import ElectionDates from "@/components/utils/ElectionDates.vue";
 import ElectionInformationDialog from "@/components/utils/ElectionInformationDialog.vue";
 import PublicityIcon from "~/components/icon/PublicityIcon.vue";
 import AuthenticationDialog from "~/components/dialogs/AuthenticationDialog.vue";
-
+import UserMenu from "@/components/menus/UserMenu.vue";
 import mixins from "vue-typed-mixins";
 
 export default mixins(manageElectionMixins).extend({
@@ -111,6 +112,7 @@ export default mixins(manageElectionMixins).extend({
     ElectionInformationDialog,
     PublicityIcon,
     AuthenticationDialog,
+    UserMenu,
   },
   data() {
     return {
@@ -132,6 +134,9 @@ export default mixins(manageElectionMixins).extend({
           ? `${electionTitle}`
           : `${electionTitle} Election`
       ).toLowerCase();
+    },
+    showBackButton(): boolean {
+      return this.rolesAllowed(this.pageRoles.election.button.back);
     },
   },
 

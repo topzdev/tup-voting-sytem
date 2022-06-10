@@ -2,13 +2,21 @@ import { Candidate } from "../services/candidate.service";
 import { Election } from "../services/election.service";
 import { Organization } from "../services/organization.service";
 import { Voters } from "../services/voters.service";
-import { RolesString } from "../types/roles";
+import { RolesString, UserRolesValue } from "../types/roles";
+import icons from "./icons";
+import pageStatus from "./page-status.config";
 
 type PageConfigItem = {
   title: string;
   route: string;
   icon: string;
-  allowedRoles?: RolesString[];
+  allowedRoles: UserRolesValue[];
+  to: string;
+  status?: any[];
+  exactPath?: string;
+  show?: boolean;
+  toolbarTitle?: string;
+  roles?: any[];
 };
 
 const pageConfig = {
@@ -41,7 +49,7 @@ const pageConfig = {
           route: "/admin",
           title: "Admin",
           icon: "mdi-shield-crown-outline",
-          allowedRoles: ["SUPER_ADMIN"],
+          allowedRoles: ["sadmin"],
         } as PageConfigItem),
     };
   },
@@ -60,6 +68,14 @@ const pageConfig = {
           title: "Election Officers",
           route: `${parentRoute}/officers`,
           icon: "mdi-account-tie-outline",
+        } as PageConfigItem),
+
+      results: () =>
+        ({
+          icon: icons.results,
+          title: "Results",
+          to: `${parentRoute}/results`,
+          status: pageStatus.results,
         } as PageConfigItem),
     };
   },

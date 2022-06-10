@@ -1,12 +1,26 @@
 import { UserRoles } from "../services/auth.service";
 
 const pageRoles = {
+  index: ["sadmin", "admin"],
+
   organization: {
+    this: ["sadmin", "admin"],
     create: ["sadmin", "admin"],
     manage: ["sadmin", "admin"],
     button: {
       back: ["sadmin", "admin"],
     },
+  },
+
+  election: {
+    election_officer: ["sadmin", "admin"],
+    button: {
+      back: ["sadmin", "admin"],
+    },
+  },
+
+  admin: {
+    this: ["sadmin", "admin"],
   },
 
   dialogs: {

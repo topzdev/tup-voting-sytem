@@ -19,10 +19,27 @@ import AccountContainer from "@/components/containers/AccountContainer.vue";
 import OrganizationList from "@/components/pages/org/OrganizationList.vue";
 import pageConfig from "../configs/pages.config";
 import mixins from "vue-typed-mixins";
+import pageRoles from "../configs/page-roles";
 export default mixins(authMixins).extend({
   auth: true,
   layout: "account",
   mixins: [authMixins],
+
+  meta: {
+    rolesAllowed: pageRoles.admin.this,
+  },
+
+  validate({ $auth, redirect }) {
+    if ($auth.user.election_officer) {
+      redirect(
+        pageConfig.election($auth.user.election_officer.election_id).this()
+          .route
+      );
+    }
+
+    return true;
+  },
+
   components: {
     PageBars,
     AccountContainer,
@@ -36,15 +53,6 @@ export default mixins(authMixins).extend({
     createOrgRoute() {
       return pageConfig.organization().create().route;
     },
-  },
-
-  created() {
-    if (this.electionOfficer) {
-      this.$router.push(
-        pageConfig.organization(this.electionOfficer.organization_id).this()
-          .route
-      );
-    }
   },
 });
 </script>

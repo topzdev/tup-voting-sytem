@@ -8,6 +8,11 @@ import { Organization } from "@/services/organization.service";
 import Vue from "vue";
 import pageStatus from "@/configs/page-status.config";
 import icons from "../configs/icons";
+import pageRoles from "../configs/page-roles";
+import { rolesOnlyAllowed } from "../helpers/roles-allowed.helper";
+import mixins from "vue-typed-mixins";
+import roleRestrictionsMixin from "./roles-restriction.mixin";
+import { IdToken } from "@nuxtjs/auth-next";
 
 type ManageElectionPage = {
   icon: string;
@@ -17,6 +22,7 @@ type ManageElectionPage = {
   exactPath?: string;
   show?: boolean;
   toolbarTitle?: string;
+  roles?: any[];
 };
 type ElectionPages =
   | "overview"
@@ -32,7 +38,7 @@ type ElectionPages =
 
 type ElectionPageLinks = Record<ElectionPages, ManageElectionPage>;
 
-const manageElectionMixins = Vue.extend({
+const manageElectionMixins = mixins(roleRestrictionsMixin).extend({
   computed: {
     manageElectionRoute(): string {
       if (!this.electionId) return "/";
@@ -110,6 +116,7 @@ const manageElectionMixins = Vue.extend({
           title: "Officers",
           to: `${basePath}/officers`,
           toolbarTitle: "Election Officers",
+          roles: pageRoles.election.election_officer,
         },
 
         settings: {
@@ -143,6 +150,11 @@ const manageElectionMixins = Vue.extend({
           if (!this.electionStatus || !item.status) return item;
 
           if (statusOnlyAllowed(this.electionStatus, item.status)) return item;
+        })
+        .filter((item) => {
+          if (!item.roles) return item;
+
+          if (this.rolesAllowed(item.roles)) return item;
         });
     },
   },

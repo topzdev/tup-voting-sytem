@@ -45,6 +45,10 @@ export default {
           id: "admin",
           text: "Admin",
         },
+        {
+          id: "elec_ofc",
+          text: "Election Officer",
+        },
       ];
     },
   },
