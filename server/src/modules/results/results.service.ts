@@ -115,7 +115,7 @@ const downloadElectionResults = async (_election_id: Election["id"]) => {
   const election = await getRepository(Election)
     .createQueryBuilder("election")
     .leftJoinAndSelect("election.organization", "organization")
-    .leftJoinAndSelect("organization.election_officers", "election_officers")
+    .leftJoinAndSelect("election.election_officers", "election_officers")
     .leftJoinAndSelect("election_officers.user", "election_officers_user")
     .where("election.id = :election_id", {
       election_id: _election_id,
@@ -163,16 +163,18 @@ const downloadElectionResults = async (_election_id: Election["id"]) => {
     // add candidates name and vote
     let candidates: ResultCandidate[] = [];
 
+    console.log(position.candidates);
+
     position.candidates.forEach(function (item) {
       let tieItem = item as any;
-      if (tieItem.tie) {
-        candidates = [
-          ...candidates,
-          ...tieItem.candidates.map((item) => ({ ...item, tie: true })),
-        ];
-      } else {
-        candidates = [...candidates, item as ResultCandidate];
-      }
+      // if (tieItem.tie) {
+      //   candidates = [
+      //     ...candidates,
+      //     ...tieItem.candidates.map((item) => ({ ...item, tie: true })),
+      //   ];
+      // } else {
+      // }
+      candidates = [...candidates, item as ResultCandidate];
     });
 
     candidates.forEach((candidate, idx) => {

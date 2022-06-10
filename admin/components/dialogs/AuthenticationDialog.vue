@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="show" persistent :min-width="width" :width="width">
     <v-form ref="form" v-model="valid" @submit.prevent="yesFunc">
-      <v-card>
+      <v-card :loading="loading">
         <v-card-title class="text-h5" v-html="title"> </v-card-title>
         <v-card-text>
           <p v-html="message"></p>
@@ -41,8 +41,17 @@
           </v-row>
         </v-card-text>
         <v-card-actions :class="[buttonSpaceBetweenClass]">
-          <v-btn color="primary" text @click="noFunc"> {{ noLabel }} </v-btn>
-          <v-btn color="primary" type="submit" text @click="yesFunc">
+          <v-btn :disabled="loading" color="primary" text @click="noFunc">
+            {{ noLabel }}
+          </v-btn>
+          <v-btn
+            :loading="loading"
+            :disabled="loading"
+            color="primary"
+            type="submit"
+            text
+            @click="yesFunc"
+          >
             {{ yesLabel }}
           </v-btn>
         </v-card-actions>
@@ -92,6 +101,7 @@ export default Vue.extend({
       fieldsShow: Object.assign({}, fieldShow),
       form: Object.assign({}, defaultForm),
       alert: Object.assign({}, defaultAlert),
+      loading: false,
     };
   },
 
@@ -165,6 +175,7 @@ export default Vue.extend({
           this.dialog.allowedRoles;
 
         try {
+          this.loading = true;
           const result = await authServices.systemLogin({
             ...this.form,
             allowedRoles,
@@ -187,6 +198,8 @@ export default Vue.extend({
               message: message,
             };
           }
+        } finally {
+          this.loading = false;
         }
       }
     },
