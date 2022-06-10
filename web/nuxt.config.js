@@ -35,6 +35,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: "~/plugins/axios-port.plugins" },
+    { src: "~/plugins/google-auth", mode: "client" },
     // { src: "~/plugins/vuex-persist", mode: "client" },
   ],
 
