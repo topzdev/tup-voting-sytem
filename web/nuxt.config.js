@@ -107,21 +107,6 @@ export default {
     rewriteRedirects: true,
     resetOnError: true,
     strategies: {
-      google: {
-        scheme: "oauth2",
-        clientId: process.env.GOOGLE_OAUTH_CLIENT_ID,
-        redirectUri: process.env.GOOGLE_OAUTH_REDIRECT_URI,
-        accessType: "offline",
-        responseType: "code",
-        scope: ["profile", "email"],
-        prompt: "consent",
-        state: "UNIQUE_AND_NON_GUESSABLE",
-        codeChallengeMethod: "",
-        responseMode: "",
-        acrValues: "",
-        endpoints: {},
-        grantType: "authorization_code",
-      },
       local: {
         token: {
           property: "token",
@@ -181,13 +166,13 @@ export default {
         removeComments: true,
       },
     },
-    terser: {
-      // https://github.com/terser/terser#compress-options
-      terserOptions: {
-        compress: {
-          drop_console: true,
-        },
-      },
-    },
+    // terser: {
+    //   // https://github.com/terser/terser#compress-options
+    //   terserOptions: {
+    //     compress: {
+    //       drop_console: true,
+    //     },
+    //   },
+    // },
   },
 };
