@@ -256,7 +256,7 @@ const submitBallot = async (
     console.log("Voter Receipt", voterReceipt);
 
     // send email after submitting voter
-    // mailerServices.sendThankYouForVotingEmail(voter.id);
+    mailerServices.sendThankYouForVotingEmail(voter, election);
 
     return { ...voterReceipt, election_title: election.title };
   } catch (error) {

@@ -40,6 +40,8 @@ import mixins from "vue-typed-mixins";
 import manageElectionMixins from "@/mixins/manage-election.mixins";
 import { statusOnlyAllowed } from "@/helpers/isAllowedByStatus.helper";
 import settingsMixin from "@/mixins/settings.mixin";
+import authMixin from "../../../../mixins/auth.mixins";
+import pageRoles from "../../../../configs/page-roles";
 
 const defaultAlert = {
   show: false,
@@ -47,7 +49,7 @@ const defaultAlert = {
   message: "",
 };
 
-export default mixins(settingsMixin).extend({
+export default mixins(settingsMixin, authMixin).extend({
   data() {
     return {
       valid: false,
@@ -77,38 +79,49 @@ export default mixins(settingsMixin).extend({
         button: {
           anyEventHide: false,
           yesFunction: async ({ hideDialog }) => {
-            if (this.valid && this.electionId) {
-              this.loading = true;
-              try {
-                await settingsServices.closeElection(this.electionId);
-                this.$accessor.snackbar.set({
-                  show: true,
-                  message: "Election has been closed!",
-                  color: "warning",
-                  timeout: 2000,
-                });
+            hideDialog();
+            this.systemAuthentication(
+              {
+                button: {
+                  yesFunction: async () => {
+                    if (this.valid && this.electionId) {
+                      this.loading = true;
+                      try {
+                        await settingsServices.closeElection(this.electionId);
+                        this.$accessor.snackbar.set({
+                          show: true,
+                          message: "Election has been closed!",
+                          color: "warning",
+                          timeout: 2000,
+                        });
 
-                await this.$accessor.manageElection.reFetchElection(
-                  this.electionId
-                );
+                        await this.$accessor.manageElection.reFetchElection(
+                          this.electionId
+                        );
 
-                this.$router.push(this.generalRoute());
-              } catch (error: any) {
-                const message =
-                  error.response?.data?.error?.message || error.message;
+                        this.$router.push(this.generalRoute());
+                      } catch (error: any) {
+                        const message =
+                          error.response?.data?.error?.message || error.message;
 
-                if (message) {
-                  this.alert = {
-                    show: true,
-                    type: "error",
-                    message: message,
-                  };
-                }
-              } finally {
-                hideDialog();
-                this.loading = false;
-              }
-            }
+                        if (message) {
+                          this.alert = {
+                            show: true,
+                            type: "error",
+                            message: message,
+                          };
+                        }
+                      } finally {
+                        hideDialog();
+                        this.loading = false;
+                      }
+                    }
+                  },
+                },
+              },
+              "current-only-password",
+              pageRoles.dialogs.closeElection
+            );
           },
           noFunction: ({ hideDialog }) => {
             hideDialog();

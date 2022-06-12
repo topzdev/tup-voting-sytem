@@ -28,10 +28,6 @@ const sendThankYouForVotingEmail = async (
   next: NextFunction
 ) => {
   try {
-    const voters_id = req.body.voters_id;
-    res
-      .status(200)
-      .json(await mailerServices.sendThankYouForVotingEmail(voters_id));
   } catch (error) {
     next(error);
   }

@@ -53,3 +53,20 @@ export const emailTemplates = {
     title: (title) => `The election ${title} will start`,
   },
 };
+
+export const formatDateTime = (date: Date | string) => {
+  return new Date(date).toLocaleDateString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+    month: "long",
+    year: "numeric",
+    day: "numeric",
+  });
+};
+
+const mailerHelper = {
+  formatDateTime,
+};
+
+export default mailerHelper;

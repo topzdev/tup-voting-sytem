@@ -11,7 +11,7 @@ import { Election } from "../election/entity/election.entity";
 import { finalStatusSubquery } from "../launchpad/launchpad.helper";
 import { Voter } from "../voter/entity/voter.entity";
 import { voterPinParser } from "../voter/voter.helper";
-import { emailTemplates } from "./mailer.helper";
+import mailerHelper, { emailTemplates } from "./mailer.helper";
 import {
   AdminLoginOTPTemplate,
   ElectionHasEndedTemplate,
@@ -96,9 +96,7 @@ const sendVotersCredentialsEmail = async (
       context: {
         firstname: item.firstname,
         lastname: item.lastname,
-        election_date: dayjs(item.election.start_date).format(
-          "MMMM DD, YYYY hh:mm:ss a"
-        ),
+        election_date: mailerHelper.formatDateTime(item.election.start_date),
         election_link: platformLinks.voting(item.election.slug),
         voterId: item.username,
         pin: voterPinParser(item.pin),
@@ -125,9 +123,7 @@ const mailVotersCredentialsEmail = async (elections: Election[]) => {
         context: {
           firstname: voter.firstname,
           lastname: voter.lastname,
-          election_date: dayjs(election.start_date).format(
-            "MMMM DD, YYYY hh:mm:ss a"
-          ),
+          election_date: mailerHelper.formatDateTime(election.start_date),
           election_link: platformLinks.voting(election.slug),
           voterId: voter.username,
           pin: voterPinParser(voter.pin),
@@ -143,24 +139,7 @@ const mailVotersCredentialsEmail = async (elections: Election[]) => {
   sendBulkMail(messages);
 };
 
-const sendThankYouForVotingEmail = async (_voter_id: number) => {
-  const voterRepository = getRepository(Voter);
-
-  let voterBuilder = voterRepository.createQueryBuilder("voter");
-
-  voterBuilder = voterBuilder
-    .leftJoinAndSelect("voter.election", "election")
-    .leftJoinAndSelect("voter.voted", "voted")
-    .where("voter.id = :_voter_id", {
-      _voter_id,
-    });
-
-  const voter = await voterBuilder.getOne();
-
-  if (!voter) throw new HttpException("NOT_FOUND", "Voter not found");
-
-  if (voter.voted) throw new HttpException("NOT_FOUND", "Voter not yet voted");
-
+const sendThankYouForVotingEmail = async (voter: Voter, election: Election) => {
   const message: NewSendMailOptions<ThankYouForVotingContextTemplate> = {
     ...emailTemplates.thankYouForVoting,
     to: voter.email_address,
@@ -169,11 +148,11 @@ const sendThankYouForVotingEmail = async (_voter_id: number) => {
       lastname: voter.lastname,
       title: emailTemplates.thankYouForVoting.title.replace(
         "$electionTitle",
-        voter.election.title
+        election.title
       ),
-      election_title: voter.election.title,
-      election_end_date: new Date(voter.election.close_date).toString(),
-      election_result_link: platformLinks.election(voter.election.slug),
+      election_title: election.title,
+      election_end_date: mailerHelper.formatDateTime(election.close_date),
+      election_result_link: platformLinks.election(election.slug),
     },
   };
 
@@ -229,8 +208,12 @@ const sendElectionHasLaunched = async (_election_ids: number[]) => {
       ...emailTemplates.electionHasLaunched,
       to: item.email_address,
       context: {
-        election_end_date: new Date(item.election.close_date).toString(),
-        election_start_date: new Date(item.election.start_date).toString(),
+        election_end_date: mailerHelper
+          .formatDateTime(item.election.close_date)
+          .toString(),
+        election_start_date: mailerHelper
+          .formatDateTime(item.election.start_date)
+          .toString(),
         election_title: item.election.title,
         title: emailTemplates.electionHasLaunched.title.replace(
           "$electionTitle",
@@ -255,8 +238,12 @@ const mailElectionWillStart = async (elections: Election[]) => {
         ...emailTemplates.electionWillStart,
         to: voter.email_address,
         context: {
-          election_end_date: new Date(election.close_date).toString(),
-          election_start_date: new Date(election.start_date).toString(),
+          election_end_date: mailerHelper
+            .formatDateTime(election.close_date)
+            .toString(),
+          election_start_date: mailerHelper
+            .formatDateTime(election.start_date)
+            .toString(),
           election_title: election.title,
           title: emailTemplates.electionWillStart.title(election.title),
           election_link: platformLinks.election(election.slug),
@@ -274,42 +261,42 @@ const mailElectionWillStart = async (elections: Election[]) => {
   sendBulkMail(messages);
 };
 
-const sendElectionHasEnded = async (_election_ids: number[]) => {
-  const voterRepository = getRepository(Voter);
+const sendElectionHasEnded = async (_election_id: Election["id"]) => {
+  const electionRepository = getRepository(Election);
+  let electionBuilder = electionRepository.createQueryBuilder("election");
 
-  let voterBuilder = voterRepository.createQueryBuilder("voter");
-
-  voterBuilder = voterBuilder
-    .leftJoinAndSelect("voter.election", "election")
+  electionBuilder = electionBuilder
+    .leftJoinAndSelect("election.voters", "voters")
     .select(finalStatusSubquery("election"))
     .addSelect([
-      "voter.firstname",
-      "voter.lastname",
-      "voter.disabled",
-      "voter.is_pre_register",
-      "voter.email_address",
+      "voters.firstname",
+      "voters.lastname",
+      "voters.disabled",
+      "voters.is_pre_register",
+      "voters.email_address",
       "election.id",
       "election.start_date",
       "election.close_date",
       "election.slug",
       "election.title",
       "election.final_status",
-    ]);
-
-  voterBuilder = voterBuilder
-    // .where("election.final_status = :final_status", {
-    //   final_status: "running",
-    // })
+    ])
     .where(
-      "voter.election_id IN(:..._election_ids) AND voter.disabled = :disabled AND voter.is_pre_register =:is_pre_register ",
+      `election.id = :election_id 
+        AND voters.disabled = :disabled 
+        AND voters.is_pre_register = :pre_registered
+      `,
       {
-        _election_ids: _election_ids,
-        disabled: true,
-        is_pre_register: false,
+        election_id: _election_id,
+        disabled: false,
+        pre_registered: false,
       }
     );
 
-  const voters = await voterBuilder.getMany();
+  const election = await electionBuilder.getOne();
+  const voters = election.voters;
+
+  console.log(election);
 
   if (!voters.length)
     throw new HttpException("BAD_REQUEST", "No voters are avaialable");
@@ -319,13 +306,15 @@ const sendElectionHasEnded = async (_election_ids: number[]) => {
       ...emailTemplates.electionHasEnded,
       to: item.email_address,
       context: {
-        election_end_date: new Date(item.election.close_date).toString(),
-        election_title: item.election.title,
+        election_end_date: mailerHelper
+          .formatDateTime(election.close_date)
+          .toString(),
+        election_title: election.title,
         title: emailTemplates.electionHasEnded.title.replace(
           "$electionTitle",
-          item.election.title
+          election.title
         ),
-        election_result_link: platformLinks.election(item.election.slug),
+        election_result_link: platformLinks.election(election.slug),
       },
     })
   );
@@ -344,7 +333,9 @@ const mailElectionHasEnded = async (elections: Election[]) => {
         ...emailTemplates.electionHasEnded,
         to: voter.email_address,
         context: {
-          election_end_date: new Date(election.close_date).toString(),
+          election_end_date: mailerHelper
+            .formatDateTime(election.close_date)
+            .toString(),
           election_title: election.title,
           title: emailTemplates.electionHasEnded.title.replace(
             "$electionTitle",

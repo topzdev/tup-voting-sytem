@@ -381,7 +381,7 @@ const sendElectionHasLaunched = async (_election_id: number) => {
 };
 
 const sendElectionHasEnded = async (_election_id: number) => {
-  const sent = await mailerServices.sendElectionHasEnded([_election_id]);
+  const sent = await mailerServices.sendElectionHasEnded(_election_id);
   return true;
 };
 
