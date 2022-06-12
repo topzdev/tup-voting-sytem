@@ -16,18 +16,18 @@ cron.schedule(
 cron.schedule(
   "55 22 * * *",
   async function () {
-    await cronHandlers.sendElectionWillStartHandler();
+    await cronHandlers.sendElectionCredentialsHandler();
   },
   {
     timezone: "Asia/Manila",
   }
 );
 
-// will run at 10:55am
+// will run at 9:55am
 cron.schedule(
   "55 21 * * *",
   async function () {
-    await cronHandlers.sendElectionCredentialsHandler();
+    await cronHandlers.sendElectionWillStartHandler();
   },
   {
     timezone: "Asia/Manila",

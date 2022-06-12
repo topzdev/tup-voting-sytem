@@ -36,6 +36,7 @@ const pageRoles = {
     removeAccount: ["sadmin", "admin"] as UserRoles[],
     launchElection: ["sadmin", "admin"] as UserRoles[],
     closeElection: ["sadmin", "admin"] as UserRoles[],
+    downloadResults: ["sadmin", "admin", "elec_ofc"] as UserRoles[],
   },
 };
 

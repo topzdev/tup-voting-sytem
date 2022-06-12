@@ -62,8 +62,10 @@ import PageBars from "~/components/bars/PageBars.vue";
 import PageCenter from "@/components/utils/PageCenter.vue";
 import WinnerSection from "~/components/pages/results/sections/ResultWinnerSection.vue";
 import { ResultPositionsWithWinner } from "@/services/results.service";
+import authMixin from "@/mixins/auth.mixins";
+import pageRoles from "@/configs/page-roles";
 
-export default mixins(manageElectionMixins).extend({
+export default mixins(manageElectionMixins, authMixin).extend({
   components: {
     WinnerSection,
     ResultBallotSection,
@@ -100,7 +102,32 @@ export default mixins(manageElectionMixins).extend({
     },
 
     async downloadElectionResults() {
-      await this.$accessor.electionResult.downloadElectionResults();
+      this.$accessor.system.showAppDialog({
+        show: true,
+        title: "Download Results",
+        message:
+          "Please do not alter the result once the results downloaded. <a target='_blank' rel='nofollow noindex' href='https://comelec.gov.ph/index.html?r=References/RelatedLaws/ElectionLaws/SynchronizedNationalandLocal/RA7166#sec30'>RA7166 Section 30</a>",
+        button: {
+          anyEventHide: false,
+          yesFunction: async ({ hideDialog }) => {
+            hideDialog();
+            this.systemAuthentication(
+              {
+                button: {
+                  yesFunction: async () => {
+                    await this.$accessor.electionResult.downloadElectionResults();
+                  },
+                },
+              },
+              "current-only-password",
+              pageRoles.dialogs.downloadResults
+            );
+          },
+          noFunction: ({ hideDialog }) => {
+            hideDialog();
+          },
+        },
+      });
     },
 
     async downloadVoteAudit() {

@@ -7,6 +7,7 @@ import { Voter } from "../../modules/voter/entity/voter.entity";
 
 const sendElectionWillStartHandler = async () => {
   try {
+    console.log("Send Election Will Start Emaill");
     console.log("mail cron job started");
     // fetch elections that will start tomorrow and not already sent
     const electionBuilder =
@@ -31,7 +32,7 @@ const sendElectionWillStartHandler = async () => {
 
     // call mailer service to send the emails
     console.log("sending emails");
-    // mailerServices.mailElectionWillStart(elections);
+    mailerServices.mailElectionWillStart(elections);
 
     console.log("saving records");
     // if no errors, save dates of election started datetime
@@ -68,6 +69,7 @@ const sendElectionWillStartHandler = async () => {
 
 const sendElectionCredentialsHandler = async () => {
   try {
+    console.log("Send Email Credentials");
     console.log("mail cron job started");
     // fetch elections that will start tomorrow and not already sent
     const electionBuilder =
@@ -92,7 +94,7 @@ const sendElectionCredentialsHandler = async () => {
 
     // call mailer service to send the emails
     console.log("sending emails");
-    // mailerServices.mailVotersCredentialsEmail(elections);
+    mailerServices.mailVotersCredentialsEmail(elections);
 
     console.log("saving records");
     // if no errors, save dates of election started datetime
@@ -129,6 +131,7 @@ const sendElectionCredentialsHandler = async () => {
 
 const sendElectionHasEnded = async () => {
   try {
+    console.log("Send Election has ended Emaill");
     console.log("mail cron job started");
     // fetch elections that will start tomorrow and not already sent
     const electionBuilder =
@@ -154,7 +157,7 @@ const sendElectionHasEnded = async () => {
 
     // call mailer service to send the emails
     console.log("sending emails");
-    // mailerServices.mailElectionHasEnded(elections);
+    mailerServices.mailElectionHasEnded(elections);
 
     console.log("saving records");
     // if no errors, save dates of election started datetime
