@@ -66,7 +66,7 @@ export default Vue.extend({
       return dayjs(this.election.close_date).format("MMMM DD, YYYY - hh:mm a");
     },
     toElectionRoute(): string {
-      return pageRoutes.election(this.election.slug);
+      return pageRoutes.election(this.election.slug).this().route;
     },
   },
 });

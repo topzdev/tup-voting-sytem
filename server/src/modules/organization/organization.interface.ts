@@ -23,3 +23,8 @@ export type UpdateOrganizationParams = Pick<
   theme_primary: string;
   theme_secondary: string;
 };
+
+export type UpdateTermsAndCondition = Pick<
+  Organization,
+  "id" | "terms_and_condition"
+>;

@@ -17,7 +17,7 @@ const breadcrumbMixins = Vue.extend({
     },
 
     publicElectionLink(election: Election) {
-      const route = pageRoutes.election(election.slug);
+      const route = pageRoutes.election(election.slug).this().route;
       return [
         {
           text: election.title,
@@ -26,6 +26,20 @@ const breadcrumbMixins = Vue.extend({
         },
       ];
     },
+
+    electionTermsAndConditionLink(election: Election) {
+      const route = pageRoutes
+        .election(election.slug)
+        .termsAndCondition().route;
+      return [
+        {
+          text: "Terms and Condition",
+          to: route,
+          exact: true,
+        },
+      ];
+    },
+
     publicCandidateLink(election: Election, candidate: Candidate) {
       const route = pageRoutes.candidate(election.slug, candidate.id);
       return [
@@ -51,6 +65,14 @@ const breadcrumbMixins = Vue.extend({
 
     electionBreadcrumb(election: Election) {
       return [...this.homepageRoute(), ...this.publicElectionLink(election)];
+    },
+
+    electionTermsAndConditionBreadcrumb(election: Election) {
+      return [
+        ...this.homepageRoute(),
+        ...this.publicElectionLink(election),
+        ...this.electionTermsAndConditionLink(election),
+      ];
     },
 
     candidateBreadcrumb(election: Election, candidate: Candidate) {

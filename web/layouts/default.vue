@@ -14,10 +14,31 @@
     <v-main>
       <Nuxt />
     </v-main>
+
+    <v-footer class="mt-10" color="primary" padless>
+      <v-row justify="center" no-gutters>
+        <v-btn
+          v-for="link in footerLinks"
+          :key="link.title"
+          color="white"
+          text
+          rounded
+          :to="link.to"
+          class="my-2 mx-2"
+        >
+          {{ link.title }}
+        </v-btn>
+        <v-col class="primary py-2 text-center white--text" cols="12">
+          © {{ new Date().getFullYear() }} Technological University of the
+          Philippines - Manila Voting System. All rights reserved
+        </v-col>
+      </v-row>
+    </v-footer>
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
+import pageRoutes from "~/configs/page-routes";
 export default {
   data() {
     return {
@@ -39,6 +60,21 @@ export default {
       miniVariant: false,
       title: "TUP Voting System",
     };
+  },
+
+  computed: {
+    footerLinks(): any[] {
+      return [
+        {
+          title: "Home",
+          to: pageRoutes.homepage().this().route,
+        },
+        {
+          title: "Privacy Policy",
+          to: pageRoutes.privacyPolicy().this().route,
+        },
+      ];
+    },
   },
 };
 </script>

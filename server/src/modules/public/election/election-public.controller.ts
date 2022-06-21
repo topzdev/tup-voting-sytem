@@ -27,9 +27,25 @@ const getElectionLongUrl = async (
   }
 };
 
+const getElectionTermsAndCondition = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const slug = req.params.slug;
+    res
+      .status(200)
+      .json(await electionService.getElectionTermsAndCondition(slug));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const electionPublicController = {
   getElectionContent,
   getElectionLongUrl,
+  getElectionTermsAndCondition,
 };
 
 export default electionPublicController;

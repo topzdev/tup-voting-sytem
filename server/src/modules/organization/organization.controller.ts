@@ -4,6 +4,7 @@ import {
   CreateOrganizationParams,
   GetOrganizationParams,
   UpdateOrganizationParams,
+  UpdateTermsAndCondition,
 } from "./organization.interface";
 import organizationService from "./organization.service";
 import { unflatten } from "flat";
@@ -137,6 +138,21 @@ const unarchive = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const updateTermsAndCondition = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const dto = unflatten<UpdateTermsAndCondition, any>(req.body);
+    res
+      .status(200)
+      .json(await organizationService.updateTermsAndCondition(dto));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const organizationController = {
   getAll,
   getOneBySlug,
@@ -148,6 +164,7 @@ const organizationController = {
   isExistBySlug,
   archive,
   unarchive,
+  updateTermsAndCondition,
 };
 
 export default organizationController;

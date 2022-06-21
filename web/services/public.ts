@@ -52,6 +52,11 @@ const publicServices = {
     return (await apiClient.get(`${url}/election/content/${slug}`)).data;
   },
 
+  async getElectionTermsAndCondition(slug: string): Promise<Election> {
+    return (await apiClient.get(`${url}/election/terms-and-condition/${slug}`))
+      .data;
+  },
+
   async getParty(party_id: number): Promise<PartyPageContent> {
     return (await apiClient.get(`${url}/party/${party_id}`)).data;
   },

@@ -38,15 +38,25 @@
                 cols="12"
                 class="d-flex justify-center"
               >
-                <v-btn
-                  :disabled="!isInit"
-                  class="mt-5"
-                  color="red white--text"
-                  large
-                  @click="showGoogleConsent"
-                  ><v-icon>mdi-google</v-icon>
-                  <span>Pre-Register with Google</span>
-                </v-btn>
+                <v-row>
+                  <v-col cols="12">
+                    <v-btn
+                      :disabled="!isInit"
+                      class="mt-5"
+                      color="red white--text"
+                      large
+                      @click="showGoogleConsent"
+                      ><v-icon>mdi-google</v-icon>
+                      <span>Pre-Register with Google</span>
+                    </v-btn>
+                  </v-col>
+                  <v-col cols="8" class="text-center mx-auto">
+                    <election-legal-text
+                      class="body-2 text--secondary"
+                      :election="election"
+                    />
+                  </v-col>
+                </v-row>
               </template>
               <template v-if="!error && success" class="text-center" cols="12">
                 <h2
@@ -90,8 +100,14 @@ import preRegisterServices from "../../services/pre-register.services";
 import PreRegisterHeader from "@/components/pages/pre-register/PreRegisterHeader.vue";
 import { Election } from "../../types/app";
 import ElectionError from "~/components/pages/voting/ElectionError.vue";
+import ElectionLegalText from "@/components/pages/election/ElectionLegalText.vue";
 export default Vue.extend({
-  components: { PageCenter, PreRegisterHeader, ElectionError },
+  components: {
+    PageCenter,
+    PreRegisterHeader,
+    ElectionError,
+    ElectionLegalText,
+  },
 
   data() {
     return {

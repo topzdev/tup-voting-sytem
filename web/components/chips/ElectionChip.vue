@@ -38,7 +38,7 @@ export default Vue.extend({
 
   computed: {
     electionRoute(): string {
-      return pageRoutes.election(this.election.slug);
+      return pageRoutes.election(this.election.slug).this().route;
     },
   },
 });

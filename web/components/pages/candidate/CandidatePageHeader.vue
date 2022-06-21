@@ -144,7 +144,9 @@ export default mixins(breadcrumbMixins).extend({
     },
 
     fullname(): string {
-      return `${this.candidate.firstname} ${this.candidate.middlename}. ${this.candidate.lastname}`;
+      return `${this.candidate.firstname} ${
+        this.candidate.middlename ? this.candidate.middlename + ". " : ""
+      }${this.candidate.lastname}`;
     },
 
     positionTitle(): string {

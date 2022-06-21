@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-navigation-drawer
+      v-if="$auth.loggedIn"
       v-model="drawer"
       :clipped="clipped"
       absolute
@@ -62,12 +63,18 @@
       </div>
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app color="primary" dark>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-app-bar-nav-icon
+        v-if="$auth.loggedIn"
+        @click.stop="drawer = !drawer"
+      />
 
       <v-toolbar-title v-text="title" />
       <v-spacer />
 
-      <user-menu />
+      <user-menu v-if="$auth.loggedIn" />
+      <template v-else>
+        <v-btn text to="/login">Login</v-btn>
+      </template>
     </v-app-bar>
     <v-main>
       <Nuxt />
@@ -78,6 +85,8 @@
     <app-dialog />
 
     <authentication-dialog />
+
+    <tutorial-dialog v-if="$auth.loggedIn" />
   </v-app>
 </template>
 
@@ -90,8 +99,9 @@ import mixins from "vue-typed-mixins";
 import { rolesOnlyAllowed } from "../helpers/roles-allowed.helper";
 import { UserRolesValue } from "../types/roles";
 import UserMenu from "@/components/menus/UserMenu.vue";
+import TutorialDialog from "@/components/dialogs/TutorialDialog.vue";
 export default mixins(authMixin).extend({
-  components: { AppSnackbar, AuthenticationDialog, UserMenu },
+  components: { AppSnackbar, AuthenticationDialog, UserMenu, TutorialDialog },
   data() {
     return {
       clipped: true,

@@ -27,6 +27,7 @@ export type Organization = {
   archive: boolean;
   themePrimary: string;
   themeSecondary: string;
+  terms_and_condition: string;
   theme: OrganizationTheme;
   logo: OrganizationLogo;
 } & DataTimestamp;
@@ -59,6 +60,11 @@ export type UpdateOrganizationDto = {
   id: number;
   logo: File;
 };
+
+export type UpdateTermsAndCondition = Pick<
+  Organization,
+  "id" | "terms_and_condition"
+>;
 
 const url = "/api/v1/org";
 
@@ -133,6 +139,10 @@ const organizationServices = {
 
   async delete(id: Organization["id"]) {
     return (await apiClient.delete(`${url}/${id}`)).data;
+  },
+
+  async updateTermsAndCondition(dto: UpdateTermsAndCondition) {
+    return (await apiClient.put(`${url}/terms-and-condition`, dto)).data;
   },
 };
 

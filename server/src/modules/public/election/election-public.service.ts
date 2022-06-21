@@ -91,9 +91,38 @@ const getElectionContent = async (slug: string) => {
   }
 };
 
+const getElectionTermsAndCondition = async (slug: string) => {
+  if (!slug)
+    throw new HttpException("BAD_REQUEST", "Election slug is required");
+
+  const electionRepository = getRepository(Election);
+  let electionBuilder = electionRepository.createQueryBuilder("election");
+
+  electionBuilder = electionBuilder
+    .addSelect(finalStatusSubquery(electionBuilder.alias))
+    .addSelect("organization.terms_and_condition")
+    .addSelect("organization.terms_and_condition_last_update")
+    .leftJoinAndSelect("election.logo", "logo")
+    .leftJoinAndSelect("election.organization", "organization")
+    .leftJoinAndSelect("organization.logo", "organization_logo")
+    .leftJoinAndSelect("organization.theme", "organization_theme")
+
+    .where(publicElectionWhereQuery("election"))
+    .andWhere("election.slug = :slug AND organization.id IS NOT NULL", {
+      slug,
+    });
+
+  const election = await electionBuilder.getOne();
+
+  if (!election) throw new HttpException("NOT_FOUND", "Election not found");
+
+  return election;
+};
+
 const electionPublicServices = {
   getElectionContent,
   getElectionLongUrl,
+  getElectionTermsAndCondition,
 };
 
 export default electionPublicServices;

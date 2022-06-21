@@ -35,6 +35,19 @@ export class Organization extends Timestamp {
   })
   description: string;
 
+  @Column({
+    default: "",
+    select: false,
+  })
+  terms_and_condition: string;
+
+  @Column({
+    default: () => "CURRENT_TIMESTAMP",
+    select: false,
+    type: "timestamptz",
+  })
+  terms_and_condition_last_update: Date;
+
   @OneToOne(() => OrganizationTheme)
   @JoinColumn()
   theme: OrganizationTheme;

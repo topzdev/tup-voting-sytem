@@ -14,7 +14,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: "%s - TUP Election",
+    titleTemplate: "%s | TUP Election",
     title: "TUP Election",
     meta: [
       { charset: "utf-8" },

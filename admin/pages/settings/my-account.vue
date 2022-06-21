@@ -9,6 +9,14 @@
         </v-col>
         <v-col cols="6" class="grow">
           <nuxt-child />
+
+          <p class="mt-2">
+            <nuxt-link to="/privacy-policy" class="mr-5"
+              >Privacy policy</nuxt-link
+            >
+
+            <nuxt-link to="/terms-and-condition">Terms and Condition</nuxt-link>
+          </p>
         </v-col>
       </v-row>
     </v-container>

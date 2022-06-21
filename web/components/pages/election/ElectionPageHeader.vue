@@ -55,7 +55,7 @@
           </v-row>
         </v-col>
 
-        <v-col class="mt-lg-n16" cols="12" lg="4">
+        <v-col class="info-box" cols="12" lg="4">
           <v-card class="w-100">
             <v-list>
               <v-list-item>
@@ -110,6 +110,11 @@
                     >Vote Now!</v-btn
                   >
                 </v-col>
+                <v-col class="d-flex" cols="12">
+                  <nuxt-link class="mx-auto mt-2" :to="termsAndConditionRoute"
+                    >Terms and Condition</nuxt-link
+                  >
+                </v-col>
               </v-row>
             </v-card-actions>
           </v-card>
@@ -136,11 +141,21 @@ export default mixins(breadcrumbMixins).extend({
     election: {
       type: Object,
     } as PropOptions<Election>,
+    breadcrumbsOf: {
+      type: String,
+      default: "election",
+    },
   },
 
   computed: {
     breadcrumb(): any {
-      return this.electionBreadcrumb(this.election);
+      switch (this.breadcrumbsOf) {
+        case "election":
+          return this.electionBreadcrumb(this.election);
+
+        case "terms-and-condition":
+          return this.electionTermsAndConditionBreadcrumb(this.election);
+      }
     },
 
     colors(): { primary: string; secondary: string } {
@@ -180,9 +195,19 @@ export default mixins(breadcrumbMixins).extend({
         url: pageRoutes.preRegister(this.election.slug),
       };
     },
+
+    termsAndConditionRoute(): string {
+      return pageRoutes.election(this.election.slug).termsAndCondition().route;
+    },
   },
 });
 </script>
 
-<style>
+<style lang="scss">
+.info-box {
+  margin-top: 0;
+  @media (min-width: 1264px) {
+    margin-top: -200px;
+  }
+}
 </style>

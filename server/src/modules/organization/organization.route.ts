@@ -65,6 +65,12 @@ router.put(
   organizationController.unarchive
 );
 
+router.put(
+  "/terms-and-condition/",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN"]),
+  organizationController.updateTermsAndCondition
+);
 const organizationRoute = router;
 
 export default organizationRoute;

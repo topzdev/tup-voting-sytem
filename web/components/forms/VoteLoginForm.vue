@@ -44,6 +44,12 @@
           Login
         </v-btn>
       </v-col>
+      <v-col cols="12" class="text-center">
+        <election-legal-text
+          class="body-2 text--secondary"
+          :election="election"
+        />
+      </v-col>
 
       <v-col class="text-center mt-2 mt-lg-5" cols="12">
         <v-btn to="/" large color="primary" text
@@ -56,9 +62,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue, { PropOptions } from "vue";
 import PasswordField from "@/components/inputs/PasswordField.vue";
+import ElectionLegalText from "@/components/pages/election/ElectionLegalText.vue";
 import AppImage from "@/components/app/AppImage.vue";
+import { Election } from "../../types/app";
 
 const defaultForm = {
   voter_id: "",
@@ -74,11 +82,15 @@ const defaultAlert = {
 export default Vue.extend({
   props: {
     election_id: Number,
+    election: {
+      type: Object,
+    } as PropOptions<Election>,
   },
 
   components: {
     PasswordField,
     AppImage,
+    ElectionLegalText,
   },
   data() {
     return {

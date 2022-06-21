@@ -47,7 +47,7 @@ export default mixins(ballotMixins).extend({
   computed: {
     electionRoute(): string {
       if (!this.election) return "/";
-      return pageRoutes.election(this.election.slug);
+      return pageRoutes.election(this.election.slug).this().route;
     },
 
     trimmedDescription(): string {

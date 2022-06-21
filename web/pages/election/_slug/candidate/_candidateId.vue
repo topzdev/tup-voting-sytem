@@ -27,6 +27,7 @@ import Vue, { PropOptions } from "vue";
 import { Candidate, Election } from "@/types/app";
 import publicServices from "@/services/public";
 import CandidatePageHeader from "@/components/pages/candidate/CandidatePageHeader.vue";
+import { MetaInfo } from "vue-meta";
 
 export default Vue.extend({
   components: {
@@ -35,6 +36,21 @@ export default Vue.extend({
   data() {
     return {
       candidate: null as Candidate | null,
+    };
+  },
+  head(): MetaInfo {
+    if (!this.candidate) return {};
+
+    return {
+      title: `${this.fullname} for ${this.candidate.position?.title} - ${this.candidate.election?.title}`,
+
+      meta: [
+        {
+          name: "description",
+          hid: "description",
+          content: this.candidate.description,
+        },
+      ],
     };
   },
 
@@ -67,6 +83,12 @@ export default Vue.extend({
   },
 
   computed: {
+    fullname(): string {
+      if (!this.candidate) return "";
+      return `${this.candidate.firstname} ${
+        this.candidate.middlename ? this.candidate.middlename + ". " : ""
+      }${this.candidate.lastname}`;
+    },
     candidateId() {
       return this.$route.params.candidateId;
     },

@@ -1,9 +1,7 @@
-import { validate } from "class-validator";
-import { getRepository, Not } from "typeorm";
+import { getRepository } from "typeorm";
 import { HttpException } from "../../helpers/errors/http.exception";
 import photoUploader from "../../helpers/photo-uploader.helper";
 import { PickedUser } from "../../type/express-serve-static-core";
-import { Election } from "../election/entity/election.entity";
 import { Photo } from "../photo/photo.service";
 import { OrganizationLogo } from "./entity/organization-logo.entity";
 import { OrganizationTheme } from "./entity/organization-theme.entity";
@@ -13,6 +11,7 @@ import {
   CreateOrganizationParams,
   GetOrganizationParams,
   UpdateOrganizationParams,
+  UpdateTermsAndCondition,
 } from "./organization.interface";
 
 // const User = getRepository(User);
@@ -93,6 +92,19 @@ const getById = async (_id: string) => {
 
   const organization = await Organization.findOne(_id, {
     relations: ["logo", "theme"],
+    select: [
+      "id",
+      "description",
+      "title",
+      "ticker",
+      "slug",
+      "archive",
+      "terms_and_condition",
+      "terms_and_condition_last_update",
+      "created_at",
+      "deleted_at",
+      "updated_at",
+    ],
     where: {
       archive: false,
     },
@@ -307,6 +319,24 @@ const unarchive = async (_id: string) => {
   return true;
 };
 
+const updateTermsAndCondition = async (dto: UpdateTermsAndCondition) => {
+  if (!dto.id) {
+    throw new HttpException("BAD_REQUEST", "Organization id is required");
+  }
+
+  const organization = await Organization.findOne(dto.id);
+
+  if (!organization) {
+    throw new HttpException("NOT_FOUND", "Organization not found");
+  }
+
+  organization.terms_and_condition = dto.terms_and_condition;
+  organization.terms_and_condition_last_update = new Date();
+
+  await organization.save();
+  return true;
+};
+
 const organizationServices = {
   getAll,
   getById,
@@ -318,6 +348,7 @@ const organizationServices = {
   archive,
   unarchive,
   isExistBySlug,
+  updateTermsAndCondition,
 };
 
 export default organizationServices;

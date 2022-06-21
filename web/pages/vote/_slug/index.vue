@@ -17,7 +17,10 @@
                 </v-col>
 
                 <v-col v-if="!electionError && election" cols="12">
-                  <login-form :election_id="electionId" />
+                  <vote-login-form
+                    :election="election"
+                    :election_id="electionId"
+                  />
                 </v-col>
               </v-row>
             </v-col>
@@ -29,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import LoginForm from "@/components/forms/LoginForm.vue";
+import VoteLoginForm from "~/components/forms/VoteLoginForm.vue";
 import PageCenter from "@/components/utils/PageCenter.vue";
 import Vue from "vue";
 import ballotMixin from "@/mixins/ballot.mixins";
@@ -50,7 +53,7 @@ export default mixins(ballotMixin).extend({
   },
 
   components: {
-    LoginForm,
+    VoteLoginForm,
     PageCenter,
     ElectionHeader,
     ElectionError,

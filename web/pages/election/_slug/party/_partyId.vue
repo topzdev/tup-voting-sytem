@@ -25,6 +25,7 @@ import PartyPageHeader from "@/components/pages/party/PartyPageHeader.vue";
 import PartyPositionCandidates from "@/components/pages/party/PartyPositionCandidates.vue";
 import publicServices from "@/services/public";
 import { Party, Position } from "@/types/app";
+import { MetaInfo } from "vue-meta";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -36,6 +37,22 @@ export default Vue.extend({
     return {
       party: null as Party | null,
       positions: [] as Position[],
+    };
+  },
+
+  head(): MetaInfo {
+    if (!this.party) return {};
+
+    return {
+      title: `${this.party.title} (${this.party.ticker}) - ${this.party.election?.title}`,
+
+      meta: [
+        {
+          name: "description",
+          hid: "description",
+          content: this.party.description,
+        },
+      ],
     };
   },
 

@@ -75,6 +75,8 @@ export type Organization = {
   archive: boolean;
   themePrimary: string;
   themeSecondary: string;
+  terms_and_condition: string;
+  terms_and_condition_last_update: string;
   theme: OrganizationTheme;
   logo: OrganizationLogo;
 } & DataTimestamp;

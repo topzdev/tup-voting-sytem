@@ -8,6 +8,9 @@ const manageOrganizationMixin = mixins(orgMixin).extend({
     pages(): Record<string, SettingLink> {
       return {
         info: pageConfig.organization(this.organizationId).manageInfo(),
+        termsAndCondition: pageConfig
+          .organization(this.organizationId)
+          .termsAndCondition(),
         deleteOrganization: pageConfig
           .organization(this.organizationId)
           .deleteOrganization(),

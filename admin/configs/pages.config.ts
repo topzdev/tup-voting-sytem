@@ -170,6 +170,13 @@ const pageConfig = {
           route: `${parentRoute}/manage/remove`,
           icon: "mdi-delete",
         } as PageConfigItem),
+
+      termsAndCondition: () =>
+        ({
+          title: "Terms and Condition",
+          route: `${parentRoute}/manage/terms-and-condition`,
+          icon: "mdi-scale-balance",
+        } as PageConfigItem),
     };
   },
   users: () => {
