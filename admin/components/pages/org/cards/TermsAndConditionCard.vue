@@ -16,6 +16,16 @@
         >
       </v-card-title>
       <v-divider></v-divider>
+      <v-card-subtitle>
+        No idea to write terms and condition? Click
+        <span
+          class="primary--text text-decoration-underline"
+          style="cursor: pointer"
+          @click="copy"
+          >here</span
+        >
+        to copy the template.
+      </v-card-subtitle>
       <v-card-text>
         <editor-field
           id="platform"
@@ -75,6 +85,9 @@ export default mixins(manageOrganizationMixin).extend({
   computed: {},
 
   methods: {
+    copy() {
+      this.form.terms_and_condition = configs.terms_and_condition_template;
+    },
     async submit() {
       try {
         const result = await organizationServices.updateTermsAndCondition({
