@@ -13,6 +13,7 @@ const icons = {
   accountLocked: "mdi-account-lock",
   accountDisabled: "mdi-account-off",
   officers: "mdi-account-tie-hat",
+  report: "mdi-file-chart",
 };
 
 export default icons;

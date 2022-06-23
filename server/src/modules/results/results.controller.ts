@@ -123,6 +123,22 @@ const unPublishResult = async (
   }
 };
 
+const printElectionResult = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const election_id = req.body.election_id;
+
+    res
+      .status(200)
+      .json(await resultsServices.printElectionResult(parseInt(election_id)));
+  } catch (error) {
+    next(error);
+  }
+};
+
 const resultsController = {
   getElectionResults,
   getElectionWinners,
@@ -132,6 +148,7 @@ const resultsController = {
   resolveTie,
   publishResult,
   unPublishResult,
+  printElectionResult,
 };
 
 export default resultsController;

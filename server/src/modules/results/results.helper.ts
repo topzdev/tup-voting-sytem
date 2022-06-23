@@ -38,7 +38,11 @@ const properCandidates = (curCandidates: InitialCandidate[]) => {
       ...currentCandidate,
       candidateName: `${currentCandidate.lastname}, ${
         currentCandidate.firstname
-      } ${currentCandidate.middlename.toUpperCase().split("")[0]}.`,
+      } ${
+        currentCandidate.middlename
+          ? currentCandidate.middlename.toUpperCase().split("")[0] + "."
+          : ""
+      }`,
       votePercentage: parseFloat(
         ((currentCandidate.votesCount / totalVotes) * 100).toFixed(2)
       ),

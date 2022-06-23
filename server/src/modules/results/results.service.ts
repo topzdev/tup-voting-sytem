@@ -11,6 +11,7 @@ import { finalStatusSubquery } from "../launchpad/launchpad.helper";
 import { Position } from "../position/entity/position.entity";
 import { Voter } from "../voter/entity/voter.entity";
 import { ElectionVoted } from "../voting/entity/voted.entity";
+import { publicElectionWhereQuery } from "../public/homepage/homepage.helpers";
 import resultHelpers from "./results.helper";
 import {
   CandidateTieResult,
@@ -21,6 +22,7 @@ import {
   ResultPosition,
   ResultPositionsWithWinner,
 } from "./results.interface";
+import overviewHelpers from "../overview/overview.helpers";
 
 const getElectionResults = async (_election_id: Election["id"]) => {
   if (!_election_id)
@@ -403,6 +405,76 @@ const unPublishResult = async (_election_id: Election["id"]) => {
   return true;
 };
 
+const printElectionResult = async (election_id: Election["id"]) => {
+  const electionRepository = getRepository(Election);
+  let electionBuilder = electionRepository.createQueryBuilder("election");
+
+  electionBuilder = electionBuilder
+    .addSelect(finalStatusSubquery(electionBuilder.alias))
+    .leftJoinAndSelect("election.logo", "logo")
+    .leftJoinAndSelect("election.organization", "organization")
+    .leftJoinAndSelect("election.election_officers", "election_officers")
+    .leftJoinAndSelect("election_officers.user", "election_officers_user")
+    .leftJoinAndSelect("organization.theme", "organization_theme")
+    .leftJoinAndSelect("organization.logo", "organization_logo")
+    .leftJoinAndSelect("election.positions", "positions")
+    .leftJoinAndSelect("positions.candidates", "candidates")
+    .leftJoinAndSelect("candidates.profile_photo", "candidates_profile_photo")
+    .leftJoinAndSelect("candidates.party", "candidates_party")
+    .leftJoinAndSelect("candidates_party.logo", "candidates_party_logo")
+    .leftJoinAndSelect("election.party", "party")
+    .leftJoinAndSelect("party.logo", "party_logo")
+    .leftJoinAndSelect("party.cover_photo", "party_cover_photo")
+    .loadRelationCountAndMap("candidates.votesCount", "candidates.votes")
+    .loadRelationCountAndMap(
+      "election.votersCount",
+      "election.voters",
+      "voters",
+      (qb) =>
+        qb.andWhere("voters.is_pre_register = :preregistered", {
+          preregistered: false,
+        })
+    )
+    .loadRelationCountAndMap("election.votesCount", "election.votes")
+    .loadRelationCountAndMap("election.votedCount", "election.voted")
+    .loadRelationCountAndMap("election.partiesCount", "election.party")
+    .loadRelationCountAndMap("election.candidatesCount", "election.candidates")
+    .loadRelationCountAndMap("election.positionsCount", "election.positions")
+
+    .where(publicElectionWhereQuery("election"))
+    .andWhere("election.id = :id AND organization.id IS NOT NULL", {
+      id: election_id,
+    })
+    .orderBy({
+      "positions.display_order": "ASC",
+      "positions.created_at": "DESC",
+    });
+
+  const election = await electionBuilder.getOne();
+
+  if (!election) throw new HttpException("NOT_FOUND", "Election not found");
+  const positions = election.positions as InitialPosition[];
+
+  if (
+    (election.final_status === "completed" ||
+      election.final_status === "archive") &&
+    election.is_tally_public
+  ) {
+    const tally = resultHelpers.getElectionFinalTally(positions);
+    const urls = overviewHelpers.generateElectionUrls(election);
+
+    return {
+      tally,
+      election: {
+        ...election,
+        urls,
+      },
+    };
+  } else {
+    throw new HttpException("NOT_FOUND", "Election is not yet completed");
+  }
+};
+
 const resultsServices = {
   getElectionResults,
   getElectionWinners,
@@ -412,6 +484,7 @@ const resultsServices = {
   resetTie,
   publishResult,
   unPublishResult,
+  printElectionResult,
 };
 
 export default resultsServices;

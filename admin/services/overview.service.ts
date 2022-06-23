@@ -10,6 +10,15 @@ export type ElectionUrls = {
   electionUrl?: string;
 };
 
+export type ElectionCounts = {
+  votersCount: number;
+  votesCount: number;
+  votedCount: number;
+  partiesCount: number;
+  candidatesCount: number;
+  positionsCount: number;
+};
+
 export type OverviewDetails = Pick<
   Election,
   | "id"
@@ -19,15 +28,10 @@ export type OverviewDetails = Pick<
   | "close_date"
   | "archive"
   | "final_status"
-> & {
-  votersCount: number;
-  votesCount: number;
-  votedCount: number;
-  partiesCount: number;
-  candidatesCount: number;
-  positionsCount: number;
-  urls: ElectionUrls;
-};
+> &
+  ElectionCounts & {
+    urls: ElectionUrls;
+  };
 
 const url = "/api/v1/overview";
 

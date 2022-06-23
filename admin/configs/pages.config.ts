@@ -297,6 +297,17 @@ const pageConfig = {
         } as PageConfigItem),
     };
   },
+
+  print: () => {
+    const parentUrl = "/print";
+    return {
+      electionReport: ({ election_id }: any) => ({
+        title: "Election Report",
+        route: `${parentUrl}/election-report?election_id=${election_id}`,
+        exact: true,
+      }),
+    };
+  },
 };
 
 export default pageConfig;

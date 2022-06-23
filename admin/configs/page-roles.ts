@@ -38,6 +38,10 @@ const pageRoles = {
     closeElection: ["sadmin", "admin"] as UserRoles[],
     downloadResults: ["sadmin", "admin", "elec_ofc"] as UserRoles[],
   },
+
+  print: {
+    electionReport: ["sadmin", "admin", "elec_ofc"] as UserRoles[],
+  },
 };
 
 export default pageRoles;

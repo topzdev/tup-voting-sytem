@@ -64,6 +64,13 @@ router.post(
   resultsController.unPublishResult
 );
 
+router.post(
+  "/print",
+  adminAuth,
+  rolesAllowed(["ADMIN", "SUPER_ADMIN", "ELECTION_OFFICER"]),
+  resultsController.printElectionResult
+);
+
 const resultsRoute = router;
 
 export default resultsRoute;

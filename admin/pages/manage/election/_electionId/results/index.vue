@@ -12,6 +12,12 @@
           >
         </template>
         <v-list>
+          <v-list-item @click="printElectionReport">
+            <v-list-item-icon>
+              <v-icon>{{ icons.report }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Election Report</v-list-item-title>
+          </v-list-item>
           <v-list-item @click="downloadElectionResults">
             <v-list-item-icon>
               <v-icon>{{ icons.results }}</v-icon>
@@ -64,6 +70,7 @@ import WinnerSection from "~/components/pages/results/sections/ResultWinnerSecti
 import { ResultPositionsWithWinner } from "@/services/results.service";
 import authMixin from "@/mixins/auth.mixins";
 import pageRoles from "@/configs/page-roles";
+import pageConfig from "../../../../../configs/pages.config";
 
 export default mixins(manageElectionMixins, authMixin).extend({
   components: {
@@ -132,6 +139,16 @@ export default mixins(manageElectionMixins, authMixin).extend({
 
     async downloadVoteAudit() {
       await this.$accessor.electionResult.downloadVoteAudit();
+    },
+
+    printElectionReport() {
+      let route = this.$router.resolve({
+        path: pageConfig
+          .print()
+          .electionReport({ election_id: this.electionId }).route,
+      });
+      // let route = this.$router.resolve('/link/to/page'); // This also works.
+      window.open(route.href, "_blank");
     },
   },
 });
