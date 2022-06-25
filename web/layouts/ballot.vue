@@ -5,13 +5,20 @@
         <Nuxt />
       </v-container>
     </v-main>
+
+    <how-to-vote-dialog />
   </v-app>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
+import HowToVoteDialog from "@/components/dialogs/HowToVoteDialog.vue";
 
-export default Vue.extend({});
+export default Vue.extend({
+  components: {
+    HowToVoteDialog,
+  },
+});
 </script>
 
 <style>
