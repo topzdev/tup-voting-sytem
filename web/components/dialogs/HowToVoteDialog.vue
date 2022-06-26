@@ -62,7 +62,7 @@ export default Vue.extend({
       dialog: false,
       current: 0,
       tooltip: true,
-      carouselHeight: 400,
+      carouselHeight: 380,
     };
   },
   computed: {
@@ -113,11 +113,11 @@ export default Vue.extend({
     onResize() {
       const windowWidth = window.innerWidth;
       if (windowWidth <= 600) {
-        this.carouselHeight = 200;
+        this.carouselHeight = 160;
       } else if (windowWidth > 600 && windowWidth <= 960) {
-        this.carouselHeight = 350;
+        this.carouselHeight = 335;
       } else {
-        this.carouselHeight = 400;
+        this.carouselHeight = 380;
       }
     },
   },
