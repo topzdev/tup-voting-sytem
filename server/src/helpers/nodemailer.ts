@@ -11,12 +11,12 @@ export type NewSendMailOptions<T = object> = {
 
 const auth = {
   auth: {
-    api_key: configs.mailgun.api_key,
-    domain: configs.mailgun.domain,
+    api_key: configs.mailgun.api_key || "",
+    domain: configs.mailgun.domain || "",
   },
 };
 
-const transporter = nodemailer.createTransport(mg(auth));
+// const transporter = nodemailer.createTransport(mg(auth));
 
 // const transporter = nodemailer.createTransport({
 //   host: configs.nodemailer.host,
@@ -27,39 +27,39 @@ const transporter = nodemailer.createTransport(mg(auth));
 //   },
 // });
 
-transporter.use(
-  "compile",
-  hbs({
-    viewEngine: {
-      extname: ".html",
-      partialsDir: path.resolve(__dirname, "../templates/emails"),
-      defaultLayout: false,
-    },
-    viewPath: path.resolve(__dirname, "../templates/emails"),
-    extName: ".hbs",
-  })
-);
+// transporter.use(
+//   "compile",
+//   hbs({
+//     viewEngine: {
+//       extname: ".html",
+//       partialsDir: path.resolve(__dirname, "../templates/emails"),
+//       defaultLayout: false,
+//     },
+//     viewPath: path.resolve(__dirname, "../templates/emails"),
+//     extName: ".hbs",
+//   })
+// );
 
 export const sendBulkMail = (messages: NewSendMailOptions[]) => {
-  for (let i = 0; i < messages.length; i++) {
-    transporter.sendMail(messages[i], (err, info) => {
-      if (err) {
-        console.log(`Error: ${err}`);
-      } else {
-        console.log(`Response: ${info}`);
-        console.log(info);
-      }
-    });
-  }
+  // for (let i = 0; i < messages.length; i++) {
+  //   transporter.sendMail(messages[i], (err, info) => {
+  //     if (err) {
+  //       console.log(`Error: ${err}`);
+  //     } else {
+  //       console.log(`Response: ${info}`);
+  //       console.log(info);
+  //     }
+  //   });
+  // }
 };
 
 export const sendSingleMail = (message: NewSendMailOptions) => {
-  transporter.sendMail(message, (err, info) => {
-    if (err) {
-      console.log(`Error: ${err}`);
-    } else {
-      console.log(info);
-      console.log(`Response: ${info}`);
-    }
-  });
+  // transporter.sendMail(message, (err, info) => {
+  //   if (err) {
+  //     console.log(`Error: ${err}`);
+  //   } else {
+  //     console.log(info);
+  //     console.log(`Response: ${info}`);
+  //   }
+  // });
 };
