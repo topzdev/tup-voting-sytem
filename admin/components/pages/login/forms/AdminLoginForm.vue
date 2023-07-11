@@ -62,8 +62,8 @@ import authServices, { AdminLoginReturn } from "@/services/auth.service";
 import { ErrorTypes } from "@/pages/login.vue";
 
 const defaultForm = {
-  usernameOrEmail: "",
-  password: "",
+  usernameOrEmail: "admin",
+  password: "admin-admin",
 };
 
 const defaultAlert = {

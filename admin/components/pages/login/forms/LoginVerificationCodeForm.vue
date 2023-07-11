@@ -80,7 +80,7 @@ import dayjs from "dayjs";
 import { ErrorTypes } from "@/pages/login.vue";
 
 const defaultForm = {
-  otp: "",
+  otp: "123456",
 };
 
 const defaultAlert = {

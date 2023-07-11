@@ -5,7 +5,12 @@
     <p class="mt-3 mx-auto body-1" style="width: 75%">
       This is the group that will have an election. Please create a new one.
     </p>
-    <v-btn color="primary" large width="75%" class="mt-1 mx-auto"
+    <v-btn
+      to="/organization/create"
+      color="primary"
+      large
+      width="75%"
+      class="mt-1 mx-auto"
       >Create Organization</v-btn
     >
   </span>

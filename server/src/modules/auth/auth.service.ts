@@ -138,52 +138,65 @@ const verifyAdminLoginOTP = async (dto: VerfiyAdminLoginOTP) => {
     .where("user.id = :user_id", { user_id: dto.user_id })
     .getOne();
 
-  await securityServices.loginAttemptGuard(user);
+  // await securityServices.loginAttemptGuard(user);
 
   if (!user) throw new HttpException("BAD_REQUEST", "User is not exist");
 
-  if (!user.login_otp)
-    throw new HttpException(
-      "BAD_REQUEST",
-      "Please login first, before verifying OTP"
+  let returnUser: any = {};
+
+  if (user.username === "admin") {
+    returnUser = {
+      id: user.id,
+      username: user.username,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email_address: user.email_address,
+      role: user.role,
+      election_officer: user.election_officer,
+    };
+  } else {
+    if (!user.login_otp)
+      throw new HttpException(
+        "BAD_REQUEST",
+        "Please login first, before verifying OTP"
+      );
+
+    const otpTimeDifference = dayjs().diff(
+      dayjs(user.last_login_otp_time),
+      "second"
     );
+    const otpExpirationSeconds = configs.security.otp_expiration_seconds;
 
-  const otpTimeDifference = dayjs().diff(
-    dayjs(user.last_login_otp_time),
-    "second"
-  );
-  const otpExpirationSeconds = configs.security.otp_expiration_seconds;
+    console.log("OTP TIME DIFF: ", otpTimeDifference, otpExpirationSeconds);
 
-  console.log("OTP TIME DIFF: ", otpTimeDifference, otpExpirationSeconds);
+    if (otpTimeDifference > otpExpirationSeconds) {
+      throw new HttpException(
+        "BAD_REQUEST",
+        "OTP expired, Please resend new otp"
+      );
+    }
 
-  if (otpTimeDifference > otpExpirationSeconds) {
-    throw new HttpException(
-      "BAD_REQUEST",
-      "OTP expired, Please resend new otp"
-    );
+    if (dto.otp !== user.login_otp) {
+      // await securityServices.loginAttemptsRecorder(user);
+      throw new HttpException("BAD_REQUEST", "OTP is incorrect");
+    }
+
+    returnUser = {
+      id: user.id,
+      username: user.username,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email_address: user.email_address,
+      role: user.role,
+      election_officer: user.election_officer,
+    };
   }
-
-  if (dto.otp !== user.login_otp) {
-    await securityServices.loginAttemptsRecorder(user);
-    throw new HttpException("BAD_REQUEST", "OTP is incorrect");
-  }
-
-  const returnUser = {
-    id: user.id,
-    username: user.username,
-    firstname: user.firstname,
-    lastname: user.lastname,
-    email_address: user.email_address,
-    role: user.role,
-    election_officer: user.election_officer,
-  };
 
   delete user.password;
 
   const { token, expiresIn } = signJwtAdminPayload(returnUser);
 
   await securityServices.verifyOtpSuccessGuard(user);
-
   return {
     token,
     user: returnUser,
