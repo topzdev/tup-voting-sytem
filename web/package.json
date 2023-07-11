@@ -32,5 +32,8 @@
     "@nuxt/typescript-build": "^2.1.0",
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/vuetify": "^1.12.3"
+  },
+  "engines": {
+    "node": "16.x"
   }
 }
