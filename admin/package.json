@@ -39,6 +39,6 @@
     "@types/shortid": "^0.0.29"
   },
   "engines": {
-    "node": "16.x"
+    "node": "18.x"
   }
 }
