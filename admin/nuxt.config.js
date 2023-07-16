@@ -2,8 +2,8 @@ import colors from "vuetify/es5/util/colors";
 require("dotenv").config();
 
 export default {
-  ssr: false,
-  target: 'static',
+  // ssr: false,
+  // target: 'static',
   env: {
     // baseUrl: process.env.BASER_SERVER_URL || "http://localhost:5000",
     // browserBaseUrl: process.env.BASER_CLIENT_URL || "http://localhost:3000",
