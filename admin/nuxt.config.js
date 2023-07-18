@@ -136,7 +136,7 @@ export default {
   build: {
     transpile: ["vue-datetime-picker", "tiptap-vuetify", "vuetify/lib"],
     devtools: false, //true
-    analyze: true,
+    // analyze: true,
     extractCSS: {
       ignoreOrder: true,
     },

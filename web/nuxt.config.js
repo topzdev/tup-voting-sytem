@@ -149,7 +149,7 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     devtools: false, //true
-    analyze: true,
+    // analyze: true,
     html: {
       minify: {
         collapseBooleanAttributes: true,
