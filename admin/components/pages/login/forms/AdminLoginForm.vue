@@ -115,8 +115,6 @@ export default Vue.extend({
     async submit() {
       (this.$refs as any).form.validate();
 
-      console.log("Submit Loggoed In");
-
       if (this.valid)
         try {
           this.loading = true;
@@ -135,29 +133,29 @@ export default Vue.extend({
 
           this.setSuccess(result);
         } catch (error: any) {
-          console.log("Error...", error);
-          // if (error || error.response.data.error) {
-          //   const message =
-          //     error.response?.data?.error?.message || error.message;
+          console.log(error);
+          if (error || error.response.data.error) {
+            const message =
+              error.response?.data?.error?.message || error.message;
 
-          //   console.log(message);
+            console.log(message);
 
-          //   if (message) {
-          //     if (typeof message === "string") {
-          //       this.alert = {
-          //         show: true,
-          //         type: "error",
-          //         message: message,
-          //       };
-          //     } else if (typeof message === "object") {
-          //       if (message.disabledError) {
-          //         this.setError("disabled-account");
-          //       } else if (message.attemptsError) {
-          //         this.setError("attempt-error");
-          //       }
-          //     }
-          //   }
-          // }
+            if (message) {
+              if (typeof message === "string") {
+                this.alert = {
+                  show: true,
+                  type: "error",
+                  message: message,
+                };
+              } else if (typeof message === "object") {
+                if (message.disabledError) {
+                  this.setError("disabled-account");
+                } else if (message.attemptsError) {
+                  this.setError("attempt-error");
+                }
+              }
+            }
+          }
         } finally {
           await this.$recaptcha.reset();
           this.loading = false;
